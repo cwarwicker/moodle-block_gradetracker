@@ -1,0 +1,28 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($CriteriaAwardStructure->isValid()): ?>
+
+<div class="gt_confirm_box">
+        
+    <h4><?= $string['delete'] ?> : <?= $CriteriaAwardStructure->getName() ?></h4>
+    
+    <div>
+        
+        <?= sprintf($string['delete:critgradingstructure:sure'], $CriteriaAwardStructure->countCriteria()) ?>
+        <br><br>
+        <form action="config.php?view=structures&section=grade&page=edit&type=criteria&<?= (!is_null($CriteriaAwardStructure->getQualBuildID())) ? 'build='.$CriteriaAwardStructure->getQualBuildID() : 'id='.$CriteriaAwardStructure->getQualStructureID() ?>" method="post">
+            
+            <input type="hidden" name="grading_structure_id" value="<?= $CriteriaAwardStructure->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_crit_grading_structure" value="<?= $string['yes'] ?>" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

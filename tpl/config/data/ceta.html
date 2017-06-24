@@ -1,0 +1,70 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<h2><?= $string['dataimport'] ?></h2>
+<p><?= $string['cetagrades:desc'] ?></p>
+<p>
+    <?php if ($templateFile): ?>
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
+        <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+    </a>
+    <?php else: ?>
+        [[<?= $string['filenotfound'] ?>]]
+    <?php endif; ?>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+    <?php if ($exampleFile): ?>
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
+            <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+        </a>
+    <?php else: ?>
+        [[<?= $string['filenotfound'] ?>]]
+    <?php endif; ?>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ceta&reload=1"><img style="vertical-align:top;" src="<?= $OUTPUT->pix_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    
+</p>
+
+<form action="" method="post" enctype="multipart/form-data">
+
+    <input type="file" name="file" />
+    <br />
+    <h3><?= $string['options'] ?></h3>
+    <input type="radio" name="importoptions" value="importcourseshortname" checked/> <?= $string['ceta:importbycourseshortname'] ?> - <small><?= $string['ceta:importbycourseshortname:desc'] ?></small><br>
+    <input type="radio" name="importoptions" value="importcourseid"/> <?= $string['ceta:importbycourseid'] ?> - <small><?= $string['ceta:importbycourseid:desc'] ?></small><br>
+    <br />
+    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?= $string['import'] ?>" />
+
+</form>
+<br />
+
+<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+
+<br />
+
+<?php if (!empty($MSGS['success'])): ?>
+
+<div id='gt_import_output' class='gt_cmd gt_hidden'>
+    <?= $MSGS['output'] ?>
+</div>
+
+<?php endif; ?>
+
+<br />
+
+<hr class="gt_hr">
+
+<h2><?= $string['dataexport'] ?></h2>
+<p><?= $string['cetagrades:descExport'] ?></p>
+<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ceta" method="post" enctype="multipart/form-data">
+<h3><?= $string['options'] ?></h3>
+<input type="radio" name="export" value="shortname" checked/> <?= $string['ceta:exportbycourseshortname'] ?> - <small><?= $string['ceta:exportbycourseshortname:desc'] ?></small><br>
+<input type="radio" name="export" value="idnumber"/> <?= $string['ceta:exportbycourseid'] ?> - <small><?= $string['ceta:exportbycourseid:desc'] ?></small><br>
+<br />
+<input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
+</form>
+
+<br />

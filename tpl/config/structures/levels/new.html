@@ -1,0 +1,55 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<form action="" method="post">
+        
+    <div class='gt_form_panel'>
+    
+        <div class='gt_form_panel_heading'>
+            <?= $string['newlevel'] ?>
+        </div>
+        
+        <div class='gt_form_panel_body'>
+        
+            <?php if ($Level->isValid()): ?>
+                <input type="hidden" name="level_id" value="<?= $Level->getID() ?>" />
+                <input type="hidden" name="level_deleted" value="<?= $Level->getDeleted() ?>" />
+            <?php endif; ?>
+
+            <p class="gt_c">
+                <input type="submit" class="gt_btn gt_blue" name="submit" value="<?= $string['save'] ?>" />
+                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+            </p>
+
+            <table class="gt_simple_form_table">
+
+                <tr>
+                    <td><?= $string['name'] ?></td>
+                    <td>
+                        <input type="text" name="level_name" value="<?= $Level->getName() ?>" placeholder="e.g. Level 3" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><?= $string['shortname'] ?></td>
+                    <td>
+                        <input type="text" name="level_shortname" value="<?= $Level->getShortName() ?>" placeholder="e.g. L3" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><?= $string['order'] ?></td>
+                    <td>
+                        <input type="number" name="level_order" value="<?= $Level->getOrderNumber() ?>" step="any" />
+                    </td>
+                </tr>
+
+            </table>
+    
+        </div>
+        
+    </div>
+    
+</form>

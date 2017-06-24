@@ -1,0 +1,152 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <form action="#results" method="post">
+
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $string['searchqual'] ?></div>
+
+            <div class="gt_form_panel_body">
+
+                <table id="gt_qual_form_table">
+
+                    <tr>
+                        <td><?= $string['qualtype'] ?></td>
+                        <td>
+                            <select name="qual_type" class="gt_form_control">
+                                <option value=""></option>
+                                <?php if ($structures): ?>
+                                    <?php foreach($structures as $struc): ?>
+                                        <option value="<?= $struc->getID() ?>" <?= (isset($searchParams['structureID']) && $searchParams['structureID'] == $struc->getID()) ? 'selected' : ''; ?> ><?= $struc->getName() ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><?= $string['level'] ?></td>
+                        <td>
+                            <select name="qual_level" class="gt_form_control">
+                                <option value=""></option>
+                                <?php if ($allLevels): ?>
+                                    <?php foreach($allLevels as $level): ?>
+                                        <option value="<?= $level->getID() ?>" <?= (isset($searchParams['levelID']) && $searchParams['levelID'] == $level->getID()) ? 'selected' : ''; ?> ><?= $level->getName() ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td><?= $string['subtype'] ?></td>
+                        <td>
+                            <select name="qual_sub_type" class="gt_form_control">
+                                <option value=""></option>
+                                <?php if ($allSubTypes): ?>
+                                    <?php foreach($allSubTypes as $subType): ?>
+                                        <option value="<?= $subType->getID() ?>" <?= (isset($searchParams['subTypeID']) && $searchParams['subTypeID'] == $subType->getID()) ? 'selected' : ''; ?> ><?= $subType->getName() ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    
+
+                    <tr>
+                        <td><?= $string['name'] ?></td>
+                        <td>
+                            <input type="text" class="gt_form_control" name="qual_name" value="<?= (isset($searchParams['name'])) ? \gt_html($searchParams['name']) : ''; ?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?= $string['search'] ?>" />
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+                <?php if (isset($results)): ?>
+                
+                    <div class="gt_full_page">
+                        
+                            <div class="gt_table_list_div">
+
+                                <table id="gt_qual_results" class="gt_config">
+
+                                    <tr>
+                                        <th><?= $string['type'] ?></th>
+                                        <th><?= $string['level'] ?></th>
+                                        <th><?= $string['subtype'] ?></th>
+                                        <th><?= $string['name'] ?></th>
+                                        <th><?= $string['options'] ?></th>
+                                    </tr>
+                                    
+                                    <?php if ($results): ?>
+                                    
+                                        <?php foreach($results as $result): ?>
+                                        
+                                        <tr>
+                                            <td><?= $result->getStructureName() ?></td>
+                                            <td><?= $result->getLevelName() ?></td>
+                                            <td><?= $result->getSubTypeName() ?></td>
+                                            <td><?= $result->getName() ?></td>
+                                            <td>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $result->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
+                                                &nbsp;&nbsp;
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=copy&id=<?= $result->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/copy') ?>" alt="<?= $string['duplicate'] ?>" /></a>
+                                                <?php if ($User->hasCapability('block/gradetracker:delete_restore_quals')): ?>
+                                                    &nbsp;&nbsp;
+                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=delete&id=<?= $result->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        
+                                        <?php endforeach; ?>
+                                    
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan='5'><?= $string['noresults'] ?></td>
+                                        </tr>
+                                    <?php endif; ?>
+                                    <?php if ($deletedresults): ?>
+                                        <?php if (gt_has_capability('block/gradetracker:view_hidden_quals')): ?>
+                                            <?php foreach($deletedresults as $delresult): ?>
+                                            <tr>
+                                            <td style="background-color:#ffe5e5;color:#808080;"><?= $string['deleted'] ?> : <?= $delresult->getStructureName() ?></td>
+                                            <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->getLevelName() ?></td>
+                                            <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->getSubTypeName() ?></td>
+                                            <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->getName() ?></td>
+                                            <td style="background-color:#ffe5e5;color:#808080;">
+                                                <form action="" method="post">
+                                                    <input name="id" type="hidden" value="<?= $delresult->getID() ?>">
+                                                    <?= $string['restore'] ?><input type="image" name="restoreQual" src="/blocks/gradetracker/pix/icons/arrow_undo.png" style="height:15px;width:15px;" alt="<?= $string['restore'] ?>" />
+                                                </form>
+                                            </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+                                </table>
+
+                            </div>
+                    </div>                    
+                
+                <?php endif; ?>
+                
+            </div>
+
+        </div>
+        
+    </form>
+        
+</div>

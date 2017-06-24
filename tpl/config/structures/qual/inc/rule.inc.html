@@ -1,0 +1,65 @@
+<div id='gt_rule_content_<?= $ruleSetNum ?>_<?= $ruleNum ?>' class='gt_rule_content' style='display:none;'>
+            
+    <div class='gt_rule_content_section_float'>
+        <div class='gt_rule_settings_heading'><?= $string['rule:setting:details'] ?></div>
+        <table class='gt_rule_settings_table'>
+            <tr>
+                <td><?= $string['rulename'] ?></td>
+                <td>
+                    <?php if (isset($rule)): ?>
+                        <input type='hidden' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][id]' class='gt_rule_id' value='<?= $rule->getID() ?>' />
+                    <?php endif; ?>
+                    <input type='text' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][name]' class='gt_rule_name' value='<?= (isset($rule)) ? \gt_html($rule->getName()) : get_string('newrule', 'block_gradetracker') ?>' />
+                </td>
+            </tr>
+            <tr>
+                <td><?= $string['description'] ?></td>
+                <td>
+                    <textarea name="rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][desc]"><?= (isset($rule)) ? \gt_html($rule->getDescription()): '' ?></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class='gt_rule_content_section_float'>
+        <div class='gt_rule_settings_heading'><?= $string['rule:setting:event'] ?></div>
+        <table class='gt_rule_settings_table'>
+            <?php foreach(\GT\Rule::getEvents() as $onEvent): ?>
+            <tr>
+                <td>
+                    <div class="gt_fancy_checkbox">
+                        <input id="chkbox_<?= $onEvent ?>_<?= $ruleSetNum ?>_<?= $ruleNum ?>" type='radio' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][onevent]' class='gt_rule_event gt_middle gt_rule_on_event_<?= $ruleSetNum ?>_<?= $ruleNum ?>' value='<?= $onEvent ?>' <?= (isset($rule) && $rule->getOnEvent() == $onEvent) ? 'checked' : '' ?> />
+                        <label for="chkbox_<?= $onEvent ?>_<?= $ruleSetNum ?>_<?= $ruleNum ?>"></label>
+                    </div>
+                </td>
+                <td>
+                    <?= $onEvent ?><br>
+                    <small><?= $string['rule:event:'.$onEvent] ?></small>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>    
+    </div>
+    
+    <div class='gt_rule_content_section'>
+        <div class='gt_rule_settings_heading'><?= $string['rule:setting:steps'] ?></div>
+        <a href='#' onclick='gt_addRuleStep(<?= $ruleSetNum ?>, <?= $ruleNum ?>);return false;' class='gt_btn gt_btn_small'><?= $string['createrulestep'] ?></a><br><br>
+        <div id='gt_rule_steps_<?= $ruleSetNum ?>_<?= $ruleNum ?>'>
+            <?php if (isset($rule)): ?>
+                <?php foreach($rule->getSteps() as $step): ?>
+                    <?php $numRuleSteps[$ruleSetNum][$ruleNum]++ ?>
+                    <?php $ruleStepNum = $numRuleSteps[$ruleSetNum][$ruleNum] ?>
+                    <?= $rule->getTemplateContent('config/structures/qual/inc/rulestep.inc.html', array('RS' => $ruleSetNum, 'R' => $ruleNum, 'S' => $ruleStepNum, 'step' => $step)) ?>
+                    <script>
+                        $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>').removeClass('gt_hidden').addClass('gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>');
+                        $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_condition').removeClass('gt_hidden').addClass('gt_rule_step_condition_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
+                        $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_action').removeClass('gt_hidden').addClass('gt_rule_step_action_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
+                    </script>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <br><br>
+
+</div>

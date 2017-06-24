@@ -1,0 +1,33 @@
+Any Levels you wish to be installed when the block is installed should be placed here.
+
+This should be in a JSON file called "levels.json"
+
+Example:
+
+[
+    {
+        "name": "Level 1",
+        "shortname": "L1",
+        "ordernum": 1
+    },
+    {
+        "name": "Level 2",
+        "shortname": "L2",
+        "ordernum": 2
+    },
+    {
+        "name": "Level 3",
+        "shortname": "L3",
+        "ordernum": 3
+    },
+    {
+        "name": "Level 4",
+        "shortname": "L4",
+        "ordernum": 4
+    },
+    {
+        "name": "Level 5",
+        "shortname": "L5",
+        "ordernum": 5
+    }
+]

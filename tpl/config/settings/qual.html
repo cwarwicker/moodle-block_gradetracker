@@ -1,0 +1,23 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<form action="" method="post" enctype="multipart/form-data">
+    
+    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    
+    <h2><?= $string['qualsettings'] ?></h2>
+    <p><?= $string['qualsettings:desc'] ?></p>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
+    
+</form>

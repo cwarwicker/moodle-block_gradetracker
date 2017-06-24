@@ -1,0 +1,26 @@
+<?php if(!defined('ELBP')) exit; ?>
+
+<table class="elbp_summary_table">
+    <tbody>
+      <tr>
+           <td class="elbp_summary_title" style="background-image:url('<?= $CFG->wwwroot ?><?= $obj->getPath() ?>pix/elbp_gradetracker/icon.png');">
+            <?= get_string('mytrackers', 'block_gradetracker') ?>
+          </td>       
+      </tr>
+    </tbody>
+  </table>
+
+
+<table class="elbp_summary_table elbp_bcgt_summary">
+    <tbody>
+      <?php if ($quals): foreach($quals as $qual): ?>
+      <tr>
+          <td><a href="#" onclick="loadTrackerPopup(<?= $qual->getID() ?>);return false;"><?= $qual->getDisplayName() ?></a></td>
+      </tr>
+      <?php endforeach; else: ?>
+      <tr>
+          <td class='c'><?= get_string('noresults', 'block_gradetracker') ?></td>
+      </tr>
+      <?php endif; ?>
+    </tbody>
+  </table>

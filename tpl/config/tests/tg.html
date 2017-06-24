@@ -1,0 +1,61 @@
+<h2><?= $string['targetgrades'] ?></h2>
+
+<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=tests&section=tg" method="post" enctype="multipart/form-data">
+<?= $string['avggcsescore'] ?>:
+<br>
+<input type="text" name="gt_avggcsescore" class="gt_30" value="<?= (isset($avggcsescore)) ? $avggcsescore : '' ?>">
+
+<br>
+<br>
+<?= $string['qualification'] ?>:
+<select class="gt_form_control" name="qualid" id="gt_tests_qual_id">
+    <option value="-1">   </option>
+    <?php foreach($allQuals as $qual): ?>
+        <option id="<?= $qual->getID() ?>" value="<?= $qual->getID() ?>" <?= (isset($qualification) && $qualification->getID() == $qual->getID()) ? 'selected' : '' ?> ><?= $qual->getDisplayName() ?></option>
+    <?php endforeach; ?>   
+    
+</select>
+
+<br>
+<input type="submit" class="gt_btn gt_blue" name="submit_calculate" value="<?= $string['calculate'] ?>">
+</form>
+<br>
+<br>
+
+
+<?php if (!empty($avggcsescore)): ?>
+
+    <div class="gt_alert_info">
+        <?= $string['targetgrade'] ?> - 
+        <?php if ($single_award): ?>
+            <?= $single_award->getName() ?> (<?= $string['ucaspoints'] ?> <?= $single_award->getUcas() ?>)
+        <?php else: ?>
+            <?= $string['na'] ?>
+        <?php endif; ?>
+    </div>
+
+    <br>
+
+    <table class="gt_table_tests">
+        <tr>
+            <th><?= $string['targetgrade'] ?></th>
+            <th><?= $string['ucaspoints'] ?></th>
+            <th><?= $string['lowerpoints'] ?></th>
+            <th><?= $string['upperpoints'] ?></th>
+            <th><?= $string['ranking'] ?></th>
+        </tr>
+        <?php foreach($awards as $award): ?>
+        <tr>
+            <td><?= $award->getName() ?></td>
+            <td><?= $award->getUcas() ?></td>
+            <td><?= $award->getQOELower() ?></td>
+            <td><?= $award->getQOEUpper() ?></td>
+            <td><?= $award->getRank() ?></td>
+        </tr>
+        <?php endforeach; ?> 
+    </table>
+    
+<?php endif; ?>
+
+<br>
+<br>

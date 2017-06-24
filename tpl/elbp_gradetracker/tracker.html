@@ -1,0 +1,10 @@
+<p class='gt_c'>
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $params['student']->id ?>&qualID=<?= $UserQualification->getID() ?>&access=v" target="_blank"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/external.png" class="gt_icon" /> <?= $string['openstudentgrid'] ?></a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=student&id=<?= $params['student']->id ?>&qualID=<?= $UserQualification->getID() ?>&access=v" target="_blank"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/printer.png" class="gt_icon" /> <?= $string['printgrid'] ?></a>
+</p>
+
+<?= $UserQualification->getStudentGrid('return', ($params + array('external' => 1, 'extSsn' => 'block_elbp'))) ?>
+
+<input type='hidden' id='gt-external' value='1' />
+<input type='hidden' id='gt-ext-sid' value='block_elbp' />

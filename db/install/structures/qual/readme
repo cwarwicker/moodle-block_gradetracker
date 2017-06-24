@@ -1,0 +1,5 @@
+Any Qualification Structures you wish to be installed when the block is installed should be placed here.
+
+Method 1) You can just put all the XML documents in this directory
+
+method 2) You can zip all the XML documents up and put the ZIP file here instead

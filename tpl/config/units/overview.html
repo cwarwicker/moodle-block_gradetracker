@@ -1,0 +1,17 @@
+<div class='gt_overview'>
+        
+    <div class='gt_overview_box'>
+        <h6><?= $string['overview:quals:activeunits'] ?></h6>
+        <div class='graph'>
+            <?= $stats['active']->output( new \GT\StatisticsBarChartOutput('overview:quals:activeunits', 'name', 'green', array('context' => 'unit', 'field' => 'unitid')) ) ?>
+        </div>
+    </div>
+    
+    <div class='gt_overview_box'>
+        <h6><?= $string['overview:quals:inactiveunits'] ?></h6>
+        <div class='graph'>
+            <?= $stats['inactive']->output( new \GT\StatisticsBarChartOutput('overview:quals:inactiveunits', 'name', 'red', array('context' => 'unit', 'field' => 'unitid')) ) ?>
+        </div>
+    </div>
+           
+</div>

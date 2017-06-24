@@ -1,0 +1,28 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($UnitAwardStructure->isValid()): ?>
+
+<div class="gt_confirm_box">
+    
+    <h4><?= $string['delete'] ?> : <?= $UnitAwardStructure->getName() ?></h4>
+    
+    <div>
+        
+        <?= sprintf($string['delete:unitgradingstructure:sure'], $UnitAwardStructure->countUnits()) ?>
+        <br><br>
+        <form action="config.php?view=structures&section=grade&page=edit&type=unit&id=<?= $UnitAwardStructure->getQualStructureID() ?>" method="post">
+            
+            <input type="hidden" name="grading_structure_id" value="<?= $UnitAwardStructure->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_unit_grading_structure" value="<?= $string['yes'] ?>" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

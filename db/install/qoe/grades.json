@@ -1,0 +1,164 @@
+[
+    {
+        "type": "GCSE",
+        "grade": "A*",
+        "points": 58,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "A",
+        "points": 52,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "B",
+        "points": 46,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "C",
+        "points": 40,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "D",
+        "points": 34,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "E",
+        "points": 28,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "F",
+        "points": 22,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "G",
+        "points": 16,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE",
+        "grade": "U",
+        "points": 0,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "A*",
+        "points": 58,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "A",
+        "points": 52,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "B",
+        "points": 46,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "C",
+        "points": 40,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "D",
+        "points": 34,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "E",
+        "points": 28,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "F",
+        "points": 22,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "G",
+        "points": 16,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Short Course",
+        "grade": "U",
+        "points": 0,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "A*",
+        "points": 58,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "A",
+        "points": 52,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "B",
+        "points": 46,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "C",
+        "points": 40,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "D",
+        "points": 34,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "E",
+        "points": 28,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "F",
+        "points": 22,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "G",
+        "points": 16,
+        "weighting": 1
+    },
+    {
+        "type": "GCSE Double Award",
+        "grade": "U",
+        "points": 0,
+        "weighting": 1
+    }
+]

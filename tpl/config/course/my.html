@@ -1,0 +1,16 @@
+<table class="gt_config">
+    <tr>
+        <th><?= $string['config:coursename'] ?></th>
+        <th><?= $string['quals'] ?></th>
+        <th><?= $string['gotocoursepage'] ?></th>
+    </tr>
+    <?php if ($courses): ?>
+        <?php foreach($courses as $course): ?>
+            <tr>
+                <td><a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'><?= $course->fullname ?></a></td>
+                <td><?= $course->countCourseQualifications(true); ?></td>
+                <td><a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'><img src="<?= $OUTPUT->pix_url('e/fullpage') ?>"></a></td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</table>

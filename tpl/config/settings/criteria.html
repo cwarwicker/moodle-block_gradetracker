@@ -1,0 +1,33 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<form action="" method="post" enctype="multipart/form-data">
+    
+    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    
+    <h2><?= $string['criteriasettings'] ?></h2>
+    <p><?= $string['criteriasettings:desc'] ?></p>
+    
+    
+    
+    <br><br>
+    
+    <h3><?= $string['numericcriteria'] ?></h3>
+    
+    <small><strong><?= $string['config:criteria:numeric:maxpoints'] ?></strong> - <?= $string['config:criteria:numeric:maxpoints:desc'] ?></small>
+    <br>
+    <input type="number" min="0" step="1" name="numeric_criteria_max_points" class="gt_small" value="<?= \gt_html($GT->getSetting('numeric_criteria_max_points')) ?>" />
+    
+    <br><br>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue"  value="<?= $string['save'] ?>" />
+    
+</form>

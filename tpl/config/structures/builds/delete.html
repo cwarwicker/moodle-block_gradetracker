@@ -1,0 +1,28 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($Build->isValid()): ?>
+
+<div class="gt_confirm_box">
+    
+    <h4><?= $string['breadcrumbs:config:structures:builds:delete'] ?></h4>
+    
+    <div>
+        
+        <?= sprintf($string['delete:qualbuild:sure'], $Build->countQualifications()) ?>
+        <br><br>
+        <form action="config.php?view=structures&section=builds" method="post">
+            
+            <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_build" value="<?= $string['yes'] ?>" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

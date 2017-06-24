@@ -1,0 +1,194 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <form action="" method="post" id="gt_course_quals_form">
+
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $Course->getName() ?> - <?= $string['userunits'] ?></div>
+
+            <div class="gt_form_panel_body">
+
+                <p class="gt_c">
+                    <input type="submit" class="gt_btn gt_blue" name="save_user_quals" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/course/view.php?id=<?= $Course->id ?>" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <br><br>
+                </p>
+                                
+                <?php if ($Course->getCourseQualifications(true, true)): ?>
+                
+                    <?php foreach($Course->getCourseQualifications(true) as $qual): ?>
+                                            
+                        <h1><?= $qual->getDisplayName() ?></h1>
+                
+                        <?php if ($qual->getUnits()): ?>
+                            <br>
+                            <p class="gt_c">
+                                <b><?= $string['unitset'] ?></b>
+                                <a onclick="unitSetDropdown(<?= $qual->getID() ?>)">
+                                    <img id="unitset_dropdown_img_<?= $qual->getID() ?>" src="<?= $CFG->wwwroot ?>/pix/t/dropdown.png">
+                                </a>
+                                <br>
+                                <select id="unitset_select_<?= $qual->getID() ?>" style="display:none;" class="gt_course_select gt_course_select_larger" multiple="multiple">
+                                    <?php foreach($qual->getUnits() as $unit): ?>
+                                        <option value="<?= $unit->getID() ?>"><?= $unit->getDisplayName() ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </p>
+                            <br>
+                        
+                            <?php if ( ($students = $Course->getStudents()) ): ?>
+                        
+                                <table id="gt_stud_units_<?= $qual->getID() ?>" defaultCredits="<?= $qual->getDefaultCredits() ?>" class="gt_stud_units gt_config">
+
+                                    <tr>
+                                        <th></th>
+                                        <th><?= $string['user'] ?></th>
+                                        
+                                        <?php if ($qual->getDefaultCredits()): ?>
+                                            <th><?= $string['credits'] ?></th>
+                                        <?php endif; ?>
+                                        
+                                        <?php foreach($qual->getUnits() as $unit): ?>
+                                            <th>
+                                                <a href="#" onclick="tickAllUnitUsers(<?= $unit->getID() ?>, <?= $qual->getID() ?>);return false;">
+                                                    <?= $unit->getDisplayName() ?>
+                                                </a>
+                                                <br>
+                                                <small><?= $unit->getCredits() ?> <?= $string['credits'] ?></small>
+                                            </th>
+                                        <?php endforeach; ?>
+
+                                    </tr>
+
+                                    <tr class="cRow">
+                                        <td></td>
+                                        <td><a href="#" onclick="tickAll('user', <?= $qual->getID() ?>);return false;"><?= $string['students'] ?></a></td>
+                                        <?php if ($qual->getDefaultCredits()): ?>
+                                            <td></td>
+                                        <?php endif; ?>
+                                        <?php foreach($qual->getUnits() as $unit): ?>
+                                            <td>
+                                                <a href='#' onclick="tickAllUnitUsersRole(<?= $unit->getID() ?>, <?= $qual->getID() ?>, 'STUDENT');return false;">
+                                                    <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                                </a>
+                                            </td>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                    
+                                    <?php foreach($students as $user): ?>
+
+                                        <?php if ($user->isOnQual($qual->getID(), "STUDENT")): ?>
+                                        
+                                            <?php $qual->loadStudent( $user ) ?>
+                                    
+                                            <tr>
+                                                <td><?= $user->getPicture($Course->id) ?></td>
+                                                <td>
+                                                    <a href="#" onclick="tickAllStudentUnits(<?= $user->id ?>, <?= $qual->getID() ?>);return false;">
+                                                        <?= $user->getDisplayName() ?>
+                                                    </a>
+                                                </td>
+
+                                                <?php if ($qual->getDefaultCredits()): ?>
+                                                    <td class='<?= (($userCredits = $qual->getUserUnitCredits()) > $qual->getDefaultCredits()) ? 'gt_incorrect_credits' : '' ?>'><span class="usr_credits_<?= $user->id ?>_<?= $qual->getID() ?>"><?= $userCredits ?></span> / <?= $qual->getDefaultCredits() ?></td>
+                                                <?php endif; ?>
+
+                                                <?php foreach($qual->getUnits() as $unit): ?>
+                                                    <td>
+                                                        <input type="checkbox" class="gt_user_unit_checkbox gt_user_unit_user_<?= $qual->getID() ?>_<?= $user->id ?> gt_user_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_user_unit_unit_<?= $qual->getID() ?>" role="STUDENT" sID="<?= $user->id ?>" qID="<?= $qual->getID() ?>" credits="<?= $unit->getCredits() ?>" name="user_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STUDENT" ) ) ? 'checked' : ''; ?> />
+                                                    </td>
+                                                <?php endforeach; ?>
+
+                                            </tr>
+                                        
+                                        <?php endif; ?>
+
+                                    <?php endforeach; ?>
+                                    
+                                    <tr class="cRow">
+                                        <td></td>
+                                        <td><a href="#" onclick="tickAll('staff', <?= $qual->getID() ?>);return false;"><?= $string['staff'] ?></a></td>
+                                        <?php if ($qual->getDefaultCredits()): ?>
+                                            <td></td>
+                                        <?php endif; ?>
+                                        <?php foreach($qual->getUnits() as $unit): ?>
+                                            <td>
+                                                <a href='#' onclick="tickAllUnitUsersRole(<?= $unit->getID() ?>, <?= $qual->getID() ?>, 'STAFF');return false;">
+                                                    <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                                </a>
+                                            </td>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                    
+                                    <?php if ( ($staff = $Course->getStaff()) ): ?>
+                                    
+                                        <?php foreach($staff as $user): ?>
+
+                                            <?php if ($user->isOnQual($qual->getID(), "STAFF")): ?>
+                                        
+                                                <tr>
+                                                    <td><?= $user->getPicture($Course->id) ?></td>
+                                                    <td>
+                                                        <a href="#" onclick="tickAllStaffUnits(<?= $user->id ?>, <?= $qual->getID() ?>);return false;">
+                                                            <?= $user->getDisplayName() ?>
+                                                        </a>
+                                                    </td>
+
+                                                    <?php if ($qual->getDefaultCredits()): ?>
+                                                        <td></td>
+                                                    <?php endif; ?>
+
+                                                    <?php foreach($qual->getUnits() as $unit): ?>
+                                                        <td>
+                                                            <input type="checkbox" class="gt_staff_unit_staff_<?= $qual->getID() ?>_<?= $user->id ?> gt_staff_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_staff_unit_unit_<?= $qual->getID() ?>" role="STAFF" name="staff_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STAFF" ) ) ? 'checked' : ''; ?> />
+                                                        </td>
+                                                    <?php endforeach; ?>
+
+                                                </tr>
+                                            
+                                            <?php endif; ?>
+
+                                        <?php endforeach; ?>
+                                        
+                                    <?php endif; ?>
+
+                                </table>
+                            
+                            <?php else: ?>
+                            
+                                <p class='gt_c'><?= $string['qualnostuds'] ?></p>
+                            
+                            <?php endif; ?>
+                        
+                        <?php else: ?>
+                        
+                            <p class='gt_c'><?= $string['qualnounits'] ?></p>
+                        
+                        <?php endif; ?>
+                        
+                        <br><br><br>
+                    
+                    <?php endforeach; ?>
+                
+                <?php else: ?>
+                    
+                    <p class="gt_c"><?= $string['coursenoquals'] ?></p>
+                
+                <?php endif; ?>
+                
+                
+                    
+            </div>
+
+        </div>
+        
+        
+    </form>
+        
+</div>
+

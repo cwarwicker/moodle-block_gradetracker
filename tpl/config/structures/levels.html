@@ -1,0 +1,54 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class='gt_c'>
+    <a href='config.php?view=structures&section=levels&page=new'><input type='button' class='gt_btn' value="<?= $string['addnewlevel'] ?>" /></a>
+</div>
+
+<br>
+<div>
+            
+    <?php if ($levels): ?>
+
+        <table class="gt_config" style="width:inherit;">
+
+            <tr>
+                <th><?= $string['name'] ?></th>
+                <th><?= $string['shortname'] ?></th>
+                <th><?= $string['order'] ?></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            <?php foreach($levels as $level): ?>
+
+                <tr>
+                    <td><?= $level->getName() ?></td>
+                    <td><?= $level->getShortName() ?></td>
+                    <td><?= $level->getOrderNumber() ?></td>
+                    <td>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels&page=edit&id=<?= $level->getID() ?>">
+                            <img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="delete" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels&page=delete&id=<?= $level->getID() ?>">
+                            <img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" />
+                        </a>
+                    </td>
+                </tr>
+
+            <?php endforeach; ?>
+
+        </table>
+
+    <?php else: ?>
+
+        <p class='gt_c'><?= $string['nodata'] ?></p>
+
+    <?php endif; ?>
+
+    
+</div>

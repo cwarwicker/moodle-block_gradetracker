@@ -1,0 +1,34 @@
+<?php if(!defined('ELBP')) exit; ?>
+
+<div id="elbp_prior_learning_content">
+    <br>
+    
+    <div class='c' id='avggcse' style="background-color:<?= $obj->getHeaderBackgroundColour(); ?>;color:<?= $obj->getHeaderFontColour() ?>;">
+        <small><?= get_string('avggcsescore', 'block_gradetracker') ?></small><br>
+        <h2 style='color:<?= $obj->getHeaderFontColour() ?>;'><?= $avgScore ?></h2>
+    </div>
+    
+    <br><br>
+    <table>
+        
+        <tr>
+            <th style="background-color:<?= $obj->getHeaderBackgroundColour(); ?>;color:<?= $obj->getHeaderFontColour() ?>;"><?= get_string('qualtype', 'block_gradetracker') ?></th>
+            <th style="background-color:<?= $obj->getHeaderBackgroundColour(); ?>;color:<?= $obj->getHeaderFontColour() ?>;"><?= get_string('subject', 'block_gradetracker') ?></th>
+            <th style="background-color:<?= $obj->getHeaderBackgroundColour(); ?>;color:<?= $obj->getHeaderFontColour() ?>;"><?= get_string('grade', 'block_gradetracker') ?></th>
+            <th style="background-color:<?= $obj->getHeaderBackgroundColour(); ?>;color:<?= $obj->getHeaderFontColour() ?>;"><?= get_string('year', 'block_gradetracker') ?></th>
+        </tr>
+        
+        <?php if($prior): ?>
+            <?php foreach($prior as $pqual): ?>
+            <tr>
+                <td><?= \gt_html($pqual->getType()->name) ?></td>
+                <td><?= \gt_html($pqual->getType()->name) ?> <?= get_string('in', 'block_gradetracker') ?> <?= \gt_html($pqual->getSubjectName($pqual->getSubjectID())) ?></td>
+                <td><?= \gt_html($pqual->getGradeObject()->grade) ?></td>
+                <td><?= \gt_html($pqual->getYear()) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        
+    </table>
+    
+</div>

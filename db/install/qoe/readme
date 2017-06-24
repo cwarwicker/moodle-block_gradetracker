@@ -1,0 +1,14 @@
+Any Quals On Entry Types and Grades you wish to be installed when the block is installed should be placed here.
+
+The Types should be in a JSON file called "types.json"
+
+The Grades should be in a JSON file called "grades.json"
+
+Example:
+
+types.json
+
+
+
+
+grades.json

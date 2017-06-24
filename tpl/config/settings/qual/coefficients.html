@@ -1,0 +1,167 @@
+"<?php if(!defined('BCGT')) exit; ?>
+
+<div class='gt_form_panel'>
+    
+    <div class='gt_form_panel_heading'><?= $string['weightingcoefficients'] ?></div>
+    <div class='gt_form_panel_body'>
+        
+        <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+        <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+        
+        <p><?= $string['weightingcoefficients:desc'] ?></p>
+        
+        <form action="" method="post">
+            
+            <small><strong><?= $string['config:qual:coefficient:percentiles'] ?></strong> - <?= $string['config:qual:coefficient:percentiles:desc'] ?></small>
+            <br>
+            <input type="number" min="0" step="1" name="qual_weighting_percentiles" value="<?= \gt_html($GT->getSetting('qual_weighting_percentiles')) ?>" />
+            <br><br>
+            
+            <small><strong><?= $string['config:qual:coefficient:percentilecolours'] ?></strong> - <?= $string['config:qual:coefficient:percentilecolours:desc'] ?></small>
+            <br>
+            <table class='gt_c'>
+                <tr>
+                    <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                        <th>
+                            <input type='color' class='gt_small gt_config_percentile_colour' colNum='<?= $col ?>' name='percentile_colours[<?= $col ?>]' value="<?= \gt_html($GT->getSetting('weighting_percentile_color_'.$col)) ?>" title="<?= $string['hexcode'] ?>" />
+                        </th>
+                    <?php endfor; ?>
+                </tr>
+                <tr>
+                    <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                        <th id="gt_bg_col_<?= $col ?>" class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?= $col ?></th>
+                    <?php endfor; ?>
+                </tr>
+            </table>
+            <br><br>
+            
+            <small><strong><?= $string['config:qual:coefficient:percentilepercents'] ?></strong> - <?= $string['config:qual:coefficient:percentilepercents:desc'] ?></small>
+            <br>
+            <table class='gt_c'>
+                <tr>
+                    <th></th>
+                    <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                        <th id="gt_bg_col_<?= $col ?>" class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?= $col ?></th>
+                    <?php endfor; ?>
+                </tr>
+                <tr>
+                    <td><?= $string['percentage'] ?></td>
+                    <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                        <td>
+                            <input type="number" class="gt_small" name="percentile_percents[<?= $col ?>]" value="<?= \gt_html($GT->getSetting('weighting_percentile_percentage_'.$col)) ?>" min="0" max="100" step="1" />
+                        </td>
+                    <?php endfor; ?>
+                </tr>
+                <tr>
+                    <td><?= $string['default'] ?></td>
+                    <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                        <td>
+                            <input type="radio" name="default_percentile" value="<?= $col ?>" <?= (\GT\Setting::getSetting('default_weighting_percentile') == $col) ? 'checked' : '' ?> />
+                        </td>
+                    <?php endfor; ?>
+                </tr>
+            </table>
+            <br><br>
+            
+            <input type="submit" class="gt_btn gt_blue" name="submitconfig" value="<?= $string['save'] ?>" />
+            
+        </form>
+        
+        <br><br>
+        
+        <?php if ($GT->getSetting('qual_weighting_percentiles') > 0): ?>
+        
+            <div class='gt_form_panel'>
+
+                <div class='gt_form_panel_sub_heading'><?= $string['qualbuilds'] ?></div>
+                <div class='gt_form_panel_body'>
+
+                    <form action="" method="post">
+                        
+                        <p class="gt_c">
+                            <input class='gt_btn gt_green' type="submit" name="submit_build_coefficients" value="<?= $string['save'] ?>" />
+                        </p>
+
+                        <table class='gt_config'>
+
+                            <tr>
+                                <th><?= $string['qualbuild'] ?></th>
+                                <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                                    <th class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?= $col ?></th>
+                                <?php endfor; ?>
+                            </tr>
+                            
+                            <?php if ($builds): ?>
+                                <?php foreach($builds as $build): ?>
+                                    <tr>
+                                        <td><?= $build->getName() ?></td>
+                                        <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                                            <td>
+                                                <input type="number" min="0" step="0.01" name="build_coefficient[<?= $build->getID() ?>][<?= $col ?>]" value="<?= \gt_html($GT->getSetting('build_coefficient_'.$build->getID().'_'.$col)) ?>" />
+                                            </td>
+                                        <?php endfor; ?>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
+                        </table>
+
+                    </form>
+
+                </div>
+
+            </div>
+        
+        
+            <br><br><br>
+        
+        
+            <div class='gt_form_panel'>
+
+                <div class='gt_form_panel_sub_heading'><?= $string['qualifications'] ?></div>
+                <div class='gt_form_panel_body'>
+
+                    <form action="" method="post">
+                        
+                        <p class="gt_c">
+                            <input class='gt_btn gt_green'  type="submit" name="submit_qual_coefficients" value="<?= $string['save'] ?>" />
+                        </p>
+
+                        <table class='gt_config'>
+
+                            <tr>
+                                <th><?= $string['qualification'] ?></th>
+                                <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                                    <th class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?= $col ?></th>
+                                <?php endfor; ?>
+                            </tr>
+                            
+                            <?php if ($qualifications): ?>
+                                <?php foreach($qualifications as $qualification): ?>
+                                    <tr>
+                                        <td><?= $qualification->getDisplayName() ?></td>
+                                        <?php for($col = 1; $col <= $percentiles; $col++): ?>
+                                            <td>
+                                                <input type="number" min="0" step="0.01" name="qual_coefficients[<?= $qualification->getID() ?>][<?= $col ?>]" value="<?= \gt_html($qualification->getAttribute('coefficient_'.$col)) ?>" />
+                                            </td>
+                                        <?php endfor; ?>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            
+                        </table>
+
+                    </form>
+
+                </div>
+
+            </div>
+        
+        <?php else: ?>
+            <p><?= $string['nopercentiles'] ?></p>
+        <?php endif; ?>
+        
+    </div>
+    
+</div>
+

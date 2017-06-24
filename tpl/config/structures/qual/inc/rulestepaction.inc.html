@@ -1,0 +1,5 @@
+<div id='gt_rule_step_action_template' class='gt_rule_step_action gt_hidden'>
+    <span class='gt_rule_action'><input type='text' name='rule_sets[[RS]][rules][[R]][steps][[S]][actions][]' value='<?= (isset($array['action'])) ? \gt_html($array['action']->reverseConversionFromString()) : ''  ?>' /> <a href='#' onclick='gt_openFx(this, "action");return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/function.png' alt='<?= get_string('function', 'block_gradetracker') ?>' /></a></span> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href='#' onclick='gt_removeRuleStepAction(this);return false;'><img src='<?= $OUTPUT->pix_url('i/delete') ?>' alt='<?= get_string('delete', 'block_gradetracker') ?>' /></a>
+</div>

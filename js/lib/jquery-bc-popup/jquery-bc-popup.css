@@ -1,0 +1,120 @@
+div.bc-modal
+{
+	background-color: #F5F5F5;
+	border-radius: 6px;
+	box-shadow: 2px 0px 4px 2px rgba(200, 200, 200, 0.75), -2px 0px 4px 2px rgba(200, 200, 200, 0.75);
+	padding: 2px;
+	max-height: 768px;
+        min-width: 40%;
+	max-width: 960px;
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	z-index: 101;
+}
+
+div.bc-modal-header
+{
+	background-color: #F5F5F5;
+	text-align: center;
+	padding: 5px 15px;
+	border-bottom: 1px solid #EEE;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+div.bc-modal-header h1
+{
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: uppercase;
+	line-height: 30px;
+}
+
+div.bc-modal-body
+{
+	max-height: 500px;
+	overflow-y: auto;
+	padding: 10px;
+	background-color: #fff;
+}
+
+div.bc-modal-body p
+{
+	margin: 0;
+}
+
+div.bc-modal-body iframe.bc-iframe
+{
+	width: 100%;
+	height: 500px;
+}
+
+div.bc-modal-footer
+{
+	background-color: #F5F5F5;
+	border-top: 1px solid #EEE;
+	text-align: center;
+	padding: 5px;
+}
+
+div.bc-overlay
+{
+	background-color: #000;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	opacity: 0.7;
+	z-index: 100;
+	cursor: pointer;
+}
+
+div.bc-modal button 
+{
+	display: inline-block;
+	background: #E3E3E3;
+	color: #333;
+	border: 1px solid #BBB;
+	border-radius: 3px;
+	margin-right: 10px;
+	margin-left: 10px;
+	padding: 5px 10px;
+	text-align: center;
+	cursor: pointer;
+	text-transform: capitalize;
+}
+
+div.bc-modal button:hover
+{
+	background-color: #000;
+	color: #FFF;
+}
+
+span.bc-close
+{
+    background-color: #B56666;
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    font: bold 13pt sans-serif;
+    padding-top: 5px;
+    position: absolute;
+    right: -7px;
+    top: -7px;
+    width: 30px;
+    height: 25px;
+    border-radius: 50%;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 10px 0px #000;
+}
+
+span.bc-close:hover
+{
+    background-color: #668eb5;
+}

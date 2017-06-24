@@ -1,0 +1,33 @@
+<div class='gt_overview'>
+        
+    <div class='gt_overview_box'>
+        <h6><?= $string['overview:quals:activequals'] ?></h6>
+        <div class='graph'>
+            <?= $stats['active']->output( new \GT\StatisticsBarChartOutput('overview:quals:activequals', 'name', 'green', array('context' => 'qual', 'field' => 'qualid')) ) ?>
+        </div>
+    </div>
+    
+     <div class='gt_overview_box'>
+        <h6><?= $string['overview:quals:inactivequals'] ?></h6>
+        <div class='graph'>
+            <?= $stats['inactive']->output( new \GT\StatisticsBarChartOutput('overview:quals:inactivequals', 'name', 'red', array('context' => 'qual', 'field' => 'qualid')) ) ?>
+        </div>
+    </div>
+    
+     <div class='gt_overview_box'>
+        <h6><?= $string['overview:quals:correctcredits'] ?></h6>
+        <div class='graph'>
+            <?= $stats['correctcredits']->output( new \GT\StatisticsBarChartOutput('overview:quals:correctcredits', 'name', 'green', array('context' => 'qual', 'field' => 'qualid')) ) ?>
+        </div>
+    </div>
+    
+     <div class='gt_overview_box'>
+        <h6><?= $string['overview:quals:incorrectcredits'] ?></h6>
+        <div class='graph'>
+            <?= $stats['incorrectcredits']->output( new \GT\StatisticsBarChartOutput('overview:quals:incorrectcredits', 'name', 'red', array('context' => 'qual', 'field' => 'qualid')) ) ?>
+        </div>
+    </div>
+    
+    
+    
+</div>

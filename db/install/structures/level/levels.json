@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Entry Level 1",
+        "shortname": "EL1",
+        "ordernum": 0.1
+    },
+    {
+        "name": "Entry Level 2",
+        "shortname": "EL2",
+        "ordernum": 0.2
+    },
+    {
+        "name": "Entry Level 3",
+        "shortname": "EL3",
+        "ordernum": 0.3
+    },
+    {
+        "name": "Level 1",
+        "shortname": "L1",
+        "ordernum": 1
+    },
+    {
+        "name": "Level 1 / Level 2",
+        "shortname": "L1/L2",
+        "ordernum": 1.5
+    },
+    {
+        "name": "Level 2",
+        "shortname": "L2",
+        "ordernum": 2
+    },
+    {
+        "name": "Level 3",
+        "shortname": "L3",
+        "ordernum": 3
+    },
+    {
+        "name": "Level 4",
+        "shortname": "L4",
+        "ordernum": 4
+    },
+    {
+        "name": "Level 5",
+        "shortname": "L5",
+        "ordernum": 5
+    }
+]

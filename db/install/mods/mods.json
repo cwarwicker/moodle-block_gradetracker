@@ -1,0 +1,45 @@
+[
+	{
+		"mod" : "assign",
+		"modtable" : "assign",
+		"modcoursecol" : "course",
+		"modstartcol" : "allowsubmissionsfromdate",
+		"modduecol" : "duedate",
+		"modtitlecol" : "name",
+		"submissiontable" : "assign_submission",
+		"submissionusercol" : "userid",
+		"submissiondatecol" : "timemodified",
+		"submissionmodcol" : "assignment",
+		"auto" : 1,
+		"enabled" : 1,
+		"deleted" : 0,
+		"submissionstatuscol" : "status",
+		"submissionstatusval" : "submitted",
+		"parttable" : null,
+		"partmodcol" : null,
+		"parttitlecol" : null,
+		"submissionpartcol" : null
+	},
+        
+	{
+		"mod" : "turnitintooltwo",
+		"modtable" : "turnitintooltwo",
+		"modcoursecol" : "course",
+		"modstartcol" : "dtstart",
+		"modduecol" : "dtdue",
+		"modtitlecol" : "name",
+		"submissiontable" : "turnitintooltwo_submissions",
+		"submissionusercol" : "userid",
+		"submissiondatecol" : "submission_modified",
+		"submissionmodcol" : "turnitintooltwoid",
+		"auto" : 1,
+		"enabled" : 1,
+		"deleted" : 0,
+		"submissionstatuscol" : "submission_status",
+		"submissionstatusval" : "",
+		"parttable" : "turnitintooltwo_parts",
+		"partmodcol" : "turnitintooltwoid",
+		"parttitlecol" : "partname",
+		"submissionpartcol" : "submission_part"
+	}
+]

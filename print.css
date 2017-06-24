@@ -1,0 +1,224 @@
+h2, h3
+{
+    text-align: center;
+}
+
+div.gt_grid_key
+{
+    text-align: center;
+}
+
+div.gt_grid_key table
+{
+    width: 90%;
+    margin: auto;
+}
+
+.gt_grid_key table th
+{
+    padding-bottom: 10px;
+}
+
+th#gt_help_col, td.gt_toggle_help
+{
+    display: none;
+}
+
+tr#gt_refresh_grades_row
+{
+    display: none;
+}
+
+.gt_hidden
+{
+    display: none;
+}
+
+div#gt_qual_awards table
+{
+    margin: auto;
+    text-align: left;
+    border-collapse: collapse;
+    font-size: 11pt;
+    margin-top: 10px;
+}
+
+div#gt_qual_awards table td
+{
+    padding: 8px 4px;
+    border: 1px solid silver;
+}
+
+div#gt_qual_awards table tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+table#gt_student_grid,
+table#gt_unit_grid,
+table#gt_class_grid
+{
+    min-width: 60%;
+    margin: auto;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table#gt_student_grid th,
+table#gt_unit_grid th,
+table#gt_class_grid th
+{
+    font-size: 11pt;
+    color: #fff;
+    background-color: #696969;
+}
+
+table#gt_student_grid th, table#gt_student_grid td,
+table#gt_unit_grid th, table#gt_unit_grid td,
+table#gt_class_grid th, table#gt_class_grid td
+{
+    padding: 8px 4px;
+    border: 1px solid silver;
+    text-align: center;
+}
+
+table#gt_student_grid td,
+table#gt_unit_grid td,
+table#gt_class_grid td
+{
+    font-size: 10pt;
+    color: #000;
+}
+
+td.gt_cell_blank
+{
+    background: #f5f5f5;
+}
+
+th.gt_grid_unit_name
+{
+    min-width: 150px;
+}
+
+table#gt_student_grid tr td.gt_grid_unit_name
+{
+    text-align: left;
+}
+
+
+img.gt_award_icon
+{
+    width: 30px !important;
+    height: 30px !important;
+}
+
+
+
+/* ALVL Style */
+table.gt_coefficient_table
+{
+    padding: 5px;
+    width: 75%;
+    margin: auto;
+    color: #fff;
+}
+
+table.gt_coefficient_table th
+{
+    background-color: #696969;
+}
+
+table.gt_coefficient_table th,
+table.gt_coefficient_table td
+{
+    text-align: center;
+    border: 1px solid silver;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    font-weight: normal;
+    padding: 5px;
+}
+
+table.gt_coefficient_table tr td.gt_qual_name
+{
+    color: #000;
+}
+
+table.gt_assessment_summary_table
+{
+    padding: 5px;
+    margin: auto;
+}
+
+table.gt_assessment_summary_table th
+{
+    background-color: #696969;
+    color: #fff;
+}
+
+table.gt_assessment_summary_table th,
+table.gt_assessment_summary_table td
+{
+    text-align: center;
+    border: 1px solid silver;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    font-weight: normal;
+    padding: 5px;
+}
+
+table.gt_student_assessment_grid
+{
+    padding: 5px;
+    margin: auto;
+}
+
+table.gt_student_assessment_grid th
+{
+    background-color: #696969;
+    color: #fff;
+}
+
+table.gt_student_assessment_grid th,
+table.gt_student_assessment_grid td
+{
+    text-align: center;
+    border: 1px solid silver;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    font-weight: normal;
+    padding: 5px;
+}
+
+
+table.gt_student_assessment_grid_comments
+{
+    width: 90%;
+    margin: auto;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+table.gt_student_assessment_grid_comments th
+{
+    background-color: #696969;
+    color: #fff;
+    width: 50%;
+}
+
+table.gt_student_assessment_grid_comments th,
+table.gt_student_assessment_grid_comments td
+{
+    text-align: center;
+    border: 1px solid silver;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    font-weight: normal;
+    padding: 5px;
+    vertical-align: top;
+}
+
+td.gt_percentile
+{
+    color: #fff;
+}
+

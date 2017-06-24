@@ -1,0 +1,29 @@
+<div id='gt_rule_step_template' class='gt_rule_step gt_hidden' stepNum='[S]'>
+    <input type='hidden' name='rule_sets[[RS]][rules][[R]][steps][[S]][number]' class='gt_hidden_step_num' value='[S]' />
+    <div class='gt_rule_step_header'>
+        <div class='gt_rule_step_header_centre'><?= get_string('step', 'block_gradetracker') ?> #<span class='gt_step_num'>[S]</span></div>
+        <div class='gt_rule_step_header_right'><a href="#" onclick="gt_removeRuleStep([RS], [R], this);return false;"><img src="<?= $OUTPUT->pix_url('i/delete') ?>" /></a></div>
+    </div>
+    <div class='gt_rule_step_content'>
+        <fieldset>
+            <legend><?= get_string('rule:setting:steps:ifcond', 'block_gradetracker') ?> <a href="#" onclick="gt_addRuleStepCondition([RS], [R], this);return false;"><img src="<?= $OUTPUT->pix_url('t/add') ?>" /></a></legend>
+            <div class='gt_step_conditions'>
+                <?php if (isset($rule) && isset($array['step']) && ($step = $array['step']) ): ?>
+                    <?php foreach($step->getConditions() as $condition): ?>
+                        <?= $rule->getTemplateContent('config/structures/qual/inc/rulestepcondition.inc.html', $array + array('condition' => $condition)) ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><?= get_string('rule:setting:steps:thenact', 'block_gradetracker') ?> <a href="#" onclick="gt_addRuleStepAction([RS], [R], this);return false;"><img src="<?= $OUTPUT->pix_url('t/add') ?>" /></a></legend>
+            <div class='gt_step_actions'>
+                <?php if (isset($rule) && isset($array['step']) && ($step = $array['step']) ): ?>
+                    <?php foreach($step->getActions() as $action): ?>
+                        <?= $rule->getTemplateContent('config/structures/qual/inc/rulestepaction.inc.html', $array + array('action' => $action)) ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </fieldset>
+    </div>
+</div>

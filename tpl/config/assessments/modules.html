@@ -1,0 +1,89 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <form action="" method="post" id="gt_course_quals_form">
+
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $string['managemodulelinking'] ?></div>
+
+            <div class="gt_form_panel_body">
+                
+                <p class="gt_c">
+                    <a class="gt_btn" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=edit"><?= $string['modlinking:new'] ?></a>
+                </p>
+
+                <div style='width:100%;overflow-x:auto;'>
+                    
+                    <table id="gt_mod_linking" class="gt_config">
+
+                        <tr>
+                            <th><?= $string['modlinking:mod'] ?></th>
+                            <th><?= $string['modlinking:modtable'] ?></th>
+                            <th><?= $string['modlinking:parttable'] ?></th>
+                            <th><?= $string['modlinking:partmoddbcolumn'] ?></th>
+                            <th><?= $string['modlinking:coursedbcolumn'] ?></th>
+                            <th><?= $string['modlinking:startdatedbcolumn'] ?></th>
+                            <th><?= $string['modlinking:duedatedbcolumn'] ?></th>
+                            <th><?= $string['modlinking:instancetitledbcolumn'] ?></th>
+                            <th><?= $string['modlinking:parttitledbcolumn'] ?></th>
+                            <th><?= $string['modlinking:submissiontable'] ?></th>
+                            <th><?= $string['modlinking:submissionpartdbcolumn'] ?></th>
+                            <th><?= $string['modlinking:submissionmodinstancedbcolumn'] ?></th>
+                            <th><?= $string['modlinking:submissionuserdbcolumn'] ?></th>
+                            <th><?= $string['modlinking:submissiondatedbcolumn'] ?></th>
+                            <th><?= $string['modlinking:submissionstatusdbcolumn'] ?></th>
+                            <th><?= $string['modlinking:submissionstatusexpectedvalue'] ?></th>
+                            <th><?= $string['modlinking:auto'] ?></th>
+                            <th><?= $string['enabled'] ?></th>
+                            <th><?= get_string('edit') ?></th>
+                            <th><?= get_string('delete') ?></th>
+                        </tr>
+                        
+                        <?php if ($mods): ?>
+                        
+                            <?php foreach($mods as $mod): ?>
+
+                                <tr>
+                                    <td><?= \gt_html($mod->getModName()) ?></td>
+                                    <td><?= \gt_html($mod->getModTable()) ?></td>
+                                    <td><?= \gt_html($mod->getPartTable()) ?></td>
+                                    <td><?= \gt_html($mod->getPartModCol()) ?></td>
+                                    <td><?= \gt_html($mod->getModCourseCol()) ?></td>
+                                    <td><?= \gt_html($mod->getModStartCol()) ?></td>
+                                    <td><?= \gt_html($mod->getModDueCol()) ?></td>
+                                    <td><?= \gt_html($mod->getModTitleCol()) ?></td>
+                                    <td><?= \gt_html($mod->getPartTitleCol()) ?></td>
+                                    <td><?= \gt_html($mod->getSubTable()) ?></td>
+                                    <td><?= \gt_html($mod->getSubPartCol()) ?></td>
+                                    <td><?= \gt_html($mod->getSubModCol()) ?></td>
+                                    <td><?= \gt_html($mod->getSubUserCol()) ?></td>
+                                    <td><?= \gt_html($mod->getSubDateCol()) ?></td>
+                                    <td><?= \gt_html($mod->getSubStatusCol()) ?></td>
+                                    <td><?= \gt_html($mod->getSubStatusVal()) ?></td>
+                                    <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/<?= ( ($mod->hasAutoUpdates()) ? 'on.png' : 'off.png' ) ?>" alt="<?= $mod->getAuto() ?>" /></td>
+                                    <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/<?= ( ($mod->isEnabled()) ? 'on.png' : 'off.png' ) ?>" alt="<?= $mod->getAuto() ?>" /></td>
+                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=edit&id=<?= $mod->getID() ?>"><img src="<?= $OUTPUT->pix_url('i/edit') ?>" alt="<?= get_string('edit') ?>" /></a></td>
+                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=delete&id=<?= $mod->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= get_string('delete') ?>" /></a></td>
+                                </tr>
+                            
+                            <?php endforeach; ?>
+                        
+                        <?php endif; ?>
+
+                    </table>
+                    
+                </div>
+                                              
+            </div>
+
+        </div>
+        
+        
+    </form>
+        
+</div>

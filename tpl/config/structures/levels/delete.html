@@ -1,0 +1,28 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($Level->isValid()): ?>
+
+<div class="gt_confirm_box">
+    
+    <h4><?= $string['breadcrumbs:config:structures:levels:delete'] ?> - <?= $Level->getName() ?></h4>
+    
+    <div>
+        
+        <?= sprintf($string['delete:level:sure'], $Level->countQualifications(), $Level->countQualificationBuilds()) ?>
+        <br><br>
+        <form action="config.php?view=structures&section=levels" method="post">
+            
+            <input type="hidden" name="level_id" value="<?= $Level->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_level" value="<?= $string['yes'] ?>" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

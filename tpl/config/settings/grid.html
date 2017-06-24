@@ -1,0 +1,197 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<script>
+    var cntStudNavLinks = 0;
+    var cntUnitNavLinks = 0;
+    var cntClassNavLinks = 0;
+</script>
+
+<form action="" method="post" enctype="multipart/form-data">
+    
+    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    
+    <h2><?= $string['gridsettings'] ?></h2>
+    <p><?= $string['gridsettings:desc'] ?></p>
+    
+<!--    <small><strong><?= $string['config:gridlogs'] ?></strong> - <?= $string['config:gridlogs:desc'] ?></small>
+    <br>
+    <input type="checkbox" name="enable_grid_logs" value="1" <?= ($GT->getSetting('enable_grid_logs') == 1) ? 'checked' : '' ?> />    
+    
+    <br><br>-->
+    
+    <small><strong><?= $string['config:fixedlinks'] ?></strong> - <?= $string['config:fixedlinks:desc'] ?></small>
+    <br>
+    <input type="checkbox" name="grid_fixed_links" value="1" <?= ($GT->getSetting('grid_fixed_links') == 1) ? 'checked' : '' ?> />    
+    
+    <br><br>
+    
+    <small><strong><?= $string['config:assessment:showqualsonepage'] ?></strong> - <?= $string['config:assessment:showqualsonepage:desc'] ?></small>
+    <br>
+    <input type="checkbox" name="assessment_grid_show_quals_one_page" value="1"  <?= ($GT->getSetting('assessment_grid_show_quals_one_page') == 1) ? 'checked' : '' ?> />
+                   
+    <br><br><br>
+    
+    
+        
+    
+    <h2><?= $string['studentgridsettings'] ?></h2>
+    <p><?= $string['studentgridsettings:desc'] ?></p>
+    
+    <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
+    <br>
+    
+    <a href="#" onclick="addNewStudentGridNavLink();return false;"><?= $string['addnew'] ?> <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addnew'] ?>" /></a>
+    
+    <div id="gt_config_stud_grid_nav_links">
+        <?php if ($GT->getStudentGridNavigation()): ?>
+            <?php $cnt = 0; ?>
+            <?php foreach($GT->getStudentGridNavigation() as $link): ?>
+                <?php $cnt++ ?>
+                <div id="gt_stud_nav_link_<?= $cnt ?>">
+                    <br>
+                    <script>cntStudNavLinks++;</script>
+                    <input type="text" name="student_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" /> 
+                    <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" /> 
+                    <a href="#" onclick="removeStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <a href="#" onclick="addNewStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <br>
+                    <div id="gt_stud_nav_link_<?= $cnt ?>_sub">
+                    <?php if (isset($link->sub) && $link->sub): ?>
+                        <?php $pNum = $cnt; ?>
+                        <?php foreach($link->sub as $sub): ?>
+                            <?php $cnt++ ?>
+                            <span id="gt_stud_nav_link_<?= $cnt ?>">
+                                <script>cntStudNavLinks++;</script>
+                                <input type="text" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" /> 
+                                <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" /> 
+                                <a href="#" onclick="removeStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                                <br>
+                            </span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    
+    
+    
+    <br><br><br>
+    
+    
+    
+    
+    
+    <h2><?= $string['unitgridsettings'] ?></h2>
+    <p><?= $string['unitgridsettings:desc'] ?></p>
+    
+    <small><strong><?= $string['config:unitgridpaging'] ?></strong> - <?= $string['config:unitgridpaging:desc'] ?></small>
+    <br>
+    <input type="number" name="unit_grid_paging" min="0" class="gt_small" value="<?= (int)$GT->getSetting('unit_grid_paging') ?>" />
+    
+    <br><br>
+    
+    <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
+    <br>
+    
+    <a href="#" onclick="addNewUnitGridNavLink();return false;"><?= $string['addnew'] ?> <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addnew'] ?>" /></a>
+    
+    <div id="gt_config_unit_grid_nav_links">
+        <?php if ($GT->getUnitGridNavigation()): ?>
+            <?php $cnt = 0; ?>
+            <?php foreach($GT->getUnitGridNavigation() as $link): ?>
+                <?php $cnt++ ?>
+                <div id="gt_unit_nav_link_<?= $cnt ?>">
+                    <br>
+                    <script>cntUnitNavLinks++;</script>
+                    <input type="text" name="unit_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" /> 
+                    <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" /> 
+                    <a href="#" onclick="removeUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <a href="#" onclick="addNewUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <br>
+                    <div id="gt_unit_nav_link_<?= $cnt ?>_sub">
+                    <?php if (isset($link->sub) && $link->sub): ?>
+                        <?php $pNum = $cnt; ?>
+                        <?php foreach($link->sub as $sub): ?>
+                            <?php $cnt++ ?>
+                            <span id="gt_unit_nav_link_<?= $cnt ?>">
+                                <script>cntUnitNavLinks++;</script>
+                                <input type="text" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" /> 
+                                <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" /> 
+                                <a href="#" onclick="removeUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                                <br>
+                            </span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    
+    
+    
+    <br><br><br>
+    
+    
+    
+    
+    
+    
+    
+    
+    <h2><?= $string['classgridsettings'] ?></h2>
+    <p><?= $string['classgridsettings:desc'] ?></p>
+        
+    <small><strong><?= $string['config:classgridpaging'] ?></strong> - <?= $string['config:classgridpaging:desc'] ?></small>
+    <br>
+    <input type="number" name="class_grid_paging" min="0" class="gt_small" value="<?= (int)$GT->getSetting('class_grid_paging') ?>" />
+    
+    <br><br>
+    
+    <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
+    <br>
+    
+    <a href="#" onclick="addNewClassGridNavLink();return false;"><?= $string['addnew'] ?> <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addnew'] ?>" /></a>
+    
+    <div id="gt_config_class_grid_nav_links">
+        <?php if ($GT->getClassGridNavigation()): ?>
+            <?php $cnt = 0; ?>
+            <?php foreach($GT->getClassGridNavigation() as $link): ?>
+                <?php $cnt++ ?>
+                <div id="gt_class_nav_link_<?= $cnt ?>">
+                    <br>
+                    <script>cntClassNavLinks++;</script>
+                    <input type="text" name="class_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" /> 
+                    <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" /> 
+                    <a href="#" onclick="removeClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <a href="#" onclick="addNewClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <br>
+                    <div id="gt_class_nav_link_<?= $cnt ?>_sub">
+                    <?php if (isset($link->sub) && $link->sub): ?>
+                        <?php $pNum = $cnt; ?>
+                        <?php foreach($link->sub as $sub): ?>
+                            <?php $cnt++ ?>
+                            <span id="gt_class_nav_link_<?= $cnt ?>">
+                                <script>cntClassNavLinks++;</script>
+                                <input type="text" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" /> 
+                                <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" /> 
+                                <a href="#" onclick="removeClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                                <br>
+                            </span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    
+    
+    <br>
+    
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
+    
+</form>

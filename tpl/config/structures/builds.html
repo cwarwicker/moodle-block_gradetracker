@@ -1,0 +1,171 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class='gt_c'>
+    <a href='config.php?view=structures&section=builds&page=new'><input type='button' class='gt_btn' value='<?= $string['addnewbuild'] ?>' /></a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <div id='gt_import_div'><a href='#' onclick="$('#gt_upload_div').toggle();return false;" class='gt_btn'><?= $string['importnewstructure'] ?></a></div>
+    <div id='gt_upload_div' style='display:none;'>
+        <br>
+        <form action="" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="text/xml,application/zip" /><br>
+            <small><b><?= $string['createlevelsubtype'] ?></b></small>: <input type="checkbox" name="create" value="1" /><br>
+            <small><b><?= $string['updatebuildimport'] ?></b></small>: 
+                <input type="radio" name="update_method" value="" checked /> <small><?= $string['skip'] ?></small>
+                &nbsp;&nbsp;&nbsp;
+                <input type="radio" name="update_method" value="overwrite" /> <small><?= $string['overwrite'] ?></small>
+                &nbsp;&nbsp;&nbsp;
+                <input type="radio" name="update_method" value="merge" /> <small><?= $string['merge'] ?></small>
+            <br>
+            <input type="submit" name="import_qual_build" class="gt_btn_small gt_blue" value="<?= $string['upload'] ?>" />
+        </form>
+    </div>
+</div>
+
+<br>
+<?php if (!empty($MSGS['import_output'])): ?>
+    <div id='gt_import_output' class='gt_cmd'>
+        <?= $MSGS['import_output'] ?>
+    </div>
+    <br>
+<?php endif; ?>
+<br>
+
+<div>
+            
+    <?php if ($builds): ?>
+
+        <table class="gt_config" style="width:inherit;">
+
+            <tr>
+                <th><?= $string['type'] ?></th>
+                <th><?= $string['level'] ?></th>
+                <th><?= $string['subtype'] ?></th>
+                <th><?= $string['qualawards'] ?></th>
+                <th><?= $string['assessmentawards'] ?></th>
+                <th><?= $string['defaults'] ?></th>
+                <th>
+                    <a href="#" id="mass_export_build_function" onclick="mass_export_display(true);return false;">
+                        <?= $string['export'] ?>
+                    </a>
+                    <form action="" method="post">
+                        <input type="hidden" name="mass_export_build" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                        <div id="mass_export_inputs"></div>
+                    </form>
+                    <input class="tick_all_export_checkboxes" name="tick_all_export_checkboxes" type="hidden" onclick="tick_all_export_checkboxes()"/>
+                </th>
+                <th></th>
+            </tr>
+
+            <?php foreach($builds as $build): ?>
+
+                <tr>
+                    <td><?= $build->getStructureRealName() ?></td>
+                    <td><?= $build->getLevelName() ?></td>
+                    <td><?= $build->getSubTypeName() ?></td>
+                    <td>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=awards&id=<?= $build->getID() ?>"><img src="<?= $OUTPUT->pix_url('i/grades') ?>" alt="grades" /></a>
+                        <?php if (!$build->getAwards()): ?>
+                            <br><small style="color:red;">(!)</small>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&type=criteria&build=<?= $build->getID() ?>">
+                            <img src="<?= $OUTPUT->pix_url('i/grades') ?>" alt="grades" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=defaults&id=<?= $build->getID() ?>">
+                            <img src="<?= $OUTPUT->pix_url('i/report') ?>" alt="defaults" />
+                        </a>
+                    </td>
+                    <td>
+                        <form action="" method="post">
+                            <input type="hidden" name="build_id" value="<?= $build->getID() ?>" />
+                            <input type="image" name="export_build" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                        </form>
+                        <input class="build_id_checkbox" name="build_id_checkbox_<?= $build->getID() ?>" value="<?= $build->getID() ?>" type="hidden" onclick="export_checkbox_status(<?= $build->getID() ?>)"/>
+                    </td>
+                    <td>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=delete&id=<?= $build->getID() ?>">
+                            <img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" />
+                        </a>
+                    </td>
+                </tr>
+
+            <?php endforeach; ?>
+
+        </table>
+
+    <?php else: ?>
+
+        <p class='gt_c'><?= $string['nodata'] ?></p>
+
+    <?php endif; ?>
+
+    
+</div>
+
+<script>
+function mass_export_display(show){
+    build_ids = document.getElementsByName("build_id");
+    if (show){
+        type = "checkbox";
+        document.getElementsByName("mass_export_build")[0].type = "image";
+        $(".tick_all_export_checkboxes")[0].type = type;
+        document.getElementById("mass_export_build_function").onclick = function() {mass_export_display(false);return false;};
+    }
+    else{
+        type = "hidden";
+        document.getElementsByName("mass_export_build")[0].type = "hidden";
+        $(".tick_all_export_checkboxes")[0].type = type;
+        document.getElementById("mass_export_build_function").onclick = function() {mass_export_display(true);return false;};
+    }
+
+    for (var i = 0; i < build_ids.length; i++){
+        document.getElementsByName("build_id_checkbox_" + build_ids[i].value)[0].type = type;
+    }
+}
+    
+function export_checkbox_status(build_id){
+    var ele = document.getElementsByName("build_id_" + build_id);
+    if ( ele.length === 0) {
+        mass_div = document.getElementById("mass_export_inputs");
+        element = '<input type="hidden" name="build_id_' + build_id + '" value="1" />';
+        mass_div.innerHTML += element;
+    }
+    else {
+        ele[0].outerHTML = "";
+        delete ele[0];
+    }
+    
+}
+
+function tick_all_export_checkboxes(){
+    
+    var status = $(".tick_all_export_checkboxes")[0].checked;
+    
+    $(".build_id_checkbox").each(function(index, ele){
+        ele.checked = status;
+        
+        var build_id = ele.value;
+        var element = document.getElementsByName("build_id_" + build_id);
+        if (element.length > 0) {
+            element[0].outerHTML = "";
+            delete element[0];
+        }
+    });
+    
+    if (status){
+        $(".build_id_checkbox").each(function(index, ele){
+            var build_id = ele.value;
+            mass_div = document.getElementById("mass_export_inputs");
+            element = '<input type="hidden" name="build_id_' + build_id + '" value="1" />';
+            mass_div.innerHTML += element;
+        });
+    }
+    
+}
+</script>

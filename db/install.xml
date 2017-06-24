@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/gradetracker/db" VERSION="20170118" COMMENT="XMLDB file for Moodle blocks/gradetracker"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_gradetracker" COMMENT="Default comment">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_settings" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="setting" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structures" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="icon" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structure_features" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structure_levels" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="minsublevels" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="maxsublevels" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="indx" UNIQUE="true" FIELDS="id, name"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structure_settings" COMMENT="Qual structure settings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="setting" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qsid_fk" TYPE="foreign" FIELDS="qualstructureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structure_rules" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="setid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="onevent" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The events on which to run this rule. Seperated by commas. e.g. ON_GRID_LOAD,ON_CRITERIA_UPDATE"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="sid_fk" TYPE="foreign" FIELDS="setid" REFTABLE="bcgt_qual_structure_rule_set" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structure_rule_stp" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="ruleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="step" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="conditions" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="rid_fk" TYPE="foreign" FIELDS="ruleid" REFTABLE="bcgt_qual_structure_rules" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_levels" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="ordernum" TYPE="number" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_subtypes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_builds" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="structureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="levelid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="subtypeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="sid_fk" TYPE="foreign" FIELDS="structureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+        <KEY NAME="lid_fk" TYPE="foreign" FIELDS="levelid" REFTABLE="bcgt_qual_levels" REFFIELDS="id"/>
+        <KEY NAME="stid_fk" TYPE="foreign" FIELDS="subtypeid" REFTABLE="bcgt_qual_subtypes" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_build_attributes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="buildid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="bid_fk" TYPE="foreign" FIELDS="buildid" REFTABLE="bcgt_qual_builds" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_build_awards" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="buildid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="rank" TYPE="number" LENGTH="3" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="ucas" TYPE="number" LENGTH="5" NOTNULL="false" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="pointslower" TYPE="number" LENGTH="7" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="pointsupper" TYPE="number" LENGTH="7" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="qoescorelower" TYPE="number" LENGTH="5" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="qoescoreupper" TYPE="number" LENGTH="5" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="bid_fk" TYPE="foreign" FIELDS="buildid" REFTABLE="bcgt_qual_builds" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qualifications" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="buildid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="bid_fk" TYPE="foreign" FIELDS="buildid" REFTABLE="bcgt_qual_builds" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_attributes" COMMENT="For storing attributes against qualifications, e.g. credits, glh, extra name, code, etc... And also for storing any user attributes for a qualification that have been defined.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_units" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="structureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="levelid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="gradingstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="unitnumber" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="credits" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="stid_fk" TYPE="foreign" FIELDS="structureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+        <KEY NAME="lid_fk" TYPE="foreign" FIELDS="levelid" REFTABLE="bcgt_qual_levels" REFFIELDS="id"/>
+        <KEY NAME="gsid_fk" TYPE="foreign" FIELDS="gradingstructureid" REFTABLE="bcgt_unit_award_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_unit_attributes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="unitid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="unid_fk" TYPE="foreign" FIELDS="unitid" REFTABLE="bcgt_units" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_unit_award_structures" COMMENT="Unit grading structures">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qsid_fk" TYPE="foreign" FIELDS="qualstructureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_unit_awards" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="gradingstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="pointslower" TYPE="number" LENGTH="2" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="pointsupper" TYPE="number" LENGTH="2" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="gsid_fk" TYPE="foreign" FIELDS="gradingstructureid" REFTABLE="bcgt_unit_award_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_units" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="unitid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="unitgroup" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="unitid" REFTABLE="bcgt_units" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_criteria" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="unitid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="parentcritid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="This references a qual structure level ,e.g. standard criteria, numeric criteria, etc..."/>
+        <FIELD NAME="subcrittype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="If this is a sub criteria it might be different from normal criteria. E.g. it might act as a range or a range's criterion."/>
+        <FIELD NAME="gradingstructureid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid" TYPE="foreign" FIELDS="unitid" REFTABLE="bcgt_units" REFFIELDS="id"/>
+        <KEY NAME="pcid_fk" TYPE="foreign" FIELDS="parentcritid" REFTABLE="bcgt_criteria" REFFIELDS="id"/>
+        <KEY NAME="gsid_fk" TYPE="foreign" FIELDS="gradingstructureid" REFTABLE="bcgt_crit_award_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_criteria_attributes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="critid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cid_fk" TYPE="foreign" FIELDS="critid" REFTABLE="bcgt_criteria" REFFIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_criteria_awards" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="gradingstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="img" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="specialval" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="points" TYPE="number" LENGTH="5" NOTNULL="true" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="pointslower" TYPE="number" LENGTH="2" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="pointsupper" TYPE="number" LENGTH="2" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="met" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="gsid_fk" TYPE="foreign" FIELDS="gradingstructureid" REFTABLE="bcgt_crit_award_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_quals" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="STUDENT or STAFF"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="uq_indx" UNIQUE="false" FIELDS="userid, qualid"/>
+        <INDEX NAME="uqr_indx" UNIQUE="false" FIELDS="userid, qualid, role"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="bcgt_user_units" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="unitid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="awardid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="comments" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="studentcomments" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdateby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="unid_fk" TYPE="foreign" FIELDS="unitid" REFTABLE="bcgt_units" REFFIELDS="id"/>
+        <KEY NAME="awid_fk" TYPE="foreign" FIELDS="awardid" REFTABLE="bcgt_unit_awards" REFFIELDS="id"/>
+        <KEY NAME="lupd_fk" TYPE="foreign" FIELDS="lastupdateby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_criteria" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="critid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="awardid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="awarddate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="comments" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="customvalue" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="flag" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="targetdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdateby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="awid_fk" TYPE="foreign" FIELDS="awardid" REFTABLE="bcgt_criteria_awards" REFFIELDS="id"/>
+        <KEY NAME="lupd_fk" TYPE="foreign" FIELDS="lastupdateby" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="cid_fk" TYPE="foreign" FIELDS="critid" REFTABLE="bcgt_criteria" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_course_quals" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_logs" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="If null - system"/>
+        <FIELD NAME="userip" TYPE="char" LENGTH="40" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="backtrace" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="beforejson" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="afterjson" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="details" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="context" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="e.g. /grids/student/1732, course/3/assignment/405, admin/add_remove_units/77, etc.."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="usrid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_log_attributes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="logid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attributename" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="attributevalue" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="lid_fk" TYPE="foreign" FIELDS="logid" REFTABLE="bcgt_logs" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_file_codes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="path" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qoe_subjects" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qoe_types" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lvl" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="weighting" TYPE="number" LENGTH="2" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qoe_grades" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qoeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="points" TYPE="number" LENGTH="3" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+        <FIELD NAME="weighting" TYPE="number" LENGTH="2" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qoeid_fk" TYPE="foreign" FIELDS="qoeid" REFTABLE="bcgt_qoe_types" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_qoe" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qoegradeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qoesubjectid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="examyear" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="gid_fk" TYPE="foreign" FIELDS="qoegradeid" REFTABLE="bcgt_qoe_grades" REFFIELDS="id"/>
+        <KEY NAME="sid_fk" TYPE="foreign" FIELDS="qoesubjectid" REFTABLE="bcgt_qoe_subjects" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_qoe_scores" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="score" TYPE="number" LENGTH="5" NOTNULL="true" SEQUENCE="false" DECIMALS="2"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_groups" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_groups" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="gid_fk" TYPE="foreign" FIELDS="groupid" REFTABLE="bcgt_groups" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_crit_award_structures" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualstructureid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="buildid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="assessments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Is this the structure used for formal assessments?"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qsid_fk" TYPE="foreign" FIELDS="qualstructureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+        <KEY NAME="bid_fk" TYPE="foreign" FIELDS="buildid" REFTABLE="bcgt_builds" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_form_elements" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="form" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="options" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="validation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_unit_build_attributes" COMMENT="For storing default values of things for units, as we can only store against structureid and levelid, we could have the unit on numerous qualification builds">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="levelid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qsid_fk" TYPE="foreign" FIELDS="qualstructureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+        <KEY NAME="lid_fk" TYPE="foreign" FIELDS="levelid" REFTABLE="bcgt_qual_levels" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_qual_units" COMMENT="Linking which units the students are doing on their qualifications">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="unitid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="unid_fk" TYPE="foreign" FIELDS="unitid" REFTABLE="bcgt_units" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="uu_indx" UNIQUE="false" FIELDS="userid, unitid"/>
+        <INDEX NAME="uur_indx" UNIQUE="false" FIELDS="userid, unitid, role"/>
+        <INDEX NAME="uuq_indx" UNIQUE="false" FIELDS="userid, unitid, qualid"/>
+        <INDEX NAME="uuqr_indx" UNIQUE="false" FIELDS="userid, unitid, qualid, role"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="bcgt_user_ranges" COMMENT="Storing the range criteria points/values for students">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="rangeid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="It's a criterion of type &quot;Range&quot;"/>
+        <FIELD NAME="critid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Could be a points score, a 0/1 (achieved), etc..."/>
+        <FIELD NAME="obnum" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Observation number"/>
+        <FIELD NAME="awarddate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="cid_fk" TYPE="foreign" FIELDS="critid" REFTABLE="bcgt_criteria" REFFIELDS="id"/>
+        <KEY NAME="rid_fk" TYPE="foreign" FIELDS="rangeid" REFTABLE="bcgt_criteria" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_unit_award_points" COMMENT="This table is used for setting different points for unit awards at different unit levels. Used in BTEC award calculations.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualbuildid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="levelid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="unitawardstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="awardid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The unit award id"/>
+        <FIELD NAME="points" TYPE="number" LENGTH="4" NOTNULL="true" SEQUENCE="false" DECIMALS="1"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qsid_fk" TYPE="foreign" FIELDS="qualstructureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+        <KEY NAME="aid_fk" TYPE="foreign" FIELDS="awardid" REFTABLE="bcgt_unit_awards" REFFIELDS="id"/>
+        <KEY NAME="lid_fk" TYPE="foreign" FIELDS="levelid" REFTABLE="bcgt_qual_levels" REFFIELDS="id"/>
+        <KEY NAME="bid_fk" TYPE="foreign" FIELDS="qualbuildid" REFTABLE="bcgt_qual_builds" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_qual_awards" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="awardid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="awid_fk" TYPE="foreign" FIELDS="awardid" REFTABLE="bcgt_qual_build_awards" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_grades" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Either an id of a qual_award record, or can just be a text grade manually input if the record is against a course instead of a valid qual"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="cid_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_activity_refs" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="course module id"/>
+        <FIELD NAME="partid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="If the module uses parts (e.g. turnitin) this is the id of the part we are linked to"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="unitid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="critid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_mods" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="modid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modtable" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="parttable" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="If the mod breaks the activity down into parts, like turnitin does, this is the table the parts are stored in"/>
+        <FIELD NAME="partmodcol" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Is the mod uses parts, this column references the instance id from the module part"/>
+        <FIELD NAME="modcoursecol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modstartcol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modduecol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modtitlecol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="parttitlecol" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="submissiontable" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="submissionpartcol" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="submissionmodcol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="submissionusercol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="submissiondatecol" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="submissionstatuscol" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The column that holds the submissions status, e.g. &quot;submitted&quot;, &quot;new&quot;, &quot;draft&quot;, etc... Can be null if this mod doesn't use one"/>
+        <FIELD NAME="submissionstatusval" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The value expected in the submissionstatuscol if the submission is valid. e.g. &quot;submitted&quot;, &quot;completed&quot;, etc... Can be null if not used by this mod"/>
+        <FIELD NAME="auto" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_assessments" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="details" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="assessmentdate" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_user_assessments" COMMENT="Table to record the grades and cetas given to user assessments">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="References a criteria_award value"/>
+        <FIELD NAME="ceta" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="comments" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastupdateby" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="score" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="aid_fk" TYPE="foreign" FIELDS="assessmentid" REFTABLE="bcgt_assessments" REFFIELDS="id"/>
+        <KEY NAME="grade_fk" TYPE="foreign" FIELDS="grade" REFTABLE="bcgt_criteria_awards" REFFIELDS="id"/>
+        <KEY NAME="ceta_fk" TYPE="foreign" FIELDS="ceta" REFTABLE="bcgt_criteria_awards" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="lu_fk" TYPE="foreign" FIELDS="lastupdateby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_assessment_quals" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_assessment_settings" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="setting" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_query_reporting" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="query" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="created_date" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="last_edited" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="last_ran" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_assessment_attributes" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="assessmentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="qualid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lastupdate" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="aid_fk" TYPE="foreign" FIELDS="assessmentid" REFTABLE="bcgt_assessments" REFFIELDS="id"/>
+        <KEY NAME="qid_fk" TYPE="foreign" FIELDS="qualid" REFTABLE="bcgt_qualifications" REFFIELDS="id"/>
+        <KEY NAME="uid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_data_mapping" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="context" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="item" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="oldid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="newid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="bcgt_qual_structure_rule_set" COMMENT="Sets of rules on a qual structure, so qual builds can choose which set of rules to use">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qualstructureid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="isdefault" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qsid_fk" TYPE="foreign" FIELDS="qualstructureid" REFTABLE="bcgt_qual_structures" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

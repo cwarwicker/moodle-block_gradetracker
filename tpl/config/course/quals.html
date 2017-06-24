@@ -1,0 +1,58 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php $nodeSpacing = ''; ?>
+
+<select class="gt_form_control" onchange="switchToCourse(this.value, '<?= $section ?>');return false;">
+
+    <?php foreach($Course->getRelationshipHierarchy() as $node): ?>
+    
+        <option value="<?= $node->id ?>" <?= ($node->id == $Course->id) ? 'selected' : ''; ?> >
+                
+                <?php if (isset($nodeLvl) && $node->hierarchyLevel < $nodeLvl): ?>
+                    <?php $nodeSpacing .= str_repeat('&nbsp;', 4) ?>
+                <?php elseif (isset($nodeLvl) && $node->hierarchyLevel > $nodeLvl): ?>
+                    <?php $nodeSpacing = substr($nodeSpacing, 0, -24) ?>
+                <?php endif; ?>
+                
+                <?php if (isset($nodeSpacing)): ?>
+                    <?= $nodeSpacing ?>
+                <?php endif; ?>
+                
+                <?= $node->getName() ?>
+                
+        </option>
+    
+        <?php $nodeLvl = $node->hierarchyLevel ?>
+        
+    <?php endforeach; ?>
+    
+</select>
+<br>
+<div class="gt_full_page">
+    
+    <form action="" method="post" id="gt_course_quals_form">
+
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $Course->getName() ?> - <?= $string['qualsoncourse'] ?></div>
+
+            <div class="gt_form_panel_body">
+
+                <p class="gt_c">
+                    <input type="submit" class="gt_btn gt_blue" name="save_course_quals" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/course/view.php?id=<?= $Course->id ?>" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <br><br>
+                </p>
+                                
+                <?= $QualPicker->display() ?>
+                
+            </div>
+
+        </div>
+        
+    </form>
+        
+</div>

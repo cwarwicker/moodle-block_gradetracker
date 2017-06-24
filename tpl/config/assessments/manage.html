@@ -1,0 +1,50 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <div class="gt_form_panel">
+
+        <div class="gt_form_panel_heading"><?= $string['manageassessments'] ?></div>
+
+        <div class="gt_form_panel_body">
+
+            <p class="c"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=edit" class="gt_btn"><?= $string['addnewassessment'] ?></a></p>                    
+
+            <table class="gt_config">
+
+                <tr>
+                    <th><?= $string['name'] ?></th>
+                    <th><?= $string['type'] ?></th>
+                    <th><?= $string['date'] ?></th>
+                    <th><?= $string['quals'] ?></th>
+                    <th><?= $string['edit'] ?></th>
+                    <th><?= $string['delete'] ?></th>
+                </tr>
+
+                <?php if ($allAssessments): ?>
+
+                    <?php foreach($allAssessments as $assessment): ?>
+
+                        <tr>
+                            <td><?= \gt_html($assessment->getName()) ?></td>
+                            <td><?= \gt_html($assessment->getType()) ?></td>
+                            <td><?= \gt_html($assessment->getDate('d-m-Y')) ?></td>
+                            <td><?= $assessment->countQuals() ?></td>
+                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=edit&id=<?= $assessment->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a></td>
+                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=delete&id=<?= $assessment->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['edit'] ?>" /></a></td>
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
+
+            </table>
+
+        </div>
+
+    </div>
+                
+</div>

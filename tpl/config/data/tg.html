@@ -1,0 +1,128 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<h2><?= $string['dataimport'] ?></h2>
+<p><?= $string['importtargetgrades:desc'] ?></p>
+<br>
+<p>
+    <?php if ($templateFile): ?>
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
+        <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+    </a>
+    <?php else: ?>
+        [[<?= $string['filenotfound'] ?>]]
+    <?php endif; ?>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+    <?php if ($exampleFile): ?>
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
+            <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+        </a>
+    <?php else: ?>
+        [[<?= $string['filenotfound'] ?>]]
+    <?php endif; ?>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=tg&reload=1"><img style="vertical-align:top;" src="<?= $OUTPUT->pix_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    
+</p>
+<br>
+
+<form action="" method="post" enctype="multipart/form-data">
+
+    <h3><?= $string['options'] ?></h3>
+    <input type="checkbox" name="options[calc_tg]" /> <?= $string['calculatetargetgrades'] ?> - <small><?= $string['import:tg:targetgrades:desc'] ?></small><br>
+    <input type="checkbox" name="options[calc_wtg]" /> <?= $string['calculateweightedtargetgrades'] ?> - <small><?= $string['import:tg:weightedtargetgrades:desc'] ?></small><br>
+    <input type="checkbox" name="options[calc_asp]" /> <?= $string['calculateaspirationalgrades'] ?> - <small><?= $string['import:tg:aspirationalgrades:desc'] ?></small><br>
+    <br>
+    <input type="file" name="file" />
+    <br><br>
+    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?= $string['import'] ?>" />
+
+</form>
+
+<br>
+
+<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if (!empty($MSGS['success'])): ?>
+
+<div id='gt_import_output' class='gt_cmd gt_hidden'>
+    <?= $MSGS['output'] ?>
+</div>
+
+<?php endif; ?>
+
+
+
+
+<hr class="gt_hr">
+
+<h2><?= $string['dataexport'] ?></h2>
+<p><?= $string['targetgrades:descExport'] ?></p>
+
+<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=tg" method="post" enctype="multipart/form-data">
+    <input type="checkbox" name="options[course]" /> <?= $string['includecoursecode'] ?><br><br>
+    <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
+</form>
+<br>
+
+<hr class="gt_hr">
+<br>
+<form id="tg_calculate_form" action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=tg" method="post" enctype="multipart/form-data">
+<h2><?= $string['calculatetargetgrades'] ?></h2>
+<table>
+    <tbody>
+        <tr>
+            <td>
+                <?= $string['qualifications'] ?>:
+            </td>
+            <td>
+            </td>
+            <td>
+                <?= $string['qualificationselected'] ?>:
+            </td>
+        </tr>
+        <tr>
+            <td>
+        <select id="tg_all_select" multiple size="15" name="all_qualID[]">
+            <?php foreach($allQuals as $qual): ?>
+                <option id="<?= $qual->getID() ?>"><?= $qual->getDisplayName() ?></option>
+            <?php endforeach; ?>       
+        </select>
+            </td>
+            <td>
+                <button type="button" id="tg_add_course" class="gt_btn"><?= $string['add'] ?> &#10095;</button>
+                <br>
+                <button type="button" id="tg_remove_course" class="gt_btn">&#10094; <?= $string['remove'] ?></button>
+            </td>
+            <td>
+                <select id="tg_added_select" multiple size="15" name="added_qualID[]">
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<input type="checkbox" name="options[calc_tg]" /> <?= $string['calculatetargetgrades'] ?><br>
+<input type="checkbox" name="options[calc_wtg]" /> <?= $string['calculateweightedtargetgrades'] ?><br>
+<input type="checkbox" name="options[calc_asp]" /> <?= $string['calculateaspirationalgrades'] ?><br><br>
+<input type="checkbox" name="options[calc_pred]" /> <?= $string['calculatepredictedgrades'] ?><br><br>
+<input type="checkbox" name="options[calc_avg]" /> <?= $string['calculateaveragegcsegrades'] ?><br>
+
+<?php if (!empty($MSGS['tg_added'])): ?>
+    <?= gt_success_alert_box($MSGS['tg_added']) ?>
+    <br>
+<?php endif; ?>
+
+<div id="gt_calc_output" class="gt_cmd gt_hidden">
+    <?= $MSGS['calc_output']; ?>
+</div>
+<br>
+
+<input type="submit" onclick="select_all()" class="gt_btn gt_blue" name="submit_calculate" value="<?= $string['calculate'] ?>">
+</form>
+

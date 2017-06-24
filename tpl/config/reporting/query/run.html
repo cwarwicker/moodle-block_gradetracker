@@ -1,0 +1,55 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<div class="gt_full_page">
+    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    <div class="gt_form_panel_heading"><?= $string['runquery'] ?></div>
+    <div class="gt_form_panel_body">
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting&section=query" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <?php if(gt_has_capability('block/gradetracker:crud_sql_report')): ?>
+            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting&section=query&page=edit&id=<?= $query->id; ?>" class="gt_btn gt_btn_small gt_blue"><?= $string['edit'] ?></a>
+        <?php endif; ?>
+        <br><br>
+        
+        <b><?= $string['name']; ?>:</b> <?= $query->name; ?>
+        <br>
+        <b><?= $string['description']; ?>:</b> <?= $query->description; ?>
+        <br>
+        <b><?= $string['results']; ?>:</b>
+        <br><br>
+
+        <?php if ($success): ?>
+            <p class='gt_centre'><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=sql&id=<?= $query->id; ?>" class='gt_btn gt_blue'><?= $string['export'] ?></a></p>
+            <div style='width:98%;overflow-x:scroll;'>
+                <table class="gt_reporting_results">
+                    <tr class="gt_reporting_results">
+                        <?php foreach($keys as $key): ?>
+                            <th class="gt_reporting_results"><?= $key ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+
+                    <?php foreach($results as $result): ?>
+                        <tr class="gt_reporting_results">
+
+                            <?php foreach($keys as $key): ?>
+                                <?php $results_array = (array)$result; ?>
+                                <td class="gt_reporting_results"><?= $results_array[$key] ?></td>
+                            <?php endforeach; ?>
+
+                        </tr>
+                    <?php endforeach; ?>
+
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
+    
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting&section=query" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <?php if(gt_has_capability('block/gradetracker:crud_sql_report')): ?>
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting&section=query&page=edit&id=<?= $query->id; ?>" class="gt_btn gt_btn_small gt_blue"><?= $string['edit'] ?></a>
+    <?php endif; ?>
+
+    
+</div>

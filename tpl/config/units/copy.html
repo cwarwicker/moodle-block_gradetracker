@@ -1,0 +1,16 @@
+<?php if(!defined('BCGT')) exit; ?>
+<div class="gt_confirm_box">
+    <h4><?= $string['copy'] ?> : <?= $copyUnit->getName();?> ?</h4>
+    <br />
+    <p><?= $string['code'] ?> : <?=$copyUnit->getCode();?></p>
+    <p><?= $string['description'] ?> : <?=$copyUnit->getDescription();?></p>
+    <p><?= $string['credits'] ?> : <?=$copyUnit->getCredits();?></p>
+    <p><?= $string['qualifications'] ?> : <?=$copyUnit->countQuals();?></p>
+    <div>
+        <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=search" method="post">
+            <input type="hidden" name="id" value="<?= $copyUnit->getID(); ?>" />
+            <input type="submit" class="gt_btn" name="copy_unit" value="<?= $string['yes'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+        </form>        
+    </div>
+</div>

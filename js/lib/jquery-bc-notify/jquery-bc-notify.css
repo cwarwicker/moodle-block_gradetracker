@@ -1,0 +1,56 @@
+div.bc-notification
+{
+    border-radius: 4px;
+    min-height: 20px;
+    padding: 4px 8px;
+    position: fixed;
+    background-color: #f8f8f9;
+    border: 1px solid #dadada;
+    color: #000;
+    cursor: pointer;
+    display: none;
+}
+
+div.bc-notification:hover
+{
+    box-shadow: 0px 0px 10px #000;
+}
+
+div.bc-notification-pos-r
+{
+    right: 10px;
+    width: 15%;
+}
+
+div.bc-notification-pos-l
+{
+    left: 10px;
+    width: 15%;
+}
+
+div.bc-notification-pos-c
+{
+    left: 23%;
+    width: 50%;
+}
+
+div.bc-notification-invert
+{
+    background-color: #000000;
+    border: 1px solid #696969;
+    color: #ffffff;
+}
+
+div.bc-notification-warning
+{
+    background-color: #FEEFB3;
+    border: 1px solid #b07d2f;
+    color: #9F6000;
+}
+
+div.bc-notification-error
+{
+    background-color: #efaeae;
+    border: 1px solid #ab5e5e;
+    color: #000;
+}

@@ -1,0 +1,138 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<td colspan="10">
+    
+    <table id="gt_criterion_sub_table_<?= $dynamicNum ?>" class="gt_criterion_sub_table">
+        
+        <tr id="gt_sub_header_row_<?= $dynamicNum ?>">
+            <td><?= $string['ranges'] ?> &nbsp;&nbsp; <a href="#" onclick="addNewRange(<?= $dynamicNum ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></td>
+            <td></td>
+        </tr>
+        
+        <?php if ($criterion->hasChildrenOfType('Range')): ?>
+        
+            <?php $dynamicRangeNum = 0; ?>
+            
+            <?php foreach($criterion->getChildren() as $child): ?>
+                
+                <?php $dynamicRangeNum++; ?>
+                
+                <tr id="gt_criterion_range_<?= $dynamicNum ?>_<?= $dynamicRangeNum ?>" class="gt_criterion_range_row" rnum="<?= $dynamicRangeNum ?>">
+                    
+                    <td class="gt_range_info_cell">
+                        <table>
+                            
+                            <tr>
+                                <td><?= $string['name'] ?></td>
+                                <td>
+                                    <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][id]" value="<?= $child->getID() ?>" />
+                                    <input type="text" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][name]" value="<?= $child->getName() ?>" placeholder="Name" />
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><?= $string['details'] ?></td>
+                                <td><textarea name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][details]" placeholder="Details"><?= $child->getDescription() ?></textarea></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><?= $string['numobservations'] ?></td>
+                                <td><input type="number" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][numobservations]" value="<?= $child->getAttribute('numobservations') ?>" /></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><?= $string['gradestructure'] ?></td>
+                                <td>
+                                    <select name='unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][gradingstructure]'>
+                                        <?php if($criteriaGradingStructures): ?>
+                                            <?php foreach($criteriaGradingStructures as $grading): ?>
+                                                <option value='<?= $grading->getID() ?>' <?= ($child->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?= $grading->getName() ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><?= $string['criteria'] ?></td>
+                                <td>
+                                    <a href="#" onclick="addNewRangeCriterion(<?= $dynamicNum ?>, <?= $dynamicRangeNum ?>);return false;">
+                                        <img src="<?= $OUTPUT->pix_url('t/add') ?>" alt="add" class="gt_no_float">
+                                    </a>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="2"><a href="#" onclick="deleteRange(<?= $dynamicNum ?>, <?= $dynamicRangeNum ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" /></a></td>
+                            </tr>
+                            
+                        </table>
+                    </td>
+                    
+                    <td class="gt_range_criteria_cell">
+                        <table>
+                            <tr>
+                                <th><?= $string['name'] ?></th>
+                                <th><?= $string['details'] ?></th>
+                                <th><?= $string['gradestructure'] ?></th>
+                                <th></th>
+                            </tr>
+                            
+                            <?php if ($child->hasChildrenOfType('Criterion')): ?>
+                            
+                                <?php $dynamicSubNum = 0; ?>
+                            
+                                <?php foreach($child->getChildren() as $subChild): ?>
+                                
+                                    <?php $dynamicSubNum++; ?>
+                                    
+                                    <tr id="gt_range_criteria_row_<?= $dynamicNum ?>_<?= $dynamicRangeNum ?>_<?= $dynamicSubNum ?>">
+                                        <td>
+                                            <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][id]" value="<?= $subChild->getID() ?>" />
+                                            <input type="text" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][name]" value="<?= $subChild->getName() ?>" />
+                                        </td>
+                                        <td>
+                                            <textarea name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][details]"><?= $subChild->getDescription() ?></textarea>
+                                        </td>
+                                        
+                                        <td>
+                                            <select name='unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][gradingstructure]'>
+                                                <option value=""></option>
+                                                <?php if($criteriaGradingStructures): ?>
+                                                    <?php foreach($criteriaGradingStructures as $grading): ?>
+                                                        <option value='<?= $grading->getID() ?>' <?= ($subChild->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?= $grading->getName() ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </td>
+
+                                        <td>
+                                            <a href="#" onclick="deleteRangeCriterion(<?= $dynamicNum ?>, <?= $dynamicRangeNum ?>, <?= $dynamicSubNum ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete"></a>
+                                            <script>
+                                                cntRangedSubCriteria++;
+                                            </script>
+                                        </td>
+                                    </tr>
+
+                                <?php endforeach; ?>
+                            
+                            <?php endif; ?>
+                            
+                        </table>
+                        
+                        <script>
+                            cntRangedRangeCriteria++;
+                        </script>
+                        
+                    </td>
+                    
+                </tr>
+                
+            
+            <?php endforeach; ?>
+        
+        <?php endif; ?>
+        
+    </table>    
+    
+</td>

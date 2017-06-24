@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "update": "general",
+  "file": "http://moodleportal.bedford.ac.uk/course/view.php?id=3&section=4"
+}
+
+
+
+File - This is the URL to the downloads page
+
+
+
+Possible update types:
+        
+general - General updates
+performance - Performance updates
+security - Security updates
+securitycrit - Critical security updates

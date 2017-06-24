@@ -1,0 +1,32 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if ($Assessment->isValid()): ?>
+
+    <div class="gt_confirm_box">
+
+        <h4><?= $string['delete'] ?> : <?= $Assessment->getName() ?></h4>
+
+        <div>
+
+            <?= sprintf($string['delete:assessment:sure'], $Assessment->countQuals()) ?>
+            <br><br>
+            <form action="" method="post">
+
+                <input type="submit" class="gt_btn" name="confirm_delete_assessment" value="<?= $string['yes'] ?>" />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+
+            </form>
+
+        </div>
+
+    </div>
+
+<?php else: ?>
+    <p class="gt_c">
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage" class="gt_btn gt_btn_small"><?= get_string('continue') ?></a>
+    </p>
+<?php endif; ?>

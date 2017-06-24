@@ -1,0 +1,138 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<table id="gt_student_grid" class="gt_student_grid" style="width:95%;">
+                            
+    <?php $cnt = 2; ?>
+    <tr>
+        <th class="gt_grid_unit_name"><?= $string['unit'] ?> <?= ($Qualification->getDefaultCredits() > 0) ? '('.$string['totalcredits'] . ': '.$Qualification->countUnitCredits().'/'.$Qualification->getDefaultCredits().')' : '' ?></th>
+        <th class="gt_grid_unit_award"><?= $string['award'] ?></th>
+        <?php if ($Qualification->isFeatureEnabledByName('percentagecomp')): ?>
+            <th class="gt_grid_progress"><?= $string['progress'] ?></th>
+            <?php $cnt++ ?>
+        <?php endif; ?>
+        
+        <?php foreach($Qualification->getHeaderCriteriaNames() as $crit): ?>
+            <th cname="<?= $crit['name'] ?>"><?= $crit['name'] ?></th>
+            <?php $cnt++ ?>
+            <?php if ($crit['sub']): ?>
+                <?php foreach($crit['sub'] as $sub): ?>
+                    <th><?= $sub ?></th>
+                    <?php $cnt++ ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        
+        <?php if ($Qualification->getStructure() && $Qualification->getStructure()->getSetting('iv_column') == 1): ?>
+            <?php $cnt++ ?>
+            <th title='<?= $string['iv:desc'] ?>'><?= $string['iv'] ?></th>
+        <?php endif; ?>
+        
+        <?php if (!isset($print) || !$print): ?>
+            <th class='gt_grid_end'></th>
+        <?php endif; ?>
+
+    </tr>
+
+    <?php if ($Qualification->getUnits()): ?>
+
+        <?php foreach($Qualification->getUnits() as $unit): ?>
+                
+            <?php if($Student->isOnQualUnit($Qualification->getID(), $unit->getID(), "STUDENT")): ?>
+
+                <tr>
+                    
+                    <td class="gt_grid_unit_name">
+                        <?php if (\gt_has_capability('block/gradetracker:view_unit_grids') && (!isset($print) || !$print)): ?>
+                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $unit->getShortenedDisplayName() ?></a>
+                        <?php else: ?>
+                            <?= $unit->getShortenedDisplayName() ?>
+                        <?php endif; ?>
+                        
+                        <?php if (!isset($print) || !$print): ?>
+                            
+                            <br><a href="#" class="gt_unit_info" uID="<?= $unit->getID() ?>" uName="<?= \gt_html($unit->getDisplayName()) ?>"><img src="<?= $OUTPUT->pix_url('i/info') ?>" alt="<?= $string['info'] ?>" /></a>
+                            
+                            <?php if ( \gt_has_capability('block/gradetracker:configure_units') && !$external): ?>
+                                &nbsp;&nbsp;
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $unit->getID() ?>" target="_blank"><img src="<?= $OUTPUT->pix_url('i/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
+                            <?php endif; ?>
+                            
+                            <div id="pUUI_<?= $unit->getID() ?>" class="gt_popup gt_hidden"></div>
+                            
+                        <?php endif; ?>
+                        
+                        <?php if ($unit->getCredits() > 0): ?>
+                            <br><small>(<?= $unit->getCredits() ?> <?= $string['credits'] ?>)</small>
+                        <?php endif; ?>
+                        
+                    </td>
+
+                    <td class="gt_grid_unit_award" sID="<?= $Student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>"><?= $unit->getAwardCell( $params['access'] ) ?></td>
+                    
+                    <!-- Progress Bar -->
+                    <?php if ($Qualification->isFeatureEnabledByName('percentagecomp')): ?>
+                        <td class="gt_grid_progress">
+                            <?php if ($unit->unitCal() === $string['na']): ?>
+                                <?= $string['na']; ?>
+                            <?php else: ?>
+                                <div class="gt_meter">
+                                    <span class='progress_bar_S<?= $Student->id ?>Q<?= $Qualification->getID() ?>U<?= $unit->getID() ?>' style="width: <?= $unit->unitCal() ?>%"></span>
+                                </div>
+                                <small class='progress_percent_S<?= $Student->id ?>Q<?= $Qualification->getID() ?>U<?= $unit->getID() ?>'><?= $unit->unitCal() ?>%</small>
+                            <?php endif; ?>
+                        </td>
+                    <?php endif; ?>
+                    
+                    
+                    <?php foreach($Qualification->getHeaderCriteriaNames() as $crit): ?>
+
+                        <?php if ( ($criterion = $unit->getCriterionByName($crit['name'])) !== false  ): ?>
+                            <td id="CRITERION_Q_<?= $Qualification->getID() ?>U_<?= $unit->getID() ?>C_<?= $criterion->getID() ?>S_<?= $Student->id ?>" class="gt_grid_cell gt_grid_cell_<?= $params['access'] ?> <?= ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?= $Student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" cID="<?= $criterion->getID() ?>" cName="<?= \gt_html($criterion->getName()) ?>" access="<?= $params['access'] ?>">
+                                <?= $criterion->getCell( $params['access'] ) ?>
+                                <div id='pU_<?= $Student->id ?>_<?= $Qualification->getID() ?>_<?= $unit->getID() ?>_<?= $criterion->getID() ?>' class='gt_popup' title='<?= \gt_html($criterion->getName()) ?>'></div>
+                            </td>
+                        <?php else: ?>
+                            <td class="gt_cell_blank"></td>
+                        <?php endif; ?>
+
+                        <?php if ($crit['sub']): ?>
+                            <?php foreach($crit['sub'] as $sub): ?>
+                                <?php if ( ($criterion = $unit->getCriterionByName($sub)) !== false  ): ?>
+                                    <td id="CRITERION_Q_<?= $Qualification->getID() ?>U_<?= $unit->getID() ?>C_<?= $criterion->getID() ?>S_<?= $Student->id ?>" class="gt_grid_cell gt_grid_cell_<?= $params['access'] ?> <?= ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?= $Student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" cID="<?= $criterion->getID() ?>"  cName="<?= \gt_html($criterion->getName()) ?>" access="<?= $params['access'] ?>">
+                                        <?= $criterion->getCell( $params['access'] ) ?>
+                                        <div id='pU_<?= $Student->id ?>_<?= $Qualification->getID() ?>_<?= $unit->getID() ?>_<?= $criterion->getID() ?>' class='gt_popup' title='<?= \gt_html($criterion->getName()) ?>'></div>
+                                    </td>
+                                <?php else: ?>
+                                    <td class="gt_cell_blank"></td>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                    <?php endforeach; ?>
+                    
+                    <?php if ($Qualification->getStructure() && $Qualification->getStructure()->getSetting('iv_column') == 1): ?>
+                        <?= $unit->getIVCell( $params['access'] ) ?>
+                    <?php endif; ?>
+                    
+                    <?php if (!isset($print) || !$print): ?>
+                        <!-- This is a nasty hack -->
+                        <td class='gt_grid_end'>
+                            <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/empty.png">
+                        </td>
+                    <?php endif; ?>
+
+                </tr>
+
+            <?php endif; ?>
+
+        <?php endforeach; ?>
+
+    <?php else: ?>
+
+        <tr>
+            <td colspan="<?= $cnt ?>"><?= $string['nodata'] ?></td>
+        </tr>
+
+    <?php endif; ?>
+
+</table>

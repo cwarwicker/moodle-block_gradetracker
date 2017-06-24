@@ -1,0 +1,712 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<input type="hidden" id="gt-gridFile" value="<?= $gridFile ?>" />
+<input type="hidden" id="gt-qID" value="<?= $Qualification->getID() ?>" />
+<input type="hidden" id="gt-sID" value="<?= $Student->id ?>" />
+<input type="hidden" id="gt-access" value="<?= $access ?>" />
+<input type="hidden" id="gt-assessmentView" value="<?= $assessmentView ?>" />
+
+<div class='gt_full_page gt_grid'>
+        
+    <div class="gt_c">
+               
+        <?php if (!isset($print)): ?>
+        
+            <?php if (!isset($external) || !$external): ?>
+
+                <div class="gt_dropdown_menu">
+                    <a href="#" class="gt_dropdown_toggle">
+                        <img src="<?= $GT->icon('cog') ?>" class="gt_icon" />
+                    </a>
+                    <ul class="gt_dropdown_menu">
+
+                        <li class="gt_c"><b><?= $string['actions'] ?></b></li>
+
+                        <?php if ($Qualification->isFeatureEnabledByName('targetgrades')): ?>
+                            <li>
+                                <a href="#" onclick="refreshGCSEScore();return false;"><?= $string['refreshgcsescore'] ?> <span id="gt_refresh_gcse_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="refreshTargetGrade();return false;"><?= $string['refreshtargetgrade'] ?> <span id="gt_refresh_tg_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if ($Qualification->isFeatureEnabledByName('weightedtargetgrades')): ?>
+                            <li>
+                                <a href="#" onclick="refreshWeightedTargetGrade();return false;"><?= $string['refreshweightedtargetgrade'] ?> <span id="gt_refresh_wtg_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if ($Qualification->isFeatureEnabledByName('predictedgrades') || $Qualification->isFeatureEnabledByName('predictedminmaxgrades')): ?>
+                            <li>
+                                <a href="#" onclick="refreshPredictedGrades();return false;"><?= $string['refreshpredictedgrades'] ?> <span id="gt_refresh_pg_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                            </li>
+                        <?php endif; ?>
+
+                    </ul>
+                </div>
+
+                <br class="gt_cl">
+
+                <ul class="slimmenu">
+
+                    <?php if (\gt_has_capability('block/gradetracker:view_student_grids')): ?>
+                    
+                        <li class="gt_nav_dropdowns">
+                            <select id="gt_switch_qual">
+                                <option value=""><?= $string['switchqual'] ?></option>
+                                <?php if($Student->getQualifications("STUDENT")): ?>
+                                    <?php foreach($Student->getQualifications("STUDENT") as $userQual): ?>
+                                        <option value="<?= $userQual->getID() ?>" <?= ($userQual->getID() == $Qualification->getID()) ? 'selected' : ''; ?> ><?= $userQual->getDisplayName() ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
+                            <select id="gt_switch_user">
+                                <option value=""><?= $string['switchuser'] ?></option>
+                                <?php if ($Qualification->getUsers("STUDENT")): ?>
+                                    <?php foreach($Qualification->getUsers("STUDENT") as $qualStudent): ?>
+                                        <option value="<?= $qualStudent->id ?>" <?= ($qualStudent->id == $Student->id) ? 'selected' : ''; ?> ><?= $qualStudent->getDisplayName() ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </li>
+                    
+                    <?php endif; ?>
+
+                    <li>
+
+                        <a href="#"><?= $string['grid'] ?></a>
+                        <ul>
+                            
+                            <li>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : ''; ?>"><?= $string['printgrid'] ?></a>
+                            </li>
+                            
+                            <?php if (\gt_has_capability('block/gradetracker:export_student_grids') || $User->id == $Student->id): ?>
+                                <li>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : '' ?>"><?= $string['exportdatasheet'] ?></a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if (\gt_has_capability('block/gradetracker:import_student_grids')): ?>
+                                <li>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : '' ?>"><?= $string['importdatasheet'] ?></a>
+                                </li>
+                            <?php endif; ?>
+                            
+                        </ul>
+
+                    </li>
+                    
+                    <li>
+                        <a href="#"><?= $string['context'] ?></a>
+                        <ul>
+                            <li>
+                                <a href="<?= $CFG->wwwroot ?>/user/profile.php?id=<?= $Student->id ?>"><?= $string['userprofile'] ?></a>
+                            </li>
+                            
+                            <?php if (\gt_is_plugin_installed('block_elbp')): ?>
+                                <li>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/elbp/view.php?id=<?= $Student->id ?>"><?= get_string('viewelbp', 'block_elbp') ?></a>
+                                </li>
+                            <?php endif; ?>
+                            
+                            <?php if ( $courseID > 0 && ($User->isOnCourse($courseID, "STAFF") || $User->hasCapability('block/gradetracker:edit_all_courses')) ): ?>
+                                <li>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=userquals&id=<?= $courseID ?>"><?= $string['userquals'] ?></a>
+                                </li>
+                                <li>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=userunits&id=<?= $courseID ?>"><?= $string['userunits'] ?></a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="#"><?= $string['core'] ?></a>
+                        <ul>
+                            <li>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/dashboard.php"><?= $string['mydashboard'] ?></a>
+                            </li>
+
+                            <?php if ($User->hasCapability('block/gradetracker:view_student_grids')): ?>
+                                <li>
+                                    <?php if ($courseID > 0): ?>
+                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=student&myCourseID=<?= $courseID ?>"><?= $string['studentgrids'] ?></a>
+                                    <?php else: ?>
+                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=student"><?= $string['studentgrids'] ?></a>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($User->hasCapability('block/gradetracker:view_unit_grids')): ?>
+                                <li>
+                                    <?php if ($courseID > 0): ?>
+                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=unit&myCourseID=<?= $courseID ?>"><?= $string['unitgrids'] ?></a>
+                                    <?php else: ?>
+                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=unit"><?= $string['unitgrids'] ?></a>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
+                                <li>
+                                    <?php if ($courseID > 0): ?>
+                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=class&myCourseID=<?= $courseID ?>"><?= $string['classgrids'] ?></a>
+                                    <?php else: ?>
+                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=class"><?= $string['classgrids'] ?></a>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endif; ?>
+
+                        </ul>
+                    </li>
+
+                    <?php if ($links): ?>
+
+                        <?php foreach($links as $link): ?>
+
+                        <li>
+                            <a href="<?= (strlen($link->url)) ? $Qualification->parseURL($link->url) : '#' ?>" target="_blank"><?= \gt_html($link->name) ?></a>
+                            <?php if ($link->sub): ?>
+                            <ul>
+                                <?php foreach($link->sub as $sub): ?>
+                                    <li>
+                                        <a href="<?= (strlen($sub->url)) ? $Qualification->parseURL($sub->url) : '#' ?>" target="_blank"><?= \gt_html($sub->name) ?></a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        </li>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
+                </ul>
+
+            <br>
+
+            <?php endif; ?>
+        <?php endif; ?>
+        
+        
+        
+        <?php if (isset($print)): ?>
+            <h2><?= $Qualification->getDisplayName() ?></h2>
+            <h3><?= $Student->getDisplayName() ?></h3>
+        <?php else: ?>
+            <h2 class="gt_h2">
+                <?= $Student->getPicture(null, 80) ?>
+                <br>
+                <?= $Student->getDisplayName() ?>
+                <br>
+                <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>"><?= $Qualification->getDisplayName() ?></a>
+                <?php else: ?>
+                    <?= $Qualification->getDisplayName() ?>
+                <?php endif; ?>
+            </h2>
+        <?php endif; ?>
+        
+        <br>
+        
+        <?php if ((!isset($print) || !$print) && $assessmentView && $hasWeightings && \gt_has_capability('block/gradetracker:see_coefficient_table') && $QualStructure->getSetting('force_single_page') != 1): ?>
+        
+            <table class='gt_coefficient_table' cellspacing='0'>
+                <tr>
+                    <th colspan="<?= $weightingPercentiles + 2 ?>"><?= $string['weightingcoefficients'] ?></th>
+                </tr>
+                <tr>
+                    <th><?= $string['qualification'] ?></th>
+                    <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
+                        <th style="background-color:<?= \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?= $i ?></th>
+                    <?php endfor; ?>
+                </tr>
+                <?php foreach($allQualifications as $qual): ?>
+                    <?php if ($qual->getAssessments() && $qual->getStructure()->getSetting('force_single_page') != 1): ?>
+                        <tr>
+                            <td class='gt_qual_name'><?= $qual->getDisplayName() ?></td>
+                            <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
+                                <td style="background-color:<?= \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?= $qual->getAttribute('coefficient_'.$i) ?></td>
+                            <?php endfor; ?>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </table>
+            <br>
+            
+        <?php endif; ?>
+        
+        
+        
+        
+        
+        
+        
+        <?php if ($assessmentView && \gt_has_capability('block/gradetracker:see_assessment_summary_table') && $QualStructure->getSetting('force_single_page') != 1): ?>
+
+            <table class="gt_assessment_summary_table" cellspacing='0'>
+
+                <tr>
+
+                    <th rowspan="<?= ($canSeeValueAdded) ? 3 : 2 ?>"><?= $string['qualification'] ?></th>
+
+                    <!-- If user has "both" permission, they can see Target and Weighted target -->
+                    <!-- Otherwise, Weighted Target takes precedence  -->
+
+                    <?php if ($canSeeBothTargets || ( $canSeeTargetGrade && !$canSeeWeightedTargetGrade ) ): ?>
+                        <th rowspan='<?= ($canSeeValueAdded) ? 3 : 2 ?>'><?= $string['targetgrade'] ?></th>
+                    <?php endif; ?>
+
+                    <?php if ($canSeeBothTargets || $canSeeWeightedTargetGrade ): ?>
+                        <th rowspan='<?= ($canSeeValueAdded) ? 3 : 2 ?>'><?= $string['weightedtargetgrade'] ?></th>
+                    <?php endif; ?>
+
+                    <th colspan="<?= ($canSeeValueAdded) ? ( ($canSeeBothTargets) ? 3 : 2 ) : 1 ?>"><?= $string['grade'] ?></th>
+
+                    <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+                        <th colspan="<?= ($canSeeValueAdded) ? ( ($canSeeBothTargets) ? 3 : 2 ) : 1 ?>"><?= $string['ceta'] ?></th>
+                    <?php endif; ?>
+                                        
+                    <?php if ($hasWeightings && \gt_has_capability('block/gradetracker:see_weighting_percentiles')): ?>
+                        <th colspan="<?= ($Qualification->isFeatureEnabledByName('cetagrades')) ? 2 : 1 ?>"><?= $string['weighting'] ?></th>
+                    <?php endif; ?>
+
+                </tr>
+
+                <tr>
+
+                    <!-- Current and VA columns for the Assessments column -->
+                    <th rowspan="<?= ($canSeeValueAdded) ? 2 : 1 ?>"><?= $string['latest'] ?></th>
+
+                    <?php if ($canSeeValueAdded): ?>
+                        <th colspan="<?= ( $canSeeBothTargets ) ? 2 : 1 ?>"><?= $string['valueadded:acronym'] ?></th>
+                    <?php endif; ?>
+
+
+                    <!-- Current and VA columns for the CETA column -->
+                    <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+                        <th rowspan="<?= ($canSeeValueAdded) ? 2 : 1 ?>"><?= $string['latest'] ?></th>
+                        <?php if ($canSeeValueAdded): ?>
+                            <th colspan="<?= ( $canSeeBothTargets ) ? 2 : 1 ?>"><?= $string['valueadded:acronym'] ?></th>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <!-- Weightings columns -->
+                    <?php if ($hasWeightings && \gt_has_capability('block/gradetracker:see_weighting_percentiles')): ?>
+                        <th rowspan="<?= ($canSeeValueAdded) ? 2 : 1 ?>"><?= $string['assessments:acronym'] ?></th>
+                        <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+                            <th rowspan="<?= ($canSeeValueAdded) ? 2 : 1 ?>"><?= $string['ceta'] ?></th>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                </tr>
+                
+                
+
+                <?php if ($canSeeValueAdded): ?>
+
+                    <tr>
+                        
+                        <!-- Assessments columns -->
+                        <?php if ($canSeeBothTargets || ( $canSeeTargetGrade && !$canSeeWeightedTargetGrade ) ): ?>
+                            <th><?= $string['target:acronym'] ?></th>
+                        <?php endif; ?>
+
+                        <?php if ($canSeeBothTargets || $canSeeWeightedTargetGrade ): ?>
+                            <th><?= $string['weightedtarget:acronym'] ?></th>
+                        <?php endif; ?>
+                        
+                        
+                        <!-- CETA columns -->
+                        <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+                            <?php if ($canSeeBothTargets || ( $canSeeTargetGrade && !$canSeeWeightedTargetGrade ) ): ?>
+                                <th><?= $string['target:acronym'] ?></th>
+                            <?php endif; ?>
+
+                            <?php if ($canSeeBothTargets || $canSeeWeightedTargetGrade ): ?>
+                                <th><?= $string['weightedtarget:acronym'] ?></th>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        
+                    </tr>
+
+                <?php endif; ?>
+
+
+                <?php if (isset($allQualifications) && $allQualifications): ?>
+                
+                    <?php foreach($allQualifications as $qual): ?>
+
+                        <?php if ($qual->getAssessments() && $qual->getStructure()->getSetting('force_single_page') != 1): ?>
+                        
+                            <tr>
+
+                                <td class='gt_qual_name'><?= $qual->getDisplayName() ?></td>
+
+                                <?php if (\gt_has_capability('block/gradetracker:see_both_target_weighted_target_grades') || ( \gt_has_capability('block/gradetracker:see_target_grade') && !\gt_has_capability('block/gradetracker:see_weighted_target_grade') ) ): ?>
+                                    <td>
+                                        <?= $Student->getUserGrade('target', array('qualID' => $qual->getID()), false, false, '-') ?>
+                                    </td>
+                                <?php endif; ?>
+
+                                <?php if (\gt_has_capability('block/gradetracker:see_both_target_weighted_target_grades') || ( \gt_has_capability('block/gradetracker:see_weighted_target_grade') ) ): ?>
+                                    <td>
+                                        <?= $Student->getUserGrade('weighted_target', array('qualID' => $qual->getID()), false, false, '-') ?>
+                                    </td>
+                                <?php endif; ?>
+
+
+
+
+
+                                <td>
+                                    <?php if ($latestAssessmentWithGrade = $qual->getUserLatestAssessment('summary', true)): ?>
+                                        <span title="<?= $latestAssessmentWithGrade->getName() ?>"><?= $latestAssessmentWithGrade->getGradeCell('v') ?></span>
+                                    <?php endif; ?>
+                                </td>
+
+                                <?php if ($canSeeValueAdded): ?>
+
+                                    <?php if ($canSeeBothTargets || ( $canSeeTargetGrade && !$canSeeWeightedTargetGrade ) ): ?>
+                                        <td>
+                                            <?= $qual->getValueAddedComparison( $qual->getUserLatestAssessmentGradeWithAward('summary'), $Student->getUserGrade('target', array('qualID' => $qual->getID()), false, true), 'grade', '-' ) ?>
+                                        </td>
+                                    <?php endif; ?>
+
+                                    <?php if ($canSeeBothTargets || $canSeeWeightedTargetGrade ): ?>
+                                        <td>
+                                            <?= $qual->getValueAddedComparison( $qual->getUserLatestAssessmentGradeWithAward('summary'), $Student->getUserGrade('weighted_target', array('qualID' => $qual->getID()), false, true), 'grade', '-' ) ?>
+                                        </td>
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+
+
+
+
+
+
+
+                                <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+
+                                    <td>
+                                        <?php if ($qual->isFeatureEnabledByName('cetagrades') && ($latestAssessmentWithCetaGrade = $qual->getUserLatestAssessment('summary', false, true))): ?>
+                                            <span title="<?= $latestAssessmentWithCetaGrade->getName() ?>"><?= $latestAssessmentWithCetaGrade->getCetaCell('v') ?></span>
+                                        <?php else: ?>
+                                            -
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <?php if ($canSeeBothTargets || ( $canSeeTargetGrade && !$canSeeWeightedTargetGrade ) ): ?>
+                                        <td>
+                                            <?php if ($qual->isFeatureEnabledByName('cetagrades')): ?>
+                                                <?= $qual->getValueAddedComparison( $qual->getUserLatestAssessmentCetaWithAward('summary'), $Student->getUserGrade('target', array('qualID' => $qual->getID()), false, true), 'ceta' ) ?>
+                                            <?php else: ?>
+                                            -
+                                            <?php endif; ?>
+                                        </td>
+                                    <?php endif; ?>
+
+                                    <?php if ($canSeeBothTargets || $canSeeWeightedTargetGrade ): ?>
+                                        <td>
+                                            <?php if ($qual->isFeatureEnabledByName('cetagrades')): ?>
+                                                <?= $qual->getValueAddedComparison( $qual->getUserLatestAssessmentCetaWithAward('summary'), $Student->getUserGrade('weighted_target', array('qualID' => $qual->getID()), false, true), 'ceta' ) ?>
+                                            <?php else: ?>
+                                            -
+                                            <?php endif; ?>
+                                        </td>
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+
+
+
+
+
+                                <?php if ($hasWeightings && \gt_has_capability('block/gradetracker:see_weighting_percentiles')): ?>
+
+                                    <?php if($percentile = $qual->getUserAssessmentWeightingPercentile(null, 'summary')): ?>
+                                        <td class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                                            <?= $percentile->percentile ?>
+                                        </td>
+                                    <?php else: ?>
+                                        <td>-</td>
+                                    <?php endif; ?>
+
+
+                                    <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+
+                                        <?php if($percentile = $qual->getUserAssessmentCetaWeightingPercentile(null, 'summary')): ?>
+                                            <td class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                                                <?= $percentile->percentile ?>
+                                            </td>
+                                        <?php else: ?>
+                                            <td>-</td>
+                                        <?php endif; ?>
+
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+
+
+                            </tr>
+                        <?php endif; ?>
+
+                    <?php endforeach; ?>
+                    
+                <?php endif; ?>
+
+            </table>
+            <br>
+        
+        <?php endif; ?>
+                        
+        <?php if (!isset($print)): ?>
+            <?php if (!isset($external) || !$external): ?>
+                <p>
+                    <input type="button" class="gt_btn" value="<?= $string['view'] ?>" onclick="loadStudentGrid('v');return false;" />
+                    <?php if (\gt_has_capability('block/gradetracker:edit_student_grids')): ?>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input id="gt_edit_button" type="button" class="gt_btn" style="display:<?= ($access == 'e') ? 'none' : 'initial' ?>;" value="<?= $string['edit'] ?>" onclick="loadStudentGrid('e');return false;" />
+                        <input id="gt_adv_edit_button" type="button" class="gt_btn" style="display:<?= ($access == 'e') ? 'initial' : 'none' ?>;" value="<?= $string['advancededit'] ?>" onclick="loadStudentGrid('ae');return false;" />
+                    <?php endif; ?>
+
+                    <?php if ($Qualification->getAssessments() && $gridFile != 'assessment_grid'): ?>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="gt_btn gt_pink" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $Student->id ?>&access=<?= $access ?>&qualID=<?= $Qualification->getID() ?>&ass=1"><?= $string['assessmentgrid'] ?></a>
+                    <?php elseif ($Qualification->getAssessments() && $gridFile == 'assessment_grid' && $Qualification->isLevelEnabled('units')): ?>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="gt_btn gt_pink" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $Student->id ?>&access=<?= $access ?>&qualID=<?= $Qualification->getID() ?>"><?= $string['normalgrid'] ?></a>
+                    <?php endif; ?>
+                </p>
+                <br>
+                
+            <?php elseif ($external && $Qualification->getAssessments() && $Qualification->isLevelEnabled('units')): ?>
+                <p>
+                    <?php if ($gridFile != 'assessment_grid'): ?>
+                        <a class="gt_btn gt_pink" href="<?= ($extSsn && $extSsn == 'block_elbp') ? $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=student&id='.$Student->id.'&access='.$access.'&qualID='.$Qualification->getID() : $_SERVER['REQUEST_URI'] ?>&ass=1"><?= $string['assessmentgrid'] ?></a>
+                    <?php else: ?>
+                        <a class="gt_btn gt_pink" href="<?= ($extSsn && $extSsn == 'block_elbp') ? $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=student&id='.$Student->id.'&access='.$access.'&qualID='.$Qualification->getID() : $_SERVER['REQUEST_URI'] ?>&ass=0"><?= $string['grid'] ?></a>
+                    <?php endif; ?>
+                </p>
+            <?php endif; ?>
+        <?php endif; ?>
+        
+        
+        <?php if (!$assessmentView): ?>
+            <div class="gt_grid_key">
+
+                <table>
+
+                    <?php if (!isset($print)): ?>
+                        <tr>
+                            <th colspan="<?= ( count($allPossibleValues) + 1 ) ?>"><?= $string['gridkey'] ?></th>
+                        </tr>
+                    <?php endif; ?>
+
+                    <tr class="imgs">
+                        <?php if ($allPossibleValues): ?>
+                            <?php foreach($allPossibleValues as $value): ?>
+                                <td style="width:<?= (100 / (count($allPossibleValues) + 1)) ?>%;">
+                                    <img src="<?= $value->getImageURL() ?>" alt="<?= $value->getShortName() ?>" class="gt_award_icon" />
+                                </td>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        <td style="width:<?= (100 / (count($allPossibleValues) + 1)) ?>%;">
+                            <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/symbols/default/na.png" alt="<?= $string['na'] ?>" class="gt_award_icon" />
+                        </td>
+                    </tr>
+                    <tr class="names">
+                        <?php if ($allPossibleValues): ?>
+                            <?php foreach($allPossibleValues as $value): ?>
+                                <td style="width:<?= (100 / (count($allPossibleValues) + 1)) ?>%;"><?= $value->getName() ?></td>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        <td style="width:<?= (100 / (count($allPossibleValues) + 1)) ?>%;"><?= $string['notattempted'] ?></td>
+                    </tr>
+                </table>   
+
+            </div>
+            <br>
+        <?php endif; ?>
+
+    </div>
+    
+    <?php if (!isset($print)): ?>
+    
+        <p id="gt_loading" class="gt_hidden"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="<?= $string['loading'] ?>" /></p>
+
+        <?php if (!isset($external) || !$external): ?>
+            <?php \gt_display_debug_section() ?>
+        <?php endif; ?>
+        
+        <?php if (!isset($external) || !$external): ?>
+            <?php if ($GT->getSetting('grid_fixed_links') == 1): ?>
+                <div id="gt_grid_quick_links">
+                    <a href="#" onclick="loadStudentGrid();return false;" title="<?= $string['redraw'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_refresh.png" class="gt_icon" alt="<?= $string['redraw'] ?>" /></a><br>
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>" title="<?= $string['printgrid'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/printer.png" class="gt_icon" alt="<?= $string['printgrid'] ?>" /></a><br>
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>" title="<?= $string['exportdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_exports.png" class="gt_icon" alt="<?= $string['exportdatasheet'] ?>" /></a><br>
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>" title="<?= $string['importdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_imports.png" class="gt_icon" alt="<?= $string['importdatasheet'] ?>" /></a>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>   
+        
+    <?php endif; ?>
+
+    
+    <div id="gt_grid_holder">
+        
+        <?php if (isset($print)): ?>
+            <?= $Qualification->getStudentGridData( array(
+                'student' => $Student,
+                'assessmentView' => $assessmentView,
+                'access' => $access,
+                'print' => true,
+            ) ) ?>
+                
+        <?php elseif (isset($external) && $external == true): ?>
+            <?= $Qualification->getStudentGridData( array(
+                'student' => $Student,
+                'assessmentView' => $assessmentView,
+                'access' => $access,
+                'external' => $external,
+                'extSsn' => $extSsn
+            ) ) ?>
+            
+        <?php endif; ?>
+        
+    </div>
+        
+    
+    <?php if (!$assessmentView): ?>
+    
+        <div id="gt_qual_awards">
+
+            <table>
+
+                <?php if (!isset($print)): ?>
+                    <tr>
+                        <th colspan='2'><?= $string['grades'] ?></th>
+                        <th id="gt_help_col" title="<?= $string['predictedgradesexplained'] ?>"><a href="#" onclick="$('.gt_toggle_help').toggle();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/question.png" class="gt_icon" /></a></th>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ($Qualification->isFeatureEnabledByName('targetgrades') && $User->hasCapability('block/gradetracker:see_target_grade')): ?>
+
+                     <tr>
+                        <td><?= $string['avggcsescore'] ?></td>
+                        <td id="gt_user_gcse_score"><?= $Student->getAverageGcseScore() ?></td>
+                        <td class="gt_toggle_help"><small><?= $string['avggcse:help'] ?></small></td>
+                    </tr>
+
+                    <tr>
+                        <td><?= $string['targetgrade'] ?></td>
+                        <td id="gt_user_target_grade_<?= $Student->id ?>_<?= $Qualification->getID() ?>">
+                            <select class='gt_target_grade_award <?= ( ($access == 'e' || $access == 'ae') && $User->hasCapability('block/gradetracker:edit_target_grades') ) ? '' : 'gt_hidden' ?> gt_tg_Q<?= $Qualification->getID() ?>_S<?= $Student->id ?>_edit' sID='<?= $Student->id ?>' qID='<?= $Qualification->getID() ?>'>
+                                <option value='0'></option>
+                                <?php if ($targetGradeAwards): ?>
+                                    <?php foreach($targetGradeAwards as $award): ?>
+                                        <option value='<?= $award->getID() ?>' <?= ( $Student->getUserGrade('target', array('qualID' => $Qualification->getID()), 'id') == $award->getID() ) ? 'selected' : ''; ?> ><?= $award->getName() ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                            <span class='gt_tg_Q<?= $Qualification->getID() ?>_S<?= $Student->id ?>_view <?= ( $access == 'v' || !$User->hasCapability('block/gradetracker:edit_target_grades') ) ? '' : 'gt_hidden' ?>'><?= $Student->getUserGrade('target', array('qualID' => $Qualification->getID())) ?></span>
+                        </td>
+                        <td class="gt_toggle_help"><small><?= $string['targetgrade:help'] ?></small></td>
+                    </tr>
+                    
+                <?php endif; ?>
+
+                <?php if ($Qualification->isFeatureEnabledByName('aspirationalgrades') && $User->hasCapability('block/gradetracker:see_aspirational_grade')): ?>
+                    <tr>
+                        <td><?= $string['aspirationalgrade'] ?></td>
+                        <td id="gt_user_aspirational_grade">
+                                <select class='gt_asp_grade_award <?= ( ($access == 'e' || $access == 'ae') && $User->hasCapability('block/gradetracker:edit_aspirational_grades') ) ? '' : 'gt_hidden' ?> gt_tg_Q<?= $Qualification->getID() ?>_S<?= $Student->id ?>_edit' sID='<?= $Student->id ?>' qID='<?= $Qualification->getID() ?>'>
+                                    <option value='0'></option>
+                                    <?php if ($targetGradeAwards): ?>
+                                        <?php foreach($targetGradeAwards as $award): ?>
+                                            <option value='<?= $award->getID() ?>' <?= ( $Student->getUserGrade('aspirational', array('qualID' => $Qualification->getID()), 'id') == $award->getID() ) ? 'selected' : ''; ?> ><?= $award->getName() ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                                <span class='gt_asp_Q<?= $Qualification->getID() ?>_S<?= $Student->id ?>_view <?= ( $access == 'v' || !$User->hasCapability('block/gradetracker:edit_aspirational_grades') ) ? '' : 'gt_hidden' ?>'><?= $Student->getUserGrade('aspirational', array('qualID' => $Qualification->getID())) ?></span>
+                        </td>
+                        <td class="gt_toggle_help"><small><?= $string['aspirationalgrade:help'] ?></small></td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ($Qualification->isFeatureEnabledByName('predictedgrades') && !$Qualification->getUserAward('final') && $User->hasCapability('block/gradetracker:see_predicted_grades')): ?>
+                    <tr>
+                        <td><?= $string['predictedgrade'] ?></td>
+                        <td id="gt_user_avg_award"><?= $Qualification->getUserAwardName('average') ?></td>
+                        <td class="gt_toggle_help"><small><?= sprintf($string['predictedgrade:desc'], $GT->getSetting('pred_grade_min_units')) ?></small></td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ($Qualification->isFeatureEnabledByName('predictedminmaxgrades') && $User->hasCapability('block/gradetracker:see_predicted_grades')): ?>
+                    <tr>
+                        <td><?= $string['predictedmingrade'] ?></td>
+                        <td id="gt_user_min_award"><?= $Qualification->getUserAwardName('min') ?></td>
+                        <td class="gt_toggle_help"><small><?= sprintf($string['predictedmingrade:desc'], $GT->getSetting('pred_grade_min_units')) ?></small></td>
+                    </tr>
+                    <tr>
+                        <td><?= $string['predictedmaxgrade'] ?></td>
+                        <td id="gt_user_max_award"><?= $Qualification->getUserAwardName('max') ?></td>
+                        <td class="gt_toggle_help"><small><?= sprintf($string['predictedmaxgrade:desc'], $GT->getSetting('pred_grade_min_units')) ?></small></td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ($Qualification->getUserAward('final')): ?>
+                    <tr id="gt_user_final_award_row">
+                        <td><?= $string['predictedfinalgrade'] ?></td>
+                        <td id="gt_user_final_award"><?= $Qualification->getUserAwardName('final') ?></td>
+                        <td class="gt_toggle_help"><small><?= $string['predictedfinalgrade:desc'] ?></small></td>
+                    </tr>
+                <?php endif; ?>
+
+            </table>
+        </div>
+
+    <?php endif; ?>
+        
+    <?php if (isset($print) && !$assessmentView): ?>
+    
+        <p style="text-align:center;"><a href="#" onclick="$('#gt_student_grid_comments').toggle();return false;"><?= $string['showhidecomments'] ?></a></p>
+        <table id="gt_student_grid_comments" class="gt_student_assessment_grid_comments" style='display:none;' cellspacing='0'>
+            <tr><th colspan='2'><?= $string['comments'] ?></th></tr>
+            <?php if ($Qualification->getUnits()): ?>
+                <?php foreach($Qualification->getUnits() as $unit): ?>
+                    <tr>
+                        <th><?= $unit->getDisplayName() ?></th>
+                        <th><?= $string['comment'] ?></th>
+                    </tr>
+                    <?php if ($unit->getCriteria()): ?>
+                        <?php foreach($unit->getCriteria() as $criterion): ?>
+                            <tr>
+                                <td><b><?= $criterion->getName() ?></b></td>
+                                <td><small><?= $criterion->getUserComments() ?></small></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </table>
+    
+    <?php endif; ?>
+   
+</div>
+
+
+<?php if (isset($external) && $external == true): ?>
+
+    <?= $GT->loadJavascript( true ) ?>
+    <?= $GT->loadCSS (true ) ?>
+
+    <script src="<?= $CFG->wwwroot ?>/blocks/gradetracker/js/scripts.js" type="text/javascript"></script>
+    <script src="<?= $CFG->wwwroot ?>/blocks/gradetracker/js/grids/scripts.js" type="text/javascript"></script>
+    <script src="<?= $CFG->wwwroot ?>/blocks/gradetracker/js/grids/student.js" type="text/javascript"></script>
+    
+<?php endif; ?>

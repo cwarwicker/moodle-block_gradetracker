@@ -1,0 +1,102 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<table id="gt_class_grid" class="gt_class_grid" style="width:95%;">
+                        
+    <?php $cnt = count($studentCols) + 2; ?>
+    <tr>
+        
+        <?php if ($studentCols): ?>
+            <?php foreach($studentCols as $col): ?>
+                <th class="gt_grid_user_<?= $col ?> gt_grid_freeze_col"><?= ($col != 'pic') ? get_string($col) : '' ?></th>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        
+        <th class="gt_grid_qual_award gt_grid_freeze_col"><?= $string['qualaward'] ?></th>
+        
+        <?php if ($Qualification->getUnits()): ?>
+        
+            <?php foreach($Qualification->getUnits() as $unit): ?>
+            
+                <th>
+                    <?php if( \gt_has_capability('block/gradetracker:view_student_grids') && !isset($print) ): ?>
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $unit->getShortenedDisplayName() ?></a>
+                    <?php else: ?>
+                        <?= $unit->getShortenedDisplayName() ?>
+                    <?php endif; ?>
+                </th>
+            
+            <?php endforeach; ?>
+        
+        <?php endif; ?>
+        
+    </tr>
+
+    <?php if ($students): ?>
+        
+        <?php foreach($students as $student): ?>
+        
+            <?php $Qualification->loadStudent($student) ?>
+        
+            <tr>
+
+                <?php if ($studentCols): ?>
+
+                    <?php foreach($studentCols as $col): ?>
+
+                        <td>
+                            <?php if( \gt_has_capability('block/gradetracker:view_student_grids') && !isset($print) ): ?>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $student->id ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $student->getProp($col) ?></a>
+                            <?php else: ?>
+                                <?= $student->getProp($col) ?>
+                            <?php endif; ?>
+                        </td>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
+                
+                <td class="gt_grid_qual_award" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>">
+                    <?php if ($qualAward = $student->getQualAward($Qualification->getID())): ?>
+                        <?= $string[$qualAward[0]] ?><br>
+                        <?= $qualAward[1]->getName() ?>
+                    <?php else: ?>
+                        <?= $string['na'] ?>
+                    <?php endif; ?>
+                </td>
+                
+                <?php if ($Qualification->getUnits()): ?>
+        
+                    <?php foreach($Qualification->getUnits() as $unit): ?>
+
+                        <?php $unit->loadStudent( $student ) ?>
+                        
+                        <?php if ($student->isOnQualUnit($Qualification->getID(), $unit->getID(), "STUDENT")): ?>
+                            <td id="S<?= $student->id ?>_Q<?= $Qualification->getID() ?>_U<?= $unit->getID() ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" sID="<?= $student->id ?>">
+                                <?= $unit->getAwardCell( $params['access'] ); ?>
+                            </td>
+                        <?php else: ?>
+                            <td id="S<?= $student->id ?>_Q<?= $Qualification->getID() ?>_U<?= $unit->getID() ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" sID="<?= $student->id ?>" class="gt_cell_blank"></td>
+                        <?php endif; ?>
+                        
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
+                               
+               
+                
+            </tr>
+
+        <?php endforeach; ?>
+    
+    <?php else: ?>
+    
+        <tr>
+            <td colspan="<?= $cnt ?>"><?= $string['nodata'] ?></td>
+        </tr>
+    
+    <?php endif; ?>
+    
+
+</table>
+

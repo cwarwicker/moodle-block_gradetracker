@@ -1,0 +1,17 @@
+<?php if(!defined('ELBP')) exit; ?>
+
+<ul class="elbp_tabrow">
+    <?php if ($quals): ?>
+        <?php foreach($quals as $qual): ?>
+            <li class="elbp_view_link" class="elbp_view_link"><a href="#" onclick="loadGradeTracker(<?= $qual->getID() ?>, this);return false;" id="qual<?= $qual->getID() ?>_tab"><?= $qual->getDisplayName() ?></a></li>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</ul>
+
+<br>
+
+<div id="elbp_gradetracker_content">
+    
+    <?= get_string('pleasechoosetracker', 'block_gradetracker') ?>
+    
+</div>

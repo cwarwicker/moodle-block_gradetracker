@@ -1,0 +1,4495 @@
+
+/* Begin: List Style Types */
+
+    ul.gt, ol.gt
+    {
+        padding: 0;
+        margin: 0;
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    ul.gt a, ol.gt a
+    {
+        margin-left: 5px;
+    }
+
+    ul.gt img, ol.gt img
+    {
+        vertical-align: middle;
+    }
+
+    ul.gt li, ol.gt li
+    {
+        margin-bottom: 5px;
+    }
+
+    ul.gt_list_circle, ol.gt_list_circle
+    {
+        list-style-type: circle;
+    }
+
+    ul.gt_list_disc, ol.gt_list_disc
+    {
+        list-style-type: disc;
+    }
+
+    ul.gt_list_square, ol.gt_list_square
+    {
+        list-style-type: square;
+    }
+
+    ul.gt_list_none, ol.gt_list_none
+    {
+        list-style-type: none;
+    }
+
+    ul.gt_list_roman, ol.gt_list_roman
+    {
+        list-style-type: upper-roman;
+    }
+
+    ul.gt_list_greek, ol.gt_list_greek
+    {
+        list-style-type: lower-greek;
+    }
+
+/* End: List Style Types */
+
+
+.gt_small_text
+{
+    font-size: 8pt;
+}
+
+.gt_err_box
+{
+    border: 1px solid;
+    margin: 10px auto;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url([[pix:block_gradetracker|error]]);
+    background-position: 10px 10px;
+    width: 80%;
+}
+
+.gt_err_box h1
+{
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-weight: bold !important;
+    color: #CB4721 !important;
+    font-size: 18pt !important;
+    text-transform: uppercase !important;
+    font-family: 'Poiret One' !important;
+    letter-spacing: 2px !important;
+    text-align: center !important;
+}
+
+.gt_err_box h2
+{
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    color: #000 !important;
+}
+
+.gt_err_box em
+{
+    color: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.gt_centre
+{
+    text-align: center;
+}
+
+
+div.gt_config
+{
+    min-width: 92%;
+    margin: auto;
+    background-color: #efeded;
+    border: 1px solid #000;
+    padding: 1% 4%;
+}
+
+div.gt_config h1, h1.gt_h1
+{
+    color: #000;
+    text-align: center;
+    font-size: 18pt;
+    text-transform: uppercase;
+    font-family: 'Poiret One';
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin: 0;
+}
+
+div.gt_config h2, h2.gt_h2
+{
+    color: #000;
+    font-size: 14pt;
+    font-weight: normal;
+    margin: 0;
+}
+
+div.gt_config h3, h3.gt_h3
+{
+    color: #666666;
+    font-size: 10pt;
+    font-weight: bold;
+    margin: 0;
+}
+
+div.gt_config small
+{
+    font-size: 8pt;
+    color: #696969;
+}
+
+div.gt_config input[type='submit'], div.gt_config input[type='button']
+{
+    /*padding: 8px 0px 9px;*/
+    cursor: pointer;
+}
+
+
+
+/* Begin: Tabbed navigation: http://css-tricks.com/better-tabs-with-round-out-borders/ */
+
+ .gt_tabrow {
+    text-align: center;
+    list-style: none;
+    margin: 20px 0px 0px;
+    padding: 0;
+    line-height: 24px;
+    /*height: 26px;*/
+    overflow: hidden;
+    font-size: 13px;
+/*    font-family: verdana;*/
+    position: relative;
+}
+.gt_tabrow li {
+    border: 1px solid #AAA;
+    background: #f3f3f3; /* Old browsers */
+    background: -moz-linear-gradient(top, #ffffff 0%, #f3f3f3 50%, #ededed 51%, #ffffff 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f3f3f3), color-stop(51%,#ededed), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    display: inline-block;
+    position: relative;
+    z-index: 0;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    /*box-shadow: 0 3px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 #FFF;*/
+    text-shadow: 0 1px #FFF;
+    margin: 0 -5px;
+    padding: 5px 20px;
+}
+.gt_tabrow a {
+    color: #555;
+    text-decoration: none;
+}
+.gt_tabrow li.selected {
+    background: #FFF;
+    color: #333;
+    z-index: 2;
+    border-bottom-color: #FFF;
+}
+.gt_tabrow:before {
+    position: absolute;
+    content: " ";
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid #AAA;
+    z-index: 1;
+}
+.gt_tabrow li:before,
+.gt_tabrow li:after {
+    border: 1px solid #ccc;
+    position: absolute;
+    bottom: -1px;
+    width: 5px;
+    height: 5px;
+    content: " ";
+}
+.gt_tabrow li:before {
+    left: -6px;
+    border-bottom-right-radius: 6px;
+    border-width: 0 1px 1px 0;
+    box-shadow: 2px 2px 0 #D1D1D1;
+}
+.gt_tabrow li:after {
+    right: -6px;
+    border-bottom-left-radius: 6px;
+    border-width: 0 0 1px 1px;
+    box-shadow: -2px 2px 0 #D1D1D1;
+}
+.gt_tabrow li.selected:before {
+    box-shadow: 2px 2px 0 #FFF;
+}
+.gt_tabrow li.selected:after {
+    box-shadow: -2px 2px 0 #FFF;
+}
+
+/* End: Tabbed navigation */
+
+
+/* Begin Navigation Bar Styling */
+   ul.gt_sub_tabrow {
+      width: 100%;
+      float: left;
+      margin: 0 0 10px 0;
+      padding: 0;
+      list-style: none;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc; 
+      border-top: none;
+   }
+   ul.gt_sub_tabrow li {
+      float: left; }
+   ul.gt_sub_tabrow li a {
+      display: block;
+      padding: 8px 15px;
+      text-decoration: none;
+      color: #555;
+      border-right: 1px solid #ccc; }
+   ul.gt_sub_tabrow li a:hover {
+      background-color: #fff; }
+   ul.gt_sub_tabrow li.selected
+   {
+       background-color: #fff;
+   }
+   
+   
+   ul.gt_sub_sub_tabrow 
+   {
+       display: inline-block;
+       list-style-type: none;
+       margin: 0;
+   }
+   
+   ul.gt_sub_sub_tabrow li
+   {
+       display: inline;
+       margin-right: 15px;
+   }
+   
+   ul.gt_sub_sub_tabrow li.selected a,
+   ul.gt_sub_sub_tabrow li a:hover
+   {
+       color: #000;
+       text-decoration: underline;
+   }
+   /* End navigation bar styling. */
+   
+   
+ul.gt_vertical_menu
+{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    width: 150px;
+    background-color: #FFF;
+    margin-top: -15px;
+    margin-left: -15px;
+}
+
+ul.gt_vertical_menu li
+{
+    border-bottom: 1px solid #6F3E04;
+    border-right: 1px solid #6F3E04;
+}
+
+ul.gt_vertical_menu li a {
+  text-decoration: none;
+  display: block;
+  width: 129px;
+  color: #333333;
+  padding: 20px 10px;
+}
+   
+ul.gt_vertical_menu li a:hover,
+ul.gt_vertical_menu li a.selected{
+    background-color: #42CA5E;
+    color: #FFF;
+}
+
+table.gt_config table.gt_course_activities_qual_table
+{
+    font-size: 8pt;
+    margin-bottom: 5px;
+}
+
+table.gt_config table.gt_course_activities_qual_table th
+{
+    background-color: #CFF095;
+    color: #46513C;
+    text-transform: none;
+}
+
+table.gt_config table.gt_course_activities_qual_table th.gt_unit_name
+{
+    font-weight: normal;
+}
+
+table.gt_config table.gt_course_activities_qual_table th,
+table.gt_config table.gt_course_activities_qual_table td
+{
+    border: 1px solid #BAD872;
+    text-align: center;
+}
+
+table.gt_config table.gt_course_activities_qual_table tr td
+{
+    background-color: #fff;
+}
+
+div#gt_grid_holder > div
+{
+    margin: auto;
+}
+
+
+   
+img.gt_logo_text
+{
+    height: 50px !important;
+}
+
+
+.gt_alert_good {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #bde993;
+    border: 1px solid #b5e787;
+    color: #3e6815;
+    margin-bottom: 15px;
+}
+
+.gt_alert_bad {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background-color: #f6cdcd;
+    border: 1px solid #f4c0c0;
+    color: #a61e1e;
+    margin-bottom: 15px;
+}
+
+
+.gt_alert_info {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid #E2E2E2;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.gt_alert_warning {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: rgb(251, 231, 169);
+    border: 1px solid rgb(130, 98, 0);
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.fade.in
+{
+    opacity: 1;
+}
+
+img.gt_preview
+{
+    max-height: 50px;
+    vertical-align: middle;
+}
+
+
+div.gt_qual_structure
+{
+    width: 100%;
+}
+
+div.gt_qual_structure_left
+{
+    width: 44%;
+    float: left;
+}
+
+div.gt_qual_structure_right
+{
+    width: 55%;
+    float: right;
+}
+
+table#gt_qual_results tr th:last-child
+{
+    min-width: 80px;
+}
+
+input.gt_text
+{
+    width: 150px !important;
+    padding: 2px;
+}
+
+input.gt_text_long
+{
+    width: 400px !important;
+    padding: 2px;
+}
+
+input.gt_text_small
+{
+    width: 40px !important;
+    padding: 2px;
+}
+
+input.gt_80
+{
+    width: 80% !important;
+    padding: 2px;
+}
+
+input.gt_max
+{
+    width: 100% !important;
+    padding: 2px;
+}
+
+textarea.gt_textarea_thin
+{
+    width: 400px;
+    height: 50px;
+    vertical-align: top;
+}
+
+textarea.gt_textarea
+{
+    width: 400px;
+    height: 115px;
+    vertical-align: top;
+}
+
+div.gt_structure_icon_section
+{
+    width: 100px;
+    float: left;
+}
+
+div.gt_structure_name_section
+{
+    float: left;
+    margin-left: 10px;
+}
+
+div.gt_structure_name_section input[type="text"]
+{
+    width: 100%;
+}
+
+div.gt_image_preview
+{
+    max-height: 100px;
+}
+
+img.gt_image_preview
+{
+    max-width: 100px !important;
+    max-height: 100px !important;
+}
+
+.gt-upload-img > img.gt_image_preview
+{
+    max-width: 50px !important;
+    max-height: 50px !important;
+}
+
+div.gt_image_change
+{
+    height: 25px;
+    background-color: #000;
+}
+
+div.gt_image_change:hover
+{
+    background-color: #333333;
+}
+
+label.gt_input_label
+{
+    display: inline-block;
+    margin: 0;
+}
+
+.gt-upload-button {
+    display: block;
+    width: 100px;
+    padding: 7px 0;
+    text-align: center;
+    background: #000;
+    color: #fff;
+    margin: auto;
+    position: relative; 
+    overflow: hidden; 
+    direction: ltr;
+}
+
+.gt-upload-button:hover
+{
+    background-color: #333;
+}
+
+.gt-upload-img {
+    display: block;
+    width: 50px;
+    padding: 7px 0;
+    text-align: center;
+    margin: auto;
+    position: relative; 
+    overflow: hidden; 
+    direction: ltr;
+}
+
+.gt-upload-button input[type="file"],
+.gt-upload-img input[type="file"]
+{
+    position: absolute; 
+    right: 0px; 
+    top: 0px; 
+    font-family: Arial; 
+    font-size: 118px; 
+    margin: 0px; 
+    padding: 0px; 
+    cursor: pointer; 
+    opacity: 0;
+}
+
+form#gt_grading_structure_form .gt-upload-button input[type="file"],
+form#gt_grading_structure_form .gt-upload-img input[type="file"]
+{
+    padding: 0;
+    height: 50px;
+}
+
+div.gt_level_box
+{
+    width: 40%;
+    height: 80px;
+    padding: 10px;
+    float: left;
+    margin-right: 2%;
+    background-color: #F9F8F5;
+    border: 1px solid #000;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+div.gt_feature_box
+{
+    width: 40%;
+    height: 120px;
+    padding: 10px;
+    float: left;
+    margin-right: 2%;
+    background-color: #F9F8F5;
+    border: 1px solid #000;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+div.gt_level_box:hover, div.gt_level_box.ticked:hover,
+div.gt_feature_box:hover, div.gt_feature_box.ticked:hover
+{
+    background-color: #DBE3F2;
+}
+
+div.gt_level_box.ticked, div.gt_feature_box.ticked
+{
+    background-color: #EEFFF3;
+}
+
+div.gt_level_box input[type="checkbox"], div.gt_feature_box input[type="checkbox"]
+{
+    display: none;
+}
+
+div.gt_level_box img.gt_ticked, div.gt_feature_box img.gt_ticked
+{
+    display: none;
+    height: 20px;
+    vertical-align: middle;
+}
+
+div.gt_feature_box img.gt_feature_icon
+{
+    display: block;
+    height: 80px;
+    margin: auto;
+    margin-bottom: 5px;
+}
+
+div.gt_structure_settings_box
+{
+    border: 1px solid #000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 15px;
+}
+
+div.gt_structure_settings_box h1
+{
+    background-color: rgb(88, 88, 89);
+    color: #fff;
+    font-size: 10pt;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 4px;
+    margin: 0;
+}
+
+div.gt_structure_settings_box > div
+{
+    padding: 4px 8px;
+    border-top: 6px solid #B0D84F;
+    background-color: #F9F8F5;
+}
+
+div.gt_structure_settings_box table
+{
+    width: 100%;
+    font-size: 8pt;
+}
+
+div.gt_structure_settings_box input:not([type=radio]):not([type=checkbox]), div.gt_structure_settings_box select
+{
+    width: 98%;
+}
+
+div.gt_structure_settings_box table#gt_structure_misc tr td:first-child
+{
+    vertical-align: top;
+}
+
+table#gt_structure_rule_sets
+{
+    text-align: center;
+}
+
+table#gt_structure_rule_sets tr.gt_rule_row
+{
+    border-top: 3px double #000;
+}
+
+table#gt_structure_rule_sets table td
+{
+    background-color: #fff;
+    border: 1px solid #E8E8E8;
+}
+
+table#gt_structure_rule_sets a img
+{
+    vertical-align: middle;
+}
+
+table#gt_structure_rule_sets td table td
+{
+    vertical-align: top;
+}
+
+tr.gt_structure_rule_step_header_row td
+{
+    text-align: center;
+    background-color: rgb(244, 254, 255);
+    border: 1px solid #E8E8E8;
+}
+
+select.gt_rule_step_select
+{
+    width: 40px !important;
+}
+
+select.gt_rule_step_select_cmp
+{
+    width: 100px !important;
+}
+
+input.gt_symbol_button
+{
+    width: 35px !important;
+    text-align: center;
+    font-size: 8pt !important;
+    font-style: italic;
+}
+
+td.gt_structure_rule_small_td
+{
+    width: 30px !important;
+}
+
+
+table#gt_structure_ordering th
+{
+    text-align: left;
+}
+
+div.gt_rule_step_condition input,
+div.gt_rule_step_condition select,
+div.gt_rule_step_action input
+{
+    width: 300px;
+    background: #fff;
+    min-height: 18px;
+    border: 1px solid #dfdfdf;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+div.gt_rule_step_condition select
+{
+    width: 150px;
+}
+
+div.gt_rule_step_condition img,
+div.gt_rule_step_action img
+{
+    width: 12px;
+}
+
+div.gt_rule_step_condition,
+div.gt_rule_step_action
+{
+    margin-bottom: 5px;
+}
+
+
+/* Getting annoyed with moodle overriding so many styles now */
+.gt_hidden, select.gt_hidden, textarea.gt_hidden, input[type="text"].gt_hidden, input[type="password"].gt_hidden, 
+input[type="datetime"].gt_hidden, input[type="datetime-local"].gt_hidden, input[type="date"].gt_hidden, 
+input[type="month"].gt_hidden, input[type="time"].gt_hidden, input[type="week"].gt_hidden, input[type="number"].gt_hidden, 
+input[type="email"].gt_hidden, input[type="url"].gt_hidden, input[type="search"].gt_hidden, input[type="tel"].gt_hidden, 
+input[type="color"].gt_hidden, div.gt_hidden, span.gt_hidden, p.gt_hidden, small.gt_hidden
+{
+    display: none;
+}
+
+
+div#gt_condition_dialog table, div#gt_action_dialog table
+{
+    width: 100%;
+}
+
+div.gt_dialog
+{
+    display: none;
+}
+
+div.gt_dialog input#gt_condition_dialog_value, div.gt_dialog input#gt_action_dialog_value
+{
+    width: 90%;
+    margin: auto;
+}
+
+table.gt_config {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    font-size: 10pt;
+    white-space: nowrap;
+}
+
+table.gt_config th, table.gt_config td {
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid #184E24;
+    padding: 4px;
+}
+
+table.gt_config th, table.gt_config > tbody > tr > th a {
+    text-transform: uppercase;
+    background-color: #61E67D;
+    color: #000;
+    padding-bottom: 10px;
+}
+
+table.gt_config th.gt_left, table.gt_config td.gt_left
+{
+    text-align: left;
+}
+
+table.gt_config th.gt_right, table.gt_config td.gt_right
+{
+    text-align: right;
+}
+
+
+table.gt_config td {
+    background-color: #fff;
+    vertical-align: middle;
+}
+
+table.gt_config tr:nth-child(odd) td {
+    background-color: #f6fff7;
+}
+
+table.gt_config tr.gt_seperator td {
+    background-color: #0384b9;
+    color: #fff;
+}
+
+table.gt_config td img
+{
+    max-width: 50px;
+    max-height: 50px;
+}
+
+table.gt_config.gt_config_white th
+{
+    background-color: #fff;
+}
+
+
+table.gt_config_min
+{
+    margin: auto;
+    text-align: center;
+    font-size: 10pt;
+    white-space: nowrap;
+}
+
+table.gt_config_min th, table.gt_config_min td {
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid #184E24;
+    padding: 2px;
+}
+
+table.gt_config_min th {
+    text-transform: uppercase;
+    background-color: #3c3fa9;
+    color: #FFF;
+    padding-bottom: 10px;
+}
+
+table.gt_config_min td {
+    background-color: #fff;
+    vertical-align: middle;
+}
+
+table.gt_config_min tr:nth-child(odd) td {
+    background-color: #f6fcff;
+}
+
+
+table tr th.gt_seperator, table tr td.gt_seperator
+{
+    background: none;
+}
+
+
+
+div.gt_confirm_box {
+    width: 500px;
+    min-height: 200px;
+    margin: auto;
+    text-align: center;
+    background-color: #fff;
+    border: 2px solid rgba(0,0,0,0.102);
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 10px;
+}
+
+div.gt_confirm_box > div
+{
+    padding: 20px 6px;
+}
+
+.gt_fancy_checkbox
+{
+    width: 28px;
+    height: 28px;
+    margin: 4px 0;
+    background: #fcfff4;
+    background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    -webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.gt_fancy_checkbox input[type="checkbox"],
+.gt_fancy_checkbox input[type="radio"]{
+    visibility: hidden;
+}
+
+.gt_fancy_checkbox label {
+    cursor: pointer;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    left: 4px;
+    top: 4px;
+    -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,1);
+    -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,1);
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,1);
+    background: -webkit-linear-gradient(top, #222 0%, #45484d 100%);
+    background: -moz-linear-gradient(top, #222 0%, #45484d 100%);
+    background: -o-linear-gradient(top, #222 0%, #45484d 100%);
+    background: -ms-linear-gradient(top, #222 0%, #45484d 100%);
+    background: linear-gradient(top, #222 0%, #45484d 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#45484d',GradientType=0 );
+}
+
+.gt_fancy_checkbox input[type="checkbox"] + label,
+.gt_fancy_checkbox input[type="radio"] + label,
+.gt_fancy_checkbox input[type="checkbox"]:checked + label,
+.gt_fancy_checkbox input[type="radio"]:checked + label
+{
+    padding: 0;
+}
+
+.gt_fancy_checkbox input[type="checkbox"]:checked + label:after,
+.gt_fancy_checkbox input[type="radio"]:checked + label:after {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: alpha(opacity=100);
+    opacity: 1;
+}
+
+.gt_fancy_checkbox label:after {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    opacity: 0;
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #00bf00;
+    background: -webkit-linear-gradient(top, #00bf00 0%, #009400 100%);
+    background: -moz-linear-gradient(top, #00bf00 0%, #009400 100%);
+    background: -o-linear-gradient(top, #00bf00 0%, #009400 100%);
+    background: -ms-linear-gradient(top, #00bf00 0%, #009400 100%);
+    background: linear-gradient(top, #00bf00 0%, #009400 100%);
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    top: 2px;
+    left: 2px;
+    -webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+}
+
+input[type="image"].gt_on_off
+{
+    width: 20px;
+}
+
+table.gt_simple_form_table,
+table.gt_form_table {
+    border-collapse: collapse;
+    min-width: 25%;
+    margin: auto;
+    text-align: center;
+}
+
+table.gt_simple_form_table tr th,
+table.gt_form_table tr th
+{
+    border: 1px solid #A3AFCD;
+    background-color: #277291;
+    color: #fff;
+    padding: 4px;
+}
+
+table.gt_simple_form_table tr td,
+table.gt_form_table tr td
+{
+    border: 1px solid #A3AFCD;
+    background-color: #fff;
+    padding: 4px;
+}
+
+table.gt_simple_form_table tr td:first-child
+{
+    text-align: right;
+}
+
+table.gt_form_table tr td
+{
+    text-align: center;
+}
+
+table.gt_form_table tr.gt_disabled_row td
+{
+    background-color: #E4E4E4;
+}
+
+input.gt_padded, textarea.gt_padded, select.gt_padded
+{
+    padding: 5px;
+}
+
+form#gt_grading_structure_form
+{
+    text-align: center;
+}
+
+form#gt_grading_structure_form input:not([type="submit"])
+{
+    height: 30px;
+    padding: 5px;
+}
+
+table.gt_table_inline
+{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.gt_config select, .gt_config input[type="text"], .gt_config input[type="password"], 
+.gt_config input[type="datetime"], .gt_config input[type="datetime-local"], .gt_config input[type="date"], 
+.gt_config input[type="month"], .gt_config input[type="time"], .gt_config input[type="week"], 
+.gt_config input[type="number"], .gt_config input[type="email"], .gt_config input[type="url"], 
+.gt_config input[type="search"], .gt_config input[type="tel"], .gt_config input[type="color"]
+{
+    height: 20px;
+}
+
+.gt_config input[type="number"]
+{
+    width: 60px;
+}
+
+
+div.gt_config input, div.gt_config select, div.gt_config textarea
+{
+    margin: 0;
+    padding: 0 2px;
+    font-size: 10pt;
+}
+
+
+div.gt_config select[multiple="multiple"]
+{
+    height: 150px;
+}
+
+div.gt_config input[type="color"]
+{
+    padding: 0;
+    height: 25px;
+    width: 40px;
+}
+
+
+
+img.gt_award_icon
+{
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+}
+
+div.gt_full_page
+{
+    width: 100%;
+/*    min-height: 300px;*/
+    font-size: 10pt;
+}
+
+div#gt_grid_holder *
+{
+    -webkit-box-sizing: initial;
+    -moz-box-sizing: initial;
+    box-sizing: initial;    
+}
+
+div.gt_grid
+{
+    width: 98%;
+}
+
+div.gt_grid img.userpicture
+{
+    border-radius: 20px;
+}
+
+div.gt_page_col
+{
+    width: 48%;
+    margin-right: 1%;
+    margin-left: 1%;
+    float: left;
+}
+
+div.gt_page_col_33
+{
+    width: 30%;
+    margin-right: 1%;
+    margin-left: 1%;
+    float: left;
+}
+
+div.gt_page_col_66
+{
+    width: 66%;
+    margin-right: 1%;
+    margin-left: 1%;
+    float: left;
+}
+
+select.gt_unit_select, select.gt_course_select, select.gt_qual_select
+{
+    min-width: 350px;
+    min-height: 100px;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+select.gt_course_select_larger
+{
+    min-height: 175px;
+}
+
+select.gt_half_width
+{
+    width: 46%;
+}
+
+select.gt_third_width
+{
+    width: 30%;
+}
+
+table#gt_qual_form_table
+{
+    width: 80%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+table#gt_qual_form_table td
+{
+    
+}
+
+table#gt_qual_form_table tr td:first-child
+{
+    text-align: left;
+    font-weight: bold;
+    text-transform: capitalize;
+    padding-right: 10px;
+}
+
+table#gt_qual_form_table tr td:last-child
+{
+    text-align: left;
+}
+
+table#gt_qual_form_table td, table#gt_qual_form_table td select,  table#gt_qual_form_table td input[type="text"],
+table#gt_qual_form_table td input[type="number"]
+{
+    height: 30px;
+}
+
+div.gt_form_panel
+{
+    
+}
+
+div.gt_form_panel_heading
+{
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca;
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    font-size: 14px;
+}
+
+div.gt_form_panel_sub_heading
+{
+    margin: auto;
+    padding: 5px;
+    color: #fff;
+    background-color: #CA6B42;
+    border: 1px solid #CA4242;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    font-size: 13px;
+}
+
+div.gt_form_panel_heading a, div.gt_form_panel_sub_heading a,
+div.gt_form_panel_heading a:visited, div.gt_form_panel_sub_heading a:visited,
+div.gt_form_panel_heading a:active, div.gt_form_panel_sub_heading a:active
+{
+    color: #fff;
+}
+
+div.gt_form_panel_heading small
+{
+    color: inherit;
+}
+
+div.gt_form_panel_sub_heading_alt
+{
+    background-color: #42CA53;
+    border: 1px solid #2EA846;
+}
+
+div.gt_form_panel_sub_heading_alt2
+{
+    background-color: #AD42CA;
+    border: 1px solid #8342CA;
+}
+
+div.gt_form_panel_sub_heading img
+{
+    float: right;
+}
+
+div.gt_form_panel_body
+{
+    padding: 15px;
+    background-color: #F4F4F4;
+}
+
+div.gt_form_panel_body div.gt_form_panel_body
+{
+    background-color: #FDFDFD;
+}
+
+div.gt_form_panel_sub_body
+{
+    width: 95%;
+    margin: auto;
+    padding: 5px;
+    background-color: rgb(252, 252, 252);
+}
+
+div.gt_form_panel_side
+{
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+}
+
+div.gt_form_panel_side table
+{
+    width: 90%;
+    margin: auto;
+}
+
+div.gt_form_panel_side table img
+{
+    width: 12px;
+    height: 12px;
+}
+
+div.gt_form_panel_centre
+{
+    width: 58%;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+}
+
+table.gt_unit_criteria_table
+{
+    width: 98%;
+    margin: auto;
+    text-align: center;
+    font-size: 12px;
+}
+
+table.gt_unit_criteria_table th
+{
+    background-color: #575757;
+    color: #fff;
+    font-weight: normal;
+    border: 1px solid #000;
+}
+
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_row td
+{
+    background-color: #ffffff;
+}
+
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_sub_row td
+{
+    background-color: #f1f1f1;
+}
+
+table.gt_unit_criteria_table input
+{
+    width: 80px !important;
+}
+
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_sub_row td input,
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_sub_row td textarea
+{
+    width: 120px;
+}
+
+table.gt_unit_criteria_table input[type="number"],
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_sub_row td input[type="number"]
+{
+    width: 50px;
+}
+
+table.gt_unit_criteria_table input[type="checkbox"],
+table.gt_unit_criteria_table input[type="radio"],
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_sub_row td input[type="checkbox"],
+table.gt_unit_criteria_table tr.gt_unit_criteria_table_sub_row td input[type="radio"]
+{
+    width: 20px;
+}
+
+table.gt_unit_criteria_table textarea
+{
+    width: 120px;
+    height: auto;
+}
+
+table.gt_unit_criteria_table select
+{
+    width: 80px;
+}
+
+table.gt_unit_criteria_table td.gt_sub_criterion_points_cell select
+{
+    width: 40px;
+}
+
+table.gt_unit_criteria_table td.gt_sub_criteria_chart_cell table td input,
+table.gt_unit_criteria_table td.gt_observation_chart_cell table td input
+{
+    width: 20px;
+}
+
+table.gt_unit_criteria_table img
+{
+    max-width: 100px;
+}
+
+table.gt_unit_criteria_table table td
+{
+    border: 1px solid #CFCFCF;
+    font-size: 8pt;
+}
+
+table.gt_unit_criteria_table table td:empty
+{
+    background: #CFCFCF;
+    background-image: -webkit-gradient(linear, left bottom, right top, color-stop(0, #CFCFCF), color-stop(0.25, #CFCFCF), color-stop(0.25, #bbb), color-stop(0.5, #bbb), color-stop(0.5, #CFCFCF), color-stop(0.75, #CFCFCF), color-stop(0.75, #bbb));
+    background-image: -webkit-linear-gradient(left bottom, #CFCFCF 0%, #CFCFCF 25%, #bbb 25%, #bbb 50%, #CFCFCF 50%, #CFCFCF 75%, #bbb 75%);
+    background-image: -moz-linear-gradient(left bottom, #CFCFCF 0%, #CFCFCF 25%, #bbb 25%, #bbb 50%, #CFCFCF 50%, #CFCFCF 75%, #bbb 75%);
+    background-image: -ms-linear-gradient(left bottom, #CFCFCF 0%, #CFCFCF 25%, #bbb 25%, #bbb 50%, #CFCFCF 50%, #CFCFCF 75%, #bbb 75%);
+    background-image: -o-linear-gradient(left bottom, #CFCFCF 0%, #CFCFCF 25%, #bbb 25%, #bbb 50%, #CFCFCF 50%, #CFCFCF 75%, #bbb 75%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#CFCFCF', endColorstr='#bbbbbb',GradientType=0 ); /* IE6-8 */
+    background-image: linear-gradient(left bottom, #CFCFCF 0%, #CFCFCF 25%, #bbb 25%, #bbb 50%, #CFCFCF 50%, #CFCFCF 75%, #bbb 75%);
+    background-size: 30px 30px;
+}
+
+table.gt_unit_criteria_table table td img:not(.gt_no_float)
+{
+    float: right;
+}
+
+table.gt_unit_criteria_table td.gt_criterion_options_cell
+{
+    text-align: left;
+}
+
+table.gt_criterion_sub_table
+{
+    text-align: center;
+}
+
+table.gt_criteria_conversion_chart
+{
+    margin: auto;
+}
+
+table.gt_criteria_conversion_chart td
+{
+    text-align: center;
+}
+
+table.gt_criterion_sub_table td.gt_range_criteria_cell
+{
+    vertical-align: top;
+}
+
+table.gt_criterion_sub_table td.gt_range_criteria_cell textarea
+{
+    width: 250px;
+}
+
+table.gt_criterion_sub_table tr.gt_criterion_range_row td
+{
+    vertical-align: top;
+}
+
+div.gt_table_list_div
+{
+    width: 90%;
+    background-color: #fff;
+    margin: auto;
+}
+
+div.gt_grid_key
+{
+    width: 90%;
+    margin: auto;
+    background-color: #F4FFF5;
+}
+
+div.gt_grid_key table
+{
+    width: 100%;
+    text-align: center;
+}
+
+div.gt_grid_key table th
+{
+    background-color: #83D062;
+    color: #fff;
+    font-size: 11pt;
+    padding: 4px 0;
+}
+
+div.gt_grid_key table tr.names td
+{
+    font-size: 8pt;
+}
+
+div.gt_grid
+{
+    
+}
+
+ul.slimmenu li.gt_nav_dropdowns
+{
+    width: 200px;
+    padding-top: 13px;
+    padding-right: 10px;
+    padding-left: 20px;
+    padding-bottom: 11px;
+}
+
+ul.slimmenu li.gt_nav_dropdowns select
+{
+    width: 100%;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    font-size: 8pt;
+}
+
+ul.slimmenu li.gt_nav_dropdowns div
+{
+    display: inline-block;
+    width: 49%;
+}
+
+input[type="text"].gt_nav_url
+{
+    width: 75%;
+}
+
+
+
+
+
+
+
+/* Grids */
+table.gt_student_grid,
+table.gt_unit_grid,
+table.gt_class_grid
+{
+    font-size: 10pt;
+}
+
+table.gt_student_grid th,
+table.gt_unit_grid th,
+table.gt_class_grid th
+{
+    border: 1px solid #912437;
+    background-color: #B0344A;
+    color: #fff;
+    font-weight: normal;
+    white-space: nowrap;
+    padding: 5px;
+    text-align: center;
+}
+
+table.gt_student_grid tr td,
+table.gt_unit_grid tr td,
+table.gt_class_grid tr td
+{
+    border: 1px solid #D7919D;
+    white-space: nowrap;
+    padding: 5px;
+    height: 30px;
+}
+
+table.gt_student_grid tr:nth-child(odd) td,
+table.gt_unit_grid tr:nth-child(odd) td,
+table.gt_class_grid tr:nth-child(odd) td
+{
+    background-color: #FFF0F3;
+}
+
+table.gt_student_grid td:not(.gt_grid_unit_name),
+table.gt_unit_grid td,
+table.gt_class_grid td
+{
+    text-align: center;
+}
+
+table.gt_student_grid tr td.gt_cell_blank,
+table.gt_unit_grid tr td.gt_cell_blank,
+table.gt_class_grid tr td.gt_cell_blank,
+table.gt_student_assessment_grid tr td.gt_cell_blank,
+table.gt_student_assessment_grid tr:nth-child(odd) td.gt_cell_blank
+{
+    background-color: #E5E5E5;
+}
+
+
+table.gt_student_grid .gt_grid_unit_name
+{
+    text-align: left;
+    min-width: 250px;
+}
+
+
+table.gt_student_grid .gt_grid_unit_award
+{
+    min-width: 80px;
+}
+
+table.gt_student_grid tr td.gt_grid_unit_award select,
+table.gt_unit_grid tr td.gt_grid_unit_award select,
+table.gt_class_grid tr td.gt_grid_unit_award select,
+table.gt_student_assessment_grid tr td select,
+table.gt_class_assessment_grid tr td select
+{
+    width: 90%;
+    max-width: 120px;
+}
+
+
+
+table.gt_student_grid tr td.gt_grid_cell input,
+table.gt_student_grid tr td.gt_grid_cell select,
+table.gt_unit_grid tr td.gt_grid_cell input,
+table.gt_unit_grid tr td.gt_grid_cell select,
+table.gt_class_grid tr td.gt_grid_cell input,
+table.gt_class_grid tr td.gt_grid_cell select,
+table.gt_student_assessment_grid tr td select,
+table.gt_class_assessment_grid tr td select,
+table.gt_student_assessment_grid tr td input,
+table.gt_class_assessment_grid tr td input
+{
+    padding: 0;
+    margin: 0;
+}
+
+table.gt_student_grid tr td.gt_grid_cell select.gt_criterion_select_ae,
+table.gt_unit_grid tr td.gt_grid_cell select.gt_criterion_select_ae
+{
+    width: 90px;
+    margin-right: 5px;
+}
+
+table.gt_student_grid tr td select, table.gt_student_grid tr td input,
+table.gt_unit_grid tr td select, table.gt_unit_grid tr td input,
+table.gt_class_grid tr td select, table.gt_class_grid tr td input,
+table.gt_student_assessment_grid tr td select, table.gt_student_assessment_grid tr td input,
+table.gt_class_assessment_grid tr td select, table.gt_class_assessment_grid tr td input,
+div#gt_qual_awards table tr td select
+{
+    height: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+table.gt_student_grid tr td select,
+table.gt_unit_grid tr td select, 
+table.gt_class_grid tr td select, 
+table.gt_student_assessment_grid tr td select,
+table.gt_class_assessment_grid tr td select, 
+div#gt_qual_awards table tr td select
+{
+    min-width: 50px;
+}
+
+input.gt_assessment_custom_field
+{
+    max-width: 100px;
+}
+
+textarea.gt_assessment_custom_field
+{
+    max-width: 150px;
+    max-height: 30px;
+}
+
+td.gt_grid_cell_v,
+td.gt_assessment_grid_cell_v
+{
+    cursor: pointer;
+}
+
+td.gt_grid_cell
+{
+    position: relative;
+}
+
+span.gt-popup-studname
+{
+    font-size: 14pt;
+    color: #0055A8;
+}
+
+span.gt-popup-qualname
+{
+    font-size: 13pt;
+    color: #023561;
+}
+
+span.gt-popup-unitname
+{
+    font-size: 12pt;
+    color: #023561;
+}
+
+span.gt-popup-critname
+{
+    font-size: 11pt;
+    color: #023561;
+}
+
+span.gt-popup-awarddate
+{
+    font-size: 10pt;
+    color: #023561;
+}
+
+table.gt_popup_table
+{
+    width: 100%;
+    margin: auto;
+    font-size: 11px;
+}
+
+table.gt_popup_table th, table.gt_popup_table td
+{
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: normal;
+}
+
+table.gt_popup_table th.gt_obnum, table.gt_popup_table td.gt_obcell
+{
+    text-align: center;
+}
+
+table.gt_popup_table tr.gt_lightpink th
+{
+    background-color: #FFD4EC;
+    max-width: 600px;
+}
+
+table.gt_popup_table tr.gt_lightblue th
+{
+    background-color: #D4E2FF;
+    max-width: 600px;
+}
+
+table.gt_popup_table tr.gt_lightblue td
+{
+    background-color: #F2F6FF;
+}
+
+table.gt_popup_table textarea
+{
+    max-width: 100px;
+}
+
+table.gt_popup_table textarea.gt_comments_large
+{
+    max-width: 100%;
+    width: 90%;
+    height: 80px;
+}
+
+table.gt_popup_table textarea.gt_comments_sub_large
+{
+    max-width: 100%;
+}
+
+table.gt_popup_table select, table.gt_popup_table input
+{
+    max-width: 80px;
+}
+
+tr.gt_double_top
+{
+    border-top: 4px double #000;
+}
+
+table.gt_popup_table tr.gt_pink th
+{
+    background-color: #ed329c;
+    color: #fff;
+}
+
+table.gt_popup_table td.gt_popup_overall_value select,
+table.gt_popup_table td.gt_popup_overall_value input
+{
+    max-width: none;
+}
+
+table.gt_popup_table td input[type="radio"], 
+table.gt_popup_table td input[type="checkbox"]
+{
+    margin: 0px;
+}
+
+div.gt_criterion_popup_info
+{
+    text-align: center;
+}
+
+div.gt_criterion_popup_info table
+{
+    width: 90%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+div.gt_criterion_popup_info table td
+{
+    vertical-align: top;
+}
+
+div.gt_criterion_popup_info table td img
+{
+    vertical-align: middle;
+}
+
+div.gt_criterion_popup_info div.gt_criterion_info_popup_heading
+{
+    background-color: #B0344A;
+    color: #fff;
+    padding: 4px;
+    font-size: 10pt;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+div.gt_criterion_info_comments
+{
+    text-align: left;
+    padding: 5px;
+}
+
+div.gt_ranged_criterion_popup
+{
+    font-size: 10pt;
+}
+
+td.gt_has_comments,
+table.gt_student_grid tr td.gt_has_comments,
+table.gt_unit_grid tr td.gt_has_comments,
+table.gt_import_grid_table tr td.gt_has_comments,
+table.gt_import_grid_table tr.even td.gt_has_comments,
+table.gt_import_grid_table tr.odd td.gt_has_comments,
+table.gt_student_assessment_grid tr td.gt_has_comments, 
+table.gt_class_assessment_grid tr td.gt_has_comments,
+table.gt_student_assessment_grid tr:nth-child(odd) td.gt_has_comments, 
+table.gt_class_assessment_grid tr:nth-child(odd) td.gt_has_comments,
+table.gt_import_grid_table tr td.gt_has_comments small
+{
+    background-color: #ffffa5;
+}
+
+table.gt_import_grid_table tr td.gt_has_comments,
+table.gt_import_grid_table tr.even td.gt_has_comments,
+table.gt_import_grid_table tr.odd td.gt_has_comments
+{
+    cursor: help;
+}
+
+table.gt_import_grid_table tr td.gt_has_comments small
+{
+    padding: 2px 8px;
+}
+
+img.gt_comment_icon
+{
+/*    position: absolute;
+    right: 2px;
+    top: 25%;*/
+    width: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+img.gt_assessment_comment_icon
+{
+    width: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+div.gt_criterion_popup_comments
+{
+    text-align: center;
+}
+
+div.gt_criterion_popup_comments textarea
+{
+    width: 80%;
+    height: 200px;
+    margin: auto;
+}
+
+div.gt_detail_criterion_popup textarea.gt_criterion_detail_textbox
+{
+    width: 80%;
+    height: 100px;
+    margin: auto;
+}
+
+table.gt_detail_criterion_overall_table
+{
+    width: 100%;
+    background-color: #F4F4F4;
+}
+
+table.gt_detail_criterion_overall_table tr th
+{
+    background-color: #428bca;
+    color: #fff;
+}
+
+table.gt_detail_criterion_overall_table tr th, table.gt_detail_criterion_overall_table tr td
+{
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: normal;
+}
+
+table.gt_detail_criterion_overall_table_2 tr th
+{
+    background-color: #1F5F96;
+    color: #fff;
+}
+
+div.gt_detail_criterion_popup div.gt_form_panel_body
+{
+    border: 1px solid #000;
+}
+
+div.bc-modal span.gt_comment_save button,
+div.bc-modal span.gt_custom_value_save button
+{
+    padding: 0;
+    margin: 0;
+    margin-bottom: 2px;
+}
+
+span.gt_numeric_point
+{
+    margin-right: 25px;
+}
+
+table.gt_criterion_info_popup_sub_table
+{
+    width: 98%;
+    font-size: 8pt;
+}
+
+table.gt_criterion_info_popup_sub_table th, table.gt_criterion_info_popup_sub_table td
+{
+    border: 1px solid #D36C7E;
+    padding: 4px;    
+}
+
+table.gt_criterion_info_popup_sub_table th
+{
+    background-color: #D7919D;
+    color: #fff;
+}
+
+table.gt_criterion_info_popup_sub_table tr:nth-child(odd) td {
+    background-color: #FFF0F3;
+}
+
+
+ul.gt_tabbed_list {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+    border-bottom: solid 6px #23448B;
+}
+
+ul.gt_tabbed_list li {
+    display: inline-block;
+    background-color: #3262c8;
+    cursor: pointer;
+    margin-right: 10px;
+}
+ul.gt_tabbed_list li:hover {
+    background-color: #23308B;
+}
+ul.gt_tabbed_list li.active {
+    background-color: #23308B;
+}
+
+ul.gt_tabbed_list li a, ul.gt_tabbed_list li a:hover {
+    display: inline-block;
+    color: #fff;
+    padding: 5px 20px;
+}
+
+div#gt_grid_debug
+{
+    width: 300px;
+    margin: auto;
+    margin-bottom: 5px;
+    text-align: center;
+    background-color: #F4FCFF;
+}
+
+div#gt_grid_debug table
+{
+    width: 100%;
+}
+
+div#gt_grid_debug table th
+{
+    background-color: #62B3D0;
+    color: #fff;
+    font-size: 11pt;
+    padding: 4px 0;
+    text-align: center;
+}
+
+div#gt_grid_debug table td
+{
+    padding: 4px;
+}
+
+div#gt_grid_debug img
+{
+    width: 32px;
+    height: 32px;
+}
+
+div#gt_grid_quick_links
+{
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #B0344A;
+    padding: 4px;
+    border-radius: 20px;
+}
+
+div#gt_grid_quick_links a
+{
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+div#gt_qual_awards
+{
+    margin-top: 15px;
+}
+
+div#gt_qual_awards table
+{
+    font-size: 10pt;
+}
+
+div#gt_qual_awards table tr th
+{
+    background-color: #83D062;
+    color: #fff;
+    font-size: 11pt;
+}
+
+div#gt_qual_awards table tr th, div#gt_qual_awards table tr td
+{
+    padding: 4px;
+}
+
+div#gt_qual_awards table tr:nth-child(even) td
+{
+    background-color: #fff;
+}
+
+div#gt_qual_awards table tr:nth-child(odd) td
+{
+    background-color: #F4FFF5;
+}
+
+div#gt_qual_awards table tr td
+{
+    border: 1px solid #DAE8DB;
+}
+
+div#gt_qual_awards table tr#gt_user_final_award_row td
+{
+    font-weight: bold;
+    background-color: #FFFEF4;
+}
+
+div#gt_qual_awards table tr th#gt_help_col
+{
+    text-align: left;
+}
+
+
+div#gt_qual_awards tr td.gt_toggle_help
+{
+    display: none;
+}
+
+table#gt_build_award_table tr td input
+{
+    width: 90%;
+}
+
+div.gt_cmd
+{
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    background-color: #000;
+    color: gold;
+    font-family: courier;
+}
+
+input.gt_upload_file
+{
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #666;
+    border: 1px solid #D8D8D8;
+    font-family: inherit;
+    width: 250px;
+}
+
+div.gt_file_upload
+{
+    position: relative;
+    /*overflow: hidden;*/
+    margin-top: -2.5px;
+}
+
+div.gt_file_upload input.gt_upload
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+
+div.gt_import_output
+{
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    background-color: #F0F5FF;
+    border: 1px dashed #7C90B6;
+}
+
+div.gt_import_warning
+{
+    background-color: #FFEFEF;
+    border: 1px dashed #fb7171;
+    color: red;
+    padding: 5px;
+    font-size: 9pt;
+}
+
+table.gt_import_key
+{
+    width: 100%;
+    overflow: auto;
+}
+
+table.gt_import_key td
+{
+    border: 1px solid #000;
+    text-align: left;
+    font-size: 9pt;
+}
+
+table.gt_import_key td.updatedsince,
+table.gt_import_grid_table tr.even td.updatedsince,
+table.gt_import_grid_table tr.odd td.updatedsince
+{
+    background: url([[pix:block_gradetracker|bot_left_corner]]) no-repeat bottom left rgb(247, 232, 159);
+    color: #000;
+}
+
+table.gt_import_key td.updatedinsheet,
+table.gt_import_grid_table tr.even td.updatedinsheet,
+table.gt_import_grid_table tr.odd td.updatedinsheet
+{
+    background: url([[pix:block_gradetracker|right_corner]]) no-repeat top right rgb(187, 247, 190);
+    color: #000;
+}
+
+table.gt_import_key td.updatedinsheet.updatedsince,
+table.gt_import_grid_table tr.even td.updatedinsheet.updatedsince,
+table.gt_import_grid_table tr.odd td.updatedinsheet.updatedsince
+{
+    background: url([[pix:block_gradetracker|left_corner]]) no-repeat top left rgb(247, 159, 159);
+    color: #000;
+}
+
+table.gt_import_key td.crit {
+  width: 50px;
+  height: 30px;
+  padding: 0px;
+}
+
+div.gt_import_grid_div {
+    width: 100%;
+    max-height: 800px;
+    margin: auto;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+table.gt_import_grid_table
+{
+    width: 100%;
+    overflow-x: auto;
+    text-align: center;
+}
+
+table.gt_import_grid_table tr.even td
+{
+    background-color: #fff;
+}
+
+table.gt_import_grid_table th {
+    background-color: #170A75;
+    color: #fff;
+    border: 1px solid #777777;
+}
+
+table.gt_import_grid_table td
+{
+    border: 1px solid #000;
+    text-align: center;
+    height: 30px;
+    background-color: #fff;
+}
+
+table.gt_import_grid_table td.crit {
+    width: 50px;
+    padding: 0px;
+}
+
+div.gt_hook_criterion_select select,
+div.gt_hook_criterion_select textarea
+{
+    font-size: 8pt;
+}
+
+div.gt_hook_criterion_select textarea
+{
+    height: 65px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Pages */
+.gt_pagination {
+    padding: 10px;
+    text-align: center;
+}
+
+.gt_pagenumber {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-right: 4px;
+    border-radius: 3px;
+    border: solid 1px #c0c0c0;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#e9e9e9));
+    background: -moz-linear-gradient(0% 0% 270deg,#f8f8f8, #e9e9e9);
+    background: #e9e9e9;
+    box-shadow: inset 0px 1px 0px rgba(255,255,255, .8), 0px 1px 3px rgba(0,0,0, .1);
+    font-size: .875em;
+    font-weight: bold;
+    text-decoration: none;
+    color: #717171;
+    text-shadow: 0px 1px 0px rgba(255,255,255, 1);
+}
+
+.gt_pagenumber:hover {
+    background: #fefefe;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FEFEFE), to(#f0f0f0));
+    background: -moz-linear-gradient(0% 0% 270deg,#FEFEFE, #f0f0f0);
+}
+
+.gt_pagenumber.active {
+    background: #616161;
+    box-shadow: inset 0px 0px 8px rgba(0,0,0, .5), 0px 1px 0px rgba(255,255,255, .8);
+    color: #f0f0f0;
+    text-shadow: 0px 0px 3px rgba(0,0,0, .5);
+}
+
+div.gt_search_results
+{
+    padding: 10px;
+    background: #fff;
+}
+
+ul.gt li img.gt_block_icon,
+ul#gt_dropdown_list li img
+{
+    width: 16px;
+    height: 16px;
+}
+
+table#gt_mod_linking
+{
+    font-size: 8pt;
+}
+
+table#gt_mod_linking th
+{
+    text-transform: none;
+}
+
+table#gt_mod_linking_edit
+{
+    width: 90%;
+    margin: auto;
+}
+
+table#gt_mod_linking_edit th
+{
+    text-align: right;
+}
+
+table#gt_mod_linking_edit td
+{
+    text-align: left;
+    width: 50%;
+}
+
+table#gt_mod_linking_edit td input[type="text"]
+{
+    width: 100%;
+}
+
+table#gt_mod_linking td img
+{
+    max-width: 16px;
+    max-height: 16px;
+}
+
+div#gt_course_activities_left
+{
+    width: 15%;
+    float: left;
+}
+
+div#gt_course_activities_right
+{
+    width: 82%;
+    margin-left: 2%;
+    float: left;
+}
+
+table#gt_course_activities img
+{
+    max-width: 24px;
+    max-height: 24px;
+}
+
+table#gt_activity_links td
+{
+    vertical-align: top;
+}
+
+table#gt_activity_links td#gt_mod_hook_activities div,
+table#gt_activity_links td.gt_mod_hook_activities div
+{
+    margin-bottom: 10px;
+}
+
+img.gt_16
+{
+    max-height: 16px !important;
+    max-width: 16px !important;
+    vertical-align: middle;
+}
+
+div.gt_assessment_qual
+{
+    width: 100%;
+    overflow-x: auto;
+}
+
+table.gt_student_assessment_grid,
+table.gt_class_assessment_grid
+{
+    margin: auto;
+    text-align: center;
+}
+
+table.gt_student_assessment_grid tr th,
+table.gt_class_assessment_grid tr th
+{
+    border: 1px solid #912437;
+    background-color: #B0344A;
+    color: #fff;
+    font-weight: normal;
+    white-space: nowrap;
+    padding: 4px;
+    vertical-align: bottom;
+}
+
+table.gt_student_assessment_grid tr td,
+table.gt_class_assessment_grid tr td
+{
+    border: 1px solid #D7919D;
+    white-space: nowrap;
+    padding: 4px;
+}
+
+table.gt_student_assessment_grid tr:nth-child(odd) td,
+table.gt_class_assessment_grid tr:nth-child(odd) td
+{
+    background-color: #FFF0F3;
+}
+
+/*table.gt_student_assessment_grid img.gt_award_icon,
+table.gt_class_assessment_grid img.gt_award_icon
+{
+    width: 50px !important;
+    height: 50px !important;
+}*/
+
+table.gt_student_assessment_grid tr th a,
+table.gt_class_assessment_grid tr th a
+{
+    color: #fff;
+}
+
+table.gt_student_assessment_grid tr th a:hover,
+table.gt_class_assessment_grid tr th a:hover
+{
+    color: #DADADA;
+}
+
+table.gt_student_assessment_grid tr td.gt_grid_cell:empty,
+table.gt_class_assessment_grid tr td.gt_grid_cell:empty
+{
+    background-color: #E5E5E5;
+}
+
+/*table.gt_student_assessment_grid tr td.gt_assessment_grade_cell
+{
+    font-size: 12pt;
+}*/
+
+table.gt_coefficient_table
+{
+    margin: auto;
+    color: #fff;
+}
+
+table.gt_coefficient_table tr td, table.gt_coefficient_table tr th
+{
+    padding: 4px 8px;
+    border: 1px solid #fff;
+}
+
+table.gt_coefficient_table tr th:first-child
+{
+    background-color: #B0344A;
+}
+
+table.gt_coefficient_table tr td.gt_qual_name
+{
+    color: #000;
+}
+
+table.gt_assessment_summary_table
+{
+    margin: auto;
+    color: #000;
+}
+
+table.gt_assessment_summary_table tr td, table.gt_assessment_summary_table tr th
+{
+    padding: 4px 8px;
+    border: 1px solid #fff;
+}
+
+table.gt_assessment_summary_table tr th
+{
+    background-color: #B0344A;
+    color: #fff;
+}
+
+table.gt_assessment_summary_table tr:nth-child(even) td
+{
+    background-color: rgb(255, 240, 243);
+}
+
+
+/* Generic */
+.gt_c
+{
+    text-align: center !important;
+}
+
+.gt_left
+{
+    text-align: left;
+}
+
+.gt_right
+{
+    text-align: right;
+}
+
+.gt_bold
+{
+    font-weight: bold;
+}
+
+.gt_cl
+{
+   clear: both;
+}
+
+.gt_top
+{
+    vertical-align: top !important;
+}
+
+.gt_middle
+{
+    vertical-align: middle !important;
+}
+
+.gt_botty
+{
+    vertical-align: bottom;
+}
+
+.gt_img_disable
+{
+    -webkit-filter: grayscale(100%);
+       -moz-filter: grayscale(100%);
+         -o-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+            filter: grayscale(100%); 
+}
+
+.gt_form_control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+input[type="text"].gt_datepicker
+{
+    width: 80px;
+}
+
+input[type="text"].gt_form_control
+{
+    width: 95%;
+}
+
+input[type="checkbox"].gt_form_control, input[type="radio"].gt_form_control
+{
+    width: 20px;
+    box-shadow: none;
+}
+
+input[type="number"].gt_form_control
+{
+    padding-left: 5px;
+    width: 55px;
+}
+
+textarea.gt_form_control
+{
+    width: 95%;
+}
+
+.gt_form_control:disabled
+{
+    cursor: not-allowed;
+}
+
+input[type='image']
+{
+    vertical-align: middle;
+}
+
+select.gt_multi_select
+{
+    width: 200px;
+    height: 150px;
+}
+
+
+
+/* Colours */
+.gt_bg_white
+{
+    background-color: #fff;
+}
+
+
+
+
+/* Buttons */
+
+input.gt_btn, a.gt_btn, a.gt_btn:link, a.gt_btn:visited, div.gt_btn,
+input.gt_btn[type="submit"], input.gt_btn[type="button"], input.gt_btn[type="reset"]
+{
+    background: #E3E3E3;
+    border: 1px solid #BBB;
+    border-radius: 3px;
+    color: #333 !important;
+    padding: 8px 0px 9px;
+    text-align: center;
+    width: 150px;
+    display: inline-block;
+    /*margin: 0 10px;*/
+    margin: 0;
+    box-shadow: none;
+}
+
+
+input.gt_btn:hover, a.gt_btn:hover, a.gt_btn:focus, div.gt_btn:hover,
+input.gt_btn[type="submit"]:hover, input.gt_btn[type="button"]:hover, input.gt_btn[type="reset"]:hover,
+input.gt_btn[type="submit"]:focus, input.gt_btn[type="button"]:focus, input.gt_btn[type="reset"]:focus
+{
+    background: #d9d9d9;
+    color: #222;
+    cursor: pointer; 
+    text-decoration: none;
+}
+
+input.gt_btn:active, a.gt_btn:active
+{
+    background: #d0d0d0;
+    color: #000; 
+}
+
+input.gt_btn:disabled, input.gt_btn[type="submit"]:disabled, input.gt_btn[type="button"]:disabled, input.gt_btn[type="reset"]:disabled
+{
+    color: #696969 !important;
+    background: #d9d9d9 !important;
+    cursor: not-allowed !important;
+    border: 1px solid #696969 !important;
+}
+
+input.gt_btn_small, a.gt_btn_small
+{
+    width: 100px !important;
+    padding: 2px !important;
+    font-size: 8pt !important;
+}
+
+a.gt_btn[disabled]
+{
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+input.gt_blue, a.gt_blue, a.gt_blue:link, a.gt_blue:visited, div.gt_blue, input.gt_blue[type="submit"], input.gt_blue[type="button"], input.gt_blue[type="reset"],
+a.gt_blue[disabled]:hover
+{
+    background: #2191ed;
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #47a4f0), color-stop(100%, #2191ed));
+    background-image: -webkit-linear-gradient(top, #47a4f0, #2191ed);
+    background-image: -moz-linear-gradient(top, #47a4f0, #2191ed);
+    background-image: -o-linear-gradient(top, #47a4f0, #2191ed);
+    background-image: linear-gradient(top, #47a4f0, #2191ed);
+    border: 1px solid #1387e7;
+    color: #fff !important;
+}
+
+input.gt_blue:hover, a.gt_blue:hover, a.gt_blue:focus, div.gt_blue:hover, 
+input.gt_blue[type="submit"]:hover, input.gt_blue[type="button"]:hover, input.gt_blue[type="reset"]:hover,
+input.gt_blue[type="submit"]:focus, input.gt_blue[type="button"]:focus, input.gt_blue[type="reset"]:focus
+{
+      background: #1387e7;
+      background-size: 100%;
+      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #349aef), color-stop(100%, #1387e7));
+      background-image: -webkit-linear-gradient(top, #349aef, #1387e7);
+      background-image: -moz-linear-gradient(top, #349aef, #1387e7);
+      background-image: -o-linear-gradient(top, #349aef, #1387e7);
+      background-image: linear-gradient(top, #349aef, #1387e7); 
+      color: #fff !important;
+}
+
+input.gt_blue:active, a.gt_blue:active, input.gt_blue[type="submit"]:active, input.gt_blue[type="button"]:active, input.gt_blue[type="reset"]:active
+{
+    background: #188cec;
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #1179cf), color-stop(100%, #188cec));
+    background-image: -webkit-linear-gradient(top, #1179cf, #188cec);
+    background-image: -moz-linear-gradient(top, #1179cf, #188cec);
+    background-image: -o-linear-gradient(top, #1179cf, #188cec);
+    background-image: linear-gradient(top, #1179cf, #188cec);
+    color: #fff !important;
+}
+
+
+
+input.gt_red, a.gt_red, a.gt_red:link, a.gt_red:visited, div.gt_red, input.gt_red[type="submit"], input.gt_red[type="button"], input.gt_red[type="reset"]
+{
+    background: #db3535;
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e15858), color-stop(100%, #db3535));
+    background-image: -webkit-linear-gradient(top, #e15858, #db3535);
+    background-image: -moz-linear-gradient(top, #e15858, #db3535);
+    background-image: -o-linear-gradient(top, #e15858, #db3535);
+    background-image: linear-gradient(top, #e15858, #db3535);
+    border: 1px solid #d62626;
+    color: #fff !important;
+}
+
+input.gt_red:hover, a.gt_red:hover, a.gt_red:focus, div.gt_red:hover, 
+input.gt_red[type="submit"]:hover, input.gt_red[type="button"]:hover, input.gt_red[type="reset"]:hover,
+input.gt_red[type="submit"]:focus, input.gt_red[type="button"]:focus, input.gt_red[type="reset"]:focus
+{
+      background: #d62626;
+      background-size: 100%;
+      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #de4646), color-stop(100%, #d62626));
+      background-image: -webkit-linear-gradient(top, #de4646, #d62626);
+      background-image: -moz-linear-gradient(top, #de4646, #d62626);
+      background-image: -o-linear-gradient(top, #de4646, #d62626);
+      background-image: linear-gradient(top, #de4646, #d62626); 
+      color: #fff !important;
+}
+
+input.gt_red:active, a.gt_red:active, input.gt_red[type="submit"]:active, input.gt_red[type="button"]:active, input.gt_red[type="reset"]:active
+{
+      background: #d92c2c;
+      background-size: 100%;
+      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #c02222), color-stop(100%, #d92c2c));
+      background-image: -webkit-linear-gradient(top, #c02222, #d92c2c);
+      background-image: -moz-linear-gradient(top, #c02222, #d92c2c);
+      background-image: -o-linear-gradient(top, #c02222, #d92c2c);
+      background-image: linear-gradient(top, #c02222, #d92c2c); 
+      color: #fff !important;
+}
+
+
+input.gt_green, a.gt_green, a.gt_green:link, a.gt_green:visited, div.gt_green, input.gt_green[type="submit"], input.gt_green[type="button"], input.gt_green[type="reset"]
+{
+    color: #fff !important;
+    background: #63a822;
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #77ca29), color-stop(100%, #63a822));
+    background-image: -webkit-linear-gradient(top, #77ca29, #63a822);
+    background-image: -moz-linear-gradient(top, #77ca29, #63a822);
+    background-image: -o-linear-gradient(top, #77ca29, #63a822);
+    background-image: linear-gradient(top, #77ca29, #63a822);
+    border: 1px solid #59971f;
+}
+
+input.gt_green:hover, a.gt_green:hover, a.gt_green:focus, div.gt_green:hover, 
+input.gt_green[type="submit"]:hover, input.gt_green[type="button"]:hover, input.gt_green[type="reset"]:hover,
+input.gt_green[type="submit"]:focus, input.gt_green[type="button"]:focus, input.gt_green[type="reset"]:focus
+{
+    color: #fff !important;
+    background: #63A128;
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7CBB41), color-stop(100%, #63A128));
+    background-image: -webkit-linear-gradient(top,#7CBB41,#63A128);
+    background-image: -moz-linear-gradient(top, #7CBB41, #63A128);
+    background-image: -o-linear-gradient(top, #7CBB41, #63A128);
+    background-image: linear-gradient(top, #7CBB41, #63A128);
+}
+
+input.gt_green:active, a.gt_green:active, input.gt_green[type="submit"]:active, input.gt_green[type="button"]:active, input.gt_green[type="reset"]:active
+{
+    color: #fff !important;
+    background: #5ea020;
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4d821a), color-stop(100%, #5ea020));
+    background-image: -webkit-linear-gradient(top, #4d821a, #5ea020);
+    background-image: -moz-linear-gradient(top, #4d821a, #5ea020);
+    background-image: -o-linear-gradient(top, #4d821a, #5ea020);
+    background-image: linear-gradient(top, #4d821a, #5ea020);
+}
+
+input.gt_black, a.gt_black, a.gt_black:link, a.gt_black:visited, div.gt_black, input.gt_black[type="submit"], input.gt_black[type="button"], input.gt_black[type="reset"]
+{
+    color: #fff !important;
+    background-color: #363636;
+    background-image: -moz-linear-gradient(top, #444444, #222222);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));
+    background-image: -webkit-linear-gradient(top, #444444, #222222);
+    background-image: -o-linear-gradient(top, #444444, #222222);
+    background-image: linear-gradient(to bottom, #444444, #222222);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF444444', endColorstr='#FF222222', GradientType=0);
+    border-color: #222222 #222222 black;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+input.gt_black:hover, a.gt_black:hover, a.gt_black:focus, div.gt_black:hover, 
+input.gt_black[type="submit"]:hover, input.gt_black[type="button"]:hover, input.gt_black[type="reset"]:hover,
+input.gt_black[type="submit"]:focus, input.gt_black[type="button"]:focus, input.gt_black[type="reset"]:focus
+{
+    color: #fff !important;
+    background-color: #222222;
+}
+
+input.gt_black:active, a.gt_black:active, input.gt_black[type="submit"]:active, input.gt_black[type="button"]:active, input.gt_black[type="reset"]:active
+{
+    color: #fff !important;
+    background-color: #222222;
+}
+
+
+input.gt_pink, a.gt_pink, a.gt_pink:link, a.gt_pink:visited, div.gt_pink, input.gt_pink[type="submit"], input.gt_pink[type="button"], input.gt_pink[type="reset"]
+{
+    background: #ff5db1;
+    background-size: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff5db1), color-stop(100%,#ef017c));
+    background: -webkit-linear-gradient(top, #ff5db1 0%,#ef017c 100%);
+    background: -o-linear-gradient(top, #ff5db1 0%,#ef017c 100%);
+    background: -ms-linear-gradient(top, #ff5db1 0%,#ef017c 100%); 
+    background: linear-gradient(to bottom, #ff5db1 0%,#ef017c 100%); 
+    border: 1px solid #DD00B0;
+    color: #fff !important;
+}
+
+input.gt_pink:hover, a.gt_pink:hover, a.gt_pink:focus, div.gt_pink:hover, 
+input.gt_pink[type="submit"]:hover, input.gt_pink[type="button"]:hover, input.gt_pink[type="reset"]:hover,
+input.gt_pink[type="submit"]:focus, input.gt_pink[type="button"]:focus, input.gt_pink[type="reset"]:focus
+{    
+    background: #E6549F;
+    background-size: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E6549F), color-stop(100%,#CC4A8E));
+    background: -webkit-linear-gradient(top, #E6549F 0%,#CC4A8E 100%);
+    background: -o-linear-gradient(top, #E6549F 0%,#CC4A8E 100%);
+    background: -ms-linear-gradient(top, #E6549F 0%,#CC4A8E 100%); 
+    background: linear-gradient(to bottom, #E6549F 0%,#CC4A8E 100%); 
+    color: #fff !important;
+}
+
+input.gt_pink:active, a.gt_pink:active, input.gt_pink[type="submit"]:active, input.gt_pink[type="button"]:active, input.gt_pink[type="reset"]:active
+{
+    background: #ef017c;
+    background-size: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ef017c), color-stop(100%,#ff5db1));
+    background: -webkit-linear-gradient(top, #ef017c 0%,#ff5db1 100%);
+    background: -o-linear-gradient(top, #ef017c 0%,#ff5db1 100%);
+    background: -ms-linear-gradient(top, #ef017c 0%,#ff5db1 100%); 
+    background: linear-gradient(to bottom, #ef017c 0%,#ff5db1 100%); 
+    color: #fff !important;
+}
+
+
+
+input.gt_yellow, a.gt_yellow, a.gt_yellow:link, a.gt_yellow:visited, div.gt_yellow, input.gt_yellow[type="submit"], input.gt_yellow[type="button"], input.gt_yellow[type="reset"],
+a.gt_yellow[disabled]:hover
+{
+    background: #ffff5d;
+    background-size: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffff5d), color-stop(100%,#efc901));
+    background: -webkit-linear-gradient(top, #ffff5d 0%,#efc901 100%);
+    background: -o-linear-gradient(top, #ffff5d 0%,#efc901 100%);
+    background: -ms-linear-gradient(top, #ffff5d 0%,#efc901 100%); 
+    background: linear-gradient(to bottom, #ffff5d 0%,#efc901 100%); 
+    border: 1px solid #dd9f00;
+    color: #000 !important;
+}
+
+input.gt_yellow:hover, a.gt_yellow:hover, a.gt_yellow:focus, div.gt_yellow:hover, 
+input.gt_yellow[type="submit"]:hover, input.gt_yellow[type="button"]:hover, input.gt_yellow[type="reset"]:hover,
+input.gt_yellow[type="submit"]:focus, input.gt_yellow[type="button"]:focus, input.gt_yellow[type="reset"]:focus
+{    
+    background: #e6e054;
+    background-size: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e6e054), color-stop(100%,#ccbc4a));
+    background: -webkit-linear-gradient(top, #e6e054 0%,#ccbc4a 100%);
+    background: -o-linear-gradient(top, #e6e054 0%,#ccbc4a 100%);
+    background: -ms-linear-gradient(top, #e6e054 0%,#ccbc4a 100%); 
+    background: linear-gradient(to bottom, #e6e054 0%,#ccbc4a 100%); 
+    color: #000 !important;
+}
+
+input.gt_yellow:active, a.gt_yellow:active, input.gt_yellow[type="submit"]:active, input.gt_yellow[type="button"]:active, input.gt_yellow[type="reset"]:active
+{
+    background: #efdc01;
+    background-size: 100%;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efdc01), color-stop(100%,#ffec5d));
+    background: -webkit-linear-gradient(top, #efdc01 0%,#ffec5d 100%);
+    background: -o-linear-gradient(top, #efdc01 0%,#ffec5d 100%);
+    background: -ms-linear-gradient(top, #efdc01 0%,#ffec5d 100%); 
+    background: linear-gradient(to bottom, #efdc01 0%,#ffec5d 100%); 
+    color: #000 !important;
+}
+
+
+.gt_float_left
+{
+    float: left;
+}
+
+.gt_float_left:after
+{
+    clear: both;
+}
+
+.gt_float_right
+{
+    float: right;
+}
+
+.gt_float_right:after
+{
+    clear: both;
+}
+
+div.gt_dropdown_menu
+{
+    float: right;
+    position: relative;
+}
+
+ul.gt_dropdown_menu
+{
+    display: none;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style-type: none;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-left: -150px;
+    font-size: 9pt;
+    text-align: left;
+}
+
+ul.gt_dropdown_menu li a
+{
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 20px;
+    color: #333333;
+    white-space: nowrap;
+}
+
+ul.gt_dropdown_menu li > a:hover
+{
+    text-decoration: none;
+    color: white;
+    background-color: #6500C2;
+    background-image: -moz-linear-gradient(top, #A800CC, #6A00B3);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#A800CC), to(#6A00B3));
+    background-image: -webkit-linear-gradient(top, #A800CC, #6A00B3);
+    background-image: -o-linear-gradient(top, #A800CC, #6A00B3);
+    background-image: linear-gradient(to bottom, #A800CC, #6A00B3);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF0088CC', endColorstr='#FF0077B3', GradientType=0);
+}
+
+ul.gt_dropdown_menu li.gt_divider {
+    height: 2px;
+    margin: 3px 1px;
+    overflow: hidden;
+    background-color: #e5e5e5;
+    border-bottom: 1px solid white;
+}
+
+
+
+
+table.gt_hook_unit_criteria
+{
+    margin-bottom: 10px;
+    table-layout: fixed;
+}
+
+table.gt_hook_unit_criteria tr th,
+table.gt_hook_unit_criteria tr td
+{
+    padding: 4px;
+    text-align: center;
+}
+
+table.gt_hook_unit_criteria tr td input
+{
+    margin: 0;
+}
+
+div.gt_hooked_unit
+{
+    overflow-x: scroll;
+}
+
+table.gt_hook_unit_criteria select
+{
+    min-width: 75px;
+    width: 100%;
+}
+
+table.gt_filter_results
+{
+    width: 100%;
+}
+
+
+#gt_loading
+{
+    text-align: center;
+}
+
+#gt_loading img
+{
+    max-height: 30px;
+}
+
+img.gt_icon
+{
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+select option.gt_mod_supported
+{
+    background-color: #bde993;
+    color: #000;
+}
+
+table.gt_small_table
+{
+    width: 95%;
+    margin: auto;
+    font-size: 9pt;
+}
+
+table.gt_small_table img.gt_icon
+{
+    width: 15px;
+    height: 15px;
+}
+
+table.gt_small_table tr th
+{
+    background-color: rgb(234, 243, 255);
+}
+
+table.gt_small_table tr th, table.gt_small_table tr td
+{
+    border: 1px solid rgb(180, 196, 216);
+    padding: 4px;
+}
+
+table.gt_small_table tr td input
+{
+    width: 90%;
+}
+
+table.gt_small_table tr td select
+{
+    width: 80px;
+}
+
+table.gt_small_table tr td input[type="number"]
+{
+    width: 40px;
+}
+
+table th.gt_percentile,
+table td.gt_percentile
+{
+    color: #ffffff;
+}
+
+hr.gt_hr
+{
+    border: none;
+    border-top: 1px solid #8c8b8b;
+    margin: 10px 0;
+}
+
+div#gt_import_div
+{
+    display: inline-block;
+}
+
+table.gt_unit_popup_criteria_table
+{
+    width: 90%;
+    margin: auto;
+    text-align: left;
+}
+
+table.gt_unit_popup_criteria_table tr th
+{
+    background-color: #772030;
+    color: #fff;
+    font-weight: normal;
+    padding: 4px;
+}
+
+table.gt_unit_popup_criteria_table tr:nth-child(even) td
+{
+    background-color: #FFF1F1;
+}
+
+table.gt_unit_popup_criteria_table td
+{
+    vertical-align: top;
+}
+
+table.gt_numeric_values_table th
+{
+    background-color: #5F749E;
+    color: #fff;
+}
+
+table.gt_numeric_values_table th,
+table.gt_numeric_values_table td
+{
+    border: none;
+    text-align: center;
+}
+
+table.gt_unit_info_range_table
+{
+    font-size: 8pt;
+}
+
+table.gt_unit_popup_criteria_table td table.gt_unit_info_range_table th
+{
+    background-color: #EFC9C9;
+    color: #000;
+}
+
+table.gt_unit_popup_criteria_table td table.gt_unit_info_range_table th,
+table.gt_unit_popup_criteria_table td table.gt_unit_info_range_table td
+{
+    border: 1px solid #CC9D9D;
+}
+
+table.gt_class_grid tr th a
+{
+    color: #fff;
+}
+
+button#tg_add_course,
+button#tg_remove_course
+{
+    width: 100%;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.gt_label
+{
+    display: inline-block;
+    padding: 4px;
+    font-size: 85%;
+    line-height: 1;
+    background-color: #a7a7a7;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem;
+}
+
+.gt_label + .gt_label_green
+{
+    background-color: #5bde71;
+}
+
+.gt_label + .gt_label_blue
+{
+    background-color: #5bc0de;
+}
+
+.gt_label + .gt_label_purple
+{
+    background-color: #c45bde;
+}
+
+.gt_label + .gt_label_orange
+{
+    background-color: #dea45b;
+}
+
+table.gt_assessment_popup_custom_fields_table td
+{
+    padding-bottom: 40px;
+}
+
+td.gt_grid_end,
+table.gt_student_grid tr:nth-child(odd) td.gt_grid_end, 
+table.gt_unit_grid tr:nth-child(odd) td.gt_grid_end, 
+table.gt_class_grid tr:nth-child(odd) td.gt_grid_end
+{
+    background-color: #B0344A;
+}
+
+td.gt_grid_end img
+{
+    width: 5px;
+    height: 30px;
+}
+
+input.gt_stud_unit_IV_date,
+input.gt_stud_unit_IV_who
+{
+    width: 100px;
+}
+
+
+
+ul#gt_dropdown_list {
+  font-size: 9pt;
+  background: #B6C368;
+  height: 50px;
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding: 0;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  -webkit-box-shadow: inset 0px 20px 0px 0px rgba(255, 255, 255, 0.1);
+  -moz-box-shadow: inset 0px 20px 0px 0px rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0px 20px 0px 0px rgba(255, 255, 255, 0.1);
+}
+
+ul#gt_dropdown_list li {
+  float: left;
+  padding: 0px 0px 0px 5px;
+}
+
+ul#gt_dropdown_list > li:first-child {
+    padding-left: 15px;
+}
+
+ul#gt_dropdown_list li a {
+  color: #000;
+  display: block;
+  font-weight: normal;
+  line-height: 50px;
+  margin: 0px;
+  padding: 0px 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+ul#gt_dropdown_list li:hover > a,
+ul#gt_dropdown_list li.selected > a {
+  background: #949E53;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+ul#gt_dropdown_list > li > a:hover,
+ul#gt_dropdown_list > li.selected > a {
+  -webkit-box-shadow: inset 0px 0px 7px 2px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: inset 0px 0px 7px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0px 0px 7px 2px rgba(0, 0, 0, 0.3);
+}
+
+
+ul#gt_dropdown_list li ul {
+  display: none;
+  height: auto;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  position: absolute;
+  width: 200px;
+  z-index: 200;
+}
+
+ul#gt_dropdown_list li:hover > ul {
+  display: block;
+}
+
+ul#gt_dropdown_list li li {
+  display: block;
+  float: none;
+  margin: 0px;
+  padding: 0px;
+  width: 200px;
+  background: #B6C368;
+  /*this is where the rounded corners for the dropdown disappears*/
+}
+
+ul#gt_dropdown_list li:hover li a {
+  background: none;
+}
+
+ul#gt_dropdown_list li ul a {
+  display: block;
+  height: 50px;
+  font-size: 12px;
+  font-style: normal;
+  margin: 0px;
+  padding: 0px 10px 0px 15px;
+  text-align: left;
+}
+
+ul#gt_dropdown_list li ul li:hover > a,
+ul#gt_dropdown_list li.selected ul li.selected > a {
+  border: 0px;
+  color: #FFFFFF;
+  background: #949E53;
+  text-decoration: none;
+}
+
+ul#gt_dropdown_list li ul li ul li:hover a {
+    background: #C7D18C;
+    color: #000;
+}
+
+ul#gt_dropdown_list ul li ul {
+    left: 100%;
+    margin-top: -50px;
+    display: none;
+}
+
+ul#gt_dropdown_list li ul li:hover ul {
+    display: block;
+}
+
+table#gt_stud_quals td.gt_cQ:empty
+{
+    background-color: #cccccc;
+}
+
+table#gt_stud_quals tr.cRow td,
+table#gt_stud_qualsFreeze tr.cRow td,
+table#gt_staff_quals tr.cRow td,
+table#gt_staff_qualsFreeze tr.cRow td,
+table.gt_stud_units tr.cRow td
+{
+    background-color: #61b5e6;
+    color: #fff;
+    font-weight: bold;
+}
+
+table.gt_stud_units tr.cRow td a,
+table#gt_stud_quals tr.cRow td a,
+table#gt_stud_qualsFreeze tr.cRow td a
+{
+    color: #fff !important;
+}
+
+table#gt_stud_quals tr.cRow td img,
+table#gt_staff_quals tr.cRow td img,
+table.gt_stud_units tr.cRow td img
+{
+    height: 25px;
+}
+
+/*table#gt_stud_units tr th,
+table#gt_stud_unitsCopy tr th
+{
+    max-width: 250px;
+    white-space: pre-line;
+    word-wrap: break-word;
+}*/
+
+form#tg_calculate_form select
+{
+    max-width: 500px;
+}
+
+
+/* Other Plugins */
+
+
+
+
+/* Overriding grid styles */
+#gt_student_gridPanelItem, #gt_unit_gridPanelItem, #gt_class_gridPanelItem, #gt_stud_qualsPanelItem
+{
+    /*top: 10px;*/
+}
+
+/* Can't remember why this was put in, so commented out for now, as messes up unit name cell */
+#gt_student_gridFreeze tr td div.GridCellDiv, #gt_unit_gridFreeze tr td div.GridCellDiv, #gt_class_gridFreeze tr td div.GridCellDiv
+{
+    /*height: 30px;*/
+}
+
+th.gt_grid_unit_award div
+{
+    width: 127px;
+}
+
+div#gt_student_gridPanelHeaderContent,
+div#gt_unit_gridPanelHeaderContent,
+div#gt_class_gridPanelHeaderContent
+{
+    /*max-height: 32px;*/
+}
+
+
+
+
+
+
+
+
+.gt_small_td{
+    width:50px;
+}
+.gt_medium_td{
+    width:100px;
+}
+
+.gt_hide_borders{
+    border-left:none !important;
+    border-right:none !important;
+    border-top:none !important;
+    border-bottom:none !important;
+    background-color:#efeded !important;
+}
+
+.gt_no_units{
+    background-color:#ff4d4d !important;
+    color:white !important;
+}
+
+.gt_generated_unit_header{
+    background-color: #7b6dec !important;
+    color: #fff !important;
+}
+
+.gt_generated_header{
+    background-color: #ec6d6d !important;
+}
+
+.gt_table_tests{
+    text-align: center;
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+table.gt_reporting_results {
+    border: 1px solid black;
+}
+
+table.gt_reporting_results th
+{
+    background-color: #000;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 2px;
+}
+
+table.gt_reporting_results td
+{
+    background-color: #fff;
+    border: 1px solid #000;
+    color: #000;
+    padding: 2px;
+}
+
+ul.gt_horizontal_menu
+{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+ul.gt_horizontal_menu li {
+    list-style-type: none;
+    display: inline;
+}
+
+ul.gt_horizontal_menu li a {
+    display: inline-block;
+    color: #fff;
+    text-align: center;
+    padding: 6px 0;
+    text-decoration: none;
+    width: 33%;
+}
+
+ul.gt_horizontal_menu li a.selected {
+    background-color: #4CAF50;
+}
+
+ul.gt_horizontal_menu li a:hover:not(.selected) {
+    background-color: #000;
+}
+
+table.gt_activities_overview
+{
+    margin: auto;
+    text-align: center;
+}
+
+table.gt_activities_overview th
+{
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #000;
+}
+
+table.gt_activities_overview tr:nth-child(odd)
+{
+    background-color: #fff;
+}
+
+table.gt_activities_overview td
+{
+    border: 1px solid #000;
+}
+
+table.gt_activities_overview td img
+{
+    width: 20px;
+    height: 20px;
+}
+
+table.gt_activities_overview td.gt_empty
+{
+    background-color: #E5E5E5;
+}
+
+table.gt_activities_overview td.gt_activities_overview_criterion
+{
+    cursor: pointer;
+}
+
+div#gt_activities_overview_details table
+{
+    margin: auto;
+    min-width: 50%;
+}
+
+div#gt_activities_overview_details table th,
+div#gt_activities_overview_details table tr td:first-child
+{
+    background-color: #333;
+    color: #fff;
+}
+
+div#gt_activities_overview_details table td
+{
+    background-color: #fff;
+    color: #000;
+}
+
+div#gt_activities_overview_details table th, 
+div#gt_activities_overview_details table td
+{
+    padding: 4px;
+    text-align: left;
+}
+
+div#gt_activities_overview_details table td a
+{
+    color: #fff;
+}
+
+table#gt_activities_overview_key
+{
+    margin: auto;
+    font-size: 8pt;
+}
+
+table#gt_activities_overview_key tr th
+{
+    background-color: #cce2f1;
+    color: #000;
+}
+
+table#gt_activities_overview_key td
+{
+    width: 33%;
+    border: 1px solid #cce2f1;
+}
+
+table#gt_activities_overview_key td img
+{
+    width: 20px;
+    height: 20px;
+    vertical-align: bottom;
+}
+
+textarea#gt_custom_css_textarea
+{
+    height: 150px;
+    width: 50%;
+}
+
+select option.gt_bcgt_old_cnt_courses_0
+{
+    background-color: red;
+    color: #fff;
+}
+
+
+.gt_meter { 
+    background: #555555;
+    border-radius: 25px;
+    box-shadow: inset 0px -1px 1px rgba(255, 255, 255, 0.298);
+    height: 10px;
+    margin: auto auto 5px;
+    padding: 0px;
+    position: relative;
+    width: 100px;
+}
+
+.gt_meter > span { 
+    background-color: #2BC253;
+    border-radius: 20px;
+    box-shadow: inset 0px 2px 9px rgba(255, 255, 255, 0.298), inset 0px -2px 6px rgba(0, 0, 0, 0.400);
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+div#gt_rules_wrapped, div#gt_rules_wrapped select, div#gt_rules_wrapped input
+{
+    font-size: 9pt;
+}
+
+div.gt_rules_steps, div.gt_rules_form
+{
+    width: 47%;
+    margin-left: 1%;
+    margin-right: 1%;
+    float: left;
+}
+
+div.gt_rules_section
+{
+    border-bottom: 1px solid #000;
+}
+
+div.gt_rules_steps
+{
+    border-left: 1px solid #000;
+}
+
+div.gt_rules_section table
+{
+    text-align: center;
+    width: 100%;
+}
+
+span.gt_update_notification img
+{
+    width: 20px;
+    height: 20px;
+}
+
+span.gt_update_notification_full_general, span.gt_update_notification_full_performance
+{
+    color: #000;
+}
+
+span.gt_update_notification_full_security
+{
+    background: #BB8530;
+    color: #fff;
+}
+
+span.gt_update_notification_full_securitycrit
+{
+    background: red;
+    color: #fff
+}
+
+
+table#gt_unit_quals
+{
+    min-width: 33%;
+    margin: auto;
+}
+
+table#gt_unit_quals td
+{
+    padding: 2px;
+}
+
+td.gt_incorrect_credits
+{
+    background-color: red !important;
+    color: #fff !important;
+}
+
+
+
+
+
+
+table.gt_log_table th, table.gt_log_table td 
+{ 
+    padding: 5px; 
+    font-weight: bold; 
+    white-space: nowrap; 
+    border-right: 1px solid #AAAAAA; 
+    border-bottom: 1px solid #AAAAAA; 
+    background-color: #EFEFEF; 
+    text-align: left; 
+    vertical-align: bottom; 
+} 
+
+table.gt_log_table td  
+{ 
+    padding: 5px; 
+    white-space: nowrap; 
+    border-right: 1px solid #AAAAAA; 
+    border-bottom: 1px solid #AAAAAA; 
+    background-color: #FFFFFF; 
+} 
+
+table.gt_reporting_options
+{
+    min-width: 50%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+table.gt_reporting_options th,
+table.gt_reporting_options td
+{
+    border: 1px solid #eeeeee;
+    padding: 4px;
+}
+
+table.gt_reporting_options th
+{
+    background-color: #dfdfff;
+}
+
+table.gt_reporting_options td
+{
+    vertical-align: top;
+    background-color: #fff;
+}
+
+table.gt_report_config_table
+{
+    width: 40%;
+    margin-right: 5%;
+    margin-bottom: 20px;
+    vertical-align: top;
+    display: inline-block;
+    height: 150px;
+}
+
+table.gt_report_config_table_narrow
+{
+    width: 30%;
+    margin-right: 2%;
+    margin-bottom: 20px;
+    vertical-align: top;
+    display: inline-block;
+    border: 1px solid #BBB;
+}
+
+table.gt_report_config_table td,
+table.gt_report_config_table_narrow td
+{
+    vertical-align: top;
+}
+
+table.gt_report_config_table td select,
+table.gt_report_config_table_narrow td select
+{
+    max-height: 80px;
+}
+
+.gt_box_shadow
+{
+    box-shadow: 10px 10px 5px #888888;
+}
+
+select.gt_large_select, select[multiple].gt_large_select
+{
+    height: 250px;
+}
+
+div.gt_overview
+{
+    text-align: center;
+}
+
+div.gt_overview_box
+{
+    text-align: left;
+    border-radius: 5px;
+    width: 44%;
+    display: inline-block;
+    margin: 10px 2%;
+    vertical-align: top;
+}
+
+div.gt_overview_box > h6
+{
+    background: #055AAB;
+    color: #fff;
+    text-align: center;
+    font-size: 10pt;
+    margin: 0;
+    padding: 2px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+div.gt_overview_box > div
+{
+    text-align: left;
+    font-size: 8pt;
+    padding: 2%;
+    background: #fff;
+    color: #000;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+div.gt_overview_box > div.graph
+{
+    background: #feffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #feffff 0%, #d2ebf9 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #feffff 0%,#d2ebf9 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #feffff 0%,#d2ebf9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#d2ebf9',GradientType=0 ); /* IE6-9 */
+}
+
+dl.gt_bar_chart
+{
+    
+}
+
+dl.gt_bar_chart dd
+{
+    width: 90%;
+    padding: 4px 0;
+    border-bottom: 1px dotted #000;
+}
+
+dl.gt_bar_chart dd div.gt_bar_chart_title
+{
+    display: inline-block;
+    font-weight: bold;
+    width: 25%;
+}
+
+dl.gt_bar_chart dd div.gt_bar_chart_bar_wrap
+{
+    display: inline-block;
+    width: 65%;
+}
+
+dl.gt_bar_chart dd div.gt_bar_chart_bar
+{
+    display: inline-block;
+    color: #fff;
+    font-size: 8pt;
+    text-align: center;
+    border-radius: 5px;
+}
+
+dl.gt_bar_chart dd div.gt_bar_chart_bar_wrap div.gt_bar_chart_green
+{
+    background-color: #1b8c29;
+}
+
+dl.gt_bar_chart dd div.gt_bar_chart_bar_wrap div.gt_bar_chart_red
+{
+    background-color: #8c1b1b;
+}
+
+dl.gt_bar_chart dd > span
+{
+    margin-left: 10px;
+}
+
+select.gt_select_units option[disabled]
+{
+    background: red;
+    color: #fff;
+}
+
+span.gt_process_error
+{
+    background: red;
+    color: #fff;
+}
+
+tr.gt_not_on_any td
+{
+    background: #ffafaf !important;
+}
+
+table.gt_unit_criteria_letters
+{
+    margin: auto;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+textarea.gt_query_box
+{
+    width: 80%;
+    min-height: 120px;
+}
+
+table#gt_sql_reports img
+{
+    width: 12px;
+    height: 12px;
+}
+
+ul.gt_recent_activity
+{
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.gt_recent_activity > li
+{
+    min-height: 72px;
+    background: #fff;
+    padding: 6px;
+    border-bottom: 1px dotted #eeeeee;
+    font-size: 8pt;
+}
+
+ul.gt_recent_activity > li:hover
+{
+    background: #efefef;
+}
+
+ul.gt_recent_activity > li > div:first-child 
+{
+    display: inline-block;
+    vertical-align: top;
+    width: 10%;
+}
+
+ul.gt_recent_activity > li > div:first-child > img
+{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.3);
+    background-size: 100%;
+}
+
+ul.gt_recent_activity > li > div:last-child
+{
+    vertical-align: top;
+    display: inline-block;
+    width: 85%;
+}
+
+ul.gt_recent_activity > li > div:last-child table
+{
+    width: 100%;
+}
+
+ul.gt_recent_activity > li > div:last-child table td
+{
+    vertical-align: top;
+}
+
+ul.gt_recent_activity img
+{
+    max-width: 100%;
+    height: auto;
+}
+
+div.gt_popup_rules_table table
+{
+    width: 90%;
+    margin: auto;
+}
+
+div.gt_popup_rules_table table th
+{
+    background: #f3f3f3;
+    color: grey;
+    font-size: 9pt;
+}
+
+div.gt_popup_rules_table table th,
+div.gt_popup_rules_table table td
+{
+    padding: 4px;
+}
+
+div.gt_popup_rules_table table tr:nth-child(even) td
+{
+    background-color: #f4f9ff;
+}
+
+div.gt_rule_settings_heading
+{
+    border-bottom: 1px dotted #DDD;
+    color: #000;
+    font-size: 15px;
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+}
+
+table.gt_rule_settings_table
+{
+    width: 100%;
+    margin-left: 0;
+}
+
+table.gt_rule_settings_table tr
+{
+    border: 1px dotted #efefef;
+}
+
+table.gt_rule_settings_table tr:hover
+{
+    background: #efefef;
+}
+
+table.gt_rule_settings_table td
+{
+    padding: 10px;
+}
+
+table.gt_rule_settings_table input[type='text'],
+table.gt_rule_settings_table textarea
+{
+    width: 300px;
+}
+
+table.gt_rule_settings_table input[type='radio'],
+table.gt_rule_settings_table input[type='checkbox']
+{
+    width: 16px;
+    height: 16px;
+}
+
+table.gt_rule_settings_table input
+{
+    background: #fff;
+    min-height: 18px;
+    border: 1px solid #dfdfdf;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+div.gt_popup_rules_divs
+{
+    width: 90%;
+    margin: auto;
+}
+
+div.gt_rule_content
+{
+    
+}
+
+div.gt_rule_content_section
+{
+    margin-bottom: 10px;
+    clear: both;
+}
+
+div.gt_rule_content_section_float
+{
+    float: left;
+    width: 49%;
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+div.gt_rule_step_header
+{
+    min-width: 800px;
+}
+
+div.gt_rule_step_header div
+{
+  float: left;
+}
+
+div.gt_rule_step_header_left,
+div.gt_rule_step_header_right
+{
+    width: 10%;
+}
+
+div.gt_rule_step_header_left a,
+div.gt_rule_step_header_right a
+{
+  display: block;
+  width: 100%;
+  text-align: center;
+  height: 20px;
+  padding: 10% 0;
+  background: #efefef;
+  color: #696969;
+}
+
+div.gt_rule_step_header_left a:hover,
+div.gt_rule_step_header_right a:hover
+{
+    background: #dedede;
+}
+
+div.gt_rule_step_header_left a img,
+div.gt_rule_step_header_right a img
+{
+    width: 20px;
+    height: 20px;
+}
+
+div.gt_rule_step_header_centre
+{
+  width: 88%;
+  background: #efefef;
+  height: 20px;
+  padding: 1%;
+}
+
+div.gt_rule_step_content
+{
+    clear: both;
+    border: 1px solid #efefef;
+    padding: 20px;
+}
+
+div.gt_rule_step_content fieldset legend
+{
+    font-size: 10pt;
+}
+
+div.gt_rule_step_content fieldset
+{
+    margin-bottom: 10px;
+}
+
+textarea#gt_fx_func
+{
+    width: 90%;
+    height: 100px;
+    font-family: "Courier New", Courier, monospace !important;
+}
+
+input#gt_fx_text_input
+{
+    width: 90%;
+}
+
+div#gt_fx_options select,
+div#gt_fx_options input
+{
+    width: 80px;
+    height: 25px;
+    padding: 0;
+    font-size: 10pt;
+}
+
+div#gt_fx_links,
+div#gt_fx_options
+{
+    height: 25px;
+}
+
+div#gt_fx_options span
+{
+    margin-right: 8px;
+}
+
+div#gt_fx_links
+{
+    margin-bottom: 5px;
+}
+
+div#gt_fx_links a
+{
+    margin-right: 10px;
+}
+
+div#gt_fx_links a[disabled]
+{
+    cursor: not-allowed;
+    color: #696969;
+    text-decoration: none;
+}
+
+div#gt_rule_fx fieldset legend img
+{
+    width: 16px;
+    height: 16px;
+}
+
+table#gt_sys_info, table#gt_register_site_table
+{
+    width: 98%;
+    line-height: 30px;
+}
+
+table#gt_sys_info td, table#gt_register_site_table td
+{
+    vertical-align: top;
+}
+
+img.gt_help_tooltip
+{
+    cursor: pointer;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+canvas#firework-canvas, canvas#sparkler-canvas
+{
+    position: absolute;
+    top: 0;
+    background-color: #000;
+    opacity: 1;
+    display: none;
+    z-index: 9999;
+}
+
+
+progress.gt_progress,          /* All HTML5 progress enabled browsers */
+progress[role].gt_progress     /* polyfill */
+{
+ 
+        /* Turns off styling - not usually needed, but good to know. */
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+ 
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+ 
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+         
+        /* Dimensions */
+        width: 400px;
+        height: 20px;
+         
+}
+
+/* Polyfill */
+progress[role].gt_progress:after {
+        background-image: none; /* removes default background from polyfill */
+}
+ 
+/* Ensure fallback text doesn't appear in polyfill */
+progress[role].gt_progress strong {
+        display: none;
+}
+
+progress::-webkit-progress-bar {
+    background: #f1f0f0;
+    box-shadow: inset 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
+}
+
+
+
+
+
+/* Browser specific */
+
+
+
+/* Firefox */
+progress.gt_progress::-moz-progress-bar {
+        background-image: -moz-linear-gradient(
+                center bottom,
+                rgb(43,194,83) 37%,
+                rgb(84,240,84) 69%
+        );
+}
+ 
+/* Chrome */
+progress.gt_progress::-webkit-progress-value {
+        background-image: -webkit-gradient(
+                linear,
+                left bottom,
+                left top,
+                color-stop(0, rgb(43,194,83)),
+                color-stop(1, rgb(84,240,84))
+        );
+        background-image: -webkit-linear-gradient(
+                center bottom,
+                rgb(43,194,83) 37%,
+                rgb(84,240,84) 69%
+        );
+}
+ 
+/* Polyfill */
+progress.gt_progress[aria-valuenow]:before {
+        background-image: -moz-linear-gradient(
+                center bottom,
+                rgb(43,194,83) 37%,
+                rgb(84,240,84) 69%
+        );
+        background-image: -ms-linear-gradient(
+                center bottom,
+                rgb(43,194,83) 37%,
+                rgb(84,240,84) 69%
+        );
+        background-image: -o-linear-gradient(
+                center bottom,
+                rgb(43,194,83) 37%,
+                rgb(84,240,84) 69%
+        );
+}
+
+
+
+
+
+/* Firefox - Wasn't showing the borders on some grid cells */
+@-moz-document url-prefix() { 
+  table.gt_unit_grid,
+  table.gt_student_grid,
+  table.gt_student_assessment_grid,
+  table.gt_class_grid,
+  table.gt_class_assessment_grid
+  {
+      border-collapse: separate;
+      border-spacing: 0px;
+  }
+}
+
+
+.ui-dialog.gt_jq_dialog
+{
+    z-index: 999 !important;
+}
+
+
+
+/* ELBP */
+div#elbp_popup_content table.gt_student_grid td
+{
+    padding: 5px;
+}
+
+div#elbp_prior_learning_content table
+{
+    width: 80%;
+    margin: auto;
+}
+
+div#elbp_prior_learning_content div#avggcse
+{
+    width: 150px;
+    margin: auto;
+    border-radius: 30px;
+}
+
+table#gt_log_search select
+{
+    max-width: 300px;
+}
+
+.gt_value_added_score
+{
+    padding: 2px 4px;
+}
+
+.gt_value_added_higher
+{
+    background: #00B917;
+    color: #fff;
+}
+
+.gt_value_added_high
+{
+    background: #0075b9;
+    color: #fff;
+}
+
+.gt_value_added_same
+{
+    background: #000;
+    color: #fff;
+}
+
+.gt_value_added_low
+{
+    background: #eba300;
+    color: #fff;
+}
+
+.gt_value_added_lower
+{
+    background: #EB000C;
+    color: #fff;
+}
+
+.gt_33
+{
+    width: 33%;
+}
+
+table#gt_log_search_attributes
+{
+    width: 100%;
+}
+
+table#gt_log_search_attributes td
+{
+    width: 33%;
+    vertical-align: top;
+}
+
+table#gt_log_search_attributes td select,
+table#gt_log_search_attributes td input
+{
+    width: 100%;
+}
+

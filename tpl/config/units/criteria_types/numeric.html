@@ -1,0 +1,155 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<td colspan="10">
+    
+    <?php if ($criterion->getPossibleValues(true)): ?>
+    
+        <table id="gt_criterion_sub_table_<?= $dynamicNum ?>" class="gt_criterion_sub_table">
+
+            <tr id="gt_sub_observation_row_<?= $dynamicNum ?>">
+                <td><?= $string['ranges'] ?> &nbsp;&nbsp; <a href="#" onclick="addNewNumericObservation(<?= $dynamicNum ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></td>
+                <td></td>
+                <?php if ($criterion->hasChildrenOfType('Range')): ?>
+                    <?php $obDynamicNumber = 0; ?>
+                    <?php foreach($criterion->getChildren() as $observation): ?>
+                        <?php if ($observation->getSubCritType() == 'Range'): ?>
+                            <?php $obDynamicNumber++ ?>
+                            <td class="gt_criterion_observation_<?= $dynamicNum ?>_<?= $obDynamicNumber ?> gt_range_cell" obNum="<?= $obDynamicNumber ?>">
+                                <a href="#" onclick="deleteNumericObservation(<?= $dynamicNum ?>, <?= $obDynamicNumber ?>);return false;">
+                                    <img src="<?= $OUTPUT->pix_url('t/delete') ?>">
+                                </a>
+                                <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][observation][<?= $obDynamicNumber ?>][id]" value="<?= $observation->getID() ?>" />
+                                <input type="text" name="unit_criteria[<?= $dynamicNum ?>][observation][<?= $obDynamicNumber ?>][name]" value="<?= $observation->getName() ?>" placeholder="Name" /> &nbsp;&nbsp; 
+                                <script>
+                                    cntNumericObservationCriteria++;
+                                    if (arrayOfNumericObservationCriteria[<?= $dynamicNum ?>] == undefined){
+                                        arrayOfNumericObservationCriteria[<?= $dynamicNum ?>] = new Array();
+                                    }
+                                    arrayOfNumericObservationCriteria[<?= $dynamicNum ?>].push(<?= $obDynamicNumber ?>);
+                                </script>
+                            </td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tr>
+
+            <tr id="gt_sub_criteria_row_<?= $dynamicNum ?>">
+                <td><?= $string['criteria'] ?> &nbsp;&nbsp; <a href="#" onclick="addNewNumericSubCriterion(<?= $dynamicNum ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></td>
+                <td class='gt_sub_criteria_chart_cell'><?php if (!$criterion->hasChildrenOfType('Range')): ?>
+                        <table class="gt_criteria_conversion_chart">
+                            <tr>
+                                <th colspan="<?= count( $criterion->getPossibleValues(true) ) ?>"><?= $string['conversionchart'] ?></th>
+                            </tr>
+                            <tr>
+                                <?php foreach($criterion->getPossibleValues(true) as $award): ?>
+                                    <th title="<?= $award->getName() ?>"><?= $award->getShortName() ?></th>
+                                <?php endforeach; ?>
+                            </tr>
+                            <tr>
+                                <?php foreach($criterion->getPossibleValues(true) as $award): ?>
+                                <td>
+                                    <input type="text" name="unit_criteria[<?= $dynamicNum ?>][chart][<?= $award->getID() ?>]" value="<?= $criterion->getAttribute('conversion_chart_'.$award->getID()); ?>">
+                                </td>
+                                <?php endforeach; ?>
+                            </tr>
+                        </table>
+                <?php endif; ?></td>
+
+                <?php if ($criterion->hasChildrenOfType('Range')): ?>
+                    <?php $obDynamicNumber = 0; ?>
+                    <?php foreach($criterion->getChildren() as $observation): ?>
+                        <?php if ($observation->getSubCritType() == 'Range'): ?>
+                            <?php $obDynamicNumber++; ?>
+                            <td class="gt_criterion_observation_<?= $dynamicNum ?>_<?= $obDynamicNumber ?> gt_observation_chart_cell gt_observation_chart_cell_<?= $obDynamicNumber ?>">
+                                <table class="gt_criteria_conversion_chart">
+                                    <tr>
+                                        <th colspan="<?= count( $criterion->getPossibleValues(true) ) ?>"><?= $string['conversionchart'] ?></th>
+                                    </tr>
+                                    <tr>
+                                        <?php foreach($criterion->getPossibleValues(true) as $award): ?>
+                                            <th title="<?= $award->getName() ?>"><?= $award->getShortName() ?></th>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                    <tr>
+                                        <?php foreach($criterion->getPossibleValues(true) as $award): ?>
+                                        <td>
+                                            <input type="text" name="unit_criteria[<?= $dynamicNum ?>][charts][<?= $obDynamicNumber ?>][<?= $award->getID() ?>]" value="<?= $observation->getAttribute('conversion_chart_'.$award->getID()); ?>">
+                                        </td>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                </table>
+                            </td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+            </tr>
+
+            <?php if ($criterion->getChildren()): ?>
+
+                <?php $subDynamicNumber = 0; ?>
+
+                <?php foreach($criterion->getChildren() as $child): ?>
+
+                    <?php if ($child->getSubCritType() == 'Criterion'): ?>
+
+                        <?php $subDynamicNumber++ ?>
+
+                        <tr id="gt_criterion_sub_criterion_<?= $dynamicNum ?>_<?= $subDynamicNumber ?>" class="gt_criterion_sub_criterion_row" dNum="<?= $subDynamicNumber ?>">
+                            <td class="gt_sub_criterion_name_cell">
+                                <a href="#" onclick="deleteNumericSubCriterion(<?= $dynamicNum ?>, <?= $subDynamicNumber ?>);return false;">
+                                    <img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" />
+                                </a>
+                                <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][subcriteria][<?= $subDynamicNumber ?>][id]" value="<?= $child->getID() ?>" />
+                                <input type="text" name="unit_criteria[<?= $dynamicNum ?>][subcriteria][<?= $subDynamicNumber ?>][name]" value="<?= $child->getName() ?>" placeholder="Name" /> &nbsp;&nbsp; 
+                            </td>
+                            <td class="gt_sub_criterion_points_cell"><?php if (!$criterion->hasChildrenOfType('Range')): ?>
+                                    <select name="unit_criteria[<?= $dynamicNum ?>][subcriteria][<?= $subDynamicNumber ?>][points]">
+                                        <?php for($i = 0; $i <= \GT\Criteria\NumericCriterion::getMaxPoints(); $i++): ?>
+                                            <option value="<?= $i ?>" <?= ($child->getAttribute('maxpoints') == $i) ? 'selected' : ''; ?> ><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
+
+                            <?php endif; ?></td>
+
+                            <?php if ($criterion->hasChildrenOfType('Range')): ?>
+                                <?php $obDynamicNumber = 0; ?>
+                                <?php foreach($criterion->getChildren() as $observation): ?>
+                                    <?php if ($observation->getSubCritType() == 'Range'): ?>
+                                        <?php $obDynamicNumber++ ?>
+                                        <td class="gt_observation_points_cell gt_criterion_observation_<?= $dynamicNum ?>_<?= $obDynamicNumber ?> gt_criterion_sub_criterion_<?= $dynamicNum ?>_<?= $subDynamicNumber ?>" cnum="<?= $subDynamicNumber ?>" obnum="?= $obDynamicNumber ?>">
+                                            <select name="unit_criteria[<?= $dynamicNum ?>][points][<?= $subDynamicNumber ?>|<?= $obDynamicNumber ?>]">
+                                                <?php for($i = 0; $i <= \GT\Criteria\NumericCriterion::getMaxPoints(); $i++): ?>
+                                                    <option value="<?= $i ?>" <?= ($criterion->getAttribute('maxpoints_'.$child->getID().'_'.$observation->getID()) == $i) ? 'selected' : ''; ?> ><?= $i ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </td>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
+                        </tr>
+
+                        <script>
+                            cntNumericSubCriteria++;
+                            if (arrayOfNumericSubCriteria[<?= $dynamicNum ?>] == undefined){
+                                arrayOfNumericSubCriteria[<?= $dynamicNum ?>] = new Array();
+                            }
+                            arrayOfNumericSubCriteria[<?= $dynamicNum ?>].push(<?= $subDynamicNumber ?>);
+                        </script>
+
+                    <?php endif; ?>
+
+                <?php endforeach; ?>
+
+            <?php endif; ?>
+
+        </table>
+    
+    <?php else: ?>
+    
+        <?= $string['plschoosegrading'] ?>
+    
+    <?php endif; ?>
+    
+</td>

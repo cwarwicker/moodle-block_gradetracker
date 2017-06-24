@@ -1,0 +1,66 @@
+<div id='gt_config' class='gt_config'>
+<!--    GT Logo-->
+    <div class='gt_c'>
+    <img id='gtlogo' name='gtlogo' src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/gradetracker.png' class='gt_logo_text' />
+    </div>
+<!--    Dashboard Tabs-->
+    <ul class="gt_tabrow">
+        <li class="selected"><a href=""><?= $string['trackers']; ?></a></li>
+        <?php if (gt_has_capability('block/gradetracker:configure')): ?>
+            <li class=""><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php"><?= $string['config']; ?></a></li> 
+        <?php endif; ?>
+        <?php if (gt_has_capability('block/gradetracker:configure_reporting')): ?>
+            <li class=""><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting"><?= $string['reporting']; ?></a></li>
+        <?php endif; ?>
+    </ul>
+
+    
+<?php if($qualifications): ?>
+<!--    Qualification List Admin/Staff-->
+    <div>
+        <h4><?= $string['dashboard:trackingsheets']; ?></h4>
+        <small><?= $string['dashboard:info']; ?></small>
+    </div>
+    <br/>
+
+        <table id="reporting_table" class="gt_config">
+            <tr>
+                <th class="gt_medium_td"><?= $string['report']; ?></th>
+                <th><?= $string['qualification']; ?></th>
+                <th class="gt_small_td" colspan='3'><?= $string['trackers']; ?></th>
+            </tr>
+                <?php foreach($qualifications as $q): ?>
+                    <tr id="gt_row_<?= $q->getID() ?>">
+                        <td class="gt_medium_td"><a href='#' onclick="gtCreateReportingDropdown(<?=$q->getID()?>);return false;"><?= $string['reporting']; ?> <img id='report_icon_<?= $q->getID() ?>' src="<?= $OUTPUT->pix_url('t/dropdown') ?>"/></a></td>
+                        <td><b><?= $q->getDisplayName(); ?></b></td>
+                        <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=student&<?= $searchinstance ?>=<?= $q->getID(); ?>&<?= $submitsearch ?>=1">Student</a></td>
+                        <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=unit&<?= $searchinstance ?>=<?= $q->getID(); ?>&<?= $submitsearch ?>=1">Unit</a></td>
+                        <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=class&<?= $searchinstance ?>=<?= $q->getID(); ?>&<?= $submitsearch ?>=1">Class</a></td>
+                    </tr>
+                <?php endforeach; ?>  
+        </table>
+<?php endif; ?>
+
+<!-- Student Quals Table -->
+<?php if($studentquals): ?>
+<br/>
+<div>
+    <h4><?= $string['dashboard:studentgrids']; ?></h4>
+    <small><?= $string['dashboard:studentgrids:info']; ?></small>
+</div>
+<br/>
+<table class="gt_config">
+    <tr>
+        <th><?= $string['qualification']; ?></th>
+        <th class="gt_small_td"><?= $string['trackers']; ?></th>
+    </tr>
+    <?php foreach($studentquals as $sq): ?>
+        <tr>
+            <td><b><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $USER->id ?>&qualID=<?= $sq->getID() ?>"><?= $sq->getDisplayName(); ?></a></b></td>
+            <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $USER->id ?>&qualID=<?= $sq->getID() ?>"><?= $string['view'] ?></a></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+<?php endif; ?>
+<br/>
+</div>

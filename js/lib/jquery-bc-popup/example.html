@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>BC-PopUp Example</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript" src="jquery-ui.min.js"></script>
+        <script type="text/javascript" src="jquery.easing.min.js"></script>
+        <script type="text/javascript" src="jquery-bc-popup.js"></script>
+        <link rel="stylesheet" href="jquery-bc-popup.css" />
+        <style type="text/css">
+            body
+            {
+                height: 2000px;
+            }
+            
+            input#open
+            {
+                position: fixed;
+                top: 10;
+                left: 10;
+            }
+            
+            input#open2
+            {
+                position: fixed;
+                top: 10;
+                left: 80;
+            }
+        </style>
+    </head>
+    <body>
+        <input type="button" value="Open" id="open" />
+        <input type="button" value="Open #2" id="open2" />
+
+        <div id="popup" style="display:none;"></div>
+        <div id="popup2" style="display:none;"></div>
+        <script>
+        
+            $(document).ready( function(){
+
+                $('#open').bind('click', function(){
+                    
+                    $('#popup').bcPopUp( {
+                        title: 'test',
+                        open: function(){
+                            $('#popup .bc-modal-body').html('test');
+                        },
+                        allowMultiple: true,
+                        showOverlay: false
+                    } );
+                    
+                    setTimeout( function(){
+                        $('#popup .bc-modal-body').html('<div style="width:800px;">kjhdkjf</div>');
+                    }, 3000 );
+                    
+                });
+
+                $('#open2').bind('click', function(){
+                    
+                    $('#popup2').bcPopUp( {
+                        title: 'test2',
+                        open: function(){
+                            $('#popup2 .bc-modal-body').html('<div style="width: 1000px;">hi there</div>');
+                        },
+                        allowMultiple: true,
+                        showOverlay: false
+                    } );
+                    
+                });
+
+            } );
+            
+
+        </script>
+        
+    </body>
+    
+    
+    
+</html>

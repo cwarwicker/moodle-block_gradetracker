@@ -1,0 +1,207 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<div class="gt_full_page">
+
+    <div class="gt_form_panel">
+
+        <div class="gt_form_panel_heading"><?= $string['manageqoe'] ?></div>
+        <div class="gt_form_panel_body">
+            
+            <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+            <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+            
+            <div class="gt_page_col_33">
+                <div class="gt_form_panel">
+                    <div class="gt_form_panel_sub_heading"><?= $string['subjects'] ?></div>
+                    <div class="gt_form_panel_body">
+                        
+                        <form action="" method="post">
+                            
+                            <table id="gt_qoe_subjects" class="gt_small_table">
+                                
+                                <tr>
+                                    <th><?= $string['name'] ?></th>
+                                    <th><a href="#" onclick="gt_addSubjectRow();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?= $string['add'] ?>" /></a></th>
+                                </tr>
+                                
+                                <tr id="gt_subjects_cloneme" class="gt_hidden">
+                                    <td>
+                                        <input type="hidden" name="ids[]" value="" />
+                                        <input type="text" name="names[]" value="" />
+                                    </td>
+                                    <td><a href="#" onclick="gt_removeRow(this);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                </tr>
+                                
+                                <?php if ($allSubjects): ?>
+                                    <?php foreach($allSubjects as $subject): ?>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="ids[]" value="<?= $subject->id ?>" />
+                                            <input type="text" name="names[]" value="<?= \gt_html($subject->name) ?>" />
+                                        </td>
+                                        <td><a href="#" onclick="gt_removeRow(this);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>  
+                                
+                            </table>
+                            
+                            <br>
+                            <p class="gt_c">
+                                <input type="submit" name="save_subjects" class="gt_btn gt_green" value="<?= $string['save'] ?>" />
+                            </p>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gt_page_col_33">
+                <div class="gt_form_panel">
+                    <div class="gt_form_panel_sub_heading gt_form_panel_sub_heading_alt"><?= $string['types'] ?></div>
+                    <div class="gt_form_panel_body">
+                        
+                        <form action="" method="post">
+                            
+                            <table id="gt_qoe_types" class="gt_small_table">
+                                
+                                <tr>
+                                    <th><?= $string['name'] ?></th>
+                                    <th><?= $string['level'] ?></th>
+                                    <th><?= $string['weighting'] ?></th>
+                                    <th><a href="#" onclick="gt_addTypeRow();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?= $string['add'] ?>" /></a></th>
+                                </tr>
+                                
+                                <tr id="gt_types_cloneme" class="gt_hidden">
+                                    <td>
+                                        <input type="hidden" name="ids[]" value="" />
+                                        <input type="text" name="names[]" value="" />
+                                    </td>
+                                    <td><input type="number" name="levels[]" value="" /></td>
+                                    <td><input type="number" name="weightings[]" value="" step="0.1" min="0" max="99.5" /></td>
+                                    <td><a href="#" onclick="gt_removeRow(this);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                </tr>
+                                
+                                <?php if ($allTypes): ?>
+                                    <?php foreach($allTypes as $type): ?>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="ids[]" value="<?= $type->id ?>" />
+                                            <input type="text" name="names[]" value="<?= \gt_html($type->name) ?>" />
+                                        </td>
+                                        <td><input type="number" name="levels[]" value="<?= \gt_html($type->lvl) ?>" /></td>
+                                        <td><input type="number" name="weightings[]" value="<?= \gt_html($type->weighting) ?>" step="0.1" min="0" max="99.5" /></td>
+                                        <td><a href="#" onclick="gt_removeRow(this);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                
+                            </table>
+                            
+                            <br>
+                            <p class="gt_c">
+                                <input type="submit" name="save_types" class="gt_btn gt_green" value="<?= $string['save'] ?>" />
+                            </p>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gt_page_col_33">
+                <div class="gt_form_panel">
+                    <div class="gt_form_panel_sub_heading gt_form_panel_sub_heading_alt2"><?= $string['grades'] ?></div>
+                    <div class="gt_form_panel_body">
+                        
+                        <form action="" method="post">
+                            
+                            <table id="gt_qoe_grades" class="gt_small_table">
+                                
+                                <tr>
+                                    <th><?= $string['type'] ?></th>
+                                    <th><?= $string['grade'] ?></th>
+                                    <th><?= $string['points'] ?></th>
+                                    <th><?= $string['weighting'] ?></th>
+                                    <th><a href="#" onclick="gt_addGradeRow();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?= $string['add'] ?>" /></a></th>
+                                </tr>
+                                
+                                <tr id="gt_grades_cloneme" class="gt_hidden">
+                                    <td>
+                                        <input type="hidden" name="ids[]" value="" />
+                                        <select name="types[]">
+                                            <option value=""></option>
+                                            <?php if ($allTypes): ?>
+                                                <?php foreach($allTypes as $type): ?>
+                                                    <option value="<?= $type->id ?>"><?= \gt_html($type->name) ?></option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="grades[]" value="" /></td>
+                                    <td><input type="number" name="points[]" value="" step="0.1" min="0" max="99.5" /></td>
+                                    <td><input type="number" name="weightings[]" value="" step="0.1" min="0" max="99.5" /></td>
+                                    <td><a href="#" onclick="gt_removeRow(this);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                </tr>
+                                
+                                <?php if ($allGrades): ?>
+                                    <?php foreach($allGrades as $grade): ?>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="ids[]" value="<?= $grade->id ?>" />
+                                            <select name="types[]">
+                                                <option value=""></option>
+                                                <?php if ($allTypes): ?>
+                                                    <?php foreach($allTypes as $type): ?>
+                                                        <option value="<?= $type->id ?>" <?= ($grade->qoeid == $type->id) ? 'selected' : ''; ?> ><?= \gt_html($type->name) ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="grades[]" value="<?= \gt_html($grade->grade) ?>" /></td>
+                                        <td><input type="number" name="points[]" value="<?= \gt_html($grade->points) ?>" step="0.1" min="0" max="99.5" /></td>
+                                        <td><input type="number" name="weightings[]" value="<?= \gt_html($grade->weighting) ?>" step="0.1" min="0" max="99.5" /></td>
+                                        <td><a href="#" onclick="gt_removeRow(this);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                
+                            </table>
+                            
+                            <br>
+                            <p class="gt_c">
+                                <input type="submit" name="save_grades" class="gt_btn gt_green" value="<?= $string['save'] ?>" />
+                            </p>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <br class="gt_cl">
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function gt_removeRow(t){
+        $(t).parents('tr').remove();
+    }
+    
+    function gt_addSubjectRow(){
+        $('#gt_subjects_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_subjects');
+    }
+    
+    function gt_addTypeRow(){
+        $('#gt_types_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_types');
+    }
+    
+     function gt_addGradeRow(){
+        $('#gt_grades_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_grades');
+    }
+</script>

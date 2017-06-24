@@ -1,0 +1,79 @@
+<?php
+/**
+ * Setting
+ *
+ * Get and Set plugin configuration settings.
+ * 
+ * @copyright 2015 Bedford College
+ * @package Bedford College Grade Tracker
+ * @version 1.0
+ * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
+
+namespace GT;
+
+class Setting 
+{
+    
+    /**
+     * Get a setting's value
+     * @param type $setting
+     */
+    public static function getSetting($setting, $userID = null)
+    {
+        
+        global $DB;
+        
+        $record = $DB->get_record("bcgt_settings", array("setting" => $setting, "userid" => $userID), "value");
+        return ($record) ? $record->value : false;
+        
+    }
+    
+    
+    
+    /**
+     * Update a plugin setting
+     * @global type $DB
+     * @param type $setting
+     * @param type $value
+     * @param type $userID
+     * @return type
+     */
+    public static function updateSetting($setting, $value, $userID = null)
+    {
+        
+        global $DB;
+        
+        $check = $DB->get_record("bcgt_settings", array("setting" => $setting, "userid" => $userID));
+        
+        // If one already exists, update the value
+        if ($check)
+        {
+            $check->value = $value;
+            return $DB->update_record("bcgt_settings", $check);
+        }
+        
+        // Doesn't exist, so create one
+        $obj = new \stdClass();
+        $obj->setting = $setting;
+        $obj->value = $value;
+        $obj->userid = $userID;
+                
+        return $DB->insert_record("bcgt_settings", $obj);
+        
+    }
+    
+}

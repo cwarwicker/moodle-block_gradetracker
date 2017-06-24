@@ -1,0 +1,142 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <form action="" method="post" id="gt_course_quals_form">
+        
+        <?php if ($Mod->isValid()): ?>
+            <input type="hidden" name="id" value="<?= $Mod->getID() ?>" />
+        <?php endif; ?>
+        
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $string['managemodulelinking'] ?></div>
+
+            <div class="gt_form_panel_body">
+
+                <div>
+                    
+                    <table id="gt_mod_linking_edit">
+
+                        <tr>
+                            <th><?= $string['enabled'] ?></th>
+                            <td><input type="checkbox" name="enabled" value="1" <?= ($Mod->isEnabled()) ? 'checked' : ''; ?> /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:mod'] ?></th>
+                            <td>
+                                <select name="modid">
+                                    <option value=""></option>
+                                    <?php if ($allMods): ?>
+                                        <?php foreach($allMods as $mod): ?>
+                                            <option value="<?= $mod->id ?>" <?= ($Mod->getModName() == $mod->name) ? 'selected' : ''; ?> class="<?= (in_array($mod->name, \GT\ModuleLink::getSupportedMods())) ? 'gt_mod_supported' : '' ?>" ><?= $mod->name ?> <?= (in_array($mod->name, \GT\ModuleLink::getSupportedMods())) ? '&#10004;' : '' ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:modtable'] ?></th>
+                            <td><input type="text" name="modtable" value="<?= \gt_html($Mod->getModTable()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:parttable'] ?></th>
+                            <td><input type="text" name="parttable" value="<?= \gt_html($Mod->getPartTable()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:partmoddbcolumn'] ?></th>
+                            <td><input type="text" name="partmodcol" value="<?= \gt_html($Mod->getPartModCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:coursedbcolumn'] ?></th>
+                            <td><input type="text" name="modcoursecol" value="<?= \gt_html($Mod->getModCourseCol()) ?>" /></td>
+                        </tr>
+                            
+                        <tr>
+                            <th><?= $string['modlinking:startdatedbcolumn'] ?></th>
+                            <td><input type="text" name="modstartcol" value="<?= \gt_html($Mod->getModStartCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:duedatedbcolumn'] ?></th>
+                            <td><input type="text" name="modduecol" value="<?= \gt_html($Mod->getModDueCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:instancetitledbcolumn'] ?></th>
+                            <td><input type="text" name="modtitlecol" value="<?= \gt_html($Mod->getModTitleCol()) ?>" /></td>
+                        </tr>
+                        
+                         <tr>
+                            <th><?= $string['modlinking:parttitledbcolumn'] ?></th>
+                            <td><input type="text" name="parttitlecol" value="<?= \gt_html($Mod->getPartTitleCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:submissiontable'] ?></th>
+                            <td><input type="text" name="submissiontable" value="<?= \gt_html($Mod->getSubTable()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:submissionmodinstancedbcolumn'] ?></th>
+                            <td><input type="text" name="submissionmodinstancecol" value="<?= \gt_html($Mod->getSubModCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:submissionpartdbcolumn'] ?></th>
+                            <td><input type="text" name="submissionpartcol" value="<?= \gt_html($Mod->getSubPartCol()) ?>" /></td>
+                        </tr>
+                                                
+                        <tr>
+                            <th><?= $string['modlinking:submissionuserdbcolumn'] ?></th>
+                            <td><input type="text" name="submissionusercol" value="<?= \gt_html($Mod->getSubUserCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:submissiondatedbcolumn'] ?></th>
+                            <td><input type="text" name="submissiondatecol" value="<?= \gt_html($Mod->getSubDateCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:submissionstatusdbcolumn'] ?></th>
+                            <td><input type="text" name="submissionstatuscol" value="<?= \gt_html($Mod->getSubStatusCol()) ?>" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?= $string['modlinking:submissionstatusexpectedvalue'] ?></th>
+                            <td><input type="text" name="submissionstatusval" value="<?= \gt_html($Mod->getSubStatusVal()) ?>" /></td>
+                        </tr>
+                                                
+                        <tr>
+                            <th><?= $string['modlinking:auto'] ?></th>
+                            <td><input type="checkbox" name="auto" value="1" <?= ($Mod->hasAutoUpdates()) ? 'checked' : ''; ?> /></td>
+                        </tr>
+
+                    </table>
+                    
+                </div>
+                
+                <br>
+                
+                <p class="gt_c">
+                    <input type="submit" class="gt_btn gt_blue" name="submit_mod_link" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                </p>
+                
+                
+            </div>
+
+        </div>
+        
+        
+    </form>
+        
+</div>

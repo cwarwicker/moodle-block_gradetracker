@@ -1,0 +1,233 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if (!isset($stage)) $stage = 1; ?>
+
+<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if (isset($MSGS['output'])): ?>
+    <?= \gt_success_alert_box( $string['blockbcgtdata:process:transferdata:success'] ) ?>
+    <div id='gt_transdata_cmd' class='gt_cmd gt_hidden'>
+        <?php foreach($MSGS['output'] as $line): ?>
+            <?= $line ?><br>
+        <?php endforeach; ?>
+    </div>
+    <br>
+<?php endif; ?>
+
+
+<div class="gt_full_page">
+
+    <div class="gt_form_panel">
+
+        <div class="gt_form_panel_heading"><?= $string['blockbcgtdata'] ?> - <?= $string['blockbcgtdata:transferdata'] ?></div>
+
+        <div class="gt_form_panel_body">
+            <p><?= $string['blockbcgtdata:transferdata:desc'] ?></p>
+
+            <form action='' method='post'>
+
+                <div class='gt_form_panel'>
+                    <div class='gt_form_panel_sub_heading'><?= $string['blockbcgtdata:transferdata:stage'.$stage] ?></div>
+                    <div class='gt_form_panel_body'>
+
+                        <?php if ($stage == 1): ?>
+                            <div class='gt_centre'>
+                                <?php if ($newQuals): ?>
+                                    <select id='gt_mapped_quals' class='gt_large_select' name='quals[]' multiple>
+                                        <?php foreach($newQuals as $qual): ?>
+                                            <option value='<?= $qual->getID() ?>'><?= $qual->getDisplayName() ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <br><br>
+                                    <input type='hidden' name='stage' value='1' />
+                                    <a href='config.php?view=data&section=block_bcgt&page=data' class='gt_btn gt_red'><?= $string['reset'] ?></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type='submit' class='gt_btn gt_blue' name='submit_data_next' value='<?= $string['next'] ?>' />
+                                <?php else: ?>
+                                    <?= $string['nodata'] ?>
+                                <?php endif; ?>
+                            </div>
+
+                        <?php elseif ($stage == 2): ?>
+
+                            <?php if ($qualsSelected): ?>
+
+                                <div class='gt_centre'>
+                                    <input type='checkbox' class='gt_toggle_select_all' useClass='gt_select_studs' /> <?= $string['selectdeselectall'] ?><br><br>
+                                </div>
+
+                                <?php foreach($qualsSelected as $qual): ?>
+
+                                    <div class='gt_form_panel'>
+                                        <div class='gt_form_panel_sub_heading'><?= $qual->getDisplayName() ?></div>
+                                        <div class='gt_form_panel_body'>
+
+                                            <small><strong><?= $string['blockbcgtdata:mappedagainst'] ?>: <?= \GT\OldGradeTrackerSystem::getOldQualNameFromNew($qual->getID()) ?></strong></small><br>
+
+                                            <div class='gt_centre'>
+                                                <?php if ( $qual->getUsers("STUDENT") ): ?>
+                                                    <input type='checkbox' class='gt_toggle_select_all' useID='gt_select_studs_<?= $qual->getID() ?>' /> <?= $string['selectdeselectall'] ?><br><br>
+                                                    <select id='gt_select_studs_<?= $qual->getID() ?>' class='gt_select_studs gt_large_select' name='students[<?= $qual->getID() ?>][]'  multiple>
+                                                        <?php foreach( $qual->getUsers("STUDENT") as $student ): ?>
+                                                            <option value='<?= $student->id ?>'><?= $student->getDisplayName() ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                    <input type='hidden' name='quals[]' value='<?= $qual->getID() ?>' />
+                                                <?php else: ?>
+                                                    <?= $string['nodata'] ?>
+                                                <?php endif; ?>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                <?php endforeach; ?>
+
+                                <br><br>
+                                <input type='hidden' name='stage' value='2' />
+                                <div class='gt_centre'>
+                                    <a href='config.php?view=data&section=block_bcgt&page=data' class='gt_btn gt_red'><?= $string['reset'] ?></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type='submit' class='gt_btn gt_blue' name='submit_data_next' value='<?= $string['next'] ?>' />
+                                </div>
+
+                            <?php endif; ?>
+
+                        <?php elseif ($stage == 3): ?>
+
+                            <div class='gt_centre'>
+                                <input type='checkbox' class='gt_toggle_select_all' useClass='gt_select_units' /> <?= $string['selectdeselectall'] ?><br><br>
+                            </div>
+
+                            <?php foreach($qualsSelected as $qual): ?>
+
+                                <div class='gt_form_panel'>
+                                    <div class='gt_form_panel_sub_heading'><?= $qual->getDisplayName() ?></div>
+                                    <div class='gt_form_panel_body'>
+
+                                        <small><strong><?= $string['blockbcgtdata:mappedagainst'] ?>:</strong> <?= \GT\OldGradeTrackerSystem::getOldQualNameFromNew($qual->getID()) ?></small><br>
+                                        <small><strong><?= $string['selectedstuds'] ?>: </strong> <?= \gt_implode_objects(', ', $studentsSelected[$qual->getID()], 'getDisplayname') ?></small>
+
+                                        <?php if ($studentsSelected[$qual->getID()]): ?>
+                                            <?php foreach($studentsSelected[$qual->getID()] as $student): ?>
+                                                <input type='hidden' name='students[<?= $qual->getID() ?>][]' value='<?= $student->id ?>' />
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+
+                                        <div class='gt_centre'>
+
+                                             <?php if ( $qual->getUnits() ): ?>
+                                                <input type='checkbox' class='gt_toggle_select_all' useID='gt_select_units_<?= $qual->getID() ?>' /> <?= $string['selectdeselectall'] ?><br><br>
+                                                <select id='gt_select_units_<?= $qual->getID() ?>' class='gt_select_units gt_large_select' name='units[<?= $qual->getID() ?>][]'  multiple>
+                                                    <?php foreach( $qual->getUnits() as $unit): ?>
+                                                        <option value='<?= $unit->getID() ?>' <?= (!$oldGT->getMappingOldValueFromNew('unit', $unit->getID())) ? 'disabled' : '' ?> ><?= $unit->getDisplayName() ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <input type='hidden' name='quals[]' value='<?= $qual->getID() ?>' />
+                                            <?php else: ?>
+                                                <?= $string['nodata'] ?>
+                                            <?php endif; ?>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br>
+
+                            <?php endforeach; ?>
+
+                            <br><br>
+                            <input type='hidden' name='stage' value='3' />
+                            <div class='gt_centre'>
+                                <a href='config.php?view=data&section=block_bcgt&page=data' class='gt_btn gt_red'><?= $string['reset'] ?></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type='submit' class='gt_btn gt_blue' name='submit_data_next' value='<?= $string['next'] ?>' />
+                            </div>
+
+
+                        <?php elseif ($stage == 4): ?>
+
+                            <div class='gt_centre'>
+                                <input type='checkbox' class='gt_toggle_check_all' useClass='qs' /> <?= $string['selectdeselectall'] ?><br><br>
+                            </div>
+
+                            <?php foreach($qualsSelected as $qual): ?>
+
+                                <div class='gt_form_panel'>
+
+                                    <div class='gt_form_panel_sub_heading'><?= $qual->getDisplayName() ?></div>
+
+                                    <div class='gt_form_panel_body'>
+
+                                        <small><strong><?= $string['blockbcgtdata:mappedagainst'] ?>:</strong> <?= \GT\OldGradeTrackerSystem::getOldQualNameFromNew($qual->getID()) ?></small><br>
+                                        <br>
+
+                                        <div class='gt_centre'>
+
+                                            <input type='checkbox' class='gt_toggle_check_all' useClass='q_<?= $qual->getID() ?>' /> <?= $string['selectdeselectall'] ?><br><br>
+
+                                            <table id='gt_transfer_qual_table_<?= $qual->getID() ?>' class='gt_config gt_transfer_qual_table'>
+                                                <tr>
+                                                    <th><?= $string['student'] ?></th>
+                                                    <?php if ($unitsSelected[$qual->getID()]): ?>
+                                                        <?php foreach($unitsSelected[$qual->getID()] as $unit): ?>
+                                                            <th><a href='#' onclick='tickAllUnit(<?= $qual->getID() ?>, <?= $unit->getID() ?>);return false;'>[<?= $unit->getID() ?>] <?= $unit->getDisplayName() ?></a></th>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </tr>
+
+                                                <?php if ($studentsSelected[$qual->getID()]): ?>
+                                                    <?php foreach($studentsSelected[$qual->getID()] as $student): ?>
+                                                        <tr>
+                                                            <td><a href='#' onclick='tickAllStudent(<?= $qual->getID() ?>, <?= $student->id ?>);return false;'><?= $student->getDisplayName() ?></a></td>
+                                                            <?php if ($unitsSelected[$qual->getID()]): ?>
+                                                                <?php foreach($unitsSelected[$qual->getID()] as $unit): ?>
+                                                                    <td><input type='checkbox' name='data[<?= $qual->getID() ?>][<?= $unit->getID() ?>][<?= $student->id ?>]' class='qs_<?= $qual->getID() ?>_<?= $student->id ?> qu_<?= $qual->getID() ?>_<?= $unit->getID() ?> q_<?= $qual->getID() ?> qs' checked /></td>
+                                                                <?php endforeach; ?>
+                                                            <?php endif; ?>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <br>
+
+                            <?php endforeach; ?>
+
+                            <br><br>
+                            <div class='gt_centre'>
+                                <a href='config.php?view=data&section=block_bcgt&page=data' class='gt_btn gt_red'><?= $string['reset'] ?></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href='#' onclick='$("#confirm_transfer").toggle();return false;' class='gt_btn gt_blue'><?= $string['confirm'] ?></a>
+                                <br><br>
+                                <span id='confirm_transfer' style='display:none;'>
+                                    <?= \gt_info_alert_box($string['blockbcgtdata:warning']) ?>
+                                    <small><?= $string['areyousure'] ?></small><br>
+                                    <input type='submit' class='gt_btn gt_green' name='confirm_data_transfer' value='<?= $string['yes'] ?>' />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="#" class="gt_btn gt_red" onclick="$('#confirm_transfer').hide();return false;"><?= $string['no'] ?></a>
+                                </span>
+                            </div>
+
+                        <?php endif; ?>
+
+                    </div>
+                </div>
+
+            </form>
+
+            
+        </div>
+        
+    </div>
+    
+</div>

@@ -1,0 +1,206 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <form action="" method="post" id="gt_course_quals_form">
+
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $Course->getName() ?> - <?= $string['userquals'] ?></div>
+
+            <div class="gt_form_panel_body">
+
+                <p class="gt_c">
+                    <input type="submit" class="gt_btn gt_blue" name="save_user_quals" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/course/view.php?id=<?= $Course->id ?>" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <br><br>
+                </p>
+                
+                                                            
+                <?php if ($courseQuals): ?>
+                
+                    <!-- Students table -->
+                    <table id="gt_stud_quals" class="gt_config">
+
+                        <tr>
+                            <th><?= $string['enrolment'] ?></th>
+                            <th><?= $string['student'] ?></th>
+                            <?php if ($courseQuals): ?>
+                                <?php foreach($courseQuals as $qual): ?>
+                                    <th><?= $qual->getDisplayName() ?></th>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tr>
+
+                        <!-- This course first -->
+                        <tr class='cRow'>
+                            <td><?= $string['direct'] ?></td>
+                            <td></td>
+                            <?php if ($courseQuals): ?>
+                                <?php foreach($courseQuals as $qual): ?>
+                                    <td>
+                                        <?php if ($Course->isQualificationOnCourse($qual->getID())): ?>
+                                            <a href='#' onclick="tickAllQual(<?= $qual->getID() ?>, <?= $Course->id ?>);return false;">
+                                                <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>                                    
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tr>
+                        
+                        <?php if (($students = $Course->getStudents(true))): ?>
+                    
+                            <?php foreach($students as $student): ?>
+
+                                <tr class='<?= ($student->onAnyOfTheseQuals($courseQuals, "STUDENT")) ? "" : "gt_not_on_any" ?>'>
+
+                                    <td></td>
+                                    <td>
+                                        <a href="#" onclick="tickAllStudent(<?= $student->id ?>, <?= $Course->id ?>);return false;">
+                                            <?= $student->getDisplayName() ?>
+                                        </a>
+                                    </td>
+
+                                    <?php foreach($courseQuals as $qual): ?>
+                                        <!-- Had to put this on 1 line or whitespace stops :empty style working -->
+                                        <td class='gt_cQ'><?php if ($Course->isQualificationOnCourse($qual->getID())): ?><input type="checkbox" class="gt_user_qual_user_<?= $student->id ?>_<?= $Course->id ?> gt_user_qual_qual_<?= $qual->getID() ?>_<?= $Course->id ?>" name="user_quals[<?= $qual->getID() ?>][]" value="<?= $student->id ?>" <?= ( $student->isOnQual( $qual->getID(), "STUDENT" ) ) ? 'checked' : ''; ?>  /><?php endif; ?></td>
+                                    <?php endforeach; ?>                                
+
+                                </tr>
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
+                        <!-- End of this course -->
+                        
+                        <!-- Now the child courses -->
+                        <?php if ( ($children = $Course->getChildCourses()) ): ?>
+                            <?php foreach($children as $child): ?>
+                                <tr class='cRow'>
+                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=userquals&id=<?= $child->id ?>"><?= $child->shortname ?></a></td>
+                                    <td></td>
+                                    <?php if ($courseQuals): ?>
+                                        <?php foreach($courseQuals as $qual): ?>
+                                            <td>
+                                                <?php if ($child->isQualificationOnCourse($qual->getID())): ?>
+                                                    <a href='#' onclick="tickAllQual(<?= $qual->getID() ?>, <?= $child->id ?>);return false;">
+                                                        <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                                    </a>
+                                                <?php endif; ?>
+                                            </td>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tr>
+                                
+                                <?php if (($students = $child->getStudents(true))): ?>
+                    
+                                    <?php foreach($students as $student): ?>
+
+                                    <tr class='<?= ($student->onAnyOfTheseQuals($courseQuals, "STUDENT")) ? "" : "gt_not_on_any" ?>'>
+
+                                        <td></td>
+                                        <td>
+                                            <a href="#" onclick="tickAllStudent(<?= $student->id ?>, <?= $child->id ?>);return false;">
+                                                <?= $student->getDisplayName() ?>
+                                            </a>
+                                        </td>
+
+                                        <?php foreach($courseQuals as $qual): ?>
+                                            <!-- Had to put this on 1 line or whitespace stops :empty style working -->
+                                            <td class='gt_cQ'><?php if ($child->isQualificationOnCourse($qual->getID())): ?><input type="checkbox" class="gt_user_qual_user_<?= $student->id ?>_<?= $child->id ?> gt_user_qual_qual_<?= $qual->getID() ?>_<?= $child->id ?>" name="user_quals[<?= $qual->getID() ?>][]" value="<?= $student->id ?>" <?= ( $student->isOnQual( $qual->getID(), "STUDENT" ) ) ? 'checked' : ''; ?>  /><?php endif; ?></td>
+                                        <?php endforeach; ?>                                
+
+                                    </tr>
+
+                                    <?php endforeach; ?>
+
+                                <?php endif; ?>
+                                
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <!-- End child courses -->
+
+                    </table>
+                    <!-- End Students Table -->
+                         
+                
+                    <br><br><br><br>
+                
+                    <!-- Staff table -->
+                    <table id="gt_staff_quals" class="gt_config">
+
+                        <tr>
+                            <th><?= $string['enrolment'] ?></th>
+                            <th><?= $string['staff'] ?></th>
+                            <?php if ($courseQuals): ?>
+                                <?php foreach($courseQuals as $qual): ?>
+                                    <th><?= $qual->getDisplayName() ?></th>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tr>
+
+                        <!-- This course first -->
+                        <tr class='cRow'>
+                            <td><?= $string['direct'] ?></td>
+                            <td></td>
+                            <?php if ($courseQuals): ?>
+                                <?php foreach($courseQuals as $qual): ?>
+                                    <td>
+                                        <a href='#' onclick="tickAllQualStaff(<?= $qual->getID() ?>, <?= $Course->id ?>);return false;">
+                                            <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                        </a>
+                                    </td>                                    
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tr>
+                        
+                        <?php if (($staff = $Course->getStaff(true))): ?>
+                    
+                            <?php foreach($staff as $staffUser): ?>
+
+                            <tr>
+                                                 
+                                <td></td>
+                                <td>
+                                    <a href="#" onclick="tickAllStaff(<?= $staffUser->id ?>, <?= $Course->id ?>);return false;">
+                                        <?= $staffUser->getDisplayName() ?>
+                                    </a>
+                                </td>
+                                
+                                <?php foreach($courseQuals as $qual): ?>
+                                    <!-- Had to put this on 1 line or whitespace stops :empty style working -->
+                                    <td class='gt_cQ'>
+                                        <input type="checkbox" class="gt_staff_qual_staff_<?= $staffUser->id ?>_<?= $Course->id ?> gt_staff_qual_qual_<?= $qual->getID() ?>_<?= $Course->id ?>" name="staff_quals[<?= $qual->getID() ?>][]" value="<?= $staffUser->id ?>" <?= ( $staffUser->isOnQual( $qual->getID(), "STAFF" ) ) ? 'checked' : ''; ?>  />
+                                    </td>
+                                <?php endforeach; ?>                                
+                                
+                            </tr>
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
+                        <!-- End of this course -->
+                        
+                    </table>
+                    <!-- End Staff Table -->
+                
+                <?php else: ?>
+                
+                    <p class="gt_c"><?= $string['coursenoquals'] ?></p>
+                
+                <?php endif; ?>
+                
+            </div>
+
+        </div>
+        
+        
+    </form>
+        
+</div>
+

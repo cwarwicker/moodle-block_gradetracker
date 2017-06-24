@@ -1,0 +1,125 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if (isset($Structure) && $Structure->isValid()): ?>
+
+<h1><?= (isset($Build)) ? $Build->getName() : $Structure->getName() ?> - <?= (isset($Build)) ? $string['assessmentawards'] : $type ?></h1>
+
+<div class='gt_c'>
+    <?php if( ($type == 'unit') || ($type == 'criteria') ): ?>
+    <a href='config.php?view=structures&section=grade&page=new_<?= $type ?>&id=<?= $Structure->getID() ?><?= (isset($Build)) ? '&build=' . $Build->getID() : '' ?>'><input type='button' class='gt_btn' value='<?= $string['addnewstructure'] ?>' /></a>    
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <div id='gt_import_div'><a href='#' onclick="$('#gt_upload_div').toggle();return false;" class='gt_btn'><?= $string['importnewstructure'] ?></a></div>
+        <div id='gt_upload_div' style='display:none;'>
+            <br>
+            <form action="" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept="text/xml,application/zip" />
+                <input type="submit" name="import_qual_structure_<?= $type ?>" class="gt_btn_small gt_blue" value="<?= $string['upload'] ?>" />
+            </form>
+        </div>
+    <?php endif; ?>
+</div>
+
+<br>
+
+<div>
+    
+    <table class="gt_form_table">
+
+        <tr>
+            <th><?= $string['name'] ?></th>
+            <th><?= $string['enabled'] ?></th>
+            <?php if ($type == 'criteria' && !isset($Build)): ?>
+                <th><?= $string['useforassessments'] ?></th>
+            <?php endif; ?>
+            <th><?= $string['export'] ?></th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        <?php if ($type == 'unit'): ?>
+        
+            <?php if ($Structure->getUnitGradingStructures()): ?>
+
+                <?php foreach($Structure->getUnitGradingStructures() as $grading): ?>
+
+                    <tr>
+
+                        <td><?= $grading->getName() ?></td>
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
+                                <input type="image" class="gt_on_off" name="enable_unit_grading_structure" src="<?= ($grading->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" />
+                            </form>
+                        </td>
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
+                                <input type="image" name="export_unit" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                            </form>
+                        </td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit_unit&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="settings" /></a></td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=delete_unit&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" /></a></td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+            <?php endif; ?>
+
+        <?php elseif ($type == 'criteria'): ?>
+        
+            <?php if (($results = $Object->getCriteriaGradingStructures())): ?>
+
+                <?php foreach($results as $grading): ?>
+
+                    <tr>
+
+                        <td><?= $grading->getName() ?></td>
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
+                                <input type="image" class="gt_on_off" name="enable_crit_grading_structure" src="<?= ($grading->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" />
+                            </form>
+                        </td>
+                        
+                        <?php if (!isset($Build)): ?>
+                            <td>
+                                <form action="" method="post">
+                                    <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
+                                    <input type="image" class="gt_on_off" name="set_grading_structure_assessments" src="<?= ($grading->isUsedInAssessments()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isUsedInAssessments()) ? $string['enabled'] : $string['disabled'] ?>" />
+                                </form>
+                            </td>
+                        <?php endif; ?>
+                        
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
+                                <input type="image" name="export_criteria" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                            </form>
+                        </td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit_criteria&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="settings" /></a></td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=delete_criteria&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" /></a></td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+            <?php endif; ?>
+
+        <?php endif; ?>
+
+    </table>
+    
+</div>
+
+<br><br>
+<div class='gt_c'>
+    <a href='config.php?view=structures&section=grade'><input type='button' class='gt_btn gt_red' value='<?= $string['back'] ?>' /></a>
+</div>
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

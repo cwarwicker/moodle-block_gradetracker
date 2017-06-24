@@ -1,0 +1,27 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($query): ?>
+
+<div class="gt_confirm_box">
+    
+    <h4><?= $string['delete'] ?> : <?= $query->name ?></h4>
+    
+    <div>
+        <?= $string['delete:query:sure'] ?>
+        <br><br>
+        <form action="config.php?view=reporting&section=query" method="post">
+            
+            <input type="hidden" name="query_id" value="<?= $query->id ?>" />
+            <input type="submit" class="gt_btn" name="delete_query" value="<?= $string['yes'] ?>" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

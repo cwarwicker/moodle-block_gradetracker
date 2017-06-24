@@ -1,0 +1,33 @@
+<?php if(!defined('ELBP')) exit; ?>
+
+<table class="elbp_summary_table">
+    <tbody>
+      <tr>
+          
+          <td class="elbp_summary_title" style="background-image:url('<?= $CFG->wwwroot ?><?= $obj->getPath() ?>pix/elbp_gt_prior_learning/icon.png');">
+            <?= get_string('priorquals', 'block_gradetracker') ?>: <?= count($prior) ?><br>
+            <?= get_string('gcsescore', 'block_gradetracker') ?>: <?= $avgScore ?>
+            
+          </td>
+        
+      </tr>
+    </tbody>
+  </table>
+
+<table class="elbp_summary_table elbp_bcgt_summary">
+    <tbody>
+      <?php if($prior): ?>
+            <?php foreach($prior as $pqual): ?>
+            <tr>
+                <td><?= \gt_html($pqual->getType()->name) ?></td>
+                <td><?= \gt_html($pqual->getType()->name) ?> <?= get_string('in', 'block_gradetracker') ?> <?= \gt_html($pqual->getSubjectName($pqual->getSubjectID())) ?></td>
+                <td><?= \gt_html($pqual->getGradeObject()->grade) ?></td>
+            </tr>
+            <?php endforeach; ?>
+      <?php else: ?>
+            <tr>
+                <td class='c'><?= get_string('noresults', 'block_gradetracker') ?></td>
+            </tr>
+      <?php endif; ?>
+    </tbody>
+  </table>

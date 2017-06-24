@@ -1,0 +1,262 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($Qualifications): ?>
+
+    <div class='gt_assessment_qual'>
+
+        <table class="gt_student_assessment_grid" cellspacing='0'>
+            
+            <tr>
+                
+                <th rowspan='2'><?= $string['subject'] ?></th>
+                
+                <?php if ($Qualification->isFeatureEnabledByName('targetgrades')): ?>
+                    <th rowspan='2'><?= $string['target'] ?></th>
+                <?php endif; ?>
+                
+                <?php if ($Qualification->isFeatureEnabledByName('weightedtargetgrades')): ?>
+                    <th rowspan='2'><?= $string['weightedtarget'] ?></th>
+                <?php endif; ?>
+                
+                <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+                    <th rowspan='2'><?= $string['ceta'] ?></th>
+                <?php endif; ?>
+
+                <!-- ALPS -->
+                <?php if ($canSeeWeightings): ?>
+                    <th rowspan='2'>
+                        <?php if (!$print): ?>
+                            <a href="#" onclick="$('.gt_assessment_grade_ceta_cell, .gt_hidden_percentile_cell').toggle();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/scales.png" alt="<?= $string['weighting'] ?>" onmouseover="$(this).attr('src', '<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/scales_black.png');" onmouseout="$(this).attr('src', '<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/scales.png');" /></a>
+                            <br><br>
+                        <?php endif; ?>
+                        <?= $string['weighting'] ?>
+                    </th>
+                <?php endif; ?>
+                
+                <?php if ($allAssessments): ?>
+                    <?php foreach($allAssessments as $assessment): ?>
+                        <th colspan='<?= (array_key_exists($assessment->getID(), $colspanArray)) ? $colspanArray[$assessment->getID()] : $defaultColspan ?>'>
+                            <?= $assessment->getName() ?>
+                            <br>
+                            <small><?= $assessment->getDate('d-m-Y') ?></small>
+                        </th>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+            </tr>
+            
+            <tr>
+
+                <?php if ($allAssessments): ?>
+                
+                    <?php foreach($allAssessments as $assessment): ?>
+                    
+                        <!-- Custom Fields -->
+                        <?php if (array_key_exists($assessment->getID(), $customFieldsArray) && $customFieldsArray[$assessment->getID()]): ?>
+                            <?php foreach($customFieldsArray[$assessment->getID()] as $field): ?>
+                                <th><?= $field->getName() ?></th>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    
+                        <?php if ($assessment->getSetting('grading_method') != 'none'): ?>
+                            <th><?= $string['grade'] ?></th>
+                        <?php endif; ?>
+                        
+                        <?php if ($Qualification->isFeatureEnabledByName('cetagrades') && $assessment->isCetaEnabled()): ?>
+                            <th><?= $string['ceta'] ?></th>
+                        <?php endif; ?>
+                        
+                        <?php if ($GT->getSetting('use_assessments_comments') == 1 && !$print): ?>
+                            <th><?= $string['comments'] ?></th>
+                        <?php endif; ?>
+                        
+                    <?php endforeach; ?>
+                    
+                <?php endif; ?>
+
+            </tr>
+                        
+            <?php foreach($Qualifications as $qualification): ?>
+
+                <?php if ($qualification->getAssessments() && ($qualification->getStructure()->getSetting('force_single_page') != 1 || $qualification->getID() == $Qualification->getID()) ): ?>
+                
+                    <tr>
+                        
+                        <td><?= (\gt_has_capability('block/gradetracker:view_class_grids') && !$print) ? "<a href='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=class&id={$qualification->getID()}&access={$params['access']}'>{$qualification->getDisplayName()}</a>" : $qualification->getDisplayName() ?></td>
+
+                        <?php if ($Qualification->isFeatureEnabledByName('targetgrades')): ?>
+                            <td id="gt_user_target_grade_<?= $Student->id ?>_<?= $qualification->getID() ?>" class='gt_assessment_grade_cell'>
+                                <span><?= $Student->getUserGrade('target', array('qualID' => $qualification->getID()), false, false, '-') ?><span>
+                            </td>
+                        <?php endif; ?>
+
+                        <?php if ($Qualification->isFeatureEnabledByName('weightedtargetgrades')): ?>
+                            <td id="gt_user_weighted_target_grade_<?= $Student->id ?>_<?= $qualification->getID() ?>" class='gt_assessment_grade_cell'>
+                                <span><?= $Student->getUserGrade('weighted_target', array('qualID' => $qualification->getID()), false, false, '-') ?></span>
+                            </td>
+                        <?php endif; ?>
+
+                        <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
+                            <td class='gt_assessment_grade_cell'>
+                                <?php $latestCetaGrade = $qualification->getUserLatestAssessmentCetaWithAward(); ?>
+                                <?= ($latestCetaGrade) ? $latestCetaGrade->getName() : '-' ?>
+                            </td>
+                        <?php endif; ?>
+
+                        <?php if ($canSeeWeightings): ?>
+                            <?php if($percentile = $qualification->getUserAssessmentCetaWeightingPercentile()): ?>
+                                <!-- This weighting column uses the latest CETA grade the student has got -->
+                                <td class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                                    <?= $percentile->percentile ?>
+                                </td>
+                            <?php else: ?>
+                                <td>-</td>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                         <?php if ($allAssessments): ?>
+                         
+                            <?php foreach($allAssessments as $assessment): ?>
+                            
+                                <?php $assessment->setQualification($qualification); ?>
+                                <?php $assessment->reloadStudent() ?>
+                                
+                                
+                                    <!-- Custom Fields -->
+                                    <?php if (array_key_exists($assessment->getID(), $customFieldsArray) && $customFieldsArray[$assessment->getID()]): ?>
+                                        <?php foreach($customFieldsArray[$assessment->getID()] as $field): ?>
+                                            <td class='gt_assessment_grid_cell_<?= $params['access'] ?>' qID='<?= $qualification->getID() ?>' sID='<?= $Student->id ?>' aID='<?= $assessment->getID() ?>' type='custom_field' fID='<?= $field->getID() ?>' aName='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                                <?= $assessment->getCustomFieldCell($field, $params['access'], $Student) ?>
+                                            </td>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                
+                                    
+                                    <?php if ($qualification->getAssessment($assessment->getID())): ?>
+                                        <?php if ($assessment->getSetting('grading_method') != 'none'): ?>
+                                            <td class='gt_assessment_grade_ceta_cell gt_grid_cell gt_assessment_grid_cell_<?= $params['access'] ?>' qID='<?= $qualification->getID() ?>' sID='<?= $Student->id ?>' aID='<?= $assessment->getID() ?>' type='grade' aName='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                                <?= $assessment->getGradeCell($params['access'], $Student) ?>
+                                                <div id='pU_<?= $Student->id ?>_<?= $qualification->getID() ?>_<?= $assessment->getID() ?>' class='gt_popup' title='<?= \gt_html($assessment->getName()) ?>'></div>
+                                            </td>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <td class="gt_assessment_grade_ceta_cell gt_cell_blank"></td>
+                                    <?php endif; ?>
+                                    
+                                    <!-- Weighting cell -->
+                                    <?php if ($canSeeWeightings): ?>
+                                    
+                                        <?php if ($qualification->getAssessment($assessment->getID())): ?>
+                                            <?php if($percentile = $qualification->getUserAssessmentWeightingPercentile($assessment)): ?>
+                                                <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?= (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                                    <?= $percentile->percentile ?>
+                                                </td>
+                                            <?php else: ?>
+                                                <td class='gt_hidden_percentile_cell' style='display:none;' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                                    <?= $assessment->getGradeCell('v', $Student) ?>
+                                                </td>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <td class="gt_hidden_percentile_cell gt_cell_blank" style='display:none;'></td>
+                                        <?php endif; ?>
+                                    
+                                    <?php endif; ?>
+                                    
+                                    
+                                <?php if ($Qualification->isFeatureEnabledByName('cetagrades') && $assessment->isCetaEnabled()): ?>
+                                
+                                    <?php if ($qualification->isFeatureEnabledByName('cetagrades') && $qualification->getAssessment($assessment->getID())): ?>
+                                       <td class='gt_assessment_grade_ceta_cell gt_grid_cell gt_assessment_grid_cell_<?= $params['access'] ?>' qID='<?= $qualification->getID() ?>' sID='<?= $Student->id ?>' aID='<?= $assessment->getID() ?>' type='ceta' aName='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                            <?= $assessment->getCetaCell($params['access'], $Student) ?>
+                                       </td>
+                                    <?php else: ?>
+                                        <td class="gt_assessment_grade_ceta_cell gt_cell_blank"></td>
+                                    <?php endif; ?>
+                                    
+                                    
+                                    <!-- Weighting cell -->
+                                    <?php if ($canSeeWeightings): ?>
+                                    
+                                        <?php if ($qualification->getAssessment($assessment->getID())): ?>
+                                            <?php if($percentile = $qualification->getUserAssessmentCetaWeightingPercentile($assessment)): ?>
+                                                <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?= (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                                    <?= $percentile->percentile ?>
+                                                </td>
+                                            <?php else: ?>
+                                                <td class='gt_hidden_percentile_cell' style='display:none;' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                                    <?= $assessment->getCetaCell('v', $Student) ?>
+                                                </td>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <td class="gt_hidden_percentile_cell gt_cell_blank" style='display:none;'></td>
+                                        <?php endif; ?>
+                                    
+                                    <?php endif; ?>
+                                    
+                                <?php endif; ?>
+                                
+                                
+                                <?php if ($GT->getSetting('use_assessments_comments') == 1 && !$print): ?>
+                                    <?php if ($qualification->getAssessment($assessment->getID())): ?>
+                                        <td qID='<?= $qualification->getID() ?>' sID='<?= $Student->id ?>' aID='<?= $assessment->getID() ?>' qName='<?= \gt_html($qualification->getName()); ?>' aName='<?= \gt_html($assessment->getName()); ?>' class='<?= ($assessment->hasUserComments()) ? "gt_has_comments" : "" ?> gt_assessment_grid_cell_<?= $params['access'] ?>' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                            <?= $assessment->getCommentsCell($params['access'], $Student); ?>                                       
+                                        </td>
+                                    <?php else: ?>
+                                        <td class="gt_assessment_grade_ceta_cell gt_cell_blank"></td>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                
+                                
+                            <?php endforeach; ?>
+                            
+                        <?php endif; ?>
+
+                    </tr>
+                    
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+
+        </table>
+        
+        <!-- If we are in Print view, list the comments here -->
+        <?php if ($print): ?>
+                
+            <p style="text-align:center;"><a href="#" onclick="$('#gt_student_grid_comments').toggle();return false;"><?= $string['showhidecomments'] ?></a></p>
+            <table id="gt_student_grid_comments" class="gt_student_assessment_grid_comments" cellspacing='0' style='display:none;'>
+                <tr><th colspan='2'><?= $string['comments'] ?></th></tr>
+                <?php if ($Qualifications): ?>
+                    <?php foreach($Qualifications as $qual): ?>
+                        <?php if ($qual->getAssessments()): ?>
+                            <tr>
+                                <th><?= $qual->getDisplayName() ?></th>
+                                <th><?= $string['comment'] ?></th>
+                            </tr>
+                            <?php foreach($allAssessments as $assessment): ?>
+                                <?php $assessment->setQualification($qual); ?>
+                                <?php $assessment->reloadStudent() ?>
+                                <?php if ($qual->getAssessment($assessment->getID())): ?>
+                                    <tr>
+                                        <td><b><?= $assessment->getName() ?></b></td>
+                                        <td><small><?= \gt_html($assessment->getUserComments(), true) ?></small></td>
+                                    </tr>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </table>
+        
+        <?php endif; ?>
+
+        
+        <?php foreach($Qualifications as $qualification): ?>
+            <?php if ($qualification->getAssessments()): ?>
+                <input type="hidden" class="gt-qID" value="<?= $qualification->getID() ?>" />
+            <?php endif; ?>
+        <?php endforeach; ?>
+        
+        
+    </div>
+    
+<?php endif; ?>

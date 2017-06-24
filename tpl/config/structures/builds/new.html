@@ -1,0 +1,80 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<form action="" method="post">
+        
+    <div class='gt_form_panel'>
+    
+        <div class='gt_form_panel_heading'>
+            <?= $string['newqualbuild'] ?>
+        </div>
+        
+        <div class='gt_form_panel_body'>
+        
+            <?php if ($Build->isValid()): ?>
+                <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
+            <?php endif; ?>
+
+            <input type="hidden" name="build_deleted" value="<?= (int)$Build->isDeleted() ?>" />
+
+            <p class="gt_c">
+                <input type="submit" class="gt_btn gt_blue" name="submit_qual_build" value="<?= $string['save'] ?>" />
+                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+            </p>
+
+            <table class="gt_simple_form_table">
+
+                <tr>
+                    <td><?= $string['structure'] ?></td>
+                    <td>
+                        <select name="build_structure_id">
+                            <option value=""><?= $string['pleaseselect'] ?></option>
+                            <?php if ($qualStructures): ?>
+                                <?php foreach($qualStructures as $structure): ?>
+                                    <option value="<?= $structure->getID() ?>" <?= ($Build->getStructureID() == $structure->getID()) ? 'selected' : ''; ?> ><?= $structure->getName() ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td><?= $string['level'] ?></td>
+                    <td>
+                        <select name="build_level_id">
+                            <option value=""><?= $string['pleaseselect'] ?></option>
+                            <?php if ($qualLevels): ?>
+                                <?php foreach($qualLevels as $level): ?>
+                                    <option value="<?= $level->getID() ?>" <?= ($Build->getLevelID() == $level->getID()) ? 'selected' : ''; ?> ><?= $level->getName() ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td><?= $string['subtype'] ?></td>
+                    <td>
+                        <select name="build_subtype_id">
+                            <option value=""><?= $string['pleaseselect'] ?></option>
+                            <?php if ($qualSubTypes): ?>
+                                <?php foreach($qualSubTypes as $subType): ?>
+                                    <option value="<?= $subType->getID() ?>" <?= ($Build->getSubTypeID() == $subType->getID()) ? 'selected' : ''; ?> ><?= $subType->getName() ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </td>
+                </tr>
+
+
+            </table>
+    
+        </div>
+        
+    </div>
+    
+</form>

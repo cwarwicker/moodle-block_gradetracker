@@ -1,0 +1,26 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<form action="" method="post">
+    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    <input style="display:none" type="text" name="query_id" value="<?= $query->id; ?>">
+    <input style="display:none" type="text" name="created_date" value="<?= $query->created_date; ?>">
+    <input style="display:none" type="text" name="last_ran" value="<?= $query->last_ran; ?>">
+    <?= $string['name']; ?>: <input type="text" name="name" value="<?= (isset($_POST['name'])) ? \gt_html($_POST['name']) : $query->name; ?>"><br><br>
+    <?= $string['description']; ?>:
+    <br>
+    <textarea name="description" class="gt_query_box"><?= (isset($_POST['description'])) ? \gt_html($_POST['description']) : $query->description; ?></textarea>
+    <br><br>
+    <?= $string['query']; ?>:
+    <br>
+    <textarea name="query" class="gt_query_box"><?= (isset($_POST['query'])) ? \gt_html($_POST['query']) : $query->query; ?></textarea>
+    <br><br>
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting&section=query" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_edit_query" value="<?= $string['save'] ?>">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <?php if(gt_has_capability('block/gradetracker:run_sql_report')): ?>
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting&section=query&page=run&id=<?= $query->id; ?>" class="gt_btn gt_btn_small gt_green"><?= $string['run'] ?></a>
+    <?php endif; ?>
+
+</form>

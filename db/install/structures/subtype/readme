@@ -1,0 +1,69 @@
+Any Sub Types you wish to be installed when the block is installed should be placed here.
+
+This should be in a JSON file called "subtypes.json"
+
+Example:
+
+[
+    {
+        "name": "90-Credit Diploma",
+        "shortname": "90Dip"
+    },
+    {
+        "name": "Award",
+        "shortname": "Award"
+    },
+    {
+        "name": "Certificate",
+        "shortname": "Cert"
+    },
+    {
+        "name": "Diploma",
+        "shortname": "Dip"
+    },
+    {
+        "name": "Extended Certificate",
+        "shortname": "ExCert"
+    },
+    {
+        "name": "Extended Diploma",
+        "shortname": "ExDip"
+    },
+    {
+        "name": "Foundation Diploma",
+        "shortname": "FndDip"
+    },
+    {
+        "name": "GCSE",
+        "shortname": "GCSE"
+    },
+    {
+        "name": "HNC",
+        "shortname": "HNC"
+    },
+    {
+        "name": "HND",
+        "shortname": "HND"
+    },
+    {
+        "name": "NVQ",
+        "shortname": "NVQ"
+    },
+    {
+        "name": "Subsidiary Diploma",
+        "shortname": "SubDip"
+    },
+    {
+        "name": "VRQ",
+        "shortname": "VRQ"
+    },
+    {
+        "name": "AS",
+        "shortname": "AS"
+    },
+    {
+        "name": "A2",
+        "shortname": "A2"
+    }
+    
+]

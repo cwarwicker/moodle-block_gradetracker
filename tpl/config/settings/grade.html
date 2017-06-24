@@ -1,0 +1,46 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+
+<form action="" method="post" enctype="multipart/form-data">
+    
+    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    
+    <h2><?= $string['gradesettings'] ?></h2>
+    <p><?= $string['gradesettings:desc'] ?></p>
+    
+    <small><strong><?= $string['config:grade:avggrademinunits'] ?></strong> - <?= $string['config:grade:avggrademinunits:desc'] ?></small>
+    <br>
+    <input type="number" min="1" name="pred_grade_min_units" value="<?= \gt_html($GT->getSetting('pred_grade_min_units')) ?>" />
+    
+    <br><br>
+    <small><strong><?= $string['config:grade:aspdiff'] ?></strong> - <?= $string['config:grade:aspdiff:desc'] ?></small>
+    <br>
+    <input type="number" step="0.1" name="asp_grade_diff" value="<?= \gt_html($GT->getSetting('asp_grade_diff')) ?>" />
+    
+    
+    <br><br>
+    <small><strong><?= $string['config:grade:weightedmethod'] ?></strong> - <?= $string['config:grade:weightedmethod:desc'] ?></small>
+    <br>
+    <select name="weighted_target_method">
+        <option value=""><?= $string['na'] ?></option>
+        <option value="gcse" <?= ( $GT->getSetting('weighted_target_method') == 'gcse' ) ? 'selected' : '' ?> ><?= $string['weighted:method1'] ?></option>
+        <option value="ucas" <?= ( $GT->getSetting('weighted_target_method') == 'ucas' ) ? 'selected' : '' ?> ><?= $string['weighted:method2'] ?></option>
+    </select>
+    <br><br>
+    
+    <small><strong><?= $string['config:grade:weighteddirection'] ?></strong> - <?= $string['config:grade:weighteddirection:desc'] ?></small>
+    <br>
+    <select name='weighted_target_direction'>
+        <option value=""></option>
+        <option value="UP" <?= (\GT\Setting::getSetting('weighted_target_direction') == 'UP') ? 'selected' : '' ?> ><?= strtoupper($string['up']) ?></option>
+        <option value="DOWN" <?= (\GT\Setting::getSetting('weighted_target_direction') == 'DOWN') ? 'selected' : '' ?> ><?= strtoupper($string['down']) ?></option>
+    </select>
+    
+    
+    
+    
+    <br><br>
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue"  value="<?= $string['save'] ?>" />
+    
+</form>

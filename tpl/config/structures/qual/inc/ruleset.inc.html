@@ -1,0 +1,26 @@
+<div id="gt_popup_rules_<?= $ruleSetNum ?>" loaded='true' style="display:none;">
+
+    <!-- List of rules on set -->
+    <div id="gt_popup_rules_table_<?= $ruleSetNum ?>" class="gt_popup_rules_table">
+        <p class='gt_centre'><a href='#' onclick='gt_addNewRule(<?= $ruleSetNum ?>);return false;' class='gt_btn gt_blue'><?= $string['addnewrule'] ?></a></p><br><br>
+        <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/ruletbl.inc.html'; ?>
+    </div>
+
+    <!-- Rule divs to show/hide -->
+    <div id='gt_popup_rules_divs_<?= $ruleSetNum ?>' class='gt_popup_rules_divs'>
+        <?php if (isset($ruleSet) && $ruleSet->getRules()): ?>
+            <?php $numRulesArray[$ruleSetNum] = 0; ?>
+            <?php foreach($ruleSet->getRules() as $rule): ?>
+
+                <?php $numRulesArray[$ruleSetNum]++ ?>
+                <?php $ruleNum = $numRulesArray[$ruleSetNum] ?>
+                <?php $numRuleSteps[$ruleSetNum][$ruleNum] = 0; ?>
+
+                <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/rule.inc.html'; ?>
+
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+
+</div>

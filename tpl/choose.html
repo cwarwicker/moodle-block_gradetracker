@@ -1,0 +1,376 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<div class='gt_full_page'>
+    
+    <ul class="gt_tabrow">
+        
+        <?php if ($User->hasCapability('block/gradetracker:view_student_grids')): ?>
+            <li class="<?= ($type == 'student') ? 'selected' : '' ?>">
+                <a href="choose.php?type=student<?= (isset($myCourseID) && $myCourseID) ? '&myCourseID='.$myCourseID : '' ?>">
+                    <?= $string['viewbystudent'] ?>
+                </a>
+            </li>
+        <?php endif; ?>
+        
+        <?php if ($User->hasCapability('block/gradetracker:view_unit_grids')): ?>
+            <li class="<?= ($type == 'unit') ? 'selected' : '' ?>">
+                <a href="choose.php?type=unit<?= (isset($myCourseID) && $myCourseID) ? '&myCourseID='.$myCourseID : '' ?>">
+                    <?= $string['viewbyunit'] ?>
+                </a>
+            </li>
+        <?php endif; ?>
+        
+        <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
+            <li class="<?= ($type == 'class') ? 'selected' : '' ?>">
+                <a href="choose.php?type=class<?= (isset($myCourseID) && $myCourseID) ? '&myCourseID='.$myCourseID : '' ?>">
+                    <?= $string['viewbyclass'] ?>
+                </a>
+            </li>
+        <?php endif; ?>
+        
+    </ul>
+    
+    <br>
+    
+    <div class='gt_form_panel'>
+
+        <div class='gt_form_panel_heading'><?= $string['selectgrid'] ?></div>
+
+        <div class='gt_form_panel_body'>
+            
+            <div class="gt_page_col_33">
+                
+                <div>
+                
+                    <div class="gt_form_panel_sub_heading">
+                        <?= $string['gridfilters'] ?>
+                    </div>
+
+                    <div class="gt_form_panel_body">
+
+                        <form action="" method="post">
+                        
+                            <div>
+
+                                <small><?= $string['myquals'] ?></small><br>
+                                <select id="gt_choose_filter_my_qual" name="myQualID" class="gt_form_control">
+                                    <option value=""><?= $string['pleaseselect'] ?></option>
+                                    <?php if ($User->getQualifications("STAFF")): ?>
+                                        <?php foreach($User->getQualifications("STAFF") as $qual): ?>
+                                            <option value="<?= $qual->getID() ?>" <?= (isset($myQualID) && $myQualID == $qual->getID()) ? 'selected' : ''; ?> ><?= $qual->getDisplayName() ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+
+                            </div>
+
+                            <br>
+                            
+                            <div>
+
+                                <small><?= $string['mycourses'] ?></small><br>
+                                <select id="gt_choose_filter_my_course" name="myCourseID" class="gt_form_control">
+                                    <option value=""><?= $string['pleaseselect'] ?></option>
+                                    <?php if ($User->getCourses("STAFF")): ?>
+                                        <?php foreach($User->getCourses("STAFF") as $course): ?>
+                                            <option value="<?= $course->id ?>" <?= (isset($myCourseID) && $myCourseID == $course->id) ? 'selected' : ''; ?> ><?= $course->getName() ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+
+                            </div>
+                            
+                            <br>
+
+                            <div>
+                                <input type="submit" class="gt_btn gt_blue" name="submit_filter_my" value="<?= $string['filter'] ?>" />
+                            </div>
+
+                        </form>
+                        
+                    </div>
+                    
+                </div>
+                
+                <br><br>
+                
+                <?php if ( $User->hasCapability('block/gradetracker:view_all_quals') ): ?>
+                
+                    <div>
+
+                        <div class="gt_form_panel_sub_heading">
+                            <?= $string['fullgridaccess'] ?>
+                        </div>
+
+                        <div class="gt_form_panel_body">
+
+                            <form action="" method="post">
+
+                                <div>
+                                    <small><?= $string['allquals'] ?></small><br>
+                                    <select id="gt_choose_filter_all_qual" name="searchQualID" class="gt_form_control">
+                                        <option value=""><?= $string['pleaseselect'] ?></option>
+                                        <?php if ($allQuals): ?>
+                                            <?php foreach( $allQuals as $qual ): ?>
+                                                <option value="<?= $qual->getID() ?>" <?= (isset($searchAllQID) && $searchAllQID == $qual->getID()) ? 'selected' : ''; ?> ><?= $qual->getDisplayName() ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>     
+
+                                <br>
+                                
+                                <div>
+                                                                        
+                                    <small><?= $string['allcourses'] ?></small><br>
+                                    <select id="gt_choose_filter_all_course" name="searchCourseID" class="gt_form_control">
+                                        <option value=""><?= $string['pleaseselect'] ?></option>
+                                        <?php if ($allCourses): ?>
+                                            <?php foreach( $allCourses as $course ): ?>
+                                                <option value="<?= $course->id ?>" <?= (isset($searchAllCID) && $searchAllCID == $course->id) ? 'selected' : ''; ?> ><?= $course->getName() ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div> 
+                                
+                                <br>
+
+                                <div>
+                                    <input type="submit" class="gt_btn gt_blue" name="submit_filter_all" value="<?= $string['filter'] ?>" />
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                
+                <?php endif; ?>
+                
+            </div>
+            
+            <div class="gt_page_col_66">
+                
+                <div class="gt_form_panel_sub_heading">
+                    <?= $string['results'] ?>
+                    <?php if (isset($searchQualification) && $searchQualification): ?>
+                        - <?= $searchQualification->getDisplayName() ?>
+                    <?php elseif (isset($searchCourse) && $searchCourse): ?>
+                        - <?= $searchCourse->getName() ?>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="gt_form_panel_body">
+                                                            
+                    <?php if (isset($results) && $results): ?>
+                                        
+                            <?php if ($type == 'student'): ?>
+                            
+                                <?php foreach($results as $cID => $quals): ?>
+                                
+                                    <?php if ($cID > 0): ?>
+                                        <h3 class="gt_form_heading">
+                                            <a href="<?= $CFG->wwwroot ?>/course/view.php?id=<?= $cID ?>"><?= \GT\Course::getNameById($cID) ?></a>
+                                        </h3>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($quals): ?>
+                                    
+                                        <?php foreach($quals as $qID => $rows): ?>
+                                
+                                            <h4 class="gt_form_heading <?= (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?= \GT\Qualification::getNameByID($qID) ?></h4>
+                                            
+                                            <?php if ($rows): ?>
+
+                                                <table class="gt_filter_results">
+
+                                                    <?php foreach($rows as $row): ?>
+
+                                                        <tr>
+                                                            <td><?= $row->getPicture() ?></td>
+                                                            <td><?= $row->getName() ?></td>
+                                                            <td><?= $row->username ?></td>
+                                                            <td>
+                                                                <?php if($User->canAccessQual($qID, 'STAFF')): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $row->id ?>&qualID=<?= $qID ?>&courseID=<?= $courseID ?>&access=v" target="_blank"><?= $string['viewgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if($User->canEditQual($qID)): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $row->id ?>&qualID=<?= $qID ?>&courseID=<?= $courseID ?>&access=e" target="_blank"><?= $string['editgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if($User->canEditQual($qID)): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $row->id ?>&qualID=<?= $qID ?>&courseID=<?= $courseID ?>&access=ae" target="_blank"><?= $string['advancededitgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            
+                                                            <?php if (\GT\Qualification::hasAssessments($qID)): ?>
+                                                                <td>
+                                                                    <?php if($User->canAccessQual($qID, 'STAFF')): ?>
+                                                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $row->id ?>&qualID=<?= $qID ?>&courseID=<?= $courseID ?>&ass=1" target="_blank"><?= $string['assessmentgrid'] ?></a>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                            <?php endif; ?>
+                                                            
+                                                        </tr>
+
+                                                    <?php endforeach; ?>
+                                                             
+                                                </table>
+                                            
+                                            <?php else: ?>
+                                            
+                                                <p class="gt_centre"><?= $string['qualnostuds'] ?></p>
+                                                    
+                                            <?php endif; ?>
+                                           
+                                            <br>
+                                           
+                                        <?php endforeach; ?>
+                                    
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
+
+                                
+                                
+                                
+                                
+                                
+                            <?php elseif ($type == 'unit'): ?>
+
+                                <?php foreach($results as $cID => $quals): ?>
+                                
+                                    <?php if ($cID > 0): ?>
+                                        <h3 class="gt_form_heading"><?= \GT\Course::getNameById($cID) ?></h3>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($quals): ?>
+                                    
+                                        <?php foreach($quals as $qID => $units): ?>
+                                
+                                            <h4 class="gt_form_heading <?= (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?= \GT\Qualification::getNameByID($qID) ?></h4>
+
+                                            <?php if ($units): ?>
+
+                                                <table class="gt_filter_results">
+
+                                                    <?php foreach($units as $unit): ?>
+
+                                                        <tr>
+                                                            <td><?= $unit->getDisplayName() ?></td>
+                                                            <td>
+                                                                <?php if($User->canAccessQual($qID, 'STAFF')): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&courseID=<?= $cID ?>&qualID=<?= $qID ?>&access=v" target="_blank"><?= $string['viewgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if($User->canEditQual($qID)): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&courseID=<?= $cID ?>&qualID=<?= $qID ?>&access=e" target="_blank"><?= $string['editgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if($User->canEditQual($qID)): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&courseID=<?= $cID ?>&qualID=<?= $qID ?>&access=ae" target="_blank"><?= $string['advancededitgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                        </tr>
+
+                                                    <?php endforeach; ?>
+                                                             
+                                                </table>
+                                            
+                                            <?php else: ?>
+                                            
+                                                <p class="gt_centre"><?= $string['qualnounits'] ?></p>
+                                                    
+                                            <?php endif; ?>
+                                           
+                                            <br>
+                                           
+                                        <?php endforeach; ?>
+                                    
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
+                            
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                            <?php elseif ($type == 'class'): ?>
+                            
+                                <?php foreach($results as $cID => $quals): ?>
+                                
+                                    <?php if ($cID > 0): ?>
+                                        <h3 class="gt_form_heading"><?= \GT\Course::getNameById($cID) ?></h3>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($quals): ?>
+                                    
+                                        <?php foreach($quals as $qID => $qual): ?>
+                                
+                                            <h4 class="gt_form_heading <?= (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?= \GT\Qualification::getNameByID($qID) ?></h4>
+
+                                                <table class="gt_filter_results">
+
+                                                        <tr>
+                                                            <td>
+                                                                <?php if($User->canAccessQual($qID, 'STAFF')): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $qual->getID() ?>&courseID=<?= $cID ?>&access=v" target="_blank"><?= $string['viewgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if($User->canEditQual($qID)): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $qual->getID() ?>&courseID=<?= $cID ?>&access=e" target="_blank"><?= $string['editgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if($User->canEditQual($qID)): ?>
+                                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $qual->getID() ?>&courseID=<?= $cID ?>&access=ae" target="_blank"><?= $string['advancededitgrid'] ?></a>
+                                                                <?php endif; ?>
+                                                            </td>
+                                                            <?php if ($qual->getAssessments()): ?>
+                                                                <td>
+                                                                    <?php if($User->canAccessQual($qID, 'STAFF')): ?>
+                                                                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $qual->getID() ?>&courseID=<?= $cID ?>&ass=1" target="_blank"><?= $string['assessmentgrid'] ?></a>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                            <?php endif; ?>
+                                                        </tr>
+                                                             
+                                                </table>                                           
+                                           
+                                            <br>
+                                           
+                                        <?php endforeach; ?>
+                                    
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
+                            
+                            <?php endif; ?>
+                    
+                    <?php elseif (isset($results)): ?>
+                    
+                        <p class="gt_c"><?= $string['noresults'] ?></p>
+                    
+                    <?php endif; ?>
+                    
+                </div>
+                
+            </div>
+            
+            <br class="gt_cl"><br>
+            
+        </div>    
+
+
+    </div>
+    
+</div>

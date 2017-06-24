@@ -1,0 +1,31 @@
+<?php if(!defined('BCGT')) exit; ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.css">
+        <?php if ($GT->getInstitutionLogoUrl()): ?>
+            <style type="text/css">
+                body
+                {
+                    background: url('<?= $GT->getInstitutionLogoUrl() ?>') no-repeat;
+                }
+            </style>
+        <?php endif; ?>
+        
+        <?php foreach( gt_get_core_jquery() as $script ): ?>
+            <script type="text/javascript" src="<?= $script ?>"></script>
+        <?php endforeach; ?>
+        
+    </head>
+    <body>
+        
+        <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/grids/'.$grid.'.html'; ?>
+        
+        <script>
+            window.document.close();
+            window.focus();
+            window.print();
+        </script>
+    </body>
+</html>

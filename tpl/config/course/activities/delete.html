@@ -1,0 +1,53 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<div class="gt_confirm_box">
+    
+    <h4><?= $string['deletelinks'] ?></h4>
+    <h5><?= $moduleLink->getRecordName() ?> (<?= $moduleLink->getModName() ?>)</h5>
+    <h6><?= $qual->getDisplayName() ?></h6>
+    <?php if (isset($unit)): ?>
+        <p><?= $unit->getDisplayName() ?></p>
+    <?php endif; ?>
+    <br><br>
+        
+    <table style="margin:auto;">
+
+        <tr>
+            <th colspan="<?= $moduleLink->countCriteriaOnModule($qual->getID(), false, $part) ?>"><?= $qual->getDisplayName() ?></th>
+        </tr>
+
+        <?php foreach( $unitArray as $u): ?>
+
+            <?php if ($criteria = $moduleLink->getCriteriaOnModule($qual->getID(), $u, $part)): ?>
+
+                <tr>
+                    <th class="gt_unit_name" colspan="<?= $moduleLink->countCriteriaOnModule($qual->getID(), false, $part) ?>"><?= $u->getDisplayName() ?></th>
+                </tr>
+
+                <tr>
+                    <?php foreach( $criteria as $crit): ?>
+                        <td><?= $crit->getName() ?></td>
+                    <?php endforeach; ?>
+                </tr>
+
+            <?php endif; ?>
+
+        <?php endforeach; ?>
+
+    </table>
+        
+    <div>
+        <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" method="post">
+            <input type="hidden" name="cmid" value="<?= $cmID ?>" />
+            <input type="hidden" name="qualid" value="<?= $qual->getID() ?>" />
+            <?php if (isset($unit)): ?>
+                <input type="hidden" name="unitid" value="<?= $unit->getID() ?>" />
+            <?php endif; ?>
+            <?php if ($part): ?>
+                <input type="hidden" name="part" value="<?= $part ?>" />
+            <?php endif; ?>
+            <input type="submit" class="gt_btn" name="confirm_delete_activity_link" value="<?= $string['yes'] ?>" />
+            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn"><?= $string['no'] ?></a>
+        </form>        
+    </div>
+</div>

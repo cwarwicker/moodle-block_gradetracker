@@ -1,0 +1,211 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<form action="" method="post">
+        
+    <div>
+        <small><strong><?= $string['logdetails'] ?></strong></small><br>
+        
+        <select name="log_details">
+            <option value=""><?= $string['allactions'] ?></option>
+            <optgroup label="<?= \GT\Log::GT_LOG_CONTEXT_GRID ?>">
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_VIEWED_STUDENT_GRID ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_VIEWED_STUDENT_GRID) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_VIEWED_STUDENT_GRID ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_VIEWED_UNIT_GRID ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_VIEWED_UNIT_GRID) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_VIEWED_UNIT_GRID ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_VIEWED_CLASS_GRID ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_VIEWED_CLASS_GRID) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_VIEWED_CLASS_GRID ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_CRIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_USER_CRIT) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_CRIT ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_UNIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_USER_UNIT) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_UNIT ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ASS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ASS) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ASS ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_GRADE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_USER_GRADE) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_UPDATED_USER_GRADE ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_GRADE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_GRADE) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_GRADE ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_AWARD ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_AWARD) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_AWARD ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_STUDENT_GRID ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_STUDENT_GRID) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_STUDENT_GRID ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_UNIT_GRID ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_UNIT_GRID) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_UNIT_GRID ?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_CLASS_GRID ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_CLASS_GRID) ? 'selected' : '' ?> ><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_CLASS_GRID ?></option>
+            </optgroup>
+            <optgroup label="<?= \GT\Log::GT_LOG_CONTEXT_CONFIG ?>">
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GENERAL_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GENERAL_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GENERAL_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_QUAL_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_QUAL_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_QUAL_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_UNIT_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_UNIT_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_UNIT_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_CRITERIA_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_CRITERIA_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_CRITERIA_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GRID_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GRID_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GRID_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_USER_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_USER_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_USER_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GRADE_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GRADE_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_GRADE_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_ASSESSMENTS_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_ASSESSMENTS_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_ASSESSMENTS_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_REPORTING_SETTINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_REPORTING_SETTINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_PLUGIN_REPORTING_SETTINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_UNIT_GRADING_STRUCTURE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_UNIT_GRADING_STRUCTURE) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_UNIT_GRADING_STRUCTURE?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_CRITERIA_GRADING_STRUCTURE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_CRITERIA_GRADING_STRUCTURE) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_CRITERIA_GRADING_STRUCTURE?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_CREATED_QUALIFICATION ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_CREATED_QUALIFICATION) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_CREATED_QUALIFICATION?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_QUALIFICATION ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_QUALIFICATION) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_QUALIFICATION?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DUPLICATED_QUALIFICATION ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DUPLICATED_QUALIFICATION) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DUPLICATED_QUALIFICATION?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DELETED_QUALIFICATION ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DELETED_QUALIFICATION) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DELETED_QUALIFICATION?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_RESTORED_QUALIFICATION ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_RESTORED_QUALIFICATION) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_RESTORED_QUALIFICATION?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_CREATED_UNIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_CREATED_UNIT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_CREATED_UNIT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_UNIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_UNIT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_UNIT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DUPLICATED_UNIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DUPLICATED_UNIT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DUPLICATED_UNIT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DELETED_UNIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DELETED_UNIT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DELETED_UNIT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_RESTORED_UNIT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_RESTORED_UNIT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_RESTORED_UNIT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DELETED_COURSE_ACTIVTY_LINK ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DELETED_COURSE_ACTIVTY_LINK) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DELETED_COURSE_ACTIVTY_LINK?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_CREATED_ASSESSMENT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_CREATED_ASSESSMENT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_CREATED_ASSESSMENT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_ASSESSMENT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_ASSESSMENT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_ASSESSMENT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DELETED_ASSESSMENT ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DELETED_ASSESSMENT) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DELETED_ASSESSMENT?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_CREATED_MODULE_LINK ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_CREATED_MODULE_LINK) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_CREATED_MODULE_LINK?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_MODULE_LINK ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_MODULE_LINK) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_MODULE_LINK?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_DELETED_MODULE_LINK ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_DELETED_MODULE_LINK) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_DELETED_MODULE_LINK?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_UPDATED_DATA_MAPPINGS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_UPDATED_DATA_MAPPINGS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_UPDATED_DATA_MAPPINGS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_SPECS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_SPECS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_SPECS?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_DATA ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_DATA) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_DATA?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_QOE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_QOE) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_QOE?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES?></option>
+                <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS?></option>
+            </optgroup>
+        </select>
+                
+        <input type="text" name="log_user" placeholder="<?= $string['username'] ?>" value="<?= (isset($search['user'])) ? $search['user'] : '' ?>" />
+        <input type="text" name="log_date_from" class="gt_date" placeholder="<?= get_string('from') ?> (dd-mm-yyyy)" value="<?= (isset($search['date_from'])) ? $search['date_from'] : '' ?>" />
+        <input type="text" name="log_date_to" class="gt_date" placeholder="<?= get_string('to') ?> (dd-mm-yyyy)" value=" <?= (isset($search['date_to'])) ? $search['date_to'] : date('d-m-Y') ?>" />
+        
+        <br><hr>
+        
+        <small><strong><?= $string['logattributes'] ?></strong> - <?= $string['logattributes:desc'] ?></small><br>
+        
+        <table id='gt_log_search_attributes'>
+            <tr>
+                <td>
+                    <select id="gt_log_search_qual" name="log_attribute[QUALID]">
+                        <option value=""><?= $string['allquals'] ?></option>
+                        <?php if ($allQuals): ?>
+                            <?php foreach($allQuals as $qual): ?>
+                                <option value="<?= $qual->getID() ?>" <?= (isset($search['atts']['QUALID']) && $search['atts']['QUALID'] == $qual->getID()) ? 'selected' : '' ?> ><?= $qual->getDisplayName() ?> [<?= $qual->getID() ?>]</option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                    <br>
+                    <select id="gt_log_search_unit" name="log_attribute[UNITID]">
+                        <option value=""><?= $string['allunits'] ?></option>
+                        
+                        <?php if (isset($useUnits) && $useUnits): ?>
+                            <?php foreach($useUnits as $unit): ?>
+                                <option value="<?= $unit->getID() ?>" <?= (isset($search['atts']['UNITID']) && $search['atts']['UNITID'] == $unit->getID()) ? 'selected' : '' ?> ><?= \gt_html($unit->getDisplayName()) ?> [<?= $unit->getID() ?>]</option>
+                            <?php endforeach; ?>
+                        
+                        <?php elseif ($allUnits): ?>
+                            <?php foreach($allUnits as $unit): ?>
+                                <option value="<?= $unit->getID() ?>" <?= (isset($search['atts']['UNITID']) && $search['atts']['UNITID'] == $unit->getID()) ? 'selected' : '' ?> ><?= \gt_html($unit->getDisplayName()) ?> [<?= $unit->getID() ?>]</option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                    <br>
+                    <select id='gt_log_search_crit' name="log_attribute[CRITID]">
+                        <option value=""><?= $string['allcrit'] ?></option>
+                        <?php if (isset($useCriteria) && $useCriteria): ?>
+                            <?php foreach($useCriteria as $crit): ?>
+                                <option value="<?= $crit->getID() ?>" <?= (isset($search['atts']['CRITID']) && $search['atts']['CRITID'] == $crit->getID()) ? 'selected' : '' ?> ><?= \gt_html($crit->getName()) ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                    <br>
+                    <select id='gt_log_search_ass' name="log_attribute[ASSID]">
+                        <option value=""><?= $string['allass'] ?></option>
+                        <?php if (isset($useAss) && $useAss): ?>
+                            <?php foreach($useAss as $ass): ?>
+                                <option value="<?= $ass->getID() ?>" <?= (isset($search['atts']['ASSID']) && $search['atts']['ASSID'] == $ass->getID()) ? 'selected' : '' ?> ><?= \gt_html($ass->getName()) ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </td>
+                
+                <td>
+                    <select id="gt_log_search_course" name="log_attribute[COURSEID]">
+                        <option value=""><?= $string['allcourses'] ?></option>
+                        <?php if ($allCourses): ?>
+                            <?php foreach($allCourses as $course): ?>
+                                <option value="<?= $course->id ?>" <?= (isset($search['atts']['COURSEID']) && $search['atts']['COURSEID'] == $course->id) ? 'selected' : '' ?> ><?= \gt_html($course->fullname) ?> [<?= $course->id ?>]</option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        <option value="OTHER" <?= (isset($search['atts']['COURSEID']) && $search['atts']['COURSEID'] == 'OTHER') ? 'selected' : '' ?> ><?= $string['other'] ?></option>
+                    </select><br>
+                    <input type='text' id='gt_log_search_course_name' name='log_attribute[COURSENAME]' placeholder="<?= $string['courseshortname'] ?>" value="<?= (isset($search['atts']['COURSENAME'])) ? \gt_html($search['atts']['COURSENAME']) : '' ?>" style='display:<?= (isset($search['atts']['COURSENAME']) && $search['atts']['COURSENAME'] != '') ? 'block' : 'none' ?>;' />
+                </td>
+                
+                <td>
+                    <input type="text" name="log_attribute[STUDENTID]" placeholder="<?= $string['affecteduser'] ?> (<?= $string['username'] ?>)" value="<?= (isset($search['atts']['STUDENTID'])) ? \gt_html($search['atts']['STUDENTID']) : '' ?>" />
+                </td>
+            </tr>
+        </table>        
+                        
+    </div>
+    
+    <p class='gt_centre'><img id="gt_log_search_load" src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" style="display:none;" /></p>
+    <p class='gt_centre'><input type='submit' name='search' class='gt_btn' value='<?= $string['search'] ?>' /></p>
+    
+</form>
+
+<br><br>
+
+<?php if (isset($results)): ?>
+
+    <?php if ($results): ?>
+        
+        <div>
+            <div class="gt_form_panel_heading"><?= $string['results'] ?></div>
+            <div class="gt_form_panel_body">
+                <table class='gt_config gt_config_white gt_left'>
+                    <tr>
+                        <?php foreach( array_keys( reset($results) ) as $header ): ?>
+                            <th><?= $header ?></th>
+                        <?php endforeach; ?>
+                        <th><?= $string['debuginfo'] ?></th>
+                    </tr>
+                    <?php foreach($results as $row): ?>
+                        <tr>
+                            <?php foreach($row as $key => $val): ?>
+                                <td>
+                                    <?php if (is_array($val)): ?>
+                                        <?php foreach($val as $k => $v): ?>
+                                            <b><?= (isset($string['log:att:'.$k])) ? $string['log:att:'.$k] : '???' ?>:</b> <?= $v ?><br>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <?= \gt_html($val) ?>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endforeach; ?>
+                            <td>
+                                <a href="javascript:window.open('<?= $CFG->wwwroot ?>/blocks/gradetracker/log.php?id=<?= $row['id'] ?>', 'log', 'width=650,height=600');"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/page_go.png" /></a>
+                            </td>                            
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        </div>
+        
+    <?php else: ?>
+        <p class='gt_centre'><?= $string['noresults'] ?></p>
+    <?php endif; ?>
+
+<?php endif; ?>
+
+<script>
+    var allUnits = [];
+    <?php if ($allUnits): ?>
+        <?php foreach($allUnits as $unit): ?>
+            allUnits.push( {id: <?= $unit->getID() ?>, name: '<?= \gt_html($unit->getDisplayName()) ?>'} );
+        <?php endforeach; ?>
+    <?php endif; ?>        
+</script>

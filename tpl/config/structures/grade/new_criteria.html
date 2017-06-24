@@ -1,0 +1,130 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if ( (isset($Structure) && $Structure->isValid()) || isset($Build) && $Build->isValid()  ): ?>
+
+<?php if (!$CriteriaAwardStructure->isEnabled()): ?>
+    <?= gt_info_alert_box( $string['structureisdisabled'] ) ?>
+<?php endif; ?>
+
+<div>
+    
+    <form action="" method="post" id="gt_grading_structure_form" enctype="multipart/form-data">
+        
+        <div class='gt_form_panel'>
+            
+            <div class='gt_form_panel_heading'>
+                <a href="config.php?view=structures&section=grade&page=edit&type=criteria<?= (isset($Build)) ? '&build=' . $Build->getID() : '&id=' . $Structure->getID() ?>"><?= (isset($Build)) ? $Build->getName() : $Structure->getName() ?> - <?= (isset($Build)) ? $string['assessmentgradingstructures'] : $string['criteriagradingstructures'] ?></a>
+            </div>
+
+            <div class='gt_form_panel_body'>
+        
+                <p class="gt_c">
+                    <input type="submit" class="gt_btn gt_blue" name="submit_crit_grading_structure" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                </p>
+                
+                <?php if ($CriteriaAwardStructure->isValid()): ?>
+                    <input type="hidden" name="grading_id" value="<?= $CriteriaAwardStructure->getID() ?>" />
+                <?php endif; ?>
+
+                <?php if (isset($Structure) && $Structure->isValid()): ?>
+                    <input type="hidden" name="grading_qual_structure_id" value="<?= $Structure->getID() ?>" />
+                <?php endif; ?>
+                
+                <?php if (isset($Build) && $Build->isValid()): ?>
+                    <input type="hidden" name="build" value="<?= $Build->getID() ?>" />
+                <?php endif; ?>
+                
+                <input type="hidden" name="grading_enabled" value="<?= $CriteriaAwardStructure->getEnabled() ?>" />
+                <input type="hidden" name="grading_assessments" value="<?= $CriteriaAwardStructure->getIsUsedForAssessments() ?>" />
+
+                <label class="gt_input_label"><?= $string['name'] ?></label>
+                <input type="text" name="grading_name" value="<?= $CriteriaAwardStructure->getName() ?>" placeholder="PMD" />
+                <br><br>
+
+                <table class="gt_form_table" id="gt_grading_structure_table">
+
+                    <tr>
+                        <th><?= $string['img'] ?></th>
+                        <th><?= $string['grade'] ?></th>
+                        <th><?= $string['shortgrade'] ?></th>
+                        <th><?= $string['met'] ?></th>
+                        <th><?= $string['specialval'] ?></th>
+                        <th><?= $string['points'] ?></th>
+                        <th><?= $string['lowerpoints'] ?></th>
+                        <th><?= $string['upperpoints'] ?></th>
+                        <th><a href="#" id="gt_add_crit_grading"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></th>
+                    </tr>
+
+                    <?php if ($CriteriaAwardStructure->getAwards()): ?>
+
+                        <?php foreach($CriteriaAwardStructure->getAwards() as $award): ?>
+                            <?php $cntAwards++ ?>
+
+                            <tr id="gt_grading_row_<?= $cntAwards ?>">
+                                <td>
+                                    <input type="hidden" name="grade_ids[<?= $cntAwards ?>]" value="<?= $award->getID() ?>" />
+                                    <div class="gt-upload-img">
+                                        <img id="gt_award_img_preview_<?= $cntAwards ?>" src="<?= $award->getImageUrl() ?>" class="gt_image_preview">
+                                        <input type="file" rowNum="<?= $cntAwards ?>" name="grade_files[<?= $cntAwards ?>]" class="gt_award_icon_input">
+                                        <input type="hidden" name="grade_icon_names[<?= $cntAwards ?>]" value="<?= $award->getImage() ?>" />
+                                    </div>
+                                </td>
+                                <td><input type="text" name="grade_names[<?= $cntAwards ?>]" placeholder="e.g. Pass" value="<?= $award->getName() ?>" /></td>
+                                <td><input type="text" class="gt_text_small" name="grade_shortnames[<?= $cntAwards ?>]" placeholder="P" value="<?= $award->getShortName() ?>" /></td>
+                                <td><input type="checkbox" name="grade_met[<?= $cntAwards ?>]" value="1" <?= ($award->isMet()) ? 'checked' : '' ?> /></td>
+                                <td>
+                                    <select name="grade_specialvals[<?= $cntAwards ?>]">
+                                        <option value=""></option>
+                                        <?php if(\GT\CriteriaAward::getSupportedSpecialVals()): ?>
+                                            <?php foreach(\GT\CriteriaAward::getSupportedSpecialVals() as $val): ?>
+                                                <option value="<?= $val ?>" <?= ($award->getSpecialVal() == $val) ? 'selected' : ''; ?> ><?= $val ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                <td><input type="number" min="0" step="any" name="grade_points[<?= $cntAwards ?>]" placeholder="1" value="<?= $award->getPoints() ?>" /></td>
+                                <td><input type="number" min="0" step="any" name="grade_points_lower[<?= $cntAwards ?>]" placeholder="1.0" value="<?= $award->getPointsLower() ?>" /></td>
+                                <td><input type="number" min="0" step="any" name="grade_points_upper[<?= $cntAwards ?>]" placeholder="1.5" value="<?= $award->getPointsUpper() ?>" /></td>
+                                <td><a href="#" onclick="$('#gt_grading_row_<?= $cntAwards ?>').remove();return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" /></a></td>
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
+                </table>
+
+            </div>
+            
+        </div>
+        
+    </form>
+    
+</div>
+
+<script>
+    var cntGrades = <?= $cntAwards ?>;
+    var specialVals = new Array();
+    
+    <?php if(\GT\CriteriaAward::getSupportedSpecialVals()): ?>
+        <?php foreach(\GT\CriteriaAward::getSupportedSpecialVals() as $val): ?>
+            specialVals.push('<?= $val ?>');
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    bindFileUploads();
+    
+    
+    
+</script>
+
+
+
+
+
+<?php else: ?>
+    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+<?php endif; ?>

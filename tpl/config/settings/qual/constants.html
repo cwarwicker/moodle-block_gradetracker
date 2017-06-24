@@ -1,0 +1,56 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<div class='gt_form_panel'>
+    
+    <div class='gt_form_panel_heading'><?= $string['weightingconstants'] ?></div>
+    <div class='gt_form_panel_body'>
+        
+        <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+        <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+        
+        <p><?= $string['weightingconstants:desc'] ?></p>
+        
+        <form action="" method="post">
+            
+            <small><strong><?= $string['enabledisable'] ?></strong> - <?= $string['config:qual:constant:enabled:desc'] ?></small>
+            <br>
+            <input type='radio' name='weighting_constants_enabled' value='1' <?= (\GT\Setting::getSetting('weighting_constants_enabled') == 1 ) ? 'checked' : '' ?> /> <?= $string['enable'] ?> &nbsp; 
+            <input type='radio' name='weighting_constants_enabled' value='0' <?= (\GT\Setting::getSetting('weighting_constants_enabled') != 1 ) ? 'checked' : '' ?> /> <?= $string['disable'] ?>
+            <br><br>
+                        
+            <table class="gt_config">
+                
+                <tr>
+                    <th><?= $string['qualbuild'] ?></th>
+                    <th><?= $string['constant'] ?></th>
+                    <th><?= $string['multiplier'] ?></th>
+                </tr>
+                
+                <?php foreach($builds as $build): ?>
+                
+                    <tr>
+                        <td><?= $build->getName() ?></td>
+                        <td>
+                            <input name="constants[<?= $build->getID() ?>]" type="number" value="<?= \gt_html($build->getAttribute('build_default_weighting_constant')) ?>" min="0" step="0.01" />
+                        </td>
+                        <td>
+                            <input name="multipliers[<?= $build->getID() ?>]" type="number" value="<?= \gt_html($build->getAttribute('build_default_weighting_multiplier')) ?>" min="0" step="0.01" />
+                        </td>
+                    </tr>
+                
+                <?php endforeach; ?>
+                
+            </table>
+            
+            <br>
+            
+            <p class="gt_c">
+                <input class="gt_btn gt_green" type="submit" name="submit_constants" value="<?= $string['save'] ?>" />
+            </p>
+            
+        </form>
+        
+    </div>
+    
+</div>
+

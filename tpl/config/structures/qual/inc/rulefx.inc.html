@@ -1,0 +1,24 @@
+<div id='gt_rule_fx'>
+    
+    <p class='gt_centre' style='display:none;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif' /></p>
+        
+    <fieldset>
+        <legend>
+            <a href="#" onclick="gt_toggleDisabled('.gt_fx_func', '#gt_fx_text_input');return false;"><?= $string['function'] ?></a> 
+            <img id="gt_fx_func_enabled" src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/off.png"  />
+            <img id="gt_fx_loading" style="display:none;" src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="loading" />
+        </legend>
+        <div id="gt_fx_links"><div class='gt_fx_options_height'></div><a href="#" onclick="gt_ruleFxAddElement('object', null, null, this);return false;" class="gt_fx_func" disabled><?= $string['addobject'] ?></a></div>
+        <div id="gt_fx_options"><div class='gt_fx_options_height'></div></div><br>
+        <textarea id='gt_fx_func' class='gt_fx_func' disabled></textarea>
+    </fieldset>
+    
+    <fieldset>
+        <legend>
+            <a href="#" onclick="gt_toggleDisabled('#gt_fx_text_input', '.gt_fx_func');return false;"><?= $string['textinput'] ?></a> 
+            <img id="gt_fx_text_input_enabled" src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/off.png"  />
+        </legend>
+        <input type='text' id='gt_fx_text_input' disabled />
+    </fieldset>
+    
+</div>

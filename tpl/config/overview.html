@@ -1,0 +1,223 @@
+<div class="gt_full_page">
+    
+    <div class='gt_form_panel_side'>
+               
+            <div class='gt_form_panel_heading'><?= $string['recentactivity'] ?></div>
+            <div class="gt_form_panel_body">
+                <ul class='gt_recent_activity'>
+                    <?php if ($logs): ?>
+                        <?php foreach($logs as $log): ?>
+                            <li>
+                                <div><?= $log->user->getPicture(null, 50) ?></div>
+                                <div>
+                                    <span>
+                                        <a href='<?= $CFG->wwwroot ?>/user/profile.php?id=<?= $log->user->id ?>'><?= $log->user->getDisplayName() ?></a> <?= $log->details ?>
+                                    </span><br>
+                                    <small><i class="icon-time"></i> <?= \gt_time_ago($log->timestamp) ?></small>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+        <br>
+        
+    </div>
+    
+    <div class='gt_form_panel_centre'>
+        <div class='gt_form_panel_heading'><?= $string['systeminfo'] ?></div>
+        <div class="gt_form_panel_body">
+            
+            <table id="gt_sys_info">
+                
+                <tr>
+                    <td><strong><?= $string['system:moodleversion'] ?></strong></td>
+                    <td><?= $Site->moodleversion ?> (<?= $Site->moodlebuild ?>)</td>
+                </tr>
+                
+                <tr>
+                    <td><strong><?= $string['system:gtversion'] ?></strong></td>
+                    <td><?= $Site->gtversion ?> (<?= $Site->gtbuild ?>)</td>
+                </tr>
+                
+                <tr>
+                    <td><strong><?= $string['system:updatesavailable'] ?></strong></td>
+                    <td><?= $GT->printVersionCheck( true, $string['uptodate'] ) ?></td>
+                </tr>
+                
+                <tr>
+                    <td><strong><?= $string['system:dataroot'] ?></strong></td>
+                    <td><em><?= \GT\GradeTracker::dataroot() ?></em> <?= (is_writeable(\GT\GradeTracker::dataroot())) ? "<span style='color:green;'>(".$string['writeable'].")</span>" : "<span style='color:red;'>(".$string['notwriteable'].")</span>" ?></td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+                
+                <tr>
+                    <td><strong><?= $string['system:registered'] ?></strong></td>
+                    <td>
+                        <?php if (\GT\Site::registered()): ?>
+                            <span><?= \sprintf($string['system:registered:yes'], $Site->uin, \GT\Site::lastUpdated('D jS M Y, H:i'), \gt_time_ago(\GT\Site::lastUpdated())) ?></span><br>
+                            <?= \gt_info_alert_box( sprintf( $string['system:registered:task'], date('D jS M Y, H:i', $task->get_next_scheduled_time()) ) ) ?>
+                            <input type='button' value='<?= $string['update'] ?>' class='gt_btn gt_btn_small gt_blue' onclick='$("#gt_register_site").toggle();return false;' />
+                        <?php else: ?>
+                            <span><?= $string['system:registered:no'] ?></span><br>
+                            <input type='button' value='<?= $string['registersite'] ?>' class='gt_btn gt_btn_small gt_blue' onclick='$("#gt_register_site").toggle();return false;' />
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                
+            </table>           
+            
+        </div>
+        
+        <br>
+        
+        <div id='gt_register_site' style='display:none;'>
+            <div class='gt_form_panel_heading'><?= $string['system:registered'] ?></div>
+            <div class="gt_form_panel_body">
+                <form id='gt_site_register_form' onsubmit='return false;'>
+                
+                    <table id='gt_register_site_table'>
+                        
+                        <tr>
+                            <td><strong><?= $string['registration:sitename'] ?></strong></td>
+                            <td><input type='text' name='name' value='<?= \gt_html($Site->name) ?>' /></td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['registration:url'] ?></strong></td>
+                            <td>
+                                <input type='hidden' name='url' value='<?= $Site->url ?>' />
+                                <span><?= $Site->url ?></span>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['registration:privacy'] ?></strong></td>
+                            <td>
+                                <select name='privacy'>
+                                    <option value='0' <?= ( $Site->privacy == 0 ) ? 'selected' : '' ?> ><?= $string['registration:privacy:allgood'] ?></option>
+                                    <option value='1' <?= ( $Site->privacy == 1 ) ? 'selected' : '' ?>><?= $string['registration:privacy:donttalktome'] ?></option>
+                                    <option value='2' <?= ( $Site->privacy == 2 ) ? 'selected' : '' ?>><?= $string['registration:privacy:nameonly'] ?></option>
+                                    <option value='3' <?= ( $Site->privacy == 3 ) ? 'selected' : '' ?>><?= $string['registration:privacy:hidemyass'] ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['registration:admin'] ?></strong></td>
+                            <td><input type='text' name='admin' value='<?= $Site->admin ?>' /></td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['registration:adminemail'] ?></strong></td>
+                            <td><input type='text' name='adminemail' value='<?= $Site->adminemail ?>' /></td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['system:moodleversion'] ?></strong> <img src='<?= $OUTPUT->pix_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:moodleversion:info']) ?>' /></td>
+                            <td>
+                                <input type='hidden' name='moodleversion' value='<?= $Site->moodleversion ?>' />
+                                <input type='hidden' name='moodlebuild' value='<?= $Site->moodlebuild ?>' />
+                                <span><?= $Site->moodleversion ?> (<?= $Site->moodlebuild ?>)</span>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['system:gtversion'] ?></strong></td>
+                            <td>
+                                <input type='hidden' name='gtversion' value='<?= $Site->gtversion ?>' />
+                                <input type='hidden' name='gtbuild' value='<?= $Site->gtbuild ?>' />
+                                <span><?= $Site->gtversion ?> (<?= $Site->gtbuild ?>)</span>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong><?= $string['system:gtinfo'] ?></strong> <img src='<?= $OUTPUT->pix_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:gtinfo:info']) ?>' /></td>
+                            <td>
+                                <input type='hidden' name='stats[structures]' value='<?= $Site->getStat('structures') ?>' />
+                                <input type='hidden' name='stats[quals]' value='<?= $Site->getStat('quals') ?>' />
+                                <input type='hidden' name='stats[units]' value='<?= $Site->getStat('units') ?>' />
+                                <input type='hidden' name='stats[criteria]' value='<?= $Site->getStat('criteria') ?>' />
+                                <span><?= $string['system:count:structures'] ?> (<?= $Site->getStat('structures') ?>)</span><br>
+                                <span><?= $string['system:count:quals'] ?> (<?= $Site->getStat('quals') ?>)</span><br>
+                                <span><?= $string['system:count:units'] ?> (<?= $Site->getStat('units') ?>)</span><br>
+                                <span><?= $string['system:count:criteria'] ?> (<?= $Site->getStat('criteria') ?>)</span><br>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                <input id='gt_reg_site_btn' type='button' name='register' onclick='gt_register_site();return false;' class='gt_btn gt_btn_small <?= (\GT\Site::registered()) ? "gt_pink" : "gt_green" ?>' value='<?= (\GT\Site::registered()) ? $string['updateregistration'] : $string['registergt'] ?>' />
+                            </td>
+                            <td>
+                                <span id='gt_reg_site_output'></span>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </form>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <div class='gt_form_panel_side'>
+        
+        <div class='gt_form_panel_heading'><?= $string['stats'] ?></div>
+        <div class="gt_form_panel_body">
+            <table>
+                <tr>
+                    <td><?= $string['quals'] ?></td>
+                    <td><?= $Site->getStat('quals') ?></td>
+                </tr>
+                <tr>
+                    <td><?= $string['units'] ?></td>
+                    <td><?= $Site->getStat('units') ?></td>
+                </tr>
+                <tr>
+                    <td><?= $string['criteria'] ?></td>
+                    <td><?= $Site->getStat('criteria') ?></td>
+                </tr>
+                
+                <tr>
+                    <td><br><br></td>
+                </tr>
+                
+                <tr>
+                    <td><?= $string['users'] ?></td>
+                    <td><?= $countUsers ?></td>
+                </tr>
+                <tr>
+                    <td><?= $string['courses'] ?></td>
+                    <td><?= $countCourses ?></td>
+                </tr>
+                
+            </table>
+        </div>
+    
+        
+        <div class='gt_form_panel_heading'><?= $string['structures'] ?></div>
+        <div class="gt_form_panel_body">
+            <table>
+                <?php if ($structures): ?>
+                    <?php foreach($structures as $structure): ?>
+                        <tr>
+                            <td><?= $structure->getName() ?></td>
+                            <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/<?= ($structure->isEnabled()) ? 'on' : 'off' ?>.png" /></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </table>
+        </div>
+    
+        <br>
+        
+        
+    </div>
+    
+</div>

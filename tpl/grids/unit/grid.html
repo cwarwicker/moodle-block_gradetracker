@@ -1,0 +1,305 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if ($params["access"] == 'ae'): ?>
+
+<div class="gt_grid_key" style="margin: auto; width:700px;">
+                        
+    <table>
+        <tbody>
+            <tr>
+                <th colspan="3" style="background-color: #62B3D0;"><?= $string['massupdate'] ?></th>
+            </tr>
+            <tr>
+                <td style="width:33.333333333333%;">
+                    <?= $string['criterion'] ?>:
+                    <select id="gt_mass_switch_crit">
+                        <option value=""></option>
+                        <?php foreach($criteria as $critName): ?>
+                            <?php $crit = $Unit->getCriterionByName($critName) ?>
+                            <option value="<?= $crit->getID() ?>">
+                                <?= $crit->getName() ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td style="width:33.333333333333%;">
+                    <?= $string['value'] ?>:
+                    <select id="gt_mass_switch_value">
+                        <option value=""></option>
+                    </select>
+                </td>
+                <td style="width:33.333333333333%;">
+                    <input id="gt_mass_update_btn" type="button" class="gt_btn" value="Update"> 
+                    <span id='gt_mass_update_loading' style="display:none;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" /></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>   
+            
+</div>
+
+     
+<?php endif; ?>
+
+<table id="gt_unit_grid" class="gt_unit_grid <?= ($view == 'activities') ? 'gt_unit_activity_grid' : ''; ?>" style="width:95%;">
+    
+    <?php if ($view == 'activities'): ?>
+    
+        <tr class='gt_unit_grid_activity_header'>
+            
+            <?php if ($studentCols): ?>
+                <?php foreach($studentCols as $col): ?>
+                    <th class="gt_grid_user_<?= $col ?> gt_grid_freeze_col" rowspan='2'><?= ($col != 'pic') ? get_string($col) : '' ?></th>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
+            <th class="gt_grid_qual_award gt_grid_freeze_col" rowspan='2'><?= $string['qualaward'] ?></th>
+            <th class="gt_grid_unit_award gt_grid_freeze_col" rowspan='2'><?= $string['unitaward'] ?></th>
+
+            <?php if ($settings['percentage']): ?>
+                <th class="gt_grid_progress gt_grid_freeze_col" rowspan='2'><?= $string['progress'] ?></th>
+            <?php endif; ?>
+                           
+            
+            <?php if ($activities): ?>
+                <?php foreach($activities as $activity): ?>
+                    <th colspan='<?= count($activity->criteria) ?>'>
+                        <img src='<?= $activity->getModIcon() ?>' alt='<?= $activity->getModName() ?>' /> <?= $activity->getRecordName() ?>
+                        <br>
+                        <small><?= $activity->getRecordDueDate('D jS M Y, H:i') ?></small>
+                    </th>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            
+            
+            <?php if ( ($nonLinked = $Unit->getCriteriaNotLinkedToActivities()) ): ?>
+                <th colspan='<?= count($nonLinked) ?>'><?= $string['other'] ?></th>
+            <?php endif; ?>
+            
+            
+            <?php if ($settings['iv']): ?>
+                <th title='<?= $string['iv:desc'] ?>'></th>
+            <?php endif; ?>
+            
+            
+            <?php if (!isset($print) || !$print): ?>
+                <th class='gt_grid_end'></th>
+            <?php endif; ?>
+            
+        </tr>
+        
+    <?php endif; ?>
+    
+        <tr>
+            
+            <?php if ($view != 'activities' && $studentCols): ?>
+                <?php foreach($studentCols as $col): ?>
+                    <th class="gt_grid_user_<?= $col ?> gt_grid_freeze_col"><?= ($col != 'pic') ? get_string($col) : '' ?></th>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <?php if ($view != 'activities'): ?>
+            
+                <th class="gt_grid_qual_award gt_grid_freeze_col"><?= $string['qualaward'] ?></th>
+                <th class="gt_grid_unit_award gt_grid_freeze_col"><?= $string['unitaward'] ?></th>
+
+                <?php if ($settings['percentage']): ?>
+                    <th class="gt_grid_progress gt_grid_freeze_col"><?= $string['progress'] ?></th>
+                <?php endif; ?>
+            
+            <?php endif; ?>
+
+            <?php foreach($criteria as $crit): ?>
+                <th><?= $crit ?></th>
+            <?php endforeach; ?>
+
+            <?php if ($settings['iv']): ?>
+                <th title='<?= $string['iv:desc'] ?>'><?= $string['iv'] ?></th>
+            <?php endif; ?>
+
+            <?php if (!isset($print) || !$print): ?>
+                <th class='gt_grid_end'></th>
+            <?php endif; ?>
+
+        </tr>
+                            
+    
+
+    <?php if ($students): ?>
+    
+        <?php foreach($students as $student): ?>
+        
+            <?php $Unit->loadStudent($student) ?>
+        
+                <tr>
+
+                    <?php if ($studentCols): ?>
+
+                        <?php foreach($studentCols as $col): ?>
+
+                            <td>
+                                <?php if( \gt_has_capability('block/gradetracker:view_student_grids') && !isset($print) ): ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $student->id ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $student->getProp($col) ?></a>
+                                <?php else: ?>
+                                    <?= $student->getProp($col) ?>
+                                <?php endif; ?>
+                            </td>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
+
+                    <td class="gt_grid_qual_award" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>">
+                        <?php if ($qualAward = $student->getQualAward($Qualification->getID())): ?>
+                            <?= $string[$qualAward[0]] ?><br>
+                            <?= $qualAward[1]->getName() ?>
+                        <?php else: ?>
+                            <?= $string['na'] ?>
+                        <?php endif; ?>
+                    </td>
+
+                    <td class="gt_grid_unit_award" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $Unit->getID() ?>"><?= $Unit->getAwardCell( $params['access'] ) ?></td>
+                    
+                    <!-- Progress Bar -->
+                    <?php if ($settings['percentage']): ?>
+                        <td class="gt_grid_progress" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>">
+                            <?php if ($Unit->unitCal() === $string['na']): ?>
+                                <?= $string['na']; ?>
+                            <?php else: ?>
+                                <div class="gt_meter">
+                                    <span class='progress_bar_S<?= $student->id ?>Q<?= $Qualification->getID() ?>U<?= $Unit->getID() ?>' style="width: <?= $Unit->unitCal() ?>%"></span>
+                                </div>
+                            <small class='progress_percent_S<?= $student->id ?>Q<?= $Qualification->getID() ?>U<?= $Unit->getID() ?>'><?= $Unit->unitCal() ?>%</small>
+                            <?php endif; ?>
+                        </td>
+                    <?php endif; ?>
+                    
+                    
+                    
+                    
+                    <?php foreach($criteria as $crit): ?>
+
+                        <?php if ( ($criterion = $Unit->getCriterionByName($crit)) !== false  ): ?>
+                            <td id="CRITERION_Q_<?= $Qualification->getID() ?>U_<?= $Unit->getID() ?>C_<?= $criterion->getID() ?>S_<?= $student->id ?>" class="CRITERION_Q_<?= $Qualification->getID() ?>U_<?= $Unit->getID() ?>C_<?= $criterion->getID() ?>S_<?= $student->id ?> gt_grid_cell gt_grid_cell_<?= $params['access'] ?> <?= ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $Unit->getID() ?>" cID="<?= $criterion->getID() ?>" cName="<?= \gt_html($criterion->getName()) ?>" access="<?= $params['access'] ?>">
+                                <?= $criterion->getCell( $params['access'] ) ?>
+                                <div id='pU_<?= $student->id ?>_<?= $Qualification->getID() ?>_<?= $Unit->getID() ?>_<?= $criterion->getID() ?>' class='gt_popup' title='<?= \gt_html($criterion->getName()) ?>'></div>
+                                <?php if ($view == 'activities' && $params['access'] == 'ae'): ?>
+                                    <div class='gt_unit_activity_width_fix' style='width:135px;'></div>
+                                <?php endif; ?>
+                            </td>
+                        <?php else: ?>
+                            <td class="gt_cell_blank"></td>
+                        <?php endif; ?>
+
+                    <?php endforeach; ?>
+                    
+                    
+                    
+                    
+                    <?php if ($settings['iv']): ?>
+                        <?= $Unit->getIVCell( $params['access'] ) ?>
+                    <?php endif; ?>
+                    
+                    <?php if (!isset($print) || !$print): ?>
+                        <!-- This is a nasty hack -->
+                        <td class='gt_grid_end'>
+                            <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/empty.png">
+                        </td>
+                    <?php endif; ?>
+                    
+                </tr>
+
+        <?php endforeach; ?>
+    
+    <?php else: ?>
+    
+        <tr>
+            <td colspan="<?= $settings['cnt'] ?>"><?= $string['nodata'] ?></td>
+        </tr>
+    
+    <?php endif; ?>
+    
+
+</table>
+
+<?php if ($params["access"] == 'ae'): ?>
+<script>
+$(document).ready( function(){
+    var criterionObj = {};
+    <?php foreach($criteria as $critName): ?>
+        <?php $crit = $Unit->getCriterionByName($critName) ?>
+        critArr = [];
+        <?php foreach($crit->getPossibleValues() as $award): ?>
+            critArr.push(["<?= $award->getName() ?>", "<?= $award->getID() ?>"]);
+        <?php endforeach; ?>
+        criterionObj["<?= $crit->getID() ?>"] = critArr;
+    <?php endforeach; ?>
+    
+    $('#gt_mass_switch_crit').unbind('change');
+    $('#gt_mass_switch_crit').bind('change', function(){
+
+        var crit = $("#gt_mass_switch_crit");
+        var value_switch = $("#gt_mass_switch_value");
+
+        if (crit.val() != '')
+        {
+            var crit_obj = criterionObj[crit.val()];
+            value_switch[0].innerHTML = "<option>        </option>";
+            for (i = 0; i < crit_obj.length; i++) {
+                value_switch[0].innerHTML += "<option value=" + crit_obj[i][1] + ">" + crit_obj[i][0] + "</option>";
+            }
+        }
+        else
+        {
+            value_switch.html('');
+        }
+    
+    });
+    
+    $('#gt_mass_update_btn').unbind('click');
+    $('#gt_mass_update_btn').bind('click', function(){
+        var qID = $('#gt-qID').val();
+        var uID = $('#gt-uID').val();
+        var cID = $('#gt-crID').val();
+        var groupID = $('#gt-groupID').val();
+        var criterion_switch_value = $("#gt_mass_switch_crit").val();
+        var value_switch_value = $("#gt_mass_switch_value").val();
+        
+        $('#gt_mass_update_loading').show();
+        
+        var params = new Array();
+        
+        params.push( { qualID: qID, unitID: uID, courseID: cID, critID: criterion_switch_value, groupID: groupID, valueID: value_switch_value } );
+        
+        $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/update.php', {action: 'mass_update_student_detail_criterion', params: params}, function(data){
+                            
+            $('#gt_mass_update_loading').hide();
+
+            if (data.length === 0){
+
+                var col = '#f24c3d';
+
+            } else {
+
+                // Was ok, so let's do stuff
+                var col = '#ccff66';
+                
+            }
+            
+            var element_name = "gt_criteria[" + qID + "][" + uID + "][" + criterion_switch_value + "]";
+            var one_type_crit = $('[name="' + element_name + '"]');
+            for (i = 0; i < one_type_crit.length; i++){
+                one_type_crit[i].value = value_switch_value;
+            }
+            one_type_crit.parent().effect( 'highlight', {color: col}, 3000 );
+
+        });
+        
+        
+        
+    });
+    
+});
+</script>
+<?php endif; ?>

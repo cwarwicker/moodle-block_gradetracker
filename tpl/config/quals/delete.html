@@ -1,0 +1,15 @@
+<?php if(!defined('BCGT')) exit; ?>
+<div class="gt_confirm_box">
+    <h4><?= $string['delete'] ?> : <?= $qualification->getName();?> ?</h4>
+    <br />
+    <p><?= $string['type'] ?> : <?=$qualification->getStructureName();?></p>
+    <p><?= $string['subtype'] ?> : <?=$qualification->getSubTypeName();?></p>
+    <p><?= $string['level'] ?> : <?=$qualification->getLevelName();?></p>
+    <div>
+        <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" method="post">
+            <input type="hidden" name="id" value="<?= $qualification->getID(); ?>" />
+            <input type="submit" class="gt_btn" name="delete_qual" value="<?= $string['yes'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+        </form>        
+    </div>
+</div>

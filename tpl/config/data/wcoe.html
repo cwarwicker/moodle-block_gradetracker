@@ -1,0 +1,62 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<h2><?= $string['dataimport'] ?></h2>
+<p><?= $string['wcoe:desc'] ?></p>
+<p>
+    <?php if ($templateFile): ?>
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
+        <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+    </a>
+    <?php else: ?>
+        [[<?= $string['filenotfound'] ?>]]
+    <?php endif; ?>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+    <?php if ($exampleFile): ?>
+        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
+            <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+        </a>
+    <?php else: ?>
+        [[<?= $string['filenotfound'] ?>]]
+    <?php endif; ?>
+    
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=wcoe&reload=1"><img style="vertical-align:top;" src="<?= $OUTPUT->pix_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    
+</p>
+
+<form action="" method="post" enctype="multipart/form-data">
+
+    <input type="file" name="file" />
+    <br><br>
+    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?= $string['import'] ?>" />
+
+</form>
+
+<br />
+
+<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if (!empty($MSGS['success'])): ?>
+
+<div id='gt_import_output' class='gt_cmd gt_hidden'>
+    <?= $MSGS['output'] ?>
+</div>
+
+<?php endif; ?>
+
+<br>
+
+<hr class="gt_hr">
+
+<h2><?= $string['dataexport'] ?></h2>
+<p><?= $string['wcoe:descExport'] ?></p>
+
+<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=wcoe" method="post" enctype="multipart/form-data">
+    <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
+</form>
+
+<br>

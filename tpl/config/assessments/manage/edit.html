@@ -1,0 +1,182 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<div class="gt_full_page">
+    
+    <form action="" method="post">
+        
+        <?php if ($Assessment->isValid()): ?>
+            <input type="hidden" name="assessmentid" value="<?= $Assessment->getID() ?>" />
+        <?php endif; ?>
+        
+        <div class="gt_form_panel">
+
+            <div class="gt_form_panel_heading"><?= $string['manageassessments'] ?></div>
+
+            <div class="gt_form_panel_body">
+                
+                <p class="gt_c">
+                    <input type="submit" class="gt_btn gt_blue" name="save_assessment" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <br><br>
+                </p>
+
+                <table class="gt_simple_form_table">
+                    
+                    <tr>
+                        <th colspan="2"><?= $string['addnewassessment'] ?></th>
+                    </tr>
+                    
+                    <tr>
+                        <td><?= $string['name'] ?></td>
+                        <td><input type="text" name="name" value="<?= \gt_html($Assessment->getName()) ?>" /></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><?= $string['type'] ?></td>
+                        <td>
+                            <select name="type" onchange="gtChangeAssessmentType(this.value);">
+                                <option value=""></option>
+                                <?php if ($allTypes): ?>
+                                    <?php foreach($allTypes as $type): ?>
+                                        <option value="<?= $type ?>" <?= ($Assessment->getType() == $type) ? 'selected' : ''; ?> ><?= \gt_html($type) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                <option value="other" <?= (!$Assessment->isValid() && !is_null($Assessment->getType()) && $Assessment->getType() != '' && !in_array($Assessment->getType(), $allTypes)) ? 'selected' : ''; ?> ><?= $string['other'] ?></option>
+                            </select> 
+                            <input id="gt_other_type" class="<?= (!$Assessment->isValid() && !is_null($Assessment->getType()) && $Assessment->getType() != '' && !in_array($Assessment->getType(), $allTypes)) ? '' : 'gt_hidden'; ?> " type="text" name="type_other" value="<?= (!$Assessment->isValid() && !is_null($Assessment->getType()) && !in_array($Assessment->getType(), $allTypes)) ? \gt_html($Assessment->getType()) : ''; ?>" />
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td><?= $string['description'] ?></td>
+                        <td><textarea name="description"><?= \gt_html($Assessment->getDetails()) ?></textarea></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><?= $string['date'] ?></td>
+                        <td><input id="gt_assessment_date" type="text" name="date" class="gt_datepicker" value="<?= \gt_html($Assessment->getDate('d-m-Y')) ?>" /></td>
+                    </tr>
+
+                    <tr>
+                        <td><?= $string['ceta'] ?></td>
+                        <td>
+                            <input type="radio" name="ceta" value="1" <?= ( $Assessment->getSetting('ceta') == 1 || $Assessment->getSetting('ceta') === false ) ? 'checked' : ''; ?> /> <?= $string['enabled'] ?>
+                            &nbsp;&nbsp; &nbsp;&nbsp;
+                            <input type="radio" name="ceta" value="0" <?= ( $Assessment->getSetting('ceta') != 1 && $Assessment->getSetting('ceta') !== false ) ? 'checked' : ''; ?> /> <?= $string['disabled'] ?>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td><?= $string['useforsummary'] ?></td>
+                        <td>
+                            <input type="radio" name="summary" value="1" <?= ( $Assessment->getSetting('summary') == 1 || $Assessment->getSetting('summary') === false ) ? 'checked' : ''; ?> /> <?= $string['enabled'] ?>
+                            &nbsp;&nbsp; &nbsp;&nbsp;
+                            <input type="radio" name="summary" value="0" <?= ( $Assessment->getSetting('summary') != 1 && $Assessment->getSetting('summary') !== false ) ? 'checked' : ''; ?> /> <?= $string['disabled'] ?>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td rowspan="2"><?= $string['gradingmethod'] ?></td>
+                        <td>
+                            <select name="grading_method" onchange="gtChangeAssessmentGradingMethod(this.value);return false;">
+                                <option value="none" <?= ($Assessment->getSetting('grading_method') == 'none') ? 'selected' : '' ?>><?= $string['none'] ?></option>
+                                <option value="structure" <?= ($Assessment->getSetting('grading_method') == 'structure') ? 'selected' : '' ?>><?= $string['gradestructure'] ?></option>
+                                <option value="numeric" <?= ($Assessment->getSetting('grading_method') == 'numeric') ? 'selected' : '' ?> ><?= $string['numeric'] ?></option>
+                            </select> 
+                            <span id='grading_numeric_inputs' style='display:<?= ($Assessment->getSetting('grading_method') == 'numeric') ? 'inline-block' : 'none' ?>;'>
+                                <small><?= $string['min'] ?></small>
+                                <input type="number" name="numeric_grading_min" value="<?= \gt_html($Assessment->getSetting('numeric_grading_min')) ?>" />
+                                &nbsp;&nbsp;
+                                <small><?= $string['max'] ?></small>
+                                <input type="number" name="numeric_grading_max" value="<?= \gt_html($Assessment->getSetting('numeric_grading_max')) ?>" />
+                            </span>
+                        </td>
+                    </tr>
+                    
+                    <tr id='gt_assessment_grading_method_structures_cell' <?= ( $Assessment->getSetting('grading_method') != 'structure' ) ? 'style="display:none;"' : ''?> >
+                        <td style='display:none;'></td>
+                        <td>
+                            
+                            <u><?= $string['qualstructures'] ?></u><br>
+                            <?php if ($qualStructuresArray): ?>
+                                <?php foreach($qualStructuresArray as $qualStructure): ?>
+                                    <span><?= $qualStructure->getName() ?></span>: 
+                                    <select name="structure_grading_structure[<?= $qualStructure->getID() ?>]">
+                                        <option value=""></option>
+                                        <?php if ( ($gradingStructures = $qualStructure->getAssessmentGradingStructures()) ): ?>
+                                            <?php foreach($gradingStructures as $gradingStructure): ?>
+                                                <option value="<?= $gradingStructure->getID() ?>" <?= ($Assessment->getSetting('grading_structure_qual_structure_' . $qualStructure->getID()) == $gradingStructure->getID()) ? 'selected' : '' ?> ><?= $gradingStructure->getName() ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                    <br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            
+                            <u><?= $string['qualbuilds'] ?></u><br>
+                            <?php if ($qualBuildsArray): ?>
+                                <?php foreach($qualBuildsArray as $qualBuild): ?>
+                                    <span><?= $qualBuild->getName() ?></span>: 
+                                    <select name="structure_grading_build[<?= $qualBuild->getID() ?>]">
+                                        <option value=""></option>
+                                        <?php if ( ($gradingStructures = $qualBuild->getAssessmentGradingStructures(true)) ): ?>
+                                            <?php foreach($gradingStructures as $gradingStructure): ?>
+                                                <option value="<?= $gradingStructure->getID() ?>" <?= ($Assessment->getSetting('grading_structure_qual_build_' . $qualBuild->getID()) == $gradingStructure->getID()) ? 'selected' : '' ?> ><?= $gradingStructure->getName() ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                    <br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            
+                            
+                        </td>
+                    </tr>
+                    
+                    <?php if ($formFields): ?>
+                        
+                        <tr>
+                            <td colspan="2" class='gt_c'><strong><?= $string['customformfields'] ?></strong></td>
+                        </tr>
+                        
+                        <?php foreach($formFields as $field): ?>
+                        
+                            <tr>
+                                <td><?= \gt_html($field->getName()) ?></td>
+                                <td>
+                                    <input type="radio" name="custom_form_fields_enabled[<?= $field->getID() ?>]" value="1" <?= ( $Assessment->getSetting('custom_form_field_enabled_'.$field->getID()) == 1 ) ? 'checked' : ''; ?> /> <?= $string['enabled'] ?>
+                                    &nbsp;&nbsp; &nbsp;&nbsp;
+                                    <input type="radio" name="custom_form_fields_enabled[<?= $field->getID() ?>]" value="0" <?= ( $Assessment->getSetting('custom_form_field_enabled_'.$field->getID()) != 1 ) ? 'checked' : ''; ?> /> <?= $string['disabled'] ?>
+                                </td>
+                            </tr>
+                        
+                        <?php endforeach; ?>
+                        
+                    <?php endif; ?>
+                    
+                </table>
+                
+                <br><br>
+                
+                <div class="gt_form_panel_heading"><?= $string['qualifications'] ?></div>
+                <div class="gt_form_panel_body">
+                    <?= $QualPicker->display(); ?>
+                </div>
+
+                <p class="gt_c">
+                    <br><br>
+                    <input type="submit" class="gt_btn gt_blue" name="save_assessment" value="<?= $string['save'] ?>" />
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                </p>
+                
+            </div>
+
+        </div>
+        
+        
+    </form>
+                        
+</div>

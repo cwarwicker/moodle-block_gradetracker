@@ -1,0 +1,337 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<?php if (!$Structure->isEnabled()): ?>
+    <?= gt_info_alert_box( $string['structureisdisabled'] ) ?>
+<?php endif; ?>
+
+<?php $numRuleSets = 0; ?>
+
+<script>
+    var numRuleSets = 0;
+</script>
+
+
+
+<form id="gt_qual_structure_form" action="" method="post" enctype="multipart/form-data">
+        
+    <div class='gt_form_panel'>
+            
+        <div class='gt_form_panel_heading'>
+            <?= ($Structure->isValid()) ? $string['breadcrumbs:config:structures:qual:edit'] : $string['breadcrumbs:config:structures:qual:new'] ?>
+        </div>
+
+        <div class='gt_form_panel_body'>
+    
+            <?php if ($Structure->isValid()): ?>
+                <input type="hidden" name="structure_id" value="<?= $Structure->getID() ?>" />
+            <?php endif; ?>
+
+            <input type="hidden" name="structure_deleted" value="<?= (int)$Structure->isDeleted() ?>" />
+
+    
+            <div class='gt_qual_structure'>
+
+                <div class='gt_qual_structure_left'>
+
+                    <div class='gt_structure_name_section'>
+
+                        <label class="gt_input_label"><?= $string['name'] ?></label><br>
+                        <input type="text" class="" name="structure_name" value="<?= $Structure->getName() ?>" placeholder="City & Guilds" />
+
+                        <br><br>
+
+                        <label class="gt_input_label"><?= $string['displayname'] ?></label><br>
+                        <input type="text" class="" name="structure_display_name" value="<?= $Structure->getDisplayName() ?>" placeholder="CG" />
+
+                        <br><br>
+
+                        <label class="gt_input_label"><?= $string['enabled'] ?></label><br>
+                        <div class="gt_fancy_checkbox">
+                            <input id="enabledCheckBox" type="checkbox" class="gt_middle" name="structure_enabled" value="1" <?= ($Structure->isEnabled()) ? 'checked' : ''; ?> />
+                            <label for="enabledCheckBox"></label>
+                        </div>
+
+                        <br><br>
+
+                        <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_qual_structure" value="<?= $string['save'] ?>">
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=quals" class="gt_btn gt_btn_small gt_red"><?= $string['cancel'] ?></a>
+                        
+                    </div>
+
+                    <br class='gt_cl'><br>
+
+                    <div>
+
+                        <h2><?= $string['levels'] ?></h2>
+
+                        <?php if ($possibleLevels): ?>
+
+                            <?php foreach($possibleLevels as $level): ?>
+                            
+                                <div class='gt_level_box <?= ($Structure->isLevelEnabled($level->getID())) ? 'ticked' : ''; ?>'>
+                                    <input type='checkbox' name='levels[<?= $level->getID() ?>]' value='<?= $level->getID() ?>' <?= ($Structure->isLevelEnabled($level->getID())) ? 'checked' : ''; ?> /> 
+                                    <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/tick_round.png" alt="ticked" class="gt_ticked" style="<?= ($Structure->isLevelEnabled($level->getID())) ? 'display:inline-block;' : ''; ?>" />
+                                    <?= $level->getName() ?>
+                                    <?php if ( !is_null($level->getMinSubLevels()) && !is_null($level->getMaxSubLevels()) ): ?>
+                                        <br>
+                                        <small><?= $string['maxsubcritlevels'] ?> <input type="number" name="max_sub_crit[<?= $level->getID() ?>]" value="<?= \gt_html($Structure->getLevelMaxSubCriteria($level->getID())) ?>" min="<?= $level->getMinSubLevels() ?>" max="<?= $level->getMaxSubLevels() ?>" /></small>
+                                    <?php endif; ?>
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        <?php else: ?>
+
+                            <?= $string['nodata'] ?>
+
+                        <?php endif; ?>
+
+
+
+
+
+                        <br class='gt_cl'><br>
+
+                        <h2><?= $string['features'] ?></h2>
+
+                        <?php if ($possibleFeatures): ?>
+
+                            <?php foreach($possibleFeatures as $feature): ?>
+
+                                <div class='gt_feature_box <?= ($Structure->isFeatureEnabled($feature->id)) ? 'ticked' : ''; ?>'>
+                                    <input type='checkbox' name='features[]' value='<?= $feature->id ?>' <?= ($Structure->isFeatureEnabled($feature->id)) ? 'checked' : ''; ?> /> 
+                                    <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/tick_round.png" alt="ticked" class="gt_ticked" style="<?= ($Structure->isFeatureEnabled($feature->id)) ? 'display:inline-block;' : ''; ?>" />
+                                    <?= $string['features:' . \strtolower(\gt_strip_chars_non_alpha($feature->name))]; ?>
+                                    <br>
+                                    <small><?= $string['features:' . \strtolower(\gt_strip_chars_non_alpha($feature->name)) . ':help']; ?></small>
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        <?php else: ?>
+
+                            <?= $string['nodata'] ?>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+
+                <div class='gt_qual_structure_right'>
+
+                    <div class='gt_structure_settings_box'>
+                        <h1><?= $string['customformfields'] ?></h1>
+                        <div>
+                            <table id='gt_custom_form_fields'>
+                                <tr>
+                                    <th><?= $string['name'] ?></th>
+                                    <th><?= $string['form'] ?></th>
+                                    <th><?= $string['type'] ?></th>
+                                    <th><?= $string['options'] ?></th>
+                                    <th><?= $string['req'] ?></th>
+                                    <th><a href="#" id="gt_add_structure_form_field"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" alt="add new" /></a></th>
+                                </tr>
+
+                                <?php if ($Structure->getCustomFormElements()): ?>
+                                    <?php foreach($Structure->getCustomFormElements() as $element): ?>
+                                        <?php $cntCustomFormElements++ ?>
+                                        <tr id="gt_custom_form_field_row_<?= $cntCustomFormElements ?>">
+                                            <td>
+                                                <input type="hidden" name="custom_form_fields_ids[<?= $cntCustomFormElements ?>]" value="<?= $element->getID() ?>" />
+                                                <input type="text" name="custom_form_fields_names[<?= $cntCustomFormElements ?>]" value="<?= \gt_html($element->getName()) ?>" />
+                                            </td>
+                                            <td>
+                                                <select name="custom_form_fields_forms[<?= $cntCustomFormElements ?>]">
+                                                    <option></option>
+                                                    <option value="qualification" <?= ($element->getForm() == "qualification") ? 'selected' : ''; ?>><?= $string['qualification'] ?></option>
+                                                    <option value="unit" <?= ($element->getForm() == "unit") ? 'selected' : ''; ?>><?= $string['unit'] ?></option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select onchange="toggleFormFieldOptions(this.value, <?= $cntCustomFormElements ?>);return false;" name="custom_form_fields_types[<?= $cntCustomFormElements ?>]">
+                                                    <option></option>
+                                                    <option value="TEXT" <?= ($element->getType() == "TEXT") ? 'selected' : ''; ?>><?= $string['element:text'] ?></option>
+                                                    <option value="NUMBER" <?= ($element->getType() == "NUMBER") ? 'selected' : ''; ?>><?= $string['element:number'] ?></option>
+                                                    <option value="TEXTBOX" <?= ($element->getType() == "TEXTBOX") ? 'selected' : ''; ?>><?= $string['element:textbox'] ?></option>
+                                                    <option value="SELECT" <?= ($element->getType() == "SELECT") ? 'selected' : ''; ?>><?= $string['element:select'] ?></option>
+                                                    <option value="CHECKBOX" <?= ($element->getType() == "CHECKBOX") ? 'selected' : ''; ?>><?= $string['element:checkbox'] ?></option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" style="<?= ($element->getType() != 'SELECT') ? 'display:none;' : ''; ?>" id="custom_form_fields_options_<?= $cntCustomFormElements ?>" name="custom_form_fields_options[<?= $cntCustomFormElements ?>]" placeholder="option1,option2,option3" value="<?= $element->getOptionsString() ?>"></td>
+                                            <td><input type="checkbox" name="custom_form_fields_req[<?= $cntCustomFormElements ?>]" value="1" <?= ($element->hasValidation("REQUIRED")) ? 'checked' : ''; ?>></td>
+                                            <td><a href="#" onclick="$('#gt_custom_form_field_row_<?= $cntCustomFormElements ?>').remove();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" alt="remove"></a></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class='gt_structure_settings_box'>
+                        <h1><?= $string['rules'] ?></h1>
+                        <div>
+                            <h3><?= $string['rulesets'] ?></h3>
+                            <table id='gt_structure_rule_sets'>
+                                
+                                <tr>
+                                    <th><a href="#" onclick="gt_addNewRuleSet();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" alt="add new" /></a></th>
+                                    <th><?= $string['name'] ?></th>
+                                    <th><?= $string['rules'] ?></th>
+                                    <th><?= $string['default'] ?></th>
+                                    <th><?= $string['enabled'] ?></th>
+                                </tr>
+                                
+                                <?php if ($ruleSets = $Structure->getRuleSets()): ?>
+                                    <?php foreach($ruleSets as $ruleSet): ?>
+                                        
+                                        <?php $numRuleSets++; ?>
+                                        
+                                        <tr id='gt_rule_set_row_<?= $numRuleSets ?>'>
+                                            <td></td>
+                                            <td><input type='hidden' name='rule_sets[<?= $numRuleSets ?>][id]' value='<?= $ruleSet->getID() ?>' /><input type='text' id='rule_set_name_<?= $numRuleSets ?>' name='rule_sets[<?= $numRuleSets ?>][name]' value='<?= \gt_html($ruleSet->getName()) ?>' /></td>
+                                            <td><a href='#' onclick='gt_openRules(<?= $numRuleSets ?>);return false;'><?= $string['openrules'] ?> <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/open.png' alt='open' /></a></td>
+                                            <td><input type='radio' name='rule_set_default' value='<?= $numRuleSets ?>' <?= ($ruleSet->isDefault()) ? 'checked' : '' ?> /></td>
+                                            <td><input type='checkbox' name='rule_sets[<?= $numRuleSets ?>][enabled]' value='1' <?= ($ruleSet->isEnabled()) ? 'checked' : '' ?> /></td>
+                                            <td><a href='#' onclick='gt_removeRuleSet(<?= $numRuleSets ?>);return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
+                                        </tr>
+                                        
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                
+                                
+                            </table>
+                                                                                             
+                        </div>
+
+                    </div>
+                    
+                    
+                    <div class='gt_structure_settings_box'>
+                        <h1><?= $string['settings'] ?></h1>
+                        <div>
+                            <table id="gt_structure_misc">
+                                <tr>
+                                    <th><?= $string['setting'] ?></th>
+                                    <th><?= $string['value'] ?></th>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['displayname'] ?></td>
+                                    <td>
+                                        <input type="text" name="settings[custom_displayname]" placeholder="<?= $string['default:displayname'] ?>" value="<?= \gt_html($Structure->getSetting('custom_displayname')) ?>" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['setting:criteriaordering'] ?></td>
+                                    <td>
+                                        <input type="text" name="settings[custom_order_criteria]" placeholder="<?= $string['order:placeholder'] ?>" value="<?= \gt_html($Structure->getCustomOrder('criteria')) ?>" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['setting:unitordering'] ?></td>
+                                    <td>
+                                        <input type="text" name="settings[custom_order_units]" placeholder="<?= $string['order:placeholder'] ?>" value="<?= \gt_html($Structure->getCustomOrder('units')) ?>" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['setting:ivcolumn'] ?></td>
+                                    <td>
+                                        <input type="checkbox" name="settings[iv_column]" value="1" <?= ( $Structure->getSetting('iv_column') == 1 ) ? 'checked' : '' ?> />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['dashboard:griddisplay'] ?></td>
+                                    <td>
+                                        <input type="radio" name="settings[custom_dashboard_view]" value="view-simple" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-simple'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:simple'] ?><br>
+                                        <input type="radio" name="settings[custom_dashboard_view]" value="view-criteria-short" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-criteria-short'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:short'] ?><br>
+                                        <input type="radio" name="settings[custom_dashboard_view]" value="view-criteria-full" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-criteria-full'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:full'] ?>  
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['setting:forcesinglepage'] ?></td>
+                                    <td>
+                                        <input type="checkbox" name="settings[force_single_page]" value="1" <?= ( $Structure->getSetting('force_single_page') == 1 ) ? 'checked' : '' ?> />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?= $string['setting:critletters'] ?></td>
+                                    <td>
+                                        <input type="text" name="settings[criteria_letters]" value="<?= \gt_html($Structure->getSetting('criteria_letters')) ?>" placeholder="e.g. P,M,D" />
+                                    </td>
+                                </tr>
+                                <!-- IF YOU ADD A NEW SETTING, REMEMBER TO ADD IT TO QUAL STRUCTURE EXPORT/IMPORT -->
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br class='gt_cl'><br>
+
+            </div>
+    
+        </div>
+        
+    </div>
+    
+    <?php $numRulesArray = array() ?>
+    <?php $numRuleSteps = array() ?>
+        
+    <?php if ($ruleSets): ?>
+        
+        <?php foreach($ruleSets as $ruleSet): ?>
+                  
+            <?php $ruleSetNum = (isset($ruleSetNum)) ? $ruleSetNum + 1 : 1; ?>
+            <?php $numRulesArray[$ruleSetNum] = 0; ?>
+            <?php $numRuleSteps[$ruleSetNum] = array() ?>
+            
+            <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/ruleset.inc.html'; ?>
+            
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+</form>
+
+
+<!-- Templates -->
+<?php unset($rule) ?>
+<?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/rulestep.inc.html'; ?>
+<?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/rulestepcondition.inc.html'; ?>
+<?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/rulestepaction.inc.html'; ?>
+<!-- End Templates -->
+
+<script>
+    
+    customFormFields = <?= count($Structure->getCustomFormElements()) ?>;
+    
+    numRuleSets = <?= $numRuleSets ?>;
+    
+    var numRulesArray = [];
+    var numRuleSteps = [];
+    
+    <?php if ($numRulesArray): ?>
+        <?php foreach($numRulesArray as $setNum => $val): ?>
+            numRulesArray[<?= $setNum ?>] = <?= $val ?>;
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <?php if ($numRuleSteps): ?>
+        <?php foreach($numRuleSteps as $setNum => $array): ?>
+            numRuleSteps[<?= $setNum ?>] = [];
+            <?php if ($array): ?>
+                <?php foreach($array as $ruleNum => $numSteps): ?>
+                    numRuleSteps[<?= $setNum ?>][<?= $ruleNum ?>] = <?= $numSteps ?>;
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    
+    
+</script>

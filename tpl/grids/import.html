@@ -1,0 +1,73 @@
+<?php if ($grid == 'student'): ?>
+    <h1 class="c"><?= $Student->getDisplayName() ?></h1>
+<?php endif; ?>
+
+<h2 class="c">
+    <?php if ($grid == 'student' || $grid == 'class'): ?>
+        <?= $Qualification->getDisplayName() ?>
+    <?php elseif ($grid == 'unit'): ?>
+        <?= $Qualification->getDisplayName() ?> - <?= $Unit->getDisplayName() ?>
+    <?php endif; ?>
+</h2>
+
+<?php if ($isAssessmentView): ?>
+    <h3 class="c"><?= $string['assessmentview'] ?></h3>
+<?php endif; ?>
+
+<p class="c"><?= $string['import:datasheet:'.$grid.':desc'] ?></p>
+
+<form action="" method="post" class="c" enctype="multipart/form-data">
+    <input id="uploadFile" class="gt_upload_file" placeholder="" disabled="disabled">
+      <div class="gt_file_upload gt_btn gt_blue">
+          <span><?= $string['choosefile'] ?></span>
+          <input id="uploadBtn" name="sheet" type="file" class="gt_upload">
+      </div>
+    <br><br>
+    <input class="gt_btn" type="submit" name="submit_sheet" value="<?= $string['import'] ?>">
+</form>
+<br>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+
+<?php if (isset($MSGS['confirmed'])): ?>
+    <?= \gt_success_alert_box( sprintf( $string['import:datasheet:process:summary'], $MSGS['cnt'] ) ) ?>
+    <br><br>
+    <div id='gt_import_output_cmd' class='gt_cmd gt_hidden'>
+        <?= $MSGS['output'] ?>
+    </div>
+<?php elseif (isset($MSGS['output'])): ?>
+    <div id='gt_import_output' class='gt_import_output'>
+        <?= $MSGS['output'] ?>
+    </div>
+<?php endif; ?>
+
+<br><br><br>
+
+<p class="c">
+    <?php if ($grid == 'student'): ?>
+        <input type="button" class="gt_btn" value="<?= $string['backtogrid'] ?>" onclick="window.location.href='<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>';">
+    <?php elseif ($grid == 'unit'): ?>
+        <input type="button" class="gt_btn" value="<?= $string['backtogrid'] ?>" onclick="window.location.href='<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>';">
+    <?php elseif ($grid == 'class'): ?>
+        <input type="button" class="gt_btn" value="<?= $string['backtogrid'] ?>" onclick="window.location.href='<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>';">
+    <?php endif; ?>
+</p>
+
+
+
+
+
+
+
+<script>  
+
+   $(document).ready( function(){
+
+        $('#uploadBtn').unbind('change'); 
+        $('#uploadBtn').bind('change', function(){
+             $('#uploadFile').val( $('#uploadBtn').val() );
+        });
+
+    } );
+
+</script>

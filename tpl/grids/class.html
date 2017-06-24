@@ -1,0 +1,242 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<input type="hidden" id="gt-qID" value="<?= $Qualification->getID() ?>" />
+<input type="hidden" id="gt-crID" value="<?= $courseID ?>" />
+<input type="hidden" id="gt-groupID" value="<?= $groupID ?>" />
+<input type="hidden" id="gt-access" value="<?= $access ?>" />
+<input type="hidden" id="gt-page" value="<?= $page ?>" />
+<input type="hidden" id="gt-assessmentView" value="<?= $assessmentView ?>" />
+
+<div class='gt_full_page gt_grid'>
+    
+    <div class="gt_c">
+
+            <?php if (!isset($print)): ?>
+            
+            <ul class="slimmenu">
+        
+                <li class="gt_nav_dropdowns">
+                    
+                    <select id="gt_switch_group" style="width:90%;">
+                        <option value="0"><?= $string['switchgroup'] ?></option>
+                        <?php if (isset($Course) && ($groups = $Course->getGroups())): ?>
+                            <?php if ($groups['parent']): ?>
+                                <?php foreach($groups['parent'] as $pID => $parentGroups): ?>
+                                    <optgroup label="<?= \GT\Course::getNameById($pID) ?>">
+                                        <?php foreach($parentGroups as $group): ?>
+                                            <option value="<?= $group->id ?>" <?= ($groupID == $group->id) ? 'selected' : '' ?> ><?= $group->name ?> (<?= $group->usercnt ?>)</option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            <?php endif; ?>    
+                            
+                            <?php if ($groups['direct']): ?>
+                                <optgroup label="<?= $Course->getName() ?>">
+                                    <?php foreach($groups['direct'] as $group): ?>
+                                        <option value="<?= $group->id ?>" <?= ($groupID == $group->id) ? 'selected' : '' ?> ><?= $group->name ?> (<?= $group->usercnt ?>)</option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            <?php endif; ?>   
+                            
+                            <?php if ($groups['child']): ?>
+                                <?php foreach($groups['child'] as $cID => $childGroups): ?>
+                                    <optgroup label="<?= \GT\Course::getNameById($cID) ?>">
+                                        <?php foreach($childGroups as $group): ?>
+                                            <option value="<?= $group->id ?>" <?= ($groupID == $group->id) ? 'selected' : '' ?> ><?= $group->name ?> (<?= $group->usercnt ?>)</option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            <?php endif; ?>   
+                            
+                        <?php endif; ?>
+                    </select>
+
+                </li>
+                
+                <li>
+                    
+                    <a href="#"><?= $string['grid'] ?></a>
+                    <ul>
+                        <li>
+                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=class&id=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : ''; ?>&groupID=<?= $groupID ?>"><?= $string['printgrid'] ?></a>
+                        </li>
+                        <li>
+                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=class&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : ''; ?>"><?= $string['exportdatasheet'] ?></a>
+                        </li>
+                        <li>
+                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=class&qualID=<?= $Qualification->getID() ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : ''; ?>"><?= $string['importdatasheet'] ?></a>
+                        </li>
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="#"><?= $string['context'] ?></a>
+                    <ul>
+                        <?php if ($User->hasCapability('block/gradetracker:configure_quals')): ?>
+                            <li>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $Qualification->getID() ?>"><?= $string['editqualification'] ?></a>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ( $courseID > 0 && ($User->isOnCourse($courseID, "STAFF") || $User->hasCapability('block/gradetracker:edit_all_courses')) ): ?>
+                            <li>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=userquals&id=<?= $courseID ?>"><?= $string['userquals'] ?></a>
+                            </li>
+                            <li>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=userunits&id=<?= $courseID ?>"><?= $string['userunits'] ?></a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="#"><?= $string['core'] ?></a>
+                    <ul>
+                        <li>
+                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/dashboard.php"><?= $string['mydashboard'] ?></a>
+                        </li>
+                        
+                        <?php if ($User->hasCapability('block/gradetracker:view_student_grids')): ?>
+                            <li>
+                                <?php if ($courseID > 0): ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=student&myCourseID=<?= $courseID ?>"><?= $string['studentgrids'] ?></a>
+                                <?php else: ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=student"><?= $string['studentgrids'] ?></a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ($User->hasCapability('block/gradetracker:view_unit_grids')): ?>
+                            <li>
+                                <?php if ($courseID > 0): ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=unit&myCourseID=<?= $courseID ?>"><?= $string['unitgrids'] ?></a>
+                                <?php else: ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=unit"><?= $string['unitgrids'] ?></a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endif; ?>
+                        
+                        <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
+                            <li>
+                                <?php if ($courseID > 0): ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=class&myCourseID=<?= $courseID ?>"><?= $string['classgrids'] ?></a>
+                                <?php else: ?>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=class"><?= $string['classgrids'] ?></a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endif; ?>
+                        
+                    </ul>
+                </li>
+
+                
+                <?php if ($links): ?>
+
+                    <?php foreach($links as $link): ?>
+
+                    <li>
+                        <a href="<?= (strlen($link->url)) ? $Qualification->parseURL($link->url) : '#' ?>" target="_blank"><?= \gt_html($link->name) ?></a>
+                        <?php if ($link->sub): ?>
+                        <ul>
+                            <?php foreach($link->sub as $sub): ?>
+                                <li>
+                                    <a href="<?= (strlen($sub->url)) ? $Qualification->parseURL($sub->url) : '#' ?>" target="_blank"><?= \gt_html($sub->name) ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <?php endif; ?>
+                    </li>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
+
+            </ul>
+        <br>
+        <?php endif; ?>
+        
+        <h2 class="gt_h2"><?= $Qualification->getDisplayName() ?></h2>       
+        <br>
+        
+        
+        <?php if ($assessmentView && $hasWeightings && \gt_has_capability('block/gradetracker:see_coefficient_table')): ?>
+        
+            <table class='gt_coefficient_table'>
+                <tr>
+                    <th colspan="<?= $weightingPercentiles + 2 ?>"><?= $string['weightingcoefficients'] ?></th>
+                </tr>
+                <tr>
+                    <th><?= $string['qualification'] ?></th>
+                    <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
+                        <th style="background-color:<?= \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?= $i ?></th>
+                    <?php endfor; ?>
+                </tr>
+                <tr>
+                    <td class='gt_qual_name'><?= $Qualification->getDisplayName() ?></td>
+                    <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
+                        <td style="background-color:<?= \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?= $Qualification->getAttribute('coefficient_'.$i) ?></td>
+                    <?php endfor; ?>
+                </tr>
+            </table>
+            <br>
+            
+        <?php endif; ?>
+        
+        
+        <?php if (!isset($print)): ?>
+            <p>
+                <input type="button" class="gt_btn" value="<?= $string['view'] ?>" onclick="loadClassGrid('v');return false;" />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="gt_edit_button" type="button" class="gt_btn" style="display:<?= ($access == 'e') ? 'none' : 'initial' ?>;" value="<?= $string['edit'] ?>" onclick="loadClassGrid('e');return false;" />
+                <input id="gt_adv_edit_button" type="button" class="gt_btn" style="display:<?= ($access == 'e') ? 'initial' : 'none' ?>;" value="<?= $string['advancededit'] ?>" onclick="loadClassGrid('ae');return false;" />
+                <?php if ($Qualification->getAssessments() && $gridFile != 'assessment_grid'): ?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="gt_btn gt_pink" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>&access=<?= $access ?>&courseID=<?= $courseID ?>&ass=1"><?= $string['assessmentgrid'] ?></a>
+                <?php elseif ($Qualification->getAssessments() && $gridFile == 'assessment_grid' && $Qualification->isLevelEnabled('units')): ?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="gt_btn gt_pink" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>&access=<?= $access ?>&courseID=<?= $courseID ?>"><?= $string['normalgrid'] ?></a>
+                <?php endif; ?>
+            </p>
+            <br>
+        <?php endif; ?>
+        
+
+    </div>
+    
+    <?php if (!isset($print)): ?>
+    
+        <p id="gt_loading" class="gt_hidden"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="<?= $string['loading'] ?>" /></p>
+        
+        <?php \gt_display_debug_section() ?>
+        
+        <?php if ($GT->getSetting('grid_fixed_links') == 1): ?>
+            <div id="gt_grid_quick_links">
+                <a href="#" onclick="loadClassGrid();return false;" title="<?= $string['redraw'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_refresh.png" class="gt_icon" alt="<?= $string['redraw'] ?>" /></a><br>
+                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=class&id=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['printgrid'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/printer.png" class="gt_icon" alt="<?= $string['printgrid'] ?>" /></a><br>
+                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=class&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['exportdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_exports.png" class="gt_icon" alt="<?= $string['exportdatasheet'] ?>" /></a><br>
+                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=class&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['importdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_imports.png" class="gt_icon" alt="<?= $string['importdatasheet'] ?>" /></a>
+            </div>
+        <?php endif; ?>
+        
+    <?php endif; ?>
+    
+    
+    <?php if (!isset($print) && isset($reqPages) && $reqPages > 1): ?>
+    
+        <div class="gt_pagination">
+            <?php for($i = 1; $i <= $reqPages; $i++): ?>
+                <a class="gt_pagenumber gt_pagenumber_<?= $i ?> <?= ($page == $i) ? 'active' : '' ?>" page="<?= $i ?>" href="#" onclick="changePage(<?= $i ?>);return false;"><?= $i ?></a>
+            <?php endfor; ?>
+        </div>
+    
+    <?php endif; ?>
+    
+    <div id="gt_grid_holder">
+        <?php if (isset($print)): ?>
+            <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/grids/class/'.$gridFile.'.html' ?>
+        <?php endif; ?>
+    </div>
+        
+   
+</div>

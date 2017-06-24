@@ -1,0 +1,27 @@
+<table>
+    <tr>
+        <th><?= get_string('rulename', 'block_gradetracker') ?></th>
+        <th><?= get_string('ruleexecuteon', 'block_gradetracker') ?></th>
+        <th><?= get_string('numsteps', 'block_gradetracker') ?></th>
+        <th><?= get_string('enabled', 'block_gradetracker') ?></th>
+        <th></th>
+    </tr>
+    <?php if (isset($ruleSet) && $ruleSet->getRules()): ?>
+        <?php foreach($ruleSet->getRules() as $rule): ?>
+            <?php $numRulesArray[$ruleSetNum]++ ?>
+            <?php $ruleNum = $numRulesArray[$ruleSetNum] ?>
+            <tr id='gt_rule_row_<?= $ruleSetNum ?>_<?= $ruleNum ?>'>
+                <td><a href='#' id='gt_rule_name_link_<?= $ruleSetNum ?>_<?= $ruleNum ?>' onclick='gt_editRule(<?= $ruleSetNum ?>, <?= $ruleNum ?>);return false;'><?= \gt_html($rule->getName()) ?></a></td>
+                <td><span id='gt_rule_event_span_<?= $ruleSetNum ?>_<?= $ruleNum ?>'><?= $rule->getOnEvent() ?></span></td>
+                <td><span id='gt_rule_steps_span_<?= $ruleSetNum ?>_<?= $ruleNum ?>'><?= count($rule->getSteps()) ?></span></td>
+                <td>
+                    <div class="gt_fancy_checkbox">
+                        <input id="chkbox_<?= $ruleSetNum ?>_<?= $ruleNum ?>" type='checkbox' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][enabled]' value='1' <?= ($rule->isEnabled()) ? 'checked' : '' ?> />
+                        <label for="chkbox_<?= $ruleSetNum ?>_<?= $ruleNum ?>"></label>
+                    </div>
+                </td>
+                <td><a href='#' onclick='gt_removeRule(<?= $ruleSetNum ?>, <?= $ruleNum ?>);return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</table>

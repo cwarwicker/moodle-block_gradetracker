@@ -1,0 +1,35 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?php if (isset($log)): ?>
+
+    <div>
+        <span>
+            <a href="<?= $CFG->wwwroot ?>/user/profile.php?id=<?= $log->userid ?>"><?= $log->user->getDisplayName() ?></a> <?= $log->details ?>, <?= \date('D jS M Y, H:i', $log->timestamp) ?>
+        </span>
+        <br>
+        <div>
+            <table>
+                <tbody>
+                    <?php foreach($log->attributes as $name => $val): ?>
+                        <tr><td><?= $string['log:att:'.$name] ?>:</td><td><strong><?= $log->getAttributeFromValue($name, $val) ?></strong></td></tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <hr>
+        
+        <strong><?= $string['before'] ?>:</strong><br>
+        <?php print_object( (!is_null($log->beforejson)) ? $log->beforejson : '-' ) ?>
+        
+        <strong><?= $string['after'] ?>:</strong><br>
+        <?php print_object( (!is_null($log->afterjson)) ? $log->afterjson : '-' ) ?>
+        
+        <hr>
+        
+        <strong><?= $string['debuginfo'] ?></strong><br>
+        <?php print_object( $log->backtrace ) ?>
+        
+    </div>
+
+<?php endif; ?>

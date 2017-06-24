@@ -1,0 +1,69 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<div class="gt_form_panel">
+    <div class="gt_form_panel_heading"><?= $string['reports:passprog'] ?></div>
+    <div class="gt_form_panel_body">
+        <p><?= $string['reports:passprog:desc'] ?></p>
+
+        <div class="gt_c">
+            <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/pcpreport.png" class="gt_box_shadow" style="width:800px;" />
+            <br><br>
+            <small><?= $string['reports:passprog:screenshot'] ?></small>
+            <br><br>
+        </div>
+        
+        <table class="gt_reporting_options">
+
+            <tr>
+                <th><?= $string['coursecats'] ?></th>
+                <th><?= $string['qualstructure'] ?></th>
+                <th><?= $string['options'] ?></th>
+            </tr>
+
+            <tr>
+                <td>
+                    <select name='categories' class='report_option' multiple='multiple'>
+                        <?php if ($categories): ?>
+                            <?php foreach($categories as $catID => $cat): ?>
+                                <option value="<?= $catID ?>"><?= $cat ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </td>
+                <td>
+                    <select name="structureID" class='report_option'>
+                        <option value=""><?= $string['pleaseselect'] ?></option>
+                        <?php if ($structures): ?>
+                            <option value="all"><?= $string['all'] ?></option>
+                            <?php foreach($structures as $structure): ?>
+                                <option value="<?= $structure->getID() ?>"><?= $structure->getName() ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </td>
+                <td>
+                    <small><?= $string['reports:passsummary:options:values'] ?></small><br>
+                    <select name='extraAwardNames' multiple='multiple' class='report_option'>
+                        <?php if ($awardNames): ?>
+                            <?php foreach($awardNames as $name): ?>
+                                <option value='<?= $name->name ?>'><?= $name->shortname ?> - <?= $name->name ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </td>
+            </tr>
+
+        </table>
+
+        <p class="gt_c">
+            <input id="gt_run_report" report="PCP" type="button" name="run" value="<?= $string['run'] ?>" class="gt_run_report gt_btn gt_green" />
+        </p>
+
+        <div class="gt_c">
+            <progress id="gt_report_progress" class="gt_progress" max="100" value="0"></progress>
+            <br>
+            <small id="gt_report_time_left"></small>
+        </div>
+
+    </div>
+</div>
