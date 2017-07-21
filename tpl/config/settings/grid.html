@@ -53,7 +53,7 @@
                     <script>cntStudNavLinks++;</script>
                     <input type="text" name="student_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" /> 
                     <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" /> 
-                    <a href="#" onclick="removeStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <a href="#" onclick="removeStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
                     <a href="#" onclick="addNewStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addsublink'] ?>" /></a> 
                     <br>
                     <div id="gt_stud_nav_link_<?= $cnt ?>_sub">
@@ -65,7 +65,7 @@
                                 <script>cntStudNavLinks++;</script>
                                 <input type="text" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" /> 
                                 <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" /> 
-                                <a href="#" onclick="removeStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                                <a href="#" onclick="removeStudentGridNavLink(<?= $cnt ?>);return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -108,7 +108,7 @@
                     <script>cntUnitNavLinks++;</script>
                     <input type="text" name="unit_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" /> 
                     <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" /> 
-                    <a href="#" onclick="removeUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <a href="#" onclick="removeUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
                     <a href="#" onclick="addNewUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addsublink'] ?>" /></a> 
                     <br>
                     <div id="gt_unit_nav_link_<?= $cnt ?>_sub">
@@ -120,7 +120,7 @@
                                 <script>cntUnitNavLinks++;</script>
                                 <input type="text" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" /> 
                                 <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" /> 
-                                <a href="#" onclick="removeUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                                <a href="#" onclick="removeUnitGridNavLink(<?= $cnt ?>);return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -166,7 +166,7 @@
                     <script>cntClassNavLinks++;</script>
                     <input type="text" name="class_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" /> 
                     <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" /> 
-                    <a href="#" onclick="removeClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                    <a href="#" onclick="removeClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
                     <a href="#" onclick="addNewClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addsublink'] ?>" /></a> 
                     <br>
                     <div id="gt_class_nav_link_<?= $cnt ?>_sub">
@@ -178,7 +178,7 @@
                                 <script>cntClassNavLinks++;</script>
                                 <input type="text" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" /> 
                                 <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" /> 
-                                <a href="#" onclick="removeClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
+                                <a href="#" onclick="removeClassGridNavLink(<?= $cnt ?>);return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['addsublink'] ?>" /></a> 
                                 <br>
                             </span>
                         <?php endforeach; ?>

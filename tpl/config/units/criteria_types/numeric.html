@@ -16,7 +16,7 @@
                             <?php $obDynamicNumber++ ?>
                             <td class="gt_criterion_observation_<?= $dynamicNum ?>_<?= $obDynamicNumber ?> gt_range_cell" obNum="<?= $obDynamicNumber ?>">
                                 <a href="#" onclick="deleteNumericObservation(<?= $dynamicNum ?>, <?= $obDynamicNumber ?>);return false;">
-                                    <img src="<?= $OUTPUT->pix_url('t/delete') ?>">
+                                    <img src="<?= gt_image_url('t/delete') ?>">
                                 </a>
                                 <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][observation][<?= $obDynamicNumber ?>][id]" value="<?= $observation->getID() ?>" />
                                 <input type="text" name="unit_criteria[<?= $dynamicNum ?>][observation][<?= $obDynamicNumber ?>][name]" value="<?= $observation->getName() ?>" placeholder="Name" /> &nbsp;&nbsp; 
@@ -98,7 +98,7 @@
                         <tr id="gt_criterion_sub_criterion_<?= $dynamicNum ?>_<?= $subDynamicNumber ?>" class="gt_criterion_sub_criterion_row" dNum="<?= $subDynamicNumber ?>">
                             <td class="gt_sub_criterion_name_cell">
                                 <a href="#" onclick="deleteNumericSubCriterion(<?= $dynamicNum ?>, <?= $subDynamicNumber ?>);return false;">
-                                    <img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" />
+                                    <img src="<?= gt_image_url('t/delete') ?>" alt="delete" />
                                 </a>
                                 <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][subcriteria][<?= $subDynamicNumber ?>][id]" value="<?= $child->getID() ?>" />
                                 <input type="text" name="unit_criteria[<?= $dynamicNum ?>][subcriteria][<?= $subDynamicNumber ?>][name]" value="<?= $child->getName() ?>" placeholder="Name" /> &nbsp;&nbsp; 

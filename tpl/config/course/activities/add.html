@@ -50,7 +50,7 @@
                                             <?php endforeach; ?>
                                         </select>
 
-                                        <span id='gt_mod_hook_loader_<?= $qual->getID() ?>' class='gt_hidden'><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt='loading' /></span>
+                                        <span id='gt_mod_hook_loader_<?= $qual->getID() ?>' class='gt_hidden'><img src="<?= gt_image_url('i/loading_small') ?>" alt='loading' /></span>
                                         <br><br>
 
                                          <div id='gt_mod_hook_qual_units_<?= $qual->getID() ?>'>
@@ -63,7 +63,7 @@
 
                                                         <div id='gt_hooked_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?>' class='gt_hooked_unit'>
 
-                                                            <?= $unit->getDisplayName() ?> <a href='#' class='gt_mod_hook_delete_unit' qualID='<?= $qual->getID() ?>' unitID='<?= $unit->getID() ?>'><img src="<?= $OUTPUT->pix_url('t/delete') ?>" /></a><br>
+                                                            <?= $unit->getDisplayName() ?> <a href='#' class='gt_mod_hook_delete_unit' qualID='<?= $qual->getID() ?>' unitID='<?= $unit->getID() ?>'><img src="<?= gt_image_url('t/delete') ?>" /></a><br>
 
                                                             <table class='gt_c gt_hook_unit_criteria'>
                                                                 <tr>
@@ -164,7 +164,7 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select> 
-                            <span id='gt_mod_hook_loader_activity' class='gt_hidden'><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt='loading' /></span>
+                            <span id='gt_mod_hook_loader_activity' class='gt_hidden'><img src="<?= gt_image_url('i/loading_small') ?>" alt='loading' /></span>
                         </td>
                     </tr>
                     
@@ -177,7 +177,7 @@
                                     <div id="gt_hooked_activity_<?= $activity->getCourseModID() ?>" class='gt_hooked_unit'>
                                         <img src="<?= $activity->getModIcon() ?>"> <?= $activity->getRecordName() ?> 
                                         <a href="#" class="gt_mod_hook_delete_activity" cmid="<?= $activity->getCourseModID() ?>">
-                                            <img src="<?= $OUTPUT->pix_url('t/delete') ?>">
+                                            <img src="<?= gt_image_url('t/delete') ?>">
                                         </a>
                                         <br>
                                         <table class="gt_c gt_hook_unit_criteria">

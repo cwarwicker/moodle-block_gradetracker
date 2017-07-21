@@ -1143,7 +1143,7 @@ class Assessment {
         $output .= "<textarea class='gt_assessment_comments_textbox' qID='{$qualification->getID()}' aID='{$this->id}' sID='{$this->student->id}'>".\gt_html($this->userComments)."</textarea>";
             
         $output .= "<br>";
-        $output .= "<p><img id='gt_comment_loading' class='gt_hidden' src='".$OUTPUT->pix_url('i/loading_small')."' alt='".get_string('loading', 'block_gradetracker')."' /></p>";
+        $output .= "<p><img id='gt_comment_loading' class='gt_hidden' src='".gt_image_url('i/loading_small')."' alt='".get_string('loading', 'block_gradetracker')."' /></p>";
         $output .= "<br>";
         
         $output .= "</div>";        

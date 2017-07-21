@@ -33,8 +33,8 @@
                             <td><?= \gt_html($assessment->getType()) ?></td>
                             <td><?= \gt_html($assessment->getDate('d-m-Y')) ?></td>
                             <td><?= $assessment->countQuals() ?></td>
-                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=edit&id=<?= $assessment->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a></td>
-                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=delete&id=<?= $assessment->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['edit'] ?>" /></a></td>
+                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=edit&id=<?= $assessment->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a></td>
+                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage&page=delete&id=<?= $assessment->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['edit'] ?>" /></a></td>
                         </tr>
 
                     <?php endforeach; ?>

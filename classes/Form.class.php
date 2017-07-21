@@ -542,11 +542,11 @@ class FormElement {
                                 $output .= "<input type='text' id='gt_filter_qual_name' class='gt_80' placeholder='".get_string('name', 'block_gradetracker')."' /> ";
                                 
                                 $output .= "<a href='#' onclick='gtFilterQualSearch();return false;'>";
-                                    $output .= "<img src='".$OUTPUT->pix_url('i/search')."' class='gt_middle' alt='search' />";
+                                    $output .= "<img src='".gt_image_url('i/search')."' class='gt_middle' alt='search' />";
                                 $output .= "</a>";
 
                                 $output .= "<br>";
-                                $output .= "<img src='".$OUTPUT->pix_url('i/loading_small')."' class='gt_hidden' id='gt_filter_quals_loading' />";
+                                $output .= "<img src='".gt_image_url('i/loading_small')."' class='gt_hidden' id='gt_filter_quals_loading' />";
                                 $output .= "<br>";
 
                                 $output .= "<select id='gt_filter_quals' class='gt_qual_select' multiple='multiple'></select>";

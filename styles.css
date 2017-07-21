@@ -3286,7 +3286,7 @@ ul#gt_dropdown_list > li:first-child {
 }
 
 ul#gt_dropdown_list li a {
-  color: #000;
+  color: #000 !important;
   display: block;
   font-weight: normal;
   line-height: 50px;
@@ -3299,7 +3299,7 @@ ul#gt_dropdown_list li a {
 ul#gt_dropdown_list li:hover > a,
 ul#gt_dropdown_list li.selected > a {
   background: #949E53;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   text-decoration: none;
 }
 

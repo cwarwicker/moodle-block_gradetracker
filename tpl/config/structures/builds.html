@@ -51,7 +51,7 @@
                         <?= $string['export'] ?>
                     </a>
                     <form action="" method="post">
-                        <input type="hidden" name="mass_export_build" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                        <input type="hidden" name="mass_export_build" src="<?= gt_image_url('i/export') ?>" />
                         <div id="mass_export_inputs"></div>
                     </form>
                     <input class="tick_all_export_checkboxes" name="tick_all_export_checkboxes" type="hidden" onclick="tick_all_export_checkboxes()"/>
@@ -66,31 +66,31 @@
                     <td><?= $build->getLevelName() ?></td>
                     <td><?= $build->getSubTypeName() ?></td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=awards&id=<?= $build->getID() ?>"><img src="<?= $OUTPUT->pix_url('i/grades') ?>" alt="grades" /></a>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=awards&id=<?= $build->getID() ?>"><img src="<?= gt_image_url('i/grades') ?>" alt="grades" /></a>
                         <?php if (!$build->getAwards()): ?>
                             <br><small style="color:red;">(!)</small>
                         <?php endif; ?>
                     </td>
                     <td>
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&type=criteria&build=<?= $build->getID() ?>">
-                            <img src="<?= $OUTPUT->pix_url('i/grades') ?>" alt="grades" />
+                            <img src="<?= gt_image_url('i/grades') ?>" alt="grades" />
                         </a>
                     </td>
                     <td>
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=defaults&id=<?= $build->getID() ?>">
-                            <img src="<?= $OUTPUT->pix_url('i/report') ?>" alt="defaults" />
+                            <img src="<?= gt_image_url('i/report') ?>" alt="defaults" />
                         </a>
                     </td>
                     <td>
                         <form action="" method="post">
                             <input type="hidden" name="build_id" value="<?= $build->getID() ?>" />
-                            <input type="image" name="export_build" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                            <input type="image" name="export_build" src="<?= gt_image_url('i/export') ?>" />
                         </form>
                         <input class="build_id_checkbox" name="build_id_checkbox_<?= $build->getID() ?>" value="<?= $build->getID() ?>" type="hidden" onclick="export_checkbox_status(<?= $build->getID() ?>)"/>
                     </td>
                     <td>
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=delete&id=<?= $build->getID() ?>">
-                            <img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" />
+                            <img src="<?= gt_image_url('t/delete') ?>" alt="delete" />
                         </a>
                     </td>
                 </tr>

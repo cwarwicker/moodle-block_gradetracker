@@ -23,10 +23,10 @@
                     <td><?= $structure->getName() ?><br><small>(<?= $structure->getDisplayName() ?>)</small></td>
                     <td>
                         <?php if ($structure->isLevelEnabled("Units")): ?>
-                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&id=<?= $structure->getID() ?>&type=unit"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="edit" /></a>
+                            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&id=<?= $structure->getID() ?>&type=unit"><img src="<?= gt_image_url('t/edit') ?>" alt="edit" /></a>
                         <?php endif; ?>
                     </td>
-                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&id=<?= $structure->getID() ?>&type=criteria"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="edit" /></a></td>
+                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&id=<?= $structure->getID() ?>&type=criteria"><img src="<?= gt_image_url('t/edit') ?>" alt="edit" /></a></td>
                 </tr>
             
             <?php endforeach; ?>

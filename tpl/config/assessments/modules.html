@@ -67,8 +67,8 @@
                                     <td><?= \gt_html($mod->getSubStatusVal()) ?></td>
                                     <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/<?= ( ($mod->hasAutoUpdates()) ? 'on.png' : 'off.png' ) ?>" alt="<?= $mod->getAuto() ?>" /></td>
                                     <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/<?= ( ($mod->isEnabled()) ? 'on.png' : 'off.png' ) ?>" alt="<?= $mod->getAuto() ?>" /></td>
-                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=edit&id=<?= $mod->getID() ?>"><img src="<?= $OUTPUT->pix_url('i/edit') ?>" alt="<?= get_string('edit') ?>" /></a></td>
-                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=delete&id=<?= $mod->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= get_string('delete') ?>" /></a></td>
+                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=edit&id=<?= $mod->getID() ?>"><img src="<?= gt_image_url('i/edit') ?>" alt="<?= get_string('edit') ?>" /></a></td>
+                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=delete&id=<?= $mod->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= get_string('delete') ?>" /></a></td>
                                 </tr>
                             
                             <?php endforeach; ?>

@@ -5,7 +5,7 @@
 <p>
     <?php if ($templateFile): ?>
     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
-        <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+        <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
     </a>
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
@@ -15,7 +15,7 @@
     
     <?php if ($exampleFile): ?>
         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
-            <img src="<?= $OUTPUT->pix_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+            <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
         </a>
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
@@ -23,7 +23,7 @@
     
     &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ass&reload=1"><img style="vertical-align:top;" src="<?= $OUTPUT->pix_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ass&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
     
 </p>
 

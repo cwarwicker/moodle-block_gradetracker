@@ -100,12 +100,12 @@
                                             <td><?= $result->getSubTypeName() ?></td>
                                             <td><?= $result->getName() ?></td>
                                             <td>
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $result->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
                                                 &nbsp;&nbsp;
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=copy&id=<?= $result->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/copy') ?>" alt="<?= $string['duplicate'] ?>" /></a>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=copy&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/copy') ?>" alt="<?= $string['duplicate'] ?>" /></a>
                                                 <?php if ($User->hasCapability('block/gradetracker:delete_restore_quals')): ?>
                                                     &nbsp;&nbsp;
-                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=delete&id=<?= $result->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=delete&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>

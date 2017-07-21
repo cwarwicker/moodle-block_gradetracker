@@ -1789,3 +1789,17 @@ function gt_get_value_added_class($awardRank, $targetRank){
     }
     
 }
+
+
+function gt_image_url($imagename, $component = 'moodle'){
+    
+    global $OUTPUT;
+    
+    if (method_exists($OUTPUT, 'image_url')){
+        return $OUTPUT->image_url($imagename, $component);
+    } else {
+        return $OUTPUT->pix_url($imagename, $component);
+    }
+    
+    
+}

@@ -76,7 +76,7 @@
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" id="gt_level_loading" class="gt_hidden gt_middle" />
+                                    <img src="<?= gt_image_url('i/loading_small') ?>" alt="loading" id="gt_level_loading" class="gt_hidden gt_middle" />
                                 </td>
                             </tr>
 
@@ -272,14 +272,14 @@
 
                                                 <td>
                                                     <a href='#' onclick='createDuplicateCriterion(<?= $dynamicNum ?>);return false;'>
-                                                        <img src='<?= $OUTPUT->pix_url('t/copy') ?>' alt='copy' />
+                                                        <img src='<?= gt_image_url('t/copy') ?>' alt='copy' />
                                                     </a>
 
                                                 </td>
 
                                                 <td>
                                                     <a href='#' onclick='removeCriterion(<?= $dynamicNum ?>);return false;'>
-                                                        <img src='<?= $OUTPUT->pix_url('t/delete') ?>' alt='delete' />
+                                                        <img src='<?= gt_image_url('t/delete') ?>' alt='delete' />
                                                     </a>
                                                 </td>
 
@@ -319,7 +319,7 @@
                                     <?php foreach($Unit->getQualifications() as $qual): ?>
                                         <tr>
                                             <td><?= $qual->getDisplayName() ?></td>
-                                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $qual->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a></td>
+                                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $qual->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </table>

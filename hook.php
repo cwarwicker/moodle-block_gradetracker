@@ -71,7 +71,7 @@ function gt_mod_hook(&$mform, $cm = false){
                         }
                     $output .= "</select> ";
 
-                    $output .= "<span id='gt_mod_hook_loader_{$qual->getID()}' class='gt_hidden'><img src='".$OUTPUT->pix_url('i/loading_small')."' alt='loading' /></span>";
+                    $output .= "<span id='gt_mod_hook_loader_{$qual->getID()}' class='gt_hidden'><img src='".gt_image_url('i/loading_small')."' alt='loading' /></span>";
                     $output .= "<br><br>";
 
                     $output .= "<div id='gt_mod_hook_qual_units_{$qual->getID()}'>";
@@ -85,7 +85,7 @@ function gt_mod_hook(&$mform, $cm = false){
                             $criteria = $unit->sortCriteria(false, true);
 
                             $output .= "<div id='gt_hooked_unit_{$qual->getID()}_{$unit->getID()}' class='gt_hooked_unit'>";
-                            $output .= "{$unit->getDisplayName()} <a href='#' class='gt_mod_hook_delete_unit' qualID='{$qual->getID()}' unitID='{$unit->getID()}'><img src='{$OUTPUT->pix_url('t/delete')}' /></a><br>";
+                            $output .= "{$unit->getDisplayName()} <a href='#' class='gt_mod_hook_delete_unit' qualID='{$qual->getID()}' unitID='{$unit->getID()}'><img src='{gt_image_url('t/delete')}' /></a><br>";
 
                             $output .= "<table class='gt_c gt_hook_unit_criteria'>";
                                 $output .= "<tr>";

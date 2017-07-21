@@ -1,1 +1,19 @@
 TODO:
+
+Grid Speed Improvements:
+=======================
+
+Rule Caching
+------------
+
+notify()
+
+- It builds up the qual object, then qual build object, then ruleset object (default ruleset for build) from the qualID
+    - Can these objects be cached?
+- When its found the ruleset, it loads the rules, and the steps beneath
+    - These can surely be cached as they will hardly ever change.
+    - Just make sure when a qual structure or qual build is updated, it clears the rule cache
+
+If that makes no real difference, could also look at caching actual qual/unit/structure objects, so they don't have to be retrieved from DB and loaded each time.
+Would need to ensure any time they are changed, the cache is cleared.
+

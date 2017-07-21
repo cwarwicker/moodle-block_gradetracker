@@ -50,11 +50,11 @@
                         
                         <?php if (!isset($print) || !$print): ?>
                             
-                            <br><a href="#" class="gt_unit_info" uID="<?= $unit->getID() ?>" uName="<?= \gt_html($unit->getDisplayName()) ?>"><img src="<?= $OUTPUT->pix_url('i/info') ?>" alt="<?= $string['info'] ?>" /></a>
+                            <br><a href="#" class="gt_unit_info" uID="<?= $unit->getID() ?>" uName="<?= \gt_html($unit->getDisplayName()) ?>"><img src="<?= gt_image_url('i/info') ?>" alt="<?= $string['info'] ?>" /></a>
                             
                             <?php if ( \gt_has_capability('block/gradetracker:configure_units') && !$external): ?>
                                 &nbsp;&nbsp;
-                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $unit->getID() ?>" target="_blank"><img src="<?= $OUTPUT->pix_url('i/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
+                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $unit->getID() ?>" target="_blank"><img src="<?= gt_image_url('i/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
                             <?php endif; ?>
                             
                             <div id="pUUI_<?= $unit->getID() ?>" class="gt_popup gt_hidden"></div>

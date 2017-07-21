@@ -57,11 +57,11 @@
                         <td>
                             <form action="" method="post">
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
-                                <input type="image" name="export_unit" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                                <input type="image" name="export_unit" src="<?= gt_image_url('i/export') ?>" />
                             </form>
                         </td>
-                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit_unit&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="settings" /></a></td>
-                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=delete_unit&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" /></a></td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit_unit&id=<?= $grading->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="settings" /></a></td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=delete_unit&id=<?= $grading->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
 
                     </tr>
 
@@ -97,11 +97,11 @@
                         <td>
                             <form action="" method="post">
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
-                                <input type="image" name="export_criteria" src="<?= $OUTPUT->pix_url('i/export') ?>" />
+                                <input type="image" name="export_criteria" src="<?= gt_image_url('i/export') ?>" />
                             </form>
                         </td>
-                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit_criteria&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="settings" /></a></td>
-                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=delete_criteria&id=<?= $grading->getID() ?>"><img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" /></a></td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit_criteria&id=<?= $grading->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="settings" /></a></td>
+                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=delete_criteria&id=<?= $grading->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
 
                     </tr>
 

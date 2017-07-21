@@ -118,7 +118,7 @@
                         </tr>
                         
                         <tr>
-                            <td><strong><?= $string['system:moodleversion'] ?></strong> <img src='<?= $OUTPUT->pix_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:moodleversion:info']) ?>' /></td>
+                            <td><strong><?= $string['system:moodleversion'] ?></strong> <img src='<?= gt_image_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:moodleversion:info']) ?>' /></td>
                             <td>
                                 <input type='hidden' name='moodleversion' value='<?= $Site->moodleversion ?>' />
                                 <input type='hidden' name='moodlebuild' value='<?= $Site->moodlebuild ?>' />
@@ -136,7 +136,7 @@
                         </tr>
                         
                         <tr>
-                            <td><strong><?= $string['system:gtinfo'] ?></strong> <img src='<?= $OUTPUT->pix_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:gtinfo:info']) ?>' /></td>
+                            <td><strong><?= $string['system:gtinfo'] ?></strong> <img src='<?= gt_image_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:gtinfo:info']) ?>' /></td>
                             <td>
                                 <input type='hidden' name='stats[structures]' value='<?= $Site->getStat('structures') ?>' />
                                 <input type='hidden' name='stats[quals]' value='<?= $Site->getStat('quals') ?>' />

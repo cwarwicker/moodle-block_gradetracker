@@ -24,22 +24,22 @@
 
                         <?php if ($Qualification->isFeatureEnabledByName('targetgrades')): ?>
                             <li>
-                                <a href="#" onclick="refreshGCSEScore();return false;"><?= $string['refreshgcsescore'] ?> <span id="gt_refresh_gcse_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                                <a href="#" onclick="refreshGCSEScore();return false;"><?= $string['refreshgcsescore'] ?> <span id="gt_refresh_gcse_loader" style="display:none;"><img src="<?= gt_image_url('i/loading_small') ?>" alt="loading" /></span></a>
                             </li>
                             <li>
-                                <a href="#" onclick="refreshTargetGrade();return false;"><?= $string['refreshtargetgrade'] ?> <span id="gt_refresh_tg_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                                <a href="#" onclick="refreshTargetGrade();return false;"><?= $string['refreshtargetgrade'] ?> <span id="gt_refresh_tg_loader" style="display:none;"><img src="<?= gt_image_url('i/loading_small') ?>" alt="loading" /></span></a>
                             </li>
                         <?php endif; ?>
 
                         <?php if ($Qualification->isFeatureEnabledByName('weightedtargetgrades')): ?>
                             <li>
-                                <a href="#" onclick="refreshWeightedTargetGrade();return false;"><?= $string['refreshweightedtargetgrade'] ?> <span id="gt_refresh_wtg_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                                <a href="#" onclick="refreshWeightedTargetGrade();return false;"><?= $string['refreshweightedtargetgrade'] ?> <span id="gt_refresh_wtg_loader" style="display:none;"><img src="<?= gt_image_url('i/loading_small') ?>" alt="loading" /></span></a>
                             </li>
                         <?php endif; ?>
 
                         <?php if ($Qualification->isFeatureEnabledByName('predictedgrades') || $Qualification->isFeatureEnabledByName('predictedminmaxgrades')): ?>
                             <li>
-                                <a href="#" onclick="refreshPredictedGrades();return false;"><?= $string['refreshpredictedgrades'] ?> <span id="gt_refresh_pg_loader" style="display:none;"><img src="<?= $OUTPUT->pix_url('i/loading_small') ?>" alt="loading" /></span></a>
+                                <a href="#" onclick="refreshPredictedGrades();return false;"><?= $string['refreshpredictedgrades'] ?> <span id="gt_refresh_pg_loader" style="display:none;"><img src="<?= gt_image_url('i/loading_small') ?>" alt="loading" /></span></a>
                             </li>
                         <?php endif; ?>
 

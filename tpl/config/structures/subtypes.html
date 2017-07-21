@@ -28,12 +28,12 @@
                     <td><?= $subType->getShortName() ?></td>
                     <td>
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=subtypes&page=edit&id=<?= $subType->getID() ?>">
-                            <img src="<?= $OUTPUT->pix_url('t/edit') ?>" alt="delete" />
+                            <img src="<?= gt_image_url('t/edit') ?>" alt="delete" />
                         </a>
                     </td>
                     <td>
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=subtypes&page=delete&id=<?= $subType->getID() ?>">
-                            <img src="<?= $OUTPUT->pix_url('t/delete') ?>" alt="delete" />
+                            <img src="<?= gt_image_url('t/delete') ?>" alt="delete" />
                         </a>
                     </td>
                 </tr>

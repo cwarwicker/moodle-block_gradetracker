@@ -439,7 +439,7 @@ class RangedCriterion extends \GT\Criterion {
 
                 $output .= "<span class='gt-popup-critname'>{$this->getName()}</span><br><br>";
 
-                $output .= "<p id='gt_popup_loader' class='gt_c gt_hidden'><img src='".$OUTPUT->pix_url('i/loading_small')."' alt='".get_string('loading', 'block_gradetracker')."' /></p>";
+                $output .= "<p id='gt_popup_loader' class='gt_c gt_hidden'><img src='".gt_image_url('i/loading_small')."' alt='".get_string('loading', 'block_gradetracker')."' /></p>";
                 $output .= "<div id='gt_popup_error' class='gt_alert_bad gt_left gt_hidden'>".get_string('errors:save', 'block_gradetracker')."</div>";
                 $output .= "<div id='gt_popup_success' class='gt_alert_good gt_left gt_hidden'>".get_string('saved', 'block_gradetracker')."</div>";
 

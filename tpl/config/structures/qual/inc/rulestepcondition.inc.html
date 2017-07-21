@@ -5,5 +5,5 @@
     &nbsp;&nbsp;&nbsp;&nbsp;
     <span class='gt_rule_condition_value_compare'><input type='text' name='rule_sets[[RS]][rules][[R]][steps][[S]][conditions][v2][]' value='<?= (isset($array['condition'])) ? \gt_html($array['condition']->getConditionPart('v2')) : ''  ?>' /> <a href='#' onclick='gt_openFx(this, "condition");return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/function.png' alt='<?= get_string('function', 'block_gradetracker') ?>' /></a></span> 
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href='#' onclick='gt_removeRuleStepCondition(this);return false;'><img src='<?= $OUTPUT->pix_url('i/delete') ?>' alt='<?= get_string('delete', 'block_gradetracker') ?>' /></a>
+    <a href='#' onclick='gt_removeRuleStepCondition(this);return false;'><img src='<?= gt_image_url('i/delete') ?>' alt='<?= get_string('delete', 'block_gradetracker') ?>' /></a>
 </div>
