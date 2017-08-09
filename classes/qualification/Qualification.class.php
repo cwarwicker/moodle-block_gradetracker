@@ -1484,22 +1484,33 @@ class Qualification {
     
     public function copyQual(){
         
-        global $DB;
-
+        global $CFG;
+        
         // create new qualificaiton object
         $newqual = new \GT\Qualification();
         $newqual->setBuildID($this->buildID);
         $newqual->setName($this->name." (copy)");
         
+        // Attach same units
+        $units = $this->getUnits();
+        if ($units)
+        {
+            foreach($this->units as $unit)
+            {
+                $newqual->addUnit($unit);
+            }
+        }
+        
         $newqual->save();
 
         // get attribute information
         $atts = $this->getQualificationAttributes();
-            foreach ($atts as $a){
-                $newqual->updateAttribute($a->attribute, $a->value);
-            }
+        foreach ($atts as $a){
+            $newqual->updateAttribute($a->attribute, $a->value);
+        }
+            
         // redirect to edit page for newly copied qualification
-        header('location:/blocks/gradetracker/config.php?view=quals&section=edit&id='.$newqual->getID());
+        header('location:'.$CFG->wwwroot.'/blocks/gradetracker/config.php?view=quals&section=edit&id='.$newqual->getID());            
             
     }
     
