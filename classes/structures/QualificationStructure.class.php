@@ -3417,7 +3417,7 @@ class QualificationStructure
             $params[] = $value;
         }
         
-        $records = $DB->get_records_sql("SELECT DISTINCT ss.qualstructureid    
+        $records = $DB->get_records_sql("SELECT DISTINCT ss.qualstructureid, s.name   
                                         FROM {bcgt_qual_structure_settings} ss
                                         INNER JOIN {bcgt_qual_structures} s ON s.id = ss.qualstructureid
                                         WHERE ss.setting = ? {$valueSQL}

@@ -26,7 +26,7 @@ function reporting_bindings(){
         gtAjaxProgress( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'download_report', params: params }, '#gt_report_progress', function(data){
             
             // Reset button
-            btn.removeProp('disabled');
+            btn.prop('disabled', false);
             btn.val( M.util.get_string('run', 'block_gradetracker') );
             
             // Download file

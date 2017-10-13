@@ -528,7 +528,7 @@ class Qualification {
         $return = array();
         $params = array();
                 
-        $sql = "SELECT DISTINCT u.id
+        $sql = "SELECT DISTINCT u.id, u.username, u.firstname, u.lastname
                 FROM {user} u
                 INNER JOIN {bcgt_user_quals} uq ON uq.userid = u.id ";
         

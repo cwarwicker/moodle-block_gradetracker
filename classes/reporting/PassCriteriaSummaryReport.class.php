@@ -384,8 +384,8 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                                     $fieldName = 'critawardcnt_'.\gt_make_db_field_safe($firstLetter, $usedFieldNames);
                                                     $fieldNameTtl = 'critcnt_'.\gt_make_db_field_safe($firstLetter, $usedFieldNames);
 
-                                                    $met = (int)$student->$fieldName;
-                                                    $critTotal = (int)$student->$fieldNameTtl;
+                                                    $met = (int)@$student->$fieldName;
+                                                    $critTotal = (int)@$student->$fieldNameTtl;
                                                                                                                                                          
                                                     // Increment this student's met total for this "Pass" criterion letter
                                                     $studentPass += $met;

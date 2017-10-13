@@ -74,7 +74,7 @@
                                         <?php foreach($qual->getUnits() as $unit): ?>
                                             <td>
                                                 <a href='#' onclick="tickAllUnitUsersRole(<?= $unit->getID() ?>, <?= $qual->getID() ?>, 'STUDENT');return false;">
-                                                    <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                                    <img class='gt_mass_arrow' src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
                                                 </a>
                                             </td>
                                         <?php endforeach; ?>

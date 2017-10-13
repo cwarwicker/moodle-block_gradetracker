@@ -351,7 +351,7 @@ class User {
         $params[] = CONTEXT_COURSE;
         $params[] = $this->id;
         
-        $records = $DB->get_records_sql("SELECT DISTINCT c.id
+        $records = $DB->get_records_sql("SELECT DISTINCT c.id, c.shortname, c.fullname
                                         FROM {course} c
                                         INNER JOIN {context} x ON x.instanceid = c.id
                                         INNER JOIN {role_assignments} ra ON ra.contextid = x.id

@@ -27,7 +27,7 @@ class DataExport {
                                     INNER JOIN {bcgt_qoe_grades} qg ON uq.qoegradeid = qg.id
                                     INNER JOIN {bcgt_qoe_types} qt ON qg.qoeid = qt.id
                                     INNER JOIN {bcgt_qoe_subjects} qs ON uq.qoesubjectid=qs.id
-                                    ORDER BY  Last_Name, First_Name, Qual, Level, Subject');
+                                    ORDER BY Last_Name, First_Name, Qual, Level, Subject');
         
     }
     
@@ -67,6 +67,7 @@ class DataExport {
                     
         $sql .= "qstr.name as qualtype,
                 ql.name as quallevel,
+                ql.ordernum,
                 qsub.name as qualsubtype,
                 q.name as qualname,
                 u.username as username,
@@ -143,8 +144,8 @@ class DataExport {
                                     INNER JOIN {bcgt_qual_subtypes} qsub on qb.subtypeid = qsub.id
                                     INNER JOIN {bcgt_qual_levels} ql on qb.levelid = ql.id
                                     INNER JOIN {bcgt_qual_build_awards} qba on ug.grade = qba.id
-                                    WHERE ug.type = "aspirational"
-                                    ORDER BY qstr.name, ql.ordernum, qsub.name, q.name');
+                                    WHERE ug.type = ?
+                                    ORDER BY qstr.name, ql.ordernum, qsub.name, q.name', array('aspirational'));
         
     }
     
@@ -176,8 +177,8 @@ class DataExport {
                                     LEFT JOIN {bcgt_qual_levels} ql on qb.levelid = ql.id
                                     LEFT JOIN {bcgt_qual_build_awards} qba on ug.grade = qba.id
                                     LEFT JOIN {course} c on ug.courseid = c.id
-                                    WHERE ug.type = "ceta"
-                                    ORDER BY qstr.name, ql.ordernum, qsub.name, q.name');
+                                    WHERE ug.type = ?
+                                    ORDER BY qstr.name, ql.ordernum, qsub.name, q.name', array('ceta'));
         
     }
     

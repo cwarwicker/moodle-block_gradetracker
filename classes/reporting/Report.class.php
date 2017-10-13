@@ -47,10 +47,10 @@ abstract class Report {
     }
     
     protected function extractParam($name, $params){
-                
+                        
         if ($params){
             foreach($params as $param){
-                if ($param['name'] == $name){
+                if ($param['name'] == $name && isset($param['value'])){
                     return $param['value'];
                 }
             }

@@ -196,7 +196,7 @@ class UserUnit extends \GT\Unit {
         $return = array();
         $params = array();
                 
-        $sql = "SELECT DISTINCT uqu.userid
+        $sql = "SELECT DISTINCT uqu.userid, u.username, u.firstname, u.lastname 
                 FROM {user} u
                 INNER JOIN {bcgt_user_qual_units} uqu ON uqu.userid = u.id
                 INNER JOIN {bcgt_user_quals} uq ON (uq.userid = u.id AND uq.qualid = uqu.qualid AND uq.role = uqu.role) ";

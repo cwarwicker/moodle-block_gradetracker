@@ -35,14 +35,14 @@ class GradeTracker
     private $string;
     public $cache;
     
-    const REMOTE_HOST_URL = 'http://moodleportal.bedford.ac.uk';
-    const REMOTE_VERSION_URL = 'http://moodleportal.bedford.ac.uk/gt_version.txt';
+    const REMOTE_HOST_URL = 'https://github.com/cwarwicker/moodle-block_gradetracker';
+    const REMOTE_VERSION_URL = 'https://raw.githubusercontent.com/cwarwicker/moodle-block_gradetracker/master/v.txt';
     const REMOTE_HUB = 'http://moodleportal.bedford.ac.uk/webservice/rest/server.php';
     const REMOTE_HUB_TOKEN = '6454383ec602e4d8448f7226f361ff31';
     
     const MAJOR_VERSION = 1; // A new major version would be a drastic change to the system, which sees lots of new features added or existing aspects of the system changed in large ways
     const MINOR_VERSION = 1; // A new minor version would be a small number of new features/changes
-    const PATCH_VERSION = 0; // A patch would be one or more bug fixes
+    const PATCH_VERSION = 1; // A patch would be one or more bug fixes
         
     /**
      * Construct the block object

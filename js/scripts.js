@@ -641,7 +641,7 @@ function gtAjaxProgress( url, params, el, onSuccess ){
                             err.show();
 
                             $('#gt_report_time_left').text('');
-                            btn.removeProp('disabled');
+                            btn.prop('disabled', false);
                             btn.val( M.util.get_string('run', 'block_gradetracker') );
 
                             req.abort();
@@ -711,7 +711,7 @@ function gtAjaxProgress( url, params, el, onSuccess ){
                     err.html( error );
                     err.show();
                     
-                    btn.removeProp('disabled');
+                    btn.prop('disabled', false);
                     btn.val( M.util.get_string('run', 'block_gradetracker') );
                     
                     return false;
@@ -738,7 +738,7 @@ function gtAjaxProgress( url, params, el, onSuccess ){
             err.show();
             
             $('#gt_report_time_left').text('');
-            btn.removeProp('disabled');
+            btn.prop('disabled', false);
             btn.val( M.util.get_string('run', 'block_gradetracker') );
             
             return false;
