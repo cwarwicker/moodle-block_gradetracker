@@ -1258,7 +1258,7 @@ class Unit {
     
     public function copyUnit(){
         
-        global $DB;
+        global $DB, $CFG;
         
         // create new unit object
         $newunit = new \GT\Unit();
@@ -1306,7 +1306,7 @@ class Unit {
         }
         
         // redirect to edit page for newly copied unit
-        header('location:/blocks/gradetracker/config.php?view=units&section=edit&id='.$newunit->getID());
+        header('location:'.$CFG->wwwroot.'/blocks/gradetracker/config.php?view=units&section=edit&id='.$newunit->getID());
     }
     
     public function addCriterion($criteria){
