@@ -215,7 +215,7 @@ class Statistics {
         
         $obj = new \GT\Statistics();
         
-        $records = $DB->get_records_sql("SELECT DISTINCT CONCAT(s.id, '_', q.id) as id, s.name, q.id as qualid, ba.value as defaultcredits, cc.credits
+        $records = $DB->get_records_sql("SELECT DISTINCT CONCAT(s.id, '_', q.id) as id, s.name, q.id as qualid, q.name as qualname, ba.value as defaultcredits, cc.credits
                                         FROM {bcgt_qual_structures} s
                                         INNER JOIN {bcgt_qual_builds} b ON b.structureid = s.id
                                         INNER JOIN {bcgt_qualifications} q ON q.buildid = b.id
