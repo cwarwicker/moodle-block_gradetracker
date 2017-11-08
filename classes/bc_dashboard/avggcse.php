@@ -17,7 +17,7 @@ class avggcse extends \BCDB\Report\Element {
     public function get() {
         
         $this->sql['select'] = $this->alias.'.score';
-        $this->sql['join'][] = 'left join {bcgt_user_qoe_scores} '.$this->alias.' on ('.$this->alias.'.userid = user.id)';
+        $this->sql['join'][] = 'left join {bcgt_user_qoe_scores} '.$this->alias.' on ('.$this->alias.'.userid = u.id)';
                         
     }
     

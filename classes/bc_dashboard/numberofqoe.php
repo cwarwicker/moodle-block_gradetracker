@@ -28,7 +28,7 @@ class numberofqoe extends \BCDB\Report\Element {
     public function get() {
         
         $this->sql['select'] = "count(distinct {$this->alias}.id)";
-        $this->sql['join'][] = "left join {bcgt_user_qoe} {$this->alias} on ({$this->alias}.userid = user.id)";
+        $this->sql['join'][] = "left join {bcgt_user_qoe} {$this->alias} on ({$this->alias}.userid = u.id)";
                         
     }
     

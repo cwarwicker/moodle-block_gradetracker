@@ -42,7 +42,7 @@ class GradeTracker
     
     const MAJOR_VERSION = 1; // A new major version would be a drastic change to the system, which sees lots of new features added or existing aspects of the system changed in large ways
     const MINOR_VERSION = 1; // A new minor version would be a small number of new features/changes
-    const PATCH_VERSION = 1; // A patch would be one or more bug fixes
+    const PATCH_VERSION = 2; // A patch would be one or more bug fixes
         
     /**
      * Construct the block object
