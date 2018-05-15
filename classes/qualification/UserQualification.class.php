@@ -222,12 +222,30 @@ class UserQualification extends \GT\Qualification {
         }
     }
     
+    /**
+     * Get the name of the award the user has, of this type
+     * @param type $type
+     * @return type
+     */
     public function getUserAwardName($type){
         
         $award = $this->getUserAward($type);
         return ($award && $award->isValid()) ? $award->getName() : get_string('na', 'block_gradetracker');
         
     }
+    
+    /**
+     * Get the UCAS points of the award the user has, of this type
+     * @param type $type
+     * @return type
+     */
+    public function getUserAwardUCAS($type){
+        
+        $award = $this->getUserAward($type);
+        return ($award && $award->isValid() && $award->getUCAS() > 0) ? $award->getUCAS() : get_string('na', 'block_gradetracker');
+        
+    }
+    
     
     /**
      * Get the weighting percentile for the current FA grade
@@ -1608,10 +1626,10 @@ class UserQualification extends \GT\Qualification {
             
         }
                 
-		// Load the student
-		$this->loadStudent($params['student']);
+        // Load the student
+        $this->loadStudent($params['student']);
 
-		// All qualifications being viewed		
+        // All qualifications being viewed		
         $params['TPL']->set("allQualifications", $allQualifications);
         
         // Navigation links
@@ -1637,8 +1655,10 @@ class UserQualification extends \GT\Qualification {
         $params['TPL']->set("canSeeTargetGrade", \gt_has_capability('block/gradetracker:see_target_grade'));
         $params['TPL']->set("canSeeWeightedTargetGrade", \gt_has_capability('block/gradetracker:see_weighted_target_grade'));
         
+        // Other Options/Settings
         $params['TPL']->set("gridFile", $gridFile);
         $params['TPL']->set("assessmentView", $assessmentView);
+        $params['TPL']->set('showUCAS', \GT\Setting::getSetting('student_grid_show_ucas'));
         
         if (isset($params['print']) && $params['print']){
             $params['TPL']->set("print", true);

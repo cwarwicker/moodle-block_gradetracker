@@ -186,7 +186,14 @@
                             </td>
                         <?php endif; ?> 
                         
-                        <td id="gt_qualAward_Q<?= $qualification->getID() ?>_S<?= $row->id ?>"><?php if (!is_null($row->qualaward)): ?><?= $row->qualaward ?> (<?= ucfirst($row->qualawardtype) ?>)<?php endif; ?></td>
+                        <td id="gt_qualAward_Q<?= $qualification->getID() ?>_S<?= $row->id ?>">
+                            <?php if (!is_null($row->qualaward)): ?>
+                                <?= $row->qualaward ?> (<?= ucfirst($row->qualawardtype) ?>)
+                                <?php if ($row->qualawarducas > 0): ?>
+                                    <br><small><?= $row->qualawarducas ?> <?= $string['ucaspoints'] ?></small>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
                         
                         <?php if($qualification->isFeatureEnabledByName("targetgrades") || $qualification->isFeatureEnabledByName("aspirationalgrades")): ?>
                             <td>

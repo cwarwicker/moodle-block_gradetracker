@@ -539,7 +539,7 @@ class GradeTracker
      */
     public function printVersionCheck($full = false, $return = false){
         
-        global $CFG;
+        global $CFG, $OUTPUT;
         
         $remote = @file_get_contents(self::REMOTE_VERSION_URL);
         if (!$remote){
@@ -550,13 +550,13 @@ class GradeTracker
         if (!$remote || is_null($remote)){
             return \gt_error_alert_box(get_string('unabletocheckforupdates', 'block_gradetracker'));
         }
-                
+                        
         $result = version_compare($this->getPluginVersion(), $remote->version, '<');
         if ($result){
             $img = (file_exists($CFG->dirroot . '/blocks/gradetracker/pix/update_'.$remote->update.'.png')) ? $CFG->wwwroot . '/blocks/gradetracker/pix/update_'.$remote->update.'.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/update_general.png';
             $link = (isset($remote->file) && $remote->file != '') ? $remote->file : self::REMOTE_HOST_URL;
             if ($full){
-                return "<span class='gt_update_notification_full_{$remote->update}'>".get_string('newversionavailable', 'block_gradetracker').": {$remote->version} [".\get_string('versionupdatetype_'.$remote->update, 'block_gradetracker')."]</span>";
+                return "<span class='gt_update_notification_full_{$remote->update}'>".get_string('newversionavailable', 'block_gradetracker').": {$remote->version} [".\get_string('versionupdatetype_'.$remote->update, 'block_gradetracker')."]</span> <a href='{$link}'><img src='{$OUTPUT->image_url('t/download')}' alt='download' /></a>";
             } else {
                 return "&nbsp;&nbsp;&nbsp;&nbsp;<span class='gt_update_notification'><a href='{$link}'><img src='{$img}' alt='update' title='".get_string('newversionavailable', 'block_gradetracker').": {$remote->version} [".\get_string('versionupdatetype_'.$remote->update, 'block_gradetracker')."]' /></a></span>";
             }
@@ -4096,6 +4096,7 @@ class GradeTracker
             if ($section == 'grid'){
                 $settings['enable_grid_logs'] = (isset($settings['enable_grid_logs'])) ? '1' : '0';
                 $settings['assessment_grid_show_quals_one_page'] = (isset($settings['assessment_grid_show_quals_one_page'])) ? '1' : '0';
+                $settings['student_grid_show_ucas'] = (isset($settings['student_grid_show_ucas'])) ? '1' : '0';
             }
             
             // Assesment settings

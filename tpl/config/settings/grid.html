@@ -38,6 +38,12 @@
     <h2><?= $string['studentgridsettings'] ?></h2>
     <p><?= $string['studentgridsettings:desc'] ?></p>
     
+    <small><strong><?= $string['config:grid:showucas'] ?></strong> - <?= $string['config:grid:showucas:desc'] ?></small>
+    <br>
+    <input type="checkbox" name="student_grid_show_ucas" value="1"  <?= ($GT->getSetting('student_grid_show_ucas') == 1) ? 'checked' : '' ?> />
+                  
+    <br><br>
+
     <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
     <br>
     

@@ -3713,8 +3713,10 @@ span.gt_update_notification img
     height: 20px;
 }
 
+
 span.gt_update_notification_full_general, span.gt_update_notification_full_performance
 {
+    background: yellow;
     color: #000;
 }
 

@@ -588,6 +588,7 @@
                 <?php if (!isset($print)): ?>
                     <tr>
                         <th colspan='2'><?= $string['grades'] ?></th>
+                        <th></th>
                         <th id="gt_help_col" title="<?= $string['predictedgradesexplained'] ?>"><a href="#" onclick="$('.gt_toggle_help').toggle();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/question.png" class="gt_icon" /></a></th>
                     </tr>
                 <?php endif; ?>
@@ -596,13 +597,13 @@
 
                      <tr>
                         <td><?= $string['avggcsescore'] ?></td>
-                        <td id="gt_user_gcse_score"><?= $Student->getAverageGcseScore() ?></td>
+                        <td id="gt_user_gcse_score" colspan="2"><?= $Student->getAverageGcseScore() ?></td>
                         <td class="gt_toggle_help"><small><?= $string['avggcse:help'] ?></small></td>
                     </tr>
 
                     <tr>
                         <td><?= $string['targetgrade'] ?></td>
-                        <td id="gt_user_target_grade_<?= $Student->id ?>_<?= $Qualification->getID() ?>">
+                        <td id="gt_user_target_grade_<?= $Student->id ?>_<?= $Qualification->getID() ?>" colspan="2">
                             <select class='gt_target_grade_award <?= ( ($access == 'e' || $access == 'ae') && $User->hasCapability('block/gradetracker:edit_target_grades') ) ? '' : 'gt_hidden' ?> gt_tg_Q<?= $Qualification->getID() ?>_S<?= $Student->id ?>_edit' sID='<?= $Student->id ?>' qID='<?= $Qualification->getID() ?>'>
                                 <option value='0'></option>
                                 <?php if ($targetGradeAwards): ?>
@@ -621,7 +622,7 @@
                 <?php if ($Qualification->isFeatureEnabledByName('aspirationalgrades') && $User->hasCapability('block/gradetracker:see_aspirational_grade')): ?>
                     <tr>
                         <td><?= $string['aspirationalgrade'] ?></td>
-                        <td id="gt_user_aspirational_grade">
+                        <td id="gt_user_aspirational_grade" colspan="2">
                                 <select class='gt_asp_grade_award <?= ( ($access == 'e' || $access == 'ae') && $User->hasCapability('block/gradetracker:edit_aspirational_grades') ) ? '' : 'gt_hidden' ?> gt_tg_Q<?= $Qualification->getID() ?>_S<?= $Student->id ?>_edit' sID='<?= $Student->id ?>' qID='<?= $Qualification->getID() ?>'>
                                     <option value='0'></option>
                                     <?php if ($targetGradeAwards): ?>
@@ -639,7 +640,10 @@
                 <?php if ($Qualification->isFeatureEnabledByName('predictedgrades') && !$Qualification->getUserAward('final') && $User->hasCapability('block/gradetracker:see_predicted_grades')): ?>
                     <tr>
                         <td><?= $string['predictedgrade'] ?></td>
-                        <td id="gt_user_avg_award"><?= $Qualification->getUserAwardName('average') ?></td>
+                        <td id="gt_user_avg_award" colspan="<?= ($showUCAS == '1') ? '1' : '2' ?>"><?= $Qualification->getUserAwardName('average') ?></td>
+                        <?php if ($showUCAS): ?>
+                            <td><small><?= $Qualification->getUserAwardUCAS('average') ?><br><strong><?= $string['ucaspoints'] ?></strong></small></td>
+                        <?php endif; ?>
                         <td class="gt_toggle_help"><small><?= sprintf($string['predictedgrade:desc'], $GT->getSetting('pred_grade_min_units')) ?></small></td>
                     </tr>
                 <?php endif; ?>
@@ -647,12 +651,18 @@
                 <?php if ($Qualification->isFeatureEnabledByName('predictedminmaxgrades') && $User->hasCapability('block/gradetracker:see_predicted_grades')): ?>
                     <tr>
                         <td><?= $string['predictedmingrade'] ?></td>
-                        <td id="gt_user_min_award"><?= $Qualification->getUserAwardName('min') ?></td>
+                        <td id="gt_user_min_award" colspan="<?= ($showUCAS == '1') ? '1' : '2' ?>"><?= $Qualification->getUserAwardName('min') ?></td>
+                        <?php if ($showUCAS): ?>
+                            <td><small><?= $Qualification->getUserAwardUCAS('min') ?><br><strong><?= $string['ucaspoints'] ?></strong></small></td>
+                        <?php endif; ?>
                         <td class="gt_toggle_help"><small><?= sprintf($string['predictedmingrade:desc'], $GT->getSetting('pred_grade_min_units')) ?></small></td>
                     </tr>
                     <tr>
                         <td><?= $string['predictedmaxgrade'] ?></td>
-                        <td id="gt_user_max_award"><?= $Qualification->getUserAwardName('max') ?></td>
+                        <td id="gt_user_max_award" colspan="<?= ($showUCAS == '1') ? '1' : '2' ?>"><?= $Qualification->getUserAwardName('max') ?></td>
+                        <?php if ($showUCAS): ?>
+                            <td><small><?= $Qualification->getUserAwardUCAS('max') ?><br><strong><?= $string['ucaspoints'] ?></strong></small></td>
+                        <?php endif; ?>
                         <td class="gt_toggle_help"><small><?= sprintf($string['predictedmaxgrade:desc'], $GT->getSetting('pred_grade_min_units')) ?></small></td>
                     </tr>
                 <?php endif; ?>

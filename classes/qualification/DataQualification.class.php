@@ -65,6 +65,7 @@ class DataQualification extends \GT\Qualification {
                 qa.name as qualaward,
                 qa.type as qualawardtype,
                 qa.rank as qualawardrank,
+                qa.ucas as qualawarducas,
                 uu.cnt as unitscount, uu.ccnt as creditscount,
                 uua.cnt as unitsawardedcount, uua.ccnt as creditsawardedcount,
                 tbl_cA_all.cnt as critawardcnt_all,tbl_c_all.cnt as critcnt_all,";
@@ -134,7 +135,7 @@ class DataQualification extends \GT\Qualification {
                 ) cg ON cg.userid = u.id 
 
                 LEFT JOIN (
-                    SELECT t.userid, t.type, a.name, a.rank
+                    SELECT t.userid, t.type, a.name, a.rank, a.ucas
                     FROM {bcgt_user_qual_awards} t
                     INNER JOIN {bcgt_qual_build_awards} a ON a.id = t.awardid
                     WHERE t.qualid = ?
