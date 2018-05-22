@@ -925,6 +925,7 @@ $string['importtargetgrades:desc'] = 'Here you can import Target Grades and the 
 $string['importwarning'] = 'Some of the criteria values in the system have been updated since you downloaded the spreadsheet. Please make sure you defintely want to over-write these before continuing';
 $string['includecoursecode'] = 'Include Course';
 $string['includenamecols'] = 'Include Name Columns';
+$string['info'] = 'Info';
 $string['info:block_bcgt'] = 'Found old "block_bcgt" installation (%s).<br><img src="%s" alt="data transfer" class="gt_16" /> <a href="config.php?view=data&section=block_bcgt">Transfer data from old block_bcgt to new block_gradetracker</a>';
 $string['insertgrades'] = 'Insert Grades';
 $string['insertquals'] = 'Insert Qualifications';

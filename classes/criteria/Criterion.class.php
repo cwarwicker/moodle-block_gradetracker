@@ -1617,7 +1617,11 @@ abstract class Criterion {
             $output .= "<span class='gt-popup-unitname'>{$unit->getDisplayName()}</span><br>";
         }
 
-        $output .= "<span class='gt-popup-critname'>{$this->getName()}</span><br><br>";
+        $output .= "<span class='gt-popup-critname'>{$this->getName()}</span><br>";
+        
+        $output .= "<p><i>{$this->getDescription()}</i></p>";
+        
+        $output .= "<br>";
 
         $output .= "<textarea class='gt_criterion_comments_textbox' qID='{$this->qualID}' uID='{$this->unitID}' cID='{$this->id}' sID='{$this->student->id}'>".\gt_html($this->userComments)."</textarea>";
             

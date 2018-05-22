@@ -1893,7 +1893,7 @@ table.gt_import_grid_table tr td.gt_has_comments small
     padding: 2px 8px;
 }
 
-img.gt_comment_icon
+img.gt_comment_icon, img.gt_edit_info_icon
 {
 /*    position: absolute;
     right: 2px;
@@ -1901,6 +1901,7 @@ img.gt_comment_icon
     width: 20px;
     vertical-align: middle;
     cursor: pointer;
+    margin: 0 4px;
 }
 
 img.gt_assessment_comment_icon

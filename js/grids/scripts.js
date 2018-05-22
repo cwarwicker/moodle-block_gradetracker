@@ -896,8 +896,8 @@ function grid_bindings(){
         
         
         // Criterion Info Popup
-        $('td.gt_grid_cell_v').unbind('click');
-        $('td.gt_grid_cell_v').bind('click', function(){
+        $('td.gt_grid_cell_v, img.gt_edit_info_icon').unbind('click');
+        $('td.gt_grid_cell_v, img.gt_edit_info_icon').bind('click', function(){
             
             var sID = $(this).attr('sID');
             var qID = $(this).attr('qID');
