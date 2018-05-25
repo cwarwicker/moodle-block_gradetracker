@@ -1345,8 +1345,8 @@ class QualificationBuild {
         finfo_close($fInfo);
                         
         // Has to be XML file, otherwise error and return
-        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip'){
-            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml or application/zip', $mime);
+        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml'){
+            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml, text/xml, text/plain or application/zip', $mime);
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
