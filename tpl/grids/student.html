@@ -670,7 +670,7 @@
                 <?php if ($Qualification->getUserAward('final')): ?>
                     <tr id="gt_user_final_award_row">
                         <td><?= $string['predictedfinalgrade'] ?></td>
-                        <td id="gt_user_final_award"><?= $Qualification->getUserAwardName('final') ?></td>
+                        <td id="gt_user_final_award" colspan="<?= ($showUCAS == '1') ? '1' : '2' ?>"><?= $Qualification->getUserAwardName('final') ?></td>
                         <td class="gt_toggle_help"><small><?= $string['predictedfinalgrade:desc'] ?></small></td>
                     </tr>
                 <?php endif; ?>

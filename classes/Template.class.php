@@ -162,7 +162,8 @@ class Template {
             extract($this->variables);
         }
                 
-        $this->set("this", $this);
+        // Had to comment this out for php 7, not sure if it will break anything
+//        $this->set("this", $this);
         
         flush();
         ob_start();

@@ -201,6 +201,27 @@ function applyUnitGridBindings(){
 }
 
 
-function refreshPredictedGrades(){
+
+/**
+ * Refresh the predicted grades on the student grid
+ */
+function refreshPredictedGrades(qID, sID){
+                
+    var params = { action: 'get_refreshed_predicted_grades', params: { studentID: sID, qualID: qID } };
+    
+    $.post( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', params, function(data){
+        
+        data = $.parseJSON(data);
+                
+        if (data['final'] !== undefined){
+            $('#qual_award_'+sID+'_'+qID+' div.GridCellDiv').html( 'Final<br>'+data['final'] );//.effect( 'highlight', {color: '#ccff66'}, 3000 );
+        }
+        
+        else if (data['average'] !== undefined){
+            $('#qual_award_'+sID+'_'+qID+' div.GridCellDiv').html( 'Predicted<br>'+data['average'] );//.effect( 'highlight', {color: '#ccff66'}, 3000 );
+        }
+       
+                        
+    });
     
 }

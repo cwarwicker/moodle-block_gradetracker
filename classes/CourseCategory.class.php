@@ -16,6 +16,8 @@ class CourseCategory {
     private $children = array();
     private $courses = array();
     
+    private $staffArray = array();
+    
     public function __construct($id = false){
         
         global $DB;
@@ -191,6 +193,65 @@ class CourseCategory {
     
     public function getParent(){
         return new \GT\CourseCategory($this->parent);
+    }
+    
+    
+    public function getStaff($reload = false){
+        
+        global $GT, $DB;
+        
+        if ($reload){
+            $this->staffArray = array();
+        } elseif ($this->staffArray){
+            return $this->staffArray;
+        }
+        
+        $return = array();
+        
+        $roles = $GT->getStaffRoles();
+        if (!$roles){
+            \gt_debug("Tried to get staff on category ({$this->id}), but no staff roles have been defined in the settings");
+            return false;
+        }
+        
+        $in = \gt_create_sql_placeholders($roles);
+        
+        // Get staff from this course
+        $sql = "SELECT DISTINCT u.*
+                FROM {user} u
+                INNER JOIN {role_assignments} ra ON ra.userid = u.id
+                INNER JOIN {context} x ON x.id = ra.contextid
+                INNER JOIN {role} r ON r.id = ra.roleid
+                WHERE r.shortname IN ({$in}) AND x.contextlevel = ? AND x.instanceid = ?
+                ORDER BY u.lastname, u.firstname, u.username";
+        
+        $params = $roles;
+        $params[] = CONTEXT_COURSECAT;
+        $params[] = $this->id;
+        
+        $records = $DB->get_records_sql($sql, $params);
+        
+        if ($records)
+        {
+            foreach($records as $record)
+            {
+                $obj = new \GT\User($record->id);
+                if ($obj->isValid())
+                {
+                    $return[$obj->id] = $obj;
+                }
+            }
+        }
+        
+        // Are there parent categories above this we want to check?
+        if ($this->hasParent()){
+            $parent = new \GT\CourseCategory($this->parent);
+            $return = $return + $parent->getStaff();
+        }
+        
+        return $return;
+        
+        
     }
     
 }

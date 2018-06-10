@@ -416,7 +416,7 @@ class Course {
         
         $roles = $GT->getStaffRoles();
         if (!$roles){
-            \gt_debug("Tried to get staff on course ({$this->id}), but no student roles have been defined in the settings");
+            \gt_debug("Tried to get staff on course ({$this->id}), but no staff roles have been defined in the settings");
             return false;
         }
         
@@ -462,6 +462,10 @@ class Course {
                 
             }
         }
+        
+        // Then get any category enrolments
+        $category = $this->getCategory();
+        $return = $return + $category->getStaff();
                 
         $this->staffArray = $return;
         return $this->staffArray;        

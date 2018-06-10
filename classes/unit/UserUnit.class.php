@@ -1161,7 +1161,7 @@ class UserUnit extends \GT\Unit {
      * @return boolean
      */
     public function autoCalculateAwards($notifyEvent = true){
-                        
+                                
         // If it doesn't have any criteria then nothing for it to do
         if (!$this->getCriteria()) return false;
 
@@ -1188,8 +1188,11 @@ class UserUnit extends \GT\Unit {
                 $possibleAwardArray[] = $possibleAward;
             }
         }
-               
-        if (!$possibleAwardArray) return false;
+                       
+        if (!$possibleAwardArray){
+            \gt_debug("Error: Could not calculate unit award, as no awards in the grading structure with point ranges > 0");
+            return false;
+        }
 
         $Sorter = new \GT\Sorter();
         $Sorter->sortUnitValues($possibleAwardArray, 'asc');
@@ -1206,9 +1209,12 @@ class UserUnit extends \GT\Unit {
             $criterionGradingStructure = $criterion->getGradingStructure();
             $criteriaMaxPointArray[$criterion->getID()] = $criterionGradingStructure->getMaxPoints();
         }
-                
+                        
         // If none have a max points of the same as the parent, we cannot proceed        
-        if (!in_array($maxPoints, $criteriaMaxPointArray)) return false;
+        if (!in_array($maxPoints, $criteriaMaxPointArray)){
+            \gt_debug("Error: Grading structure points mismatch - e.g. Criteria are Achieved Only (1.0) but Unit can be Pass (1.0), Merit (2.0), Distinction (3.0)");
+            return false;
+        }
 
         // Now loop through the top level criteria again and see if they are all met
         // And if they are, get the point score so we can work out the average
@@ -1278,6 +1284,8 @@ class UserUnit extends \GT\Unit {
             }
             
         }
+        
+        \gt_debug("Criteria met: {$cntMet}/{$cnt}");
                         
         // Only auto calculate an award if they are all met
         if ($cntMet === $cnt)

@@ -52,6 +52,9 @@ $User = new \GT\User($USER->id);
 // If action not defined exit. Don't use reuired_param as the error message will mess up our ajax call
 if (!$action) exit;
 
+\gt_debug("Called get.php: " . print_r($_POST, true));
+
+
 // Check which action we're doing
 switch ($action)
 {
@@ -432,6 +435,7 @@ switch ($action)
     case 'get_refreshed_predicted_grades':
         
         $result = array();
+        
         
         $qualID = $params['qualID'];
         $Qualification = new \GT\Qualification\UserQualification($qualID);

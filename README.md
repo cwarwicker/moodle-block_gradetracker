@@ -1,4 +1,4 @@
-# Grade Tracker Plugin (v1.1.4)
+# Grade Tracker Plugin (v1.2.0)
 
 This plugin provides you with the Grade Tracker block, which can be used to track students' progress across a wide range of qualification types, from qualification level, down to criteria level.
 

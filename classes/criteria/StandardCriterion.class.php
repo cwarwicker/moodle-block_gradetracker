@@ -322,7 +322,7 @@ class StandardCriterion extends \GT\Criterion {
                     }
                     
                     // Info popup
-                    $output .= "<img class='gt_edit_info_icon' src='{$CFG->wwwroot}/blocks/gradetracker/pix/icons/info_rhombus' alt='".get_string('info', 'block_gradetracker')."' sID='{$this->student->id}' qID='{$this->qualID}' uID='{$this->unitID}' cID='{$this->id}' cName='".\gt_html($this->name)."' />";
+                    $output .= "<img class='gt_edit_info_icon' src='{$CFG->wwwroot}/blocks/gradetracker/pix/icons/info_rhombus.png' alt='".get_string('info', 'block_gradetracker')."' sID='{$this->student->id}' qID='{$this->qualID}' uID='{$this->unitID}' cID='{$this->id}' cName='".\gt_html($this->name)."' />";
                     
                 }
                 else
@@ -382,7 +382,7 @@ class StandardCriterion extends \GT\Criterion {
                 }
                 
                 // Info popup
-                $output .= "<br><img class='gt_edit_info_icon' src='{$CFG->wwwroot}/blocks/gradetracker/pix/icons/info_rhombus' alt='".get_string('info', 'block_gradetracker')."' sID='{$this->student->id}' qID='{$this->qualID}' uID='{$this->unitID}' cID='{$this->id}' cName='".\gt_html($this->name)."' />";
+                $output .= "<br><img class='gt_edit_info_icon' src='{$CFG->wwwroot}/blocks/gradetracker/pix/icons/info_rhombus.png' alt='".get_string('info', 'block_gradetracker')."' sID='{$this->student->id}' qID='{$this->qualID}' uID='{$this->unitID}' cID='{$this->id}' cName='".\gt_html($this->name)."' />";
 
             }
 

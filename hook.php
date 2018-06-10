@@ -23,6 +23,7 @@ function gt_mod_hook(&$mform, $cm = false){
     }
     
     // Bring javascript in
+    $PAGE->requires->jquery();
     $PAGE->requires->js( '/blocks/gradetracker/js/mod.js', true );
     $PAGE->requires->js_init_call("gt_mod_hook_bindings", null, true);
         

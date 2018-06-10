@@ -874,32 +874,7 @@ class UserQualification extends \GT\Qualification {
         
     }
     
-    
-//    public function calculateValueAdded(){
-//        
-//        if (!$this->student){
-//            \gt_debug("Error: No student");
-//            return false;
-//        }
-//        
-//        // Get the student's Final or Average award
-//        $award = $this->getUserPredictedOrFinalAward();
-//        if (!$award){
-//            \gt_debug("No Final or Average award");
-//            return false;
-//        }
-//        
-//        // Now get either the Aspirational grade or the Target grade, depending on which they have
-//        $grade = $this->student->getUserGrade('aspirational', array('qualid' => $this->id), false, true);
-//        \gt_pn("asp:");
-//        \gt_pn($grade);
-//        
-//        
-//        
-//        
-//        
-//    }
-    
+
     
     /**
      * Calculate the student's predicted awards for this qual
@@ -1275,11 +1250,11 @@ class UserQualification extends \GT\Qualification {
                 
             }
             
-            \gt_debug("Total units awarded: {$totalUnitsAwarded}");
+            \gt_debug("Total calculable units awarded: {$totalUnitsAwarded}");
             \gt_debug("Unit award points array: " . print_r($pointsArray, true));
             
             // Average award
-            if($totalUnitsAwarded == 0){
+            if ($totalUnitsAwarded == 0){
                 $averagePoints = 0;
             }
             else{
@@ -1291,7 +1266,7 @@ class UserQualification extends \GT\Qualification {
             \gt_debug("Average Award: " . print_r($averageAward, true));
             
             
-            
+            // Compare the total units which have been awarded against the total which could be (are calculable)
             if ($totalUnitsAwarded < $totalAwardableUnits)
             {
                                 
@@ -1393,8 +1368,8 @@ class UserQualification extends \GT\Qualification {
                 $this->deleteUserAward("final");
             }
             
-            // Predicted Average
-            if ($this->isFeatureEnabledByName('predictedgrades') && $totalUnitsAwarded >= $min)
+            // Predicted Average/Final
+            if ($this->isFeatureEnabledByName('predictedgrades') && $totalUnitsWithAward >= $min && $averageAward)
             {
                                 
                 \gt_debug("Saving average/final award");
@@ -1408,7 +1383,7 @@ class UserQualification extends \GT\Qualification {
             }
             elseif($this->isFeatureEnabledByName('predictedgrades'))
             {
-                \gt_debug("No Grades Set, removing Predicted Grades.");
+                \gt_debug("Total units awarded ({$totalUnitsWithAward}) does not meet the minimum no. required ({$min}). So resetting predicted awards.");
                 $blank = new \gt\QualificationAward();
                 
                 $this->saveUserAward($blank, "average");
@@ -1417,8 +1392,10 @@ class UserQualification extends \GT\Qualification {
                 }
             }
             
-            // Predicted Min/Max
-            if ($this->isFeatureEnabledByName('predictedminmaxgrades') && $totalUnitsAwarded >= $min)
+            
+            
+            // Predicted Min & Max
+            if ($this->isFeatureEnabledByName('predictedminmaxgrades') && $totalUnitsWithAward >= $min && $minAward && $maxAward)
             {
                 \gt_debug("Saving min/max awards");
                 $this->saveUserAward($minAward, "min");

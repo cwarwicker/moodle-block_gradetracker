@@ -55,7 +55,7 @@
 
                 <?php endif; ?>
                 
-                <td class="gt_grid_qual_award" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>">
+                <td class="gt_grid_qual_award" id="qual_award_<?= $student->id ?>_<?= $Qualification->getID() ?>" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>">
                     <?php if ($qualAward = $student->getQualAward($Qualification->getID())): ?>
                         <?= $string[$qualAward[0]] ?><br>
                         <?= $qualAward[1]->getName() ?>

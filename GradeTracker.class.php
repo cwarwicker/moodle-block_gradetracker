@@ -41,8 +41,8 @@ class GradeTracker
     const REMOTE_HUB_TOKEN = '6454383ec602e4d8448f7226f361ff31';
     
     const MAJOR_VERSION = 1; // A new major version would be a drastic change to the system, which sees lots of new features added or existing aspects of the system changed in large ways
-    const MINOR_VERSION = 1; // A new minor version would be a small number of new features/changes
-    const PATCH_VERSION = 2; // A patch would be one or more bug fixes
+    const MINOR_VERSION = 2; // A new minor version would be a small number of new features/changes
+    const PATCH_VERSION = 0; // A patch would be one or more bug fixes
         
     /**
      * Construct the block object
@@ -556,7 +556,7 @@ class GradeTracker
             $img = (file_exists($CFG->dirroot . '/blocks/gradetracker/pix/update_'.$remote->update.'.png')) ? $CFG->wwwroot . '/blocks/gradetracker/pix/update_'.$remote->update.'.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/update_general.png';
             $link = (isset($remote->file) && $remote->file != '') ? $remote->file : self::REMOTE_HOST_URL;
             if ($full){
-                return "<span class='gt_update_notification_full_{$remote->update}'>".get_string('newversionavailable', 'block_gradetracker').": {$remote->version} [".\get_string('versionupdatetype_'.$remote->update, 'block_gradetracker')."]</span> <a href='{$link}'><img src='{$OUTPUT->image_url('t/download')}' alt='download' /></a>";
+                return "<span class='gt_update_notification_full_{$remote->update}'>".get_string('newversionavailable', 'block_gradetracker').": {$remote->version} [".\get_string('versionupdatetype_'.$remote->update, 'block_gradetracker')."]</span> <a href='{$link}'><img src='".\gt_image_url('t/download')."' alt='download' /></a>";
             } else {
                 return "&nbsp;&nbsp;&nbsp;&nbsp;<span class='gt_update_notification'><a href='{$link}'><img src='{$img}' alt='update' title='".get_string('newversionavailable', 'block_gradetracker').": {$remote->version} [".\get_string('versionupdatetype_'.$remote->update, 'block_gradetracker')."]' /></a></span>";
             }
@@ -1490,7 +1490,7 @@ class GradeTracker
                 print_error('invalidcourse', 'block_gradetracker');
             }
 
-            // Check if the user is on this course, otherwise they shouldn't be able to edit anything
+            // Check if the user is on this course, otherwise they shouldn't be able to edit anything            
             if (!$User->isOnCourse($id, "STAFF") && !$User->hasCapability('block/gradetracker:edit_all_courses')){
                 print_error('invalidaccess', 'block_gradetracker');
             }

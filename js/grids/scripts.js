@@ -1402,7 +1402,7 @@ function applyAwardUpdates(result, sID, qID, uID){
     
     
     // Refresh Predicted Grades
-    refreshPredictedGrades();  
+    refreshPredictedGrades(qID, sID);  
     
     
 }

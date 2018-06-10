@@ -281,6 +281,11 @@ class User {
             
         }
         
+        $course = get_course($courseID);
+        if (!$course){
+            return false;
+        }
+        
         $params = $shortnames;
         $params[] = CONTEXT_COURSE;
         $params[] = $this->id;
@@ -293,10 +298,65 @@ class User {
                                       INNER JOIN {role} r ON r.id = ra.roleid
                                       WHERE r.shortname IN ({$in}) AND x.contextlevel = ? AND ra.userid = ? AND c.id = ?", $params);
                                     
-        return ($check) ? true : false;
+        $result = ($check) ? true : false;
+        
+        // If they are not on the course and we are looking for staff, check to see if they have a category enrolment with any of those roles
+        if (!$result && $role == "STAFF"){
+            $result = $this->isOnCategory($course->category);
+        }
+        
+                                      
+        return $result;
         
     }
     
+    /**
+     * Check if the staff member is enrolled at the category level instead
+     * @global \GT\type $DB
+     * @global \GT\type $GT
+     * @param type $catID
+     * @return boolean
+     */
+    private function isOnCategory($catID){
+        
+        global $DB, $GT;
+        
+        $shortnames = $GT->getStaffRoles();
+        $in = \gt_create_sql_placeholders($shortnames);
+        
+        $category = $DB->get_record("course_categories", array("id" => $catID));
+        if (!$category){
+            return false;
+        }
+        
+        $params = $shortnames;
+        $params[] = CONTEXT_COURSECAT;
+        $params[] = $this->id;
+        $params[] = $catID;
+        
+        $check = $DB->get_record_sql("SELECT cc.id
+                                      FROM {course_categories} cc
+                                      INNER JOIN {context} x ON x.instanceid = cc.id
+                                      INNER JOIN {role_assignments} ra ON ra.contextid = x.id
+                                      INNER JOIN {role} r ON r.id = ra.roleid
+                                      WHERE r.shortname IN ({$in}) AND x.contextlevel = ? AND ra.userid = ? AND cc.id = ?", $params);
+                                      
+        
+        $result = ($check) ? true : false;
+        
+        // If not and it has a parent, keep going up
+        if (!$result && $category->parent > 0){
+            return $this->isOnCategory($category->parent);
+        }
+                                      
+        return $result;
+        
+        
+    }
+
+
+
+
     /**
      * Get the user's courses for either STUDENT or STAFF
      * @param type $role
