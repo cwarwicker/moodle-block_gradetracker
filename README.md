@@ -17,7 +17,7 @@ Features
 Requirements
 ------------
 - PHP 5.6 or higher
-- Moodle 3.1 or higher
+- Moodle 3.1, 3.2 or 3.3
 - block_bc_dashboard installed
 
 Installation
