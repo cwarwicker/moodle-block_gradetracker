@@ -611,7 +611,7 @@ class GradeTracker
         $return = array();
         foreach($cats as $catID)
         {
-            $return[$catID] = \coursecat::get($catID)->name;
+            $return[$catID] = \core_course_category::get($catID)->name;
         }
         
         // Order by name
@@ -1011,7 +1011,7 @@ class GradeTracker
         
         elseif ($section == 'reporting')
         {
-            $TPL->set("categories", \coursecat::make_categories_list());
+            $TPL->set("categories", \core_course_category::make_categories_list());
             $TPL->set("reportingCats", $this->getReportingCategories());
             $TPL->set("structures", \GT\QualificationStructure::getAllStructures());
         }
@@ -1474,7 +1474,7 @@ class GradeTracker
         
         elseif ($section == 'search')
         {
-            $TPL->set("categories", \coursecat::make_categories_list());
+            $TPL->set("categories", \core_course_category::make_categories_list());
         }
         
         elseif ($section == 'my')
@@ -4480,7 +4480,7 @@ class GradeTracker
     public function loadJavascript( $external = false )
     {
         
-        global $CFG, $PAGE;
+        global $PAGE;
         
         $output = "";
                 
@@ -4490,7 +4490,6 @@ class GradeTracker
             '/blocks/gradetracker/js/lib/jquery-taphold/taphold.js',
             '/blocks/gradetracker/js/lib/jquery-slimmenu/jquery.slimmenu.min.js',
             '/blocks/gradetracker/js/lib/jquery-bc-popup/jquery-bc-popup.js',
-//            '/blocks/gradetracker/js/lib/jquery-bc-popup/jquery.easing.min.js', # Shouldn't need this, as jQuery UI included
             '/blocks/gradetracker/js/lib/jquery-bc-notify/jquery-bc-notify.js',
             '/blocks/gradetracker/js/lib/tablesorter/jquery.tablesorter.js',
             '/blocks/gradetracker/js/lib/misc/fw.js',
@@ -4499,24 +4498,23 @@ class GradeTracker
         );
         
         
-        
-        // jQuery
-        $PAGE->requires->jquery();
-        $PAGE->requires->jquery_plugin('ui');
-               
+
         
         // If loaded from external, we want to echo out these with script tags, otherwise use the Moodle requires->js
-        foreach($scripts as $script)
-        {
-            if ($external)
-            {
-                $output .= "<script src='{$script}' type='text/javascript'></script>";
-            }
-            else
-            {
-                $PAGE->requires->js( $script );
-            }
-        }
+//        foreach($scripts as $script)
+//        {
+//            if ($external)
+//            {
+//                $output .= "<script src='{$script}' type='text/javascript'></script>";
+//            }
+//            else
+//            {
+//                $PAGE->requires->js( $script );
+//            }
+//        }
+
+
+        $PAGE->requires->js_call_amd('block_gradetracker/scripts', 'init');
         
                 
         return $output;        

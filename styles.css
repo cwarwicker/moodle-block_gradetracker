@@ -3830,6 +3830,7 @@ table.gt_report_config_table_narrow td
 table.gt_report_config_table td select,
 table.gt_report_config_table_narrow td select
 {
+    height: 80px;
     max-height: 80px;
 }
 

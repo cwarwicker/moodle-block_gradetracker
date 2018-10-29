@@ -25,7 +25,6 @@
 
 require_once '../../config.php';
 require_once $CFG->dirroot . '/lib/filelib.php';
-require_once $CFG->dirroot.'/lib/coursecatlib.php';
 require_once $CFG->dirroot . '/blocks/gradetracker/lib.php';
 
 // Need to be logged in to view this page
@@ -99,7 +98,6 @@ if (file_exists($CFG->dirroot . '/blocks/gradetracker/js/config/'.$view.'/'.$sec
 
 $GT->loadJavascript();
 $GT->loadCSS();
-$PAGE->requires->js_init_call("gt_bindings", null, true);
 
 // If course is set, put that into breadcrumb
 $PAGE->navbar->add( $GT->getPluginTitle(), null);
@@ -155,14 +153,6 @@ $TPL->set("GT", $GT)
     ->set("User", $User);
 $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/config.html' );
 $TPL->display();
-
-
-// test event
-//$event = \block_gradetracker\event\my_event::create( array(
-//    'objectid' => 1,
-//    'context' => context_block::instance(1)
-//));
-//$event->trigger();
 
 
 echo $OUTPUT->footer();

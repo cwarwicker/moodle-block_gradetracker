@@ -92,7 +92,6 @@ class GUI extends \GT\Qualification {
     {
         
         global $CFG;
-        require_once $CFG->dirroot.'/lib/coursecatlib.php';
 
         // Load the builds based on the structure selected
         $structureID = $this->getStructureID();
@@ -111,7 +110,7 @@ class GUI extends \GT\Qualification {
         $this->tpl->set("structures", \GT\QualificationStructure::getAllStructures());
         $this->tpl->set("allLevels", \GT\Level::getAllLevels());
         $this->tpl->set("allSubTypes", \GT\SubType::getAllSubTypes());
-        $this->tpl->set("allCats", \coursecat::make_categories_list());
+        $this->tpl->set("allCats", \core_course_category::make_categories_list());
         
         // Load units and courses
         $this->getUnits();
