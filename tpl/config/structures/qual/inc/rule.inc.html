@@ -51,9 +51,11 @@
                     <?php $ruleStepNum = $numRuleSteps[$ruleSetNum][$ruleNum] ?>
                     <?= $rule->getTemplateContent('config/structures/qual/inc/rulestep.inc.html', array('RS' => $ruleSetNum, 'R' => $ruleNum, 'S' => $ruleStepNum, 'step' => $step)) ?>
                     <script>
-                        $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>').removeClass('gt_hidden').addClass('gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>');
-                        $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_condition').removeClass('gt_hidden').addClass('gt_rule_step_condition_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
-                        $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_action').removeClass('gt_hidden').addClass('gt_rule_step_action_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
+                        $(document).ready( function(){
+                            $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>').removeClass('gt_hidden').addClass('gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>');
+                            $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_condition').removeClass('gt_hidden').addClass('gt_rule_step_condition_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
+                            $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_action').removeClass('gt_hidden').addClass('gt_rule_step_action_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
+                        } );
                     </script>
                 <?php endforeach; ?>
             <?php endif; ?>
