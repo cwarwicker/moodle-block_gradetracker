@@ -675,6 +675,7 @@ $string['constant'] = 'Constant';
 $string['context'] = 'Context';
 $string['conversionchart'] = 'Conversion Chart';
 $string['core'] = 'Core';
+$string['couldnotupdate'] = 'Unable to update grid. Your Moodle session may have timed out, please refresh the page and see if you need to login again';
 $string['course'] = 'Course';
 $string['courses'] = 'Courses';
 $string['coursecats'] = 'Course Categories';
