@@ -1,5 +1,5 @@
 define(['jquery', 'jqueryui'], function($, ui) {
-       
+
 
     var client = {};
     var GT = {};
@@ -651,151 +651,187 @@ define(['jquery', 'jqueryui'], function($, ui) {
     };
 
 
+    GT.ajax = function(url, params, callback, callBefore){
 
-    GT.ajax = function( url, params, el, onSuccess ){
+        // Code to run before the ajax request
+        if (callBefore){
+            callBefore();
+        }
 
-        var startTime = false;
-        var max = $(el).attr('max');
-
-        // Button pressed
-        var btn = $('#'+params.params.btn);
-
-        // Reset progress to 0
-        $(el).val(0);
-        $('#gt_progress_errors').remove();
-
-        var req = $.ajax({
-            xhr: function() {
-
-                var xhr = new window.XMLHttpRequest();
-                xhr.addEventListener("progress", function(evt){
-
-                    var progress = $(el);
-                    var txt = xhr.responseText;
-
-                    if (txt.length)
-                    {
-
-                        // Check that it's a valid response and not an error
-                        if (txt.charAt(0) !== '{' || txt.charAt(txt.length-1) !== '}'){
-
-                            // Error box
-                            var err = $('#gt_progress_errors');
-                            if (err.length == 0){
-                                $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
-                                err = $('#gt_progress_errors');
-                            }
-
-                            err.html( txt );
-                            err.show();
-
-                            $('#gt_report_time_left').text('');
-                            btn.prop('disabled', false);
-                            btn.val( M.util.get_string('run', 'block_gradetracker') );
-
-                            req.abort();
-
-                            return false;
-
-                        }
-
-                        var matches = txt.match(/\{.*?\}/g);
-                        var m = matches.pop();
-
-                        if (m.length > 0){
-
-                            var response = $.parseJSON( m );
-
-                            // Estimated time left
-                            if (startTime === false){
-                                startTime = response.time;
-                            } else if (response.progress < 100){
-                                var progressLeft = max - response.progress;
-                                var timesLeft = progressLeft / response.progress;
-                                var time = response.time - startTime;
-                                var remaining = Math.round(time * timesLeft);
-                                if (remaining > 0){
-                                    $('#gt_report_time_left').text(remaining + ' ' + M.util.get_string('sexleft', 'block_gradetracker'));
-                                }
-                            }
-
-                            if (response.result == 'pending'){
-                                progress.val( response.progress );
-                            }
-
-                        }
-
-                    }
-
-                }, false);
-
-                return xhr;
-
-            },
-            url: url,
+        $.ajax({
             type: "POST",
+            url: url,
             data: params,
-            dataType: "text",
-            success: function(data){
-
-                var matches = data.match(/\{.*?\}/g);
-                if (matches != null && matches.length > 0){
-                    var m = matches.pop();
-                    if (m.length > 0){
-                        data = $.parseJSON(m);
-                    }
-                }
-
-                if (data.length == 0 || data.result == false){
-
-                    // Error box
-                    var err = $('#gt_progress_errors');
-                    if (err.length == 0){
-                        $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
-                        err = $('#gt_progress_errors');
-                    }
-
-                    var error = (data.error !== undefined) ? data.error : 'error';
-
-                    err.html( error );
-                    err.show();
-
-                    btn.prop('disabled', false);
-                    btn.val( M.util.get_string('run', 'block_gradetracker') );
-
-                    return false;
-
-                }
-
-                $(el).val(max);
-                $('#gt_report_time_left').text('');
-                $('#gt_progress_errors').hide();
-
-                onSuccess( data );
-
+            error: function(d){
+                GT.ajax_error(d.responseText);
+                client.log('Error: ' + d);
             },
-            error: function(data){
+            success: function(d){
 
-                // Error box
-                var err = $('#gt_progress_errors');
-                if (err.length == 0){
-                    $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
-                    err = $('#gt_progress_errors');
+                // Run specified callback after the ajax request
+                if (callback){
+                    callback(d);
                 }
 
-                err.html( data );
-                err.show();
-
-                $('#gt_report_time_left').text('');
-                btn.prop('disabled', false);
-                btn.val( M.util.get_string('run', 'block_gradetracker') );
-
-                return false;
+                // Run default callback
+                // todo
 
             }
         });
 
     };
+
+    // AJAX error function
+    GT.ajax_error = function(msg){
+        client.log('['+new Date() + '] ' + msg);
+        alert('['+new Date() + '] ' + msg);
+    };
+
+    // Old AJAX method which was hard-coded to some report stuff
+    // GT.ajax = function( url, params, el, onSuccess ){
+    //
+    //     var startTime = false;
+    //     var max = $(el).attr('max');
+    //
+    //     // Button pressed
+    //     var btn = $('#'+params.params.btn);
+    //
+    //     // Reset progress to 0
+    //     $(el).val(0);
+    //     $('#gt_progress_errors').remove();
+    //
+    //     var req = $.ajax({
+    //         xhr: function() {
+    //
+    //             var xhr = new window.XMLHttpRequest();
+    //             xhr.addEventListener("progress", function(evt){
+    //
+    //                 var progress = $(el);
+    //                 var txt = xhr.responseText;
+    //
+    //                 if (txt.length)
+    //                 {
+    //
+    //                     // Check that it's a valid response and not an error
+    //                     if (txt.charAt(0) !== '{' || txt.charAt(txt.length-1) !== '}'){
+    //
+    //                         // Error box
+    //                         var err = $('#gt_progress_errors');
+    //                         if (err.length == 0){
+    //                             $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
+    //                             err = $('#gt_progress_errors');
+    //                         }
+    //
+    //                         err.html( txt );
+    //                         err.show();
+    //
+    //                         $('#gt_report_time_left').text('');
+    //                         btn.prop('disabled', false);
+    //                         btn.val( M.util.get_string('run', 'block_gradetracker') );
+    //
+    //                         req.abort();
+    //
+    //                         return false;
+    //
+    //                     }
+    //
+    //                     var matches = txt.match(/\{.*?\}/g);
+    //                     var m = matches.pop();
+    //
+    //                     if (m.length > 0){
+    //
+    //                         var response = $.parseJSON( m );
+    //
+    //                         // Estimated time left
+    //                         if (startTime === false){
+    //                             startTime = response.time;
+    //                         } else if (response.progress < 100){
+    //                             var progressLeft = max - response.progress;
+    //                             var timesLeft = progressLeft / response.progress;
+    //                             var time = response.time - startTime;
+    //                             var remaining = Math.round(time * timesLeft);
+    //                             if (remaining > 0){
+    //                                 $('#gt_report_time_left').text(remaining + ' ' + M.util.get_string('sexleft', 'block_gradetracker'));
+    //                             }
+    //                         }
+    //
+    //                         if (response.result == 'pending'){
+    //                             progress.val( response.progress );
+    //                         }
+    //
+    //                     }
+    //
+    //                 }
+    //
+    //             }, false);
+    //
+    //             return xhr;
+    //
+    //         },
+    //         url: url,
+    //         type: "POST",
+    //         data: params,
+    //         dataType: "text",
+    //         success: function(data){
+    //
+    //             var matches = data.match(/\{.*?\}/g);
+    //             if (matches != null && matches.length > 0){
+    //                 var m = matches.pop();
+    //                 if (m.length > 0){
+    //                     data = $.parseJSON(m);
+    //                 }
+    //             }
+    //
+    //             if (data.length == 0 || data.result == false){
+    //
+    //                 // Error box
+    //                 var err = $('#gt_progress_errors');
+    //                 if (err.length == 0){
+    //                     $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
+    //                     err = $('#gt_progress_errors');
+    //                 }
+    //
+    //                 var error = (data.error !== undefined) ? data.error : 'error';
+    //
+    //                 err.html( error );
+    //                 err.show();
+    //
+    //                 btn.prop('disabled', false);
+    //                 btn.val( M.util.get_string('run', 'block_gradetracker') );
+    //
+    //                 return false;
+    //
+    //             }
+    //
+    //             $(el).val(max);
+    //             $('#gt_report_time_left').text('');
+    //             $('#gt_progress_errors').hide();
+    //
+    //             onSuccess( data );
+    //
+    //         },
+    //         error: function(data){
+    //
+    //             // Error box
+    //             var err = $('#gt_progress_errors');
+    //             if (err.length == 0){
+    //                 $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
+    //                 err = $('#gt_progress_errors');
+    //             }
+    //
+    //             err.html( data );
+    //             err.show();
+    //
+    //             $('#gt_report_time_left').text('');
+    //             btn.prop('disabled', false);
+    //             btn.val( M.util.get_string('run', 'block_gradetracker') );
+    //
+    //             return false;
+    //
+    //         }
+    //     });
+    //
+    // };
 
 
 
@@ -812,6 +848,8 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
     };
 
+    // Set GT into global space
+    window.GT = GT;
 
 
 
@@ -819,7 +857,6 @@ define(['jquery', 'jqueryui'], function($, ui) {
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
     }
-
 
     client.init = function(){
 
@@ -830,9 +867,9 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
     };
 
-    window.GT = GT;
+
 
     return client;
-    
-    
+
+
 });

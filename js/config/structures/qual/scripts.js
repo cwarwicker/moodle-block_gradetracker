@@ -4,31 +4,39 @@ var ruleComparisons = new Array();
 var customFormFields = 0;
 
 
+function test_function(){
+
+  alert('GT Value: ' + GT.test);
+
+}
+
 /**
  * Bind relevant elements for the qual structure form page
  * @returns {undefined}
  */
 function structures_qual_bindings()
 {
- 
+
     $(document).ready( function(){
-    
+
+        test_function();
+
         // Get rule events
         $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_rule_events'}, function(data){
             ruleEvents = $.parseJSON(data);
         });
-                
+
         // Get rule comparisons
         $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_rule_comparisons'}, function(data){
             ruleComparisons = $.parseJSON(data);
         });
-        
-        
-    
+
+
+
         // Level & feature click
         $('.gt_level_box, .gt_feature_box').unbind('click');
         $('.gt_level_box, .gt_feature_box').bind('click', function(){
-            
+
             var box = $(this).children('input[type="checkbox"]');
             box.prop('checked', !box.prop('checked'));
             if (box.prop('checked') === true)
@@ -41,27 +49,27 @@ function structures_qual_bindings()
                 $(this).removeClass('ticked');
                 $(this).children('img.gt_ticked').css('display', 'none');
             }
-            
+
         });
-        
+
         // Stop clicks into the input calling the parent click
         $('.gt_level_box input').click( function(e){
             e.stopPropagation();
         } );
-        
-        
-        
+
+
+
         // Icon upload preview
         $('#gt_structure_icon_upload').change( function(){
             gtReadFileURL(this, '.gt_image_preview');
         } );
-        
-        
-        
-        // Add new form field        
+
+
+
+        // Add new form field
         $('#gt_add_structure_form_field').unbind('click');
         $('#gt_add_structure_form_field').bind('click', function(e){
-            
+
             // This is defined in new.html as a count of the elements currently loaded into the structure
             customFormFields++;
             var row = "";
@@ -73,24 +81,24 @@ function structures_qual_bindings()
                 row += "<td><input type='checkbox' name='custom_form_fields_req["+customFormFields+"]' value='1' /></td>";
                 row += "<td><a href='#' onclick='$(\"#gt_custom_form_field_row_"+customFormFields+"\").remove();return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='remove' /></a></td>";
             row += "</tr>";
-            
+
             $('#gt_custom_form_fields').append(row);
-            
+
             e.preventDefault();
-            
+
         });
-        
-        
-        
+
+
+
         // Add new rule
         $('#gt_add_structure_rule').unbind('click');
         $('#gt_add_structure_rule').bind('click', function(e){
-            
+
             // This is defined in new.html as a count of the rules currently loaded into the structure
             numRules++;
-            
+
             var row = "";
-            
+
             row += "<tr id='gt_structure_rule_row_"+numRules+"' class='gt_rule_row gt_rule_row_"+numRules+"'>";
                 row += "<td><input type='text' name='rule_names["+numRules+"]' /></td>";
                 row += "<td><select name='rule_events["+numRules+"]'>";
@@ -117,84 +125,84 @@ function structures_qual_bindings()
                     row += "</tr>";
                 row += "</table>";
             row += "</td></tr>";
-            
-            
+
+
             $('#gt_structure_rules').append(row);
             e.preventDefault();
-            
+
         });
-        
-        
+
+
         // Update condition values when change things
         $('#gt_condition_dialog select').unbind('change');
         $('#gt_condition_dialog select').bind('change', function(){
-            
+
             var ruleNum = $('#conditionHiddenRuleNum').val();
             var stepNum = $('#conditionHiddenStepNum').val();
             var condNum = $('#conditionHiddenConditionNum').val();
             var span = $('#conditionHiddenSpan').val();
-            
+
             updateConditionValues(ruleNum, stepNum, condNum, span);
-            
+
         });
-        
+
         // Update action values when change things
         $('#gt_action_dialog select').unbind('change');
         $('#gt_action_dialog select').bind('change', function(){
-            
+
             var ruleNum = $('#actionHiddenRuleNum').val();
             var stepNum = $('#actionHiddenStepNum').val();
             var condNum = $('#actionHiddenConditionNum').val();
-            
+
             updateActionValues(ruleNum, stepNum, condNum);
-            
+
         });
-        
+
         // Condition text input - might want to just type
         $('#gt_condition_dialog_value').unbind('keyup');
         $('#gt_condition_dialog_value').bind('keyup', function(){
-            
+
             $('#gt_condition_dialog_save').prop('disabled', false);
-            
+
         });
-        
+
         // Ok button
         $('#gt_condition_dialog_save').unbind('click');
         $('#gt_condition_dialog_save').bind('click', function(){
-            
+
             var ruleNum = $('#conditionHiddenRuleNum').val();
             var stepNum = $('#conditionHiddenStepNum').val();
             var condNum = $('#conditionHiddenConditionNum').val();
             var span = $('#conditionHiddenSpan').val();
             var val = $('#gt_condition_dialog_value').val();
-            
+
             $('#gt_rule_'+ruleNum+'_step_'+stepNum+'_condition_'+condNum+'_'+span+'_input').val(val);
             $('#gt_rule_'+ruleNum+'_step_'+stepNum+'_'+span+'_'+condNum).text(val);
-            
+
             $('#gt_condition_dialog').dialog('close');
-            
+
         });
-        
+
         // action Ok button
         $('#gt_action_dialog_save').unbind('click');
         $('#gt_action_dialog_save').bind('click', function(){
-            
+
             var ruleNum = $('#actionHiddenRuleNum').val();
             var stepNum = $('#actionHiddenStepNum').val();
             var condNum = $('#actionHiddenActionNum').val();
             var val = $('#gt_action_dialog_value').val();
-            
+
             $('#gt_rule_'+ruleNum+'_step_'+stepNum+'_action_'+condNum+'_input').val(val);
             $('#gt_rule_'+ruleNum+'_step_'+stepNum+'_'+condNum).text(val);
-            
+
             $('#gt_action_dialog').dialog('close');
-            
+
         });
-                
+
         $('.gt_tooltip').tooltip();
-        
+
     });
-    
+
 }
 
 
@@ -221,7 +229,7 @@ function addRuleStep(ruleNum)
 
     var row = "";
     row += "<tr id='gt_structure_rule_step_row_"+ruleNum+"_"+step+"' class='gt_rule_step_row gt_rule_row_"+ruleNum+"'>";
-        
+
         // Step Numbers
         row += "<td><select class='gt_rule_step_select' name='rule_steps["+ruleNum+"]["+step+"]'>";
             for (var i = 1; i <= step; i++)
@@ -230,27 +238,27 @@ function addRuleStep(ruleNum)
                 row += "<option value='"+i+"' "+sel+">"+i+"</option>";
             }
         row += "</select></td>";
-        
+
         // Conditions
         row += "<td id='gt_structure_rule_"+ruleNum+"_step_"+step+"_conditions'>";
             row += "<a href='#' onclick='addNewRuleStepConditionSpans("+ruleNum+", "+step+");return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/add.png' alt='add' /></a>";
             row += getRuleStepConditionSpans(ruleNum, step);
         row += "</td>";
-        
+
         // Actions
         row += "<td id='gt_structure_rule_"+ruleNum+"_step_"+step+"_actions'>";
             row += "<a href='#' onclick='addNewRuleStepActionSpans("+ruleNum+", "+step+");return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/add.png' alt='add' /></a>";
             row += getRuleStepActionSpans(ruleNum, step);
         row += "</td>";
-        
-        
+
+
         row += "<td><a href='#' onclick='removeRuleStep("+ruleNum+", "+step+");return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='remove' /></a></td>";
-        
-        
+
+
     row += "</tr>";
 
     $('#gt_structure_rule_table_'+ruleNum).append(row);
-    
+
     updateStepSelectMenus(ruleNum);
     applyConditionBindings();
 
@@ -262,29 +270,29 @@ function addRuleStep(ruleNum)
  */
 function applyConditionBindings()
 {
-    
+
     // Do the onBlur for the comparison dropdown. Cannot do it on select menu, weirdest Moodle thing i've
-    // seen so far, totally fucks up the whole javascript caching to have anything on that one select menu    
+    // seen so far, totally fucks up the whole javascript caching to have anything on that one select menu
     $('.gt_rule_step_select_cmp').each( function(){
-        
+
         var span = $(this).parent('span');
         var spanID = $(span).attr('id');
         var split = spanID.split("_");
         var ruleNum = split[2];
         var stepNum = split[4];
         var cndNum = split[6];
-        
+
         $(this).unbind('blur');
         $(this).bind('blur', function(){
-            
+
             $('#gt_rule_'+ruleNum+'_step_'+stepNum+'_cmp_'+cndNum).text( $(this).val() );
             toggleStepComparisonEditing(ruleNum, stepNum, cndNum);
-            
+
         });
-        
-        
+
+
     } );
-    
+
 }
 
 /**
@@ -329,10 +337,10 @@ function addNewRuleStepActionSpans(ruleNum, step)
  */
 function getRuleStepActionSpans(ruleNum, step)
 {
-    
+
     // Count existing actions in this step
     var lastAction = $('.gt_rule_'+ruleNum+'_step_'+step+'_action').last();
-    
+
     if ($(lastAction).length > 0)
     {
         var cnt = parseInt($(lastAction).attr('actionNum')) + 1;
@@ -341,16 +349,16 @@ function getRuleStepActionSpans(ruleNum, step)
     {
         var cnt = 1;
     }
-    
+
     // Build spans
     var row = "<span id='gt_rule_"+ruleNum+"_step_"+step+"_action_"+cnt+"'><br>";
         row += "<span id='gt_rule_"+ruleNum+"_step_"+step+"_"+cnt+"' actionNum='"+cnt+"' class='gt_rule_condition_action gt_rule_"+ruleNum+"_step_"+step+"_action' onclick='toggleRuleStepActionPopUp("+ruleNum+", "+step+", "+cnt+");return false;'>action</span> ";
         row += " <a href='#' onclick='removeRuleStepAction("+ruleNum+", "+step+", "+cnt+");return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='delete' style='width:12px;' /></a>";
         row += "<input type='hidden' name='rule_actions["+ruleNum+"]["+step+"]["+cnt+"]' id='gt_rule_"+ruleNum+"_step_"+step+"_action_"+cnt+"_input' value='' />";
     row += "<br></span>";
-    
+
     return row;
-    
+
 }
 
 /**
@@ -371,19 +379,19 @@ function getRuleStepConditionSpans(ruleNum, step)
     {
         var cnt = 1;
     }
-        
+
     var row = "<span id='gt_rule_"+ruleNum+"_step_"+step+"_condition_"+cnt+"'><br>";
-    
+
     row += "<span id='gt_rule_"+ruleNum+"_step_"+step+"_v1_"+cnt+"' conditionNum='"+cnt+"' class='gt_rule_condition_value gt_rule_"+ruleNum+"_step_"+step+"_condition' onclick='toggleRuleStepPopUp("+ruleNum+", "+step+", "+cnt+", \"v1\");return false;'>value</span> ";
     row += "<span id='gt_rule_"+ruleNum+"_step_"+step+"_cmp_"+cnt+"' class='gt_rule_condition_comparison' onclick='toggleStepComparisonEditing("+ruleNum+", "+step+", "+cnt+");return false;'>comparison</span> <span id='gt_rule_"+ruleNum+"_step_"+step+"_cmp_"+cnt+"_editing' class='gt_rule_step_editing'><select name='rule_conditions["+ruleNum+"]["+step+"]["+cnt+"][cmp]' class='gt_rule_step_select_cmp'><option value=''></option></select></span>";
     row += "<span id='gt_rule_"+ruleNum+"_step_"+step+"_v2_"+cnt+"' class='gt_rule_condition_value_compare' onclick='toggleRuleStepPopUp("+ruleNum+", "+step+", "+cnt+", \"v2\");return false;'>value</span>";
     row += " <a href='#' onclick='removeRuleStepCondition("+ruleNum+", "+step+", "+cnt+");return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='delete' style='width:12px;' /></a>";
-    
+
     row += "<input type='hidden' name='rule_conditions["+ruleNum+"]["+step+"]["+cnt+"][v1]' id='gt_rule_"+ruleNum+"_step_"+step+"_condition_"+cnt+"_v1_input' value='' />";
     row += "<input type='hidden' name='rule_conditions["+ruleNum+"]["+step+"]["+cnt+"][v2]' id='gt_rule_"+ruleNum+"_step_"+step+"_condition_"+cnt+"_v2_input' value='' />";
-    
+
     row += "<br></span>";
-    
+
     return row;
 }
 
@@ -408,32 +416,32 @@ function removeRuleStep(ruleNum, step)
  */
 function toggleRuleStepActionPopUp(ruleNum, step, action)
 {
-    
+
     // Fill the inputs in the popup based on the hidden value for this condition
     var val = $('#gt_rule_'+ruleNum+'_step_'+step+'_action_'+action+'_input').val();
-    
+
     var arr = val.split(ruleOperator);
     var condObj = arr.shift();
-    
+
     var condMethod = arr.pop();
     if (condMethod !== undefined){
-        condMethod = condMethod.split("(")[0]; 
+        condMethod = condMethod.split("(")[0];
     }
-    
+
     var condFilter = arr.join(ruleOperator);
     if (condFilter !== undefined){
-        condFilter = condFilter.split("(")[0]; 
+        condFilter = condFilter.split("(")[0];
     }
- 
+
     // The dialog box
     $('#actionHiddenRuleNum').val(ruleNum);
     $('#actionHiddenStepNum').val(step);
     $('#actionHiddenActionNum').val(action);
     $('#actionHiddenSpan').val('');
-    
+
     // Object input
     $('#gt_action_dialog_obj').val(condObj);
-    
+
     // Clear method options
     $('#gt_action_dialog_method').html('<option value=""></option>')
     if (typeof ruleConditionMethods[condObj] !== "undefined")
@@ -443,13 +451,13 @@ function toggleRuleStepActionPopUp(ruleNum, step, action)
             $('#gt_action_dialog_method').append('<option value="'+i+'" '+sel+'>'+i+'</option>')
         });
     }
-    
+
     // Filter input
     $('#gt_action_dialog_filter').val(condFilter);
-    
+
     // Value input
     $('#gt_action_dialog_value').val(val);
-    
+
     // If object not set, clear prop and filter and disable
     if (condObj === "")
     {
@@ -461,8 +469,8 @@ function toggleRuleStepActionPopUp(ruleNum, step, action)
         $('#gt_action_dialog_method').prop('disabled', false);
         $('#gt_action_dialog_filter').prop('disabled', false);
     }
-    
-    
+
+
     // If object or property not set, disable OK button
     if (condObj === "" || condMethod === "")
     {
@@ -472,11 +480,11 @@ function toggleRuleStepActionPopUp(ruleNum, step, action)
     {
         $('#gt_action_dialog_save').prop('disabled', false);
     }
-    
-        
+
+
     // Display the dialog box
     $('#gt_action_dialog').dialog();
-    
+
 }
 
 /**
@@ -489,24 +497,24 @@ function toggleRuleStepActionPopUp(ruleNum, step, action)
  */
 function toggleRuleStepPopUp(ruleNum, step, condition, span)
 {
- 
+
     // Fill the inputs in the popup based on the hidden value for this condition
     var val = $('#gt_rule_'+ruleNum+'_step_'+step+'_condition_'+condition+'_'+span+'_input').val();
     var arr = val.split(ruleOperator);
     var condObj = arr.shift();
     var condProp = arr.pop();
     var condFilter = arr.join(ruleOperator);
-    condFilter = condFilter.split("(")[0]; 
- 
+    condFilter = condFilter.split("(")[0];
+
     // The dialog box
     $('#conditionHiddenRuleNum').val(ruleNum);
     $('#conditionHiddenStepNum').val(step);
     $('#conditionHiddenConditionNum').val(condition);
     $('#conditionHiddenSpan').val(span);
-    
+
     // Object input
     $('#gt_condition_dialog_obj').val(condObj);
-    
+
     // Clear property options
     $('#gt_condition_dialog_prop').html('<option value=""></option>')
     if (typeof ruleConditionProperties[condObj] !== "undefined")
@@ -516,13 +524,13 @@ function toggleRuleStepPopUp(ruleNum, step, condition, span)
             $('#gt_condition_dialog_prop').append('<option value="'+i+'" '+sel+'>'+i+'</option>')
         });
     }
-    
+
     // Filter input
     $('#gt_condition_dialog_filter').val(condFilter);
-    
+
     // Value input
     $('#gt_condition_dialog_value').val(val);
-    
+
     // If object not set, clear prop and filter and disable
     if (condObj === "")
     {
@@ -534,8 +542,8 @@ function toggleRuleStepPopUp(ruleNum, step, condition, span)
         $('#gt_condition_dialog_prop').prop('disabled', false);
         $('#gt_condition_dialog_filter').prop('disabled', false);
     }
-    
-    
+
+
     // If object or property not set, disable OK button
     if (condObj === "" || condProp === "")
     {
@@ -545,16 +553,16 @@ function toggleRuleStepPopUp(ruleNum, step, condition, span)
     {
         $('#gt_condition_dialog_save').prop('disabled', false);
     }
-    
-    
+
+
     // Show property row and hide method row
     $('#gt_dialog_prop_row').show();
     $('#gt_dialog_method_row').hide();
-    
+
     // Display the dialog box
     $('#gt_condition_dialog').dialog();
-    
-        
+
+
 }
 
 /**
@@ -566,17 +574,17 @@ function toggleRuleStepPopUp(ruleNum, step, condition, span)
  */
 function updateActionValues(ruleNum, step, action)
 {
-    
+
     // Variables
     var str = "";
     var o = $('#gt_action_dialog_obj').val();
     var m = $('#gt_action_dialog_method').val();
     var f = $('#gt_action_dialog_filter').val();
-    
-    
+
+
     // Clear method options
     $('#gt_action_dialog_method').html('<option value=""></option>')
-    
+
     if (typeof ruleConditionMethods[o] !== "undefined")
     {
         $.each(ruleConditionMethods[o], function(k, i){
@@ -584,8 +592,8 @@ function updateActionValues(ruleNum, step, action)
             $('#gt_action_dialog_method').append('<option value="'+i+'" '+sel+'>'+i+'</option>')
         });
     }
-    
-    
+
+
     // If object not set, clear prop and filter and disable
     if (o === "")
     {
@@ -599,8 +607,8 @@ function updateActionValues(ruleNum, step, action)
         $('#gt_action_dialog_method').prop('disabled', false);
         $('#gt_action_dialog_filter').prop('disabled', false);
     }
-    
-    
+
+
     if ( o === "" || m === "" )
     {
         $('#gt_action_dialog_save').prop('disabled', true);
@@ -609,29 +617,29 @@ function updateActionValues(ruleNum, step, action)
     {
         $('#gt_action_dialog_save').prop('disabled', false);
     }
-    
-    
-    
+
+
+
     // Create string input
-    
+
     // Object
     str += o;
-    
+
     // Filter
     if (f !== "")
     {
         str += ruleOperator + f + "()";
     }
-    
+
     // Method
     if (m !== "")
     {
         str += ruleOperator + m + "()";
     }
-    
+
     $('#gt_action_dialog_value').val(str);
-    
-    
+
+
 }
 
 /**
@@ -644,17 +652,17 @@ function updateActionValues(ruleNum, step, action)
  */
 function updateConditionValues(ruleNum, step, condition, span)
 {
-    
+
     // Object
     var str = "";
     var o = $('#gt_condition_dialog_obj').val();
     var p = $('#gt_condition_dialog_prop').val();
     var f = $('#gt_condition_dialog_filter').val();
-    
-    
+
+
     // Clear property options
     $('#gt_condition_dialog_prop').html('<option value=""></option>')
-    
+
     if (typeof ruleConditionProperties[o] !== "undefined")
     {
         $.each(ruleConditionProperties[o], function(k, i){
@@ -662,9 +670,9 @@ function updateConditionValues(ruleNum, step, condition, span)
             $('#gt_condition_dialog_prop').append('<option value="'+i+'" '+sel+'>'+i+'</option>')
         });
     }
-    
-        
-    
+
+
+
     // If object not set, clear prop and filter and disable
     if (o === "")
     {
@@ -681,8 +689,8 @@ function updateConditionValues(ruleNum, step, condition, span)
         $('#gt_condition_dialog_method').prop('disabled', false);
         $('#gt_condition_dialog_filter').prop('disabled', false);
     }
-    
-    
+
+
     // If object or property not set, disable OK button
     if ( o === "" || p === "" )
     {
@@ -692,28 +700,28 @@ function updateConditionValues(ruleNum, step, condition, span)
     {
         $('#gt_condition_dialog_save').prop('disabled', false);
     }
-    
-    
+
+
     // Create string input
-    
+
     // Object
     str += o;
-    
+
     // Filter
     if (f !== "")
     {
         str += ruleOperator + f + "()";
     }
-    
+
     // Property
     if (p !== "")
     {
         str += ruleOperator + p;
     }
-    
+
     $('#gt_condition_dialog_value').val(str);
-    
-    
+
+
 }
 
 
@@ -743,13 +751,13 @@ function removeRuleStepAction(ruleNum, step, action)
  */
 function toggleStepEditing(ruleNum, step, condition, span)
 {
-        
+
     // Toggle this one
     $('#gt_rule_'+ruleNum+'_step_'+step+'_'+span+'_'+condition+'_editing').toggle();
-    
+
     // Hide all other ones
     $('.gt_rule_step_editing:not(#gt_rule_'+ruleNum+'_step_'+step+'_'+span+'_'+condition+'_editing)').hide();
-    
+
 }
 
 /**
@@ -761,14 +769,14 @@ function toggleStepEditing(ruleNum, step, condition, span)
  */
 function toggleStepComparisonEditing(ruleNum, step, condition)
 {
-    
+
     updateComparisonSelectMenus(ruleNum, step, condition);
     $('#gt_rule_'+ruleNum+'_step_'+step+'_cmp_'+condition).toggle();
     $('#gt_rule_'+ruleNum+'_step_'+step+'_cmp_'+condition+'_editing').toggle();
     if ( $('#gt_rule_'+ruleNum+'_step_'+step+'_cmp_'+condition+'_editing').css('display') !== 'none'){
         $('#gt_rule_'+ruleNum+'_step_'+step+'_cmp_'+condition+'_editing select').focus();
     }
-    
+
 }
 
 /**
@@ -778,23 +786,23 @@ function toggleStepComparisonEditing(ruleNum, step, condition)
  */
 function updateStepSelectMenus(ruleid)
 {
-    
+
     var cnt = $('.gt_rule_step_row.gt_rule_row_'+ruleid).length;
     $('.gt_rule_step_row.gt_rule_row_'+ruleid+' select.gt_rule_step_select').each( function(){
-        
+
         var selected = $(this).val();
         $(this).html('');
-        
+
         for (var i = 1; i <= cnt; i++)
         {
             $(this).append('<option value="'+i+'">'+i+'</option>');
         }
-        
+
         // Set selected value back
         $(this).val(selected);
-        
+
     } );
-    
+
 }
 
 /**
@@ -806,17 +814,17 @@ function updateStepSelectMenus(ruleid)
  */
 function updateComparisonSelectMenus(rule, step, condition)
 {
-    
+
     var el = $('#gt_rule_'+rule+'_step_'+step+'_cmp_'+condition+'_editing select.gt_rule_step_select_cmp');
     var val = $(el).val();
-    
+
     $(el).html('');
     $.each(ruleComparisons, function(i, v){
         $(el).append('<option value="'+i+'">'+i+'</option>');
     } );
-    
+
     $(el).val(val);
-    
+
 }
 
 
@@ -829,7 +837,7 @@ function updateComparisonSelectMenus(rule, step, condition)
  */
 function toggleFormFieldOptions(type, num)
 {
-    
+
     if (type == 'SELECT')
     {
         $('#custom_form_fields_options_'+num).show();
@@ -838,7 +846,7 @@ function toggleFormFieldOptions(type, num)
     {
         $('#custom_form_fields_options_'+num).hide();
     }
-    
+
 }
 
 
@@ -886,35 +894,35 @@ function gt_openRules(num){
 
     // Create div inside the form
     if ( $('#gt_popup_rules_' + num).length == 0 ){
-        
+
         // Load template
         var params = {ruleSetNum: num};
-        
+
         $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_rule_set_template', params: params}, function(data){
-            
+
             $('form#gt_qual_structure_form').append(data);
-            
+
             var content = $('#gt_popup_rules_'+num).html();
             var ruleSetName = $('#rule_set_name_'+num).val();
             ruleSetName = gt_html(ruleSetName);
             _gt_openRulesPopUp(num, ruleSetName, content);
-            
+
         });
 
     } else {
- 
+
         var content = $('#gt_popup_rules_'+num).html();
         var ruleSetName = $('#rule_set_name_'+num).val();
         ruleSetName = gt_html(ruleSetName);
         _gt_openRulesPopUp(num, ruleSetName, content);
-    
+
     }
 
 }
 
 
 function _gt_openRulesPopUp(num, ruleSetName, content){
-    
+
     $('#gt_popup_rules_' + num).bcPopUp( {
         title: M.util.get_string('rules', 'block_gradetracker') + ' - ' + ruleSetName,
         content: content,
@@ -922,7 +930,7 @@ function _gt_openRulesPopUp(num, ruleSetName, content){
         overrideWidth: '90%',
         appendTo: 'form#gt_qual_structure_form'
     } );
-    
+
 }
 
 function gt_addNewRule(ruleSetNum){
@@ -1087,7 +1095,7 @@ function gt_addRuleStepCondition(ruleSetNum, ruleNum, el){
 
 function gt_removeRuleStepCondition(el){
     $(el).parent().remove();
-}   
+}
 
 function gt_addRuleStepAction(ruleSetNum, ruleNum, el){
 
@@ -1313,7 +1321,7 @@ function gt_bindFxInputs(){
         }
 
         // Post params
-        var p = {type: t, value: val, returnType: returnType, returnValue: returnValue, objStr: objStr, longName: longName}; 
+        var p = {type: t, value: val, returnType: returnType, returnValue: returnValue, objStr: objStr, longName: longName};
 
         $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_rule_fx_links', params: p}, function(data){
 
@@ -1324,7 +1332,7 @@ function gt_bindFxInputs(){
             $.each(response, function(k, v){
                 var useName = (longName !== undefined) ? longName : val;
                 $('#gt_fx_links').append("<a href='#' id='gt_rule_fx_link_"+v+"' class='gt_fx_func' dependentOn='"+id+"' onclick='gt_ruleFxAddElement(\""+v+"\", \""+t+"\", \""+useName+"\", this);return false;'>"+M.util.get_string('add'+v, 'block_gradetracker')+"</a>");
-            });         
+            });
 
             $('#gt_fx_loading').hide();
 
@@ -1338,9 +1346,9 @@ function gt_bindFxInputs(){
         gt_updateFx();
     });
 
-    // Bind change events to update the function in the textarea        
+    // Bind change events to update the function in the textarea
     $('input.gt_fx_func').off('keyup');
-    $('input.gt_fx_func').on('keyup', function(){    
+    $('input.gt_fx_func').on('keyup', function(){
         gt_updateFx();
     });
 
