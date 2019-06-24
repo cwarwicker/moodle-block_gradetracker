@@ -10,8 +10,8 @@
         <?php foreach($ruleSet->getRules() as $rule): ?>
             <?php $numRulesArray[$ruleSetNum]++ ?>
             <?php $ruleNum = $numRulesArray[$ruleSetNum] ?>
-            <tr id='gt_rule_row_<?= $ruleSetNum ?>_<?= $ruleNum ?>'>
-                <td><a href='#' id='gt_rule_name_link_<?= $ruleSetNum ?>_<?= $ruleNum ?>' onclick='gt_editRule(<?= $ruleSetNum ?>, <?= $ruleNum ?>);return false;'><?= \gt_html($rule->getName()) ?></a></td>
+            <tr id='gt_rule_row_<?= $ruleSetNum ?>_<?= $ruleNum ?>' class='gt_rule_row_<?= $ruleSetNum ?>'>
+                <td><a href='#' id='gt_rule_name_link_<?= $ruleSetNum ?>_<?= $ruleNum ?>' class='gt_edit_rule' ruleSetNum='<?= $ruleSetNum ?>' ruleNum='<?= $ruleNum ?>'><?= \gt_html($rule->getName()) ?></a></td>
                 <td><span id='gt_rule_event_span_<?= $ruleSetNum ?>_<?= $ruleNum ?>'><?= $rule->getOnEvent() ?></span></td>
                 <td><span id='gt_rule_steps_span_<?= $ruleSetNum ?>_<?= $ruleNum ?>'><?= count($rule->getSteps()) ?></span></td>
                 <td>
@@ -20,7 +20,7 @@
                         <label for="chkbox_<?= $ruleSetNum ?>_<?= $ruleNum ?>"></label>
                     </div>
                 </td>
-                <td><a href='#' onclick='gt_removeRule(<?= $ruleSetNum ?>, <?= $ruleNum ?>);return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
+                <td><a href='#' onclick="$('#gt_rule_row_<?= $ruleSetNum ?>_<?= $ruleNum ?>, #gt_rule_content_<?= $ruleSetNum ?>_<?= $ruleNum ?>').remove();return false;"><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
             </tr>
         <?php endforeach; ?>
     <?php endif; ?>

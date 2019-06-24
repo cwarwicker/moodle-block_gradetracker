@@ -1,3 +1,6 @@
+THIS BRANCH IS IN DEVELOPMENT, DO NOT USE
+
+
 # Grade Tracker Plugin (v1.2.0)
 
 This plugin provides you with the Grade Tracker block, which can be used to track students' progress across a wide range of qualification types, from qualification level, down to criteria level.
@@ -23,7 +26,7 @@ Requirements
 Installation
 ------------
 - Download the zip file, using the green "Clone or download" button
-- Extract the files 
+- Extract the files
 - Rename the folder inside "moodle-block_gradetracker-master" to just "gradetracker".
 - Place the "gradetracker" folder inside the /blocks directory of your Moodle site and run through the normal plugin installation procedure, then you can add the block to a course page.
 

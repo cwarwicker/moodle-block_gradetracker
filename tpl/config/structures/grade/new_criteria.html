@@ -10,22 +10,22 @@
 <?php endif; ?>
 
 <div>
-    
+
     <form action="" method="post" id="gt_grading_structure_form" enctype="multipart/form-data">
-        
+
         <div class='gt_form_panel'>
-            
+
             <div class='gt_form_panel_heading'>
                 <a href="config.php?view=structures&section=grade&page=edit&type=criteria<?= (isset($Build)) ? '&build=' . $Build->getID() : '&id=' . $Structure->getID() ?>"><?= (isset($Build)) ? $Build->getName() : $Structure->getName() ?> - <?= (isset($Build)) ? $string['assessmentgradingstructures'] : $string['criteriagradingstructures'] ?></a>
             </div>
 
             <div class='gt_form_panel_body'>
-        
+
                 <p class="gt_c">
                     <input type="submit" class="gt_btn gt_blue" name="submit_crit_grading_structure" value="<?= $string['save'] ?>" />
                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
                 </p>
-                
+
                 <?php if ($CriteriaAwardStructure->isValid()): ?>
                     <input type="hidden" name="grading_id" value="<?= $CriteriaAwardStructure->getID() ?>" />
                 <?php endif; ?>
@@ -33,11 +33,11 @@
                 <?php if (isset($Structure) && $Structure->isValid()): ?>
                     <input type="hidden" name="grading_qual_structure_id" value="<?= $Structure->getID() ?>" />
                 <?php endif; ?>
-                
+
                 <?php if (isset($Build) && $Build->isValid()): ?>
                     <input type="hidden" name="build" value="<?= $Build->getID() ?>" />
                 <?php endif; ?>
-                
+
                 <input type="hidden" name="grading_enabled" value="<?= $CriteriaAwardStructure->getEnabled() ?>" />
                 <input type="hidden" name="grading_assessments" value="<?= $CriteriaAwardStructure->getIsUsedForAssessments() ?>" />
 
@@ -98,28 +98,12 @@
                 </table>
 
             </div>
-            
-        </div>
-        
-    </form>
-    
-</div>
 
-<script>
-    var cntGrades = <?= $cntAwards ?>;
-    var specialVals = new Array();
-    
-    <?php if(\GT\CriteriaAward::getSupportedSpecialVals()): ?>
-        <?php foreach(\GT\CriteriaAward::getSupportedSpecialVals() as $val): ?>
-            specialVals.push('<?= $val ?>');
-        <?php endforeach; ?>
-    <?php endif; ?>
-    
-    bindFileUploads();
-    
-    
-    
-</script>
+        </div>
+
+    </form>
+
+</div>
 
 
 

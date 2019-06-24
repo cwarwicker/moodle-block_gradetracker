@@ -10,11 +10,11 @@
 <?php endif; ?>
 
 <div>
-    
+
     <form action="" method="post" id="gt_grading_structure_form">
-        
+
         <div class='gt_form_panel'>
-            
+
             <div class='gt_form_panel_heading'>
                 <a href="config.php?view=structures&section=grade&page=edit&id=<?= $Structure->getID() ?>&type=unit"><?= $Structure->getName() ?> - <?= $string['unitgradingstructures'] ?></a>
             </div>
@@ -25,7 +25,7 @@
                     <input type="submit" class="gt_btn gt_blue" name="submit_unit_grading_structure" value="<?= $string['save'] ?>" />
                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
                 </p>
-                
+
                 <?php if ($UnitAwardStructure->isValid()): ?>
                     <input type="hidden" name="grading_id" value="<?= $UnitAwardStructure->getID() ?>" />
                 <?php endif; ?>
@@ -67,24 +67,24 @@
                     <?php endif; ?>
 
                 </table>
-                
+
                 <br><hr><br>
-                
+
                 <h2><?= $string['unitpoints'] ?></h2>
                 <p><?= $string['unitpoints:desc'] ?></p>
-                
+
                 <table class="gt_form_table gt_table_inline">
-                    
+
                     <tr>
                         <th><?= $string['level'] ?></th>
                         <th><?= $string['grade'] ?></th>
                         <th><?= $string['points'] ?></th>
                     </tr>
-                    
+
                     <?php if (isset($buildLevels)): ?>
-                    
+
                         <?php foreach($buildLevels as $buildLevel): ?>
-                        
+
                             <?php if ($UnitAwardStructure->getAwards()): ?>
 
                                 <?php foreach($UnitAwardStructure->getAwards() as $award): ?>
@@ -100,24 +100,24 @@
                                 <?php endforeach; ?>
 
                             <?php endif; ?>
-                        
-                        
-                        
+
+
+
                         <?php endforeach; ?>
-                    
+
                     <?php endif; ?>
-                    
+
                 </table>
-                
-                
+
+
                 <table class="gt_form_table gt_table_inline">
-                    
+
                     <tr>
                         <th><?= $string['qualbuild'] ?></th>
                         <th><?= $string['grade'] ?></th>
                         <th><?= $string['points'] ?></th>
                     </tr>
-                    
+
                     <?php if (isset($builds)): ?>
                         <?php foreach($builds as $build): ?>
                             <?php if ($UnitAwardStructure->getAwards()): ?>
@@ -133,20 +133,17 @@
                             <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
-                    
+
                 </table>
 
             </div>
-            
+
         </div>
-        
+
     </form>
-    
+
 </div>
 
-<script>
-    var cntGrades = <?= $cntAwards ?>;
-</script>
 
 
 <?php else: ?>

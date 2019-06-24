@@ -3,12 +3,12 @@
  * Plugin Configuration
  *
  * Configure all the various aspects of the plugin
- * 
+ *
  * @copyright 2015 Bedford College
  * @package Bedford College Grade Tracker
  * @version 1.0
  * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 require_once '../../config.php';
@@ -87,17 +87,15 @@ $PAGE->set_heading( get_string('config', 'block_gradetracker') );
 $PAGE->set_cacheable(true);
 $PAGE->set_pagelayout( $GT->getMoodleThemeLayout() );
 
-// Try and load javascript
-if (file_exists($CFG->dirroot . '/blocks/gradetracker/js/config/'.$view.'/'.$section.'/scripts.js')){
-    $PAGE->requires->js( '/blocks/gradetracker/js/config/'.$view.'/'.$section.'/scripts.js', true );
-    $PAGE->requires->js_init_call("{$view}_{$section}_bindings", null, true);
-} elseif (file_exists($CFG->dirroot . '/blocks/gradetracker/js/config/'.$view.'/scripts.js')){
-    $PAGE->requires->js( '/blocks/gradetracker/js/config/'.$view.'/scripts.js', true );
-    $PAGE->requires->js_init_call("{$view}_bindings", null, true);
-}
-
 $GT->loadJavascript();
 $GT->loadCSS();
+
+// Try and load page-specific javascript
+if (file_exists($CFG->dirroot . '/blocks/gradetracker/amd/src/config_'.$view.'_'.$section.'.js')){
+  $PAGE->requires->js_call_amd("block_gradetracker/config_{$view}_{$section}", 'init', \GT\Output::initAMD($view, $section));
+} elseif (file_exists($CFG->dirroot . '/blocks/gradetracker/amd/src/config_'.$view.'.js')){
+  $PAGE->requires->js_call_amd("block_gradetracker/config_{$view}", 'init', \GT\Output::initAMD($view));
+}
 
 // If course is set, put that into breadcrumb
 $PAGE->navbar->add( $GT->getPluginTitle(), null);
@@ -117,10 +115,10 @@ if ($view)
     $viewURL = $view;
     if ($view == 'course'){
         $viewURL = $view . '&id=' . $id;
-    } 
-    
+    }
+
     $PAGE->navbar->add( get_string('breadcrumbs:config:'.$view, 'block_gradetracker'), $CFG->wwwroot . '/blocks/gradetracker/config.php?view='.$viewURL, navigation_node::TYPE_CUSTOM);
-    
+
 }
 
 if ($view && $section)
@@ -129,7 +127,7 @@ if ($view && $section)
     $viewURL = $view;
     if ($view == 'course'){
         $viewURL = $view . '&id=' . $id;
-    } 
+    }
     $PAGE->navbar->add( get_string('breadcrumbs:config:'.$view.':'.$section, 'block_gradetracker'), $CFG->wwwroot . '/blocks/gradetracker/config.php?view='.$viewURL.'&section='.$section, navigation_node::TYPE_CUSTOM);
 }
 

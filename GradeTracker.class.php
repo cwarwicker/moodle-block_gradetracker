@@ -4514,8 +4514,7 @@ class GradeTracker
 //        }
 
 
-        $PAGE->requires->js_call_amd('block_gradetracker/scripts', 'init');
-
+        $PAGE->requires->js_call_amd("block_gradetracker/scripts", 'init');
 
         return $output;
 

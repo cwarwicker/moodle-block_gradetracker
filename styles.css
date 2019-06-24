@@ -255,7 +255,7 @@ div.gt_config input[type='submit'], div.gt_config input[type='button']
       padding: 0;
       list-style: none;
       background-color: #f2f2f2;
-      border: 1px solid #ccc; 
+      border: 1px solid #ccc;
       border-top: none;
    }
    ul.gt_sub_tabrow li {
@@ -272,21 +272,21 @@ div.gt_config input[type='submit'], div.gt_config input[type='button']
    {
        background-color: #fff;
    }
-   
-   
-   ul.gt_sub_sub_tabrow 
+
+
+   ul.gt_sub_sub_tabrow
    {
        display: inline-block;
        list-style-type: none;
        margin: 0;
    }
-   
+
    ul.gt_sub_sub_tabrow li
    {
        display: inline;
        margin-right: 15px;
    }
-   
+
    ul.gt_sub_sub_tabrow li.selected a,
    ul.gt_sub_sub_tabrow li a:hover
    {
@@ -294,8 +294,8 @@ div.gt_config input[type='submit'], div.gt_config input[type='button']
        text-decoration: underline;
    }
    /* End navigation bar styling. */
-   
-   
+
+
 ul.gt_vertical_menu
 {
     padding: 0;
@@ -320,7 +320,7 @@ ul.gt_vertical_menu li a {
   color: #333333;
   padding: 20px 10px;
 }
-   
+
 ul.gt_vertical_menu li a:hover,
 ul.gt_vertical_menu li a.selected{
     background-color: #42CA5E;
@@ -363,7 +363,7 @@ div#gt_grid_holder > div
 }
 
 
-   
+
 img.gt_logo_text
 {
     height: 50px !important;
@@ -560,8 +560,8 @@ label.gt_input_label
     background: #000;
     color: #fff;
     margin: auto;
-    position: relative; 
-    overflow: hidden; 
+    position: relative;
+    overflow: hidden;
     direction: ltr;
 }
 
@@ -576,22 +576,22 @@ label.gt_input_label
     padding: 7px 0;
     text-align: center;
     margin: auto;
-    position: relative; 
-    overflow: hidden; 
+    position: relative;
+    overflow: hidden;
     direction: ltr;
 }
 
 .gt-upload-button input[type="file"],
 .gt-upload-img input[type="file"]
 {
-    position: absolute; 
-    right: 0px; 
-    top: 0px; 
-    font-family: Arial; 
-    font-size: 118px; 
-    margin: 0px; 
-    padding: 0px; 
-    cursor: pointer; 
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-family: Arial;
+    font-size: 118px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
     opacity: 0;
 }
 
@@ -794,10 +794,10 @@ div.gt_rule_step_action
 
 
 /* Getting annoyed with moodle overriding so many styles now */
-.gt_hidden, select.gt_hidden, textarea.gt_hidden, input[type="text"].gt_hidden, input[type="password"].gt_hidden, 
-input[type="datetime"].gt_hidden, input[type="datetime-local"].gt_hidden, input[type="date"].gt_hidden, 
-input[type="month"].gt_hidden, input[type="time"].gt_hidden, input[type="week"].gt_hidden, input[type="number"].gt_hidden, 
-input[type="email"].gt_hidden, input[type="url"].gt_hidden, input[type="search"].gt_hidden, input[type="tel"].gt_hidden, 
+.gt_hidden, select.gt_hidden, textarea.gt_hidden, input[type="text"].gt_hidden, input[type="password"].gt_hidden,
+input[type="datetime"].gt_hidden, input[type="datetime-local"].gt_hidden, input[type="date"].gt_hidden,
+input[type="month"].gt_hidden, input[type="time"].gt_hidden, input[type="week"].gt_hidden, input[type="number"].gt_hidden,
+input[type="email"].gt_hidden, input[type="url"].gt_hidden, input[type="search"].gt_hidden, input[type="tel"].gt_hidden,
 input[type="color"].gt_hidden, div.gt_hidden, span.gt_hidden, p.gt_hidden, small.gt_hidden
 {
     display: none;
@@ -1088,10 +1088,10 @@ table.gt_table_inline
     vertical-align: top;
 }
 
-.gt_config select, .gt_config input[type="text"], .gt_config input[type="password"], 
-.gt_config input[type="datetime"], .gt_config input[type="datetime-local"], .gt_config input[type="date"], 
-.gt_config input[type="month"], .gt_config input[type="time"], .gt_config input[type="week"], 
-.gt_config input[type="number"], .gt_config input[type="email"], .gt_config input[type="url"], 
+.gt_config select, .gt_config input[type="text"], .gt_config input[type="password"],
+.gt_config input[type="datetime"], .gt_config input[type="datetime-local"], .gt_config input[type="date"],
+.gt_config input[type="month"], .gt_config input[type="time"], .gt_config input[type="week"],
+.gt_config input[type="number"], .gt_config input[type="email"], .gt_config input[type="url"],
 .gt_config input[type="search"], .gt_config input[type="tel"], .gt_config input[type="color"]
 {
     height: 20px;
@@ -1144,7 +1144,7 @@ div#gt_grid_holder *
 {
     -webkit-box-sizing: initial;
     -moz-box-sizing: initial;
-    box-sizing: initial;    
+    box-sizing: initial;
 }
 
 div.gt_grid
@@ -1214,7 +1214,7 @@ table#gt_qual_form_table
 
 table#gt_qual_form_table td
 {
-    
+
 }
 
 table#gt_qual_form_table tr td:first-child
@@ -1238,7 +1238,7 @@ table#gt_qual_form_table td input[type="number"]
 
 div.gt_form_panel
 {
-    
+
 }
 
 div.gt_form_panel_heading
@@ -1521,7 +1521,7 @@ div.gt_grid_key table tr.names td
 
 div.gt_grid
 {
-    
+
 }
 
 ul.slimmenu li.gt_nav_dropdowns
@@ -1678,10 +1678,10 @@ div#gt_qual_awards table tr td select
 }
 
 table.gt_student_grid tr td select,
-table.gt_unit_grid tr td select, 
-table.gt_class_grid tr td select, 
+table.gt_unit_grid tr td select,
+table.gt_class_grid tr td select,
 table.gt_student_assessment_grid tr td select,
-table.gt_class_assessment_grid tr td select, 
+table.gt_class_assessment_grid tr td select,
 div#gt_qual_awards table tr td select
 {
     min-width: 50px;
@@ -1815,7 +1815,7 @@ table.gt_popup_table td.gt_popup_overall_value input
     max-width: none;
 }
 
-table.gt_popup_table td input[type="radio"], 
+table.gt_popup_table td input[type="radio"],
 table.gt_popup_table td input[type="checkbox"]
 {
     margin: 0px;
@@ -1871,9 +1871,9 @@ table.gt_unit_grid tr td.gt_has_comments,
 table.gt_import_grid_table tr td.gt_has_comments,
 table.gt_import_grid_table tr.even td.gt_has_comments,
 table.gt_import_grid_table tr.odd td.gt_has_comments,
-table.gt_student_assessment_grid tr td.gt_has_comments, 
+table.gt_student_assessment_grid tr td.gt_has_comments,
 table.gt_class_assessment_grid tr td.gt_has_comments,
-table.gt_student_assessment_grid tr:nth-child(odd) td.gt_has_comments, 
+table.gt_student_assessment_grid tr:nth-child(odd) td.gt_has_comments,
 table.gt_class_assessment_grid tr:nth-child(odd) td.gt_has_comments,
 table.gt_import_grid_table tr td.gt_has_comments small
 {
@@ -1982,7 +1982,7 @@ table.gt_criterion_info_popup_sub_table
 table.gt_criterion_info_popup_sub_table th, table.gt_criterion_info_popup_sub_table td
 {
     border: 1px solid #D36C7E;
-    padding: 4px;    
+    padding: 4px;
 }
 
 table.gt_criterion_info_popup_sub_table th
@@ -2579,7 +2579,7 @@ table.gt_assessment_summary_table tr:nth-child(even) td
        -moz-filter: grayscale(100%);
          -o-filter: grayscale(100%);
         -ms-filter: grayscale(100%);
-            filter: grayscale(100%); 
+            filter: grayscale(100%);
 }
 
 .gt_form_control {
@@ -2679,14 +2679,14 @@ input.gt_btn[type="submit"]:focus, input.gt_btn[type="button"]:focus, input.gt_b
 {
     background: #d9d9d9;
     color: #222;
-    cursor: pointer; 
+    cursor: pointer;
     text-decoration: none;
 }
 
 input.gt_btn:active, a.gt_btn:active
 {
     background: #d0d0d0;
-    color: #000; 
+    color: #000;
 }
 
 input.gt_btn:disabled, input.gt_btn[type="submit"]:disabled, input.gt_btn[type="button"]:disabled, input.gt_btn[type="reset"]:disabled
@@ -2725,7 +2725,7 @@ a.gt_blue[disabled]:hover
     color: #fff !important;
 }
 
-input.gt_blue:hover, a.gt_blue:hover, a.gt_blue:focus, div.gt_blue:hover, 
+input.gt_blue:hover, a.gt_blue:hover, a.gt_blue:focus, div.gt_blue:hover,
 input.gt_blue[type="submit"]:hover, input.gt_blue[type="button"]:hover, input.gt_blue[type="reset"]:hover,
 input.gt_blue[type="submit"]:focus, input.gt_blue[type="button"]:focus, input.gt_blue[type="reset"]:focus
 {
@@ -2735,7 +2735,7 @@ input.gt_blue[type="submit"]:focus, input.gt_blue[type="button"]:focus, input.gt
       background-image: -webkit-linear-gradient(top, #349aef, #1387e7);
       background-image: -moz-linear-gradient(top, #349aef, #1387e7);
       background-image: -o-linear-gradient(top, #349aef, #1387e7);
-      background-image: linear-gradient(top, #349aef, #1387e7); 
+      background-image: linear-gradient(top, #349aef, #1387e7);
       color: #fff !important;
 }
 
@@ -2766,7 +2766,7 @@ input.gt_red, a.gt_red, a.gt_red:link, a.gt_red:visited, div.gt_red, input.gt_re
     color: #fff !important;
 }
 
-input.gt_red:hover, a.gt_red:hover, a.gt_red:focus, div.gt_red:hover, 
+input.gt_red:hover, a.gt_red:hover, a.gt_red:focus, div.gt_red:hover,
 input.gt_red[type="submit"]:hover, input.gt_red[type="button"]:hover, input.gt_red[type="reset"]:hover,
 input.gt_red[type="submit"]:focus, input.gt_red[type="button"]:focus, input.gt_red[type="reset"]:focus
 {
@@ -2776,7 +2776,7 @@ input.gt_red[type="submit"]:focus, input.gt_red[type="button"]:focus, input.gt_r
       background-image: -webkit-linear-gradient(top, #de4646, #d62626);
       background-image: -moz-linear-gradient(top, #de4646, #d62626);
       background-image: -o-linear-gradient(top, #de4646, #d62626);
-      background-image: linear-gradient(top, #de4646, #d62626); 
+      background-image: linear-gradient(top, #de4646, #d62626);
       color: #fff !important;
 }
 
@@ -2788,7 +2788,7 @@ input.gt_red:active, a.gt_red:active, input.gt_red[type="submit"]:active, input.
       background-image: -webkit-linear-gradient(top, #c02222, #d92c2c);
       background-image: -moz-linear-gradient(top, #c02222, #d92c2c);
       background-image: -o-linear-gradient(top, #c02222, #d92c2c);
-      background-image: linear-gradient(top, #c02222, #d92c2c); 
+      background-image: linear-gradient(top, #c02222, #d92c2c);
       color: #fff !important;
 }
 
@@ -2806,7 +2806,7 @@ input.gt_green, a.gt_green, a.gt_green:link, a.gt_green:visited, div.gt_green, i
     border: 1px solid #59971f;
 }
 
-input.gt_green:hover, a.gt_green:hover, a.gt_green:focus, div.gt_green:hover, 
+input.gt_green:hover, a.gt_green:hover, a.gt_green:focus, div.gt_green:hover,
 input.gt_green[type="submit"]:hover, input.gt_green[type="button"]:hover, input.gt_green[type="reset"]:hover,
 input.gt_green[type="submit"]:focus, input.gt_green[type="button"]:focus, input.gt_green[type="reset"]:focus
 {
@@ -2848,7 +2848,7 @@ input.gt_black, a.gt_black, a.gt_black:link, a.gt_black:visited, div.gt_black, i
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
 
-input.gt_black:hover, a.gt_black:hover, a.gt_black:focus, div.gt_black:hover, 
+input.gt_black:hover, a.gt_black:hover, a.gt_black:focus, div.gt_black:hover,
 input.gt_black[type="submit"]:hover, input.gt_black[type="button"]:hover, input.gt_black[type="reset"]:hover,
 input.gt_black[type="submit"]:focus, input.gt_black[type="button"]:focus, input.gt_black[type="reset"]:focus
 {
@@ -2870,23 +2870,23 @@ input.gt_pink, a.gt_pink, a.gt_pink:link, a.gt_pink:visited, div.gt_pink, input.
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff5db1), color-stop(100%,#ef017c));
     background: -webkit-linear-gradient(top, #ff5db1 0%,#ef017c 100%);
     background: -o-linear-gradient(top, #ff5db1 0%,#ef017c 100%);
-    background: -ms-linear-gradient(top, #ff5db1 0%,#ef017c 100%); 
-    background: linear-gradient(to bottom, #ff5db1 0%,#ef017c 100%); 
+    background: -ms-linear-gradient(top, #ff5db1 0%,#ef017c 100%);
+    background: linear-gradient(to bottom, #ff5db1 0%,#ef017c 100%);
     border: 1px solid #DD00B0;
     color: #fff !important;
 }
 
-input.gt_pink:hover, a.gt_pink:hover, a.gt_pink:focus, div.gt_pink:hover, 
+input.gt_pink:hover, a.gt_pink:hover, a.gt_pink:focus, div.gt_pink:hover,
 input.gt_pink[type="submit"]:hover, input.gt_pink[type="button"]:hover, input.gt_pink[type="reset"]:hover,
 input.gt_pink[type="submit"]:focus, input.gt_pink[type="button"]:focus, input.gt_pink[type="reset"]:focus
-{    
+{
     background: #E6549F;
     background-size: 100%;
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E6549F), color-stop(100%,#CC4A8E));
     background: -webkit-linear-gradient(top, #E6549F 0%,#CC4A8E 100%);
     background: -o-linear-gradient(top, #E6549F 0%,#CC4A8E 100%);
-    background: -ms-linear-gradient(top, #E6549F 0%,#CC4A8E 100%); 
-    background: linear-gradient(to bottom, #E6549F 0%,#CC4A8E 100%); 
+    background: -ms-linear-gradient(top, #E6549F 0%,#CC4A8E 100%);
+    background: linear-gradient(to bottom, #E6549F 0%,#CC4A8E 100%);
     color: #fff !important;
 }
 
@@ -2897,8 +2897,8 @@ input.gt_pink:active, a.gt_pink:active, input.gt_pink[type="submit"]:active, inp
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ef017c), color-stop(100%,#ff5db1));
     background: -webkit-linear-gradient(top, #ef017c 0%,#ff5db1 100%);
     background: -o-linear-gradient(top, #ef017c 0%,#ff5db1 100%);
-    background: -ms-linear-gradient(top, #ef017c 0%,#ff5db1 100%); 
-    background: linear-gradient(to bottom, #ef017c 0%,#ff5db1 100%); 
+    background: -ms-linear-gradient(top, #ef017c 0%,#ff5db1 100%);
+    background: linear-gradient(to bottom, #ef017c 0%,#ff5db1 100%);
     color: #fff !important;
 }
 
@@ -2912,23 +2912,23 @@ a.gt_yellow[disabled]:hover
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffff5d), color-stop(100%,#efc901));
     background: -webkit-linear-gradient(top, #ffff5d 0%,#efc901 100%);
     background: -o-linear-gradient(top, #ffff5d 0%,#efc901 100%);
-    background: -ms-linear-gradient(top, #ffff5d 0%,#efc901 100%); 
-    background: linear-gradient(to bottom, #ffff5d 0%,#efc901 100%); 
+    background: -ms-linear-gradient(top, #ffff5d 0%,#efc901 100%);
+    background: linear-gradient(to bottom, #ffff5d 0%,#efc901 100%);
     border: 1px solid #dd9f00;
     color: #000 !important;
 }
 
-input.gt_yellow:hover, a.gt_yellow:hover, a.gt_yellow:focus, div.gt_yellow:hover, 
+input.gt_yellow:hover, a.gt_yellow:hover, a.gt_yellow:focus, div.gt_yellow:hover,
 input.gt_yellow[type="submit"]:hover, input.gt_yellow[type="button"]:hover, input.gt_yellow[type="reset"]:hover,
 input.gt_yellow[type="submit"]:focus, input.gt_yellow[type="button"]:focus, input.gt_yellow[type="reset"]:focus
-{    
+{
     background: #e6e054;
     background-size: 100%;
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e6e054), color-stop(100%,#ccbc4a));
     background: -webkit-linear-gradient(top, #e6e054 0%,#ccbc4a 100%);
     background: -o-linear-gradient(top, #e6e054 0%,#ccbc4a 100%);
-    background: -ms-linear-gradient(top, #e6e054 0%,#ccbc4a 100%); 
-    background: linear-gradient(to bottom, #e6e054 0%,#ccbc4a 100%); 
+    background: -ms-linear-gradient(top, #e6e054 0%,#ccbc4a 100%);
+    background: linear-gradient(to bottom, #e6e054 0%,#ccbc4a 100%);
     color: #000 !important;
 }
 
@@ -2939,8 +2939,8 @@ input.gt_yellow:active, a.gt_yellow:active, input.gt_yellow[type="submit"]:activ
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efdc01), color-stop(100%,#ffec5d));
     background: -webkit-linear-gradient(top, #efdc01 0%,#ffec5d 100%);
     background: -o-linear-gradient(top, #efdc01 0%,#ffec5d 100%);
-    background: -ms-linear-gradient(top, #efdc01 0%,#ffec5d 100%); 
-    background: linear-gradient(to bottom, #efdc01 0%,#ffec5d 100%); 
+    background: -ms-linear-gradient(top, #efdc01 0%,#ffec5d 100%);
+    background: linear-gradient(to bottom, #efdc01 0%,#ffec5d 100%);
     color: #000 !important;
 }
 
@@ -3251,8 +3251,8 @@ table.gt_assessment_popup_custom_fields_table td
 }
 
 td.gt_grid_end,
-table.gt_student_grid tr:nth-child(odd) td.gt_grid_end, 
-table.gt_unit_grid tr:nth-child(odd) td.gt_grid_end, 
+table.gt_student_grid tr:nth-child(odd) td.gt_grid_end,
+table.gt_unit_grid tr:nth-child(odd) td.gt_grid_end,
 table.gt_class_grid tr:nth-child(odd) td.gt_grid_end
 {
     background-color: #B0344A;
@@ -3607,7 +3607,7 @@ div#gt_activities_overview_details table td
     color: #000;
 }
 
-div#gt_activities_overview_details table th, 
+div#gt_activities_overview_details table th,
 div#gt_activities_overview_details table td
 {
     padding: 4px;
@@ -3657,7 +3657,7 @@ select option.gt_bcgt_old_cnt_courses_0
 }
 
 
-.gt_meter { 
+.gt_meter {
     background: #555555;
     border-radius: 25px;
     box-shadow: inset 0px -1px 1px rgba(255, 255, 255, 0.298);
@@ -3668,7 +3668,7 @@ select option.gt_bcgt_old_cnt_courses_0
     width: 100px;
 }
 
-.gt_meter > span { 
+.gt_meter > span {
     background-color: #2BC253;
     border-radius: 20px;
     box-shadow: inset 0px 2px 9px rgba(255, 255, 255, 0.298), inset 0px -2px 6px rgba(0, 0, 0, 0.400);
@@ -3755,26 +3755,26 @@ td.gt_incorrect_credits
 
 
 
-table.gt_log_table th, table.gt_log_table td 
-{ 
-    padding: 5px; 
-    font-weight: bold; 
-    white-space: nowrap; 
-    border-right: 1px solid #AAAAAA; 
-    border-bottom: 1px solid #AAAAAA; 
-    background-color: #EFEFEF; 
-    text-align: left; 
-    vertical-align: bottom; 
-} 
+table.gt_log_table th, table.gt_log_table td
+{
+    padding: 5px;
+    font-weight: bold;
+    white-space: nowrap;
+    border-right: 1px solid #AAAAAA;
+    border-bottom: 1px solid #AAAAAA;
+    background-color: #EFEFEF;
+    text-align: left;
+    vertical-align: bottom;
+}
 
-table.gt_log_table td  
-{ 
-    padding: 5px; 
-    white-space: nowrap; 
-    border-right: 1px solid #AAAAAA; 
-    border-bottom: 1px solid #AAAAAA; 
-    background-color: #FFFFFF; 
-} 
+table.gt_log_table td
+{
+    padding: 5px;
+    white-space: nowrap;
+    border-right: 1px solid #AAAAAA;
+    border-bottom: 1px solid #AAAAAA;
+    background-color: #FFFFFF;
+}
 
 table.gt_reporting_options
 {
@@ -3893,7 +3893,7 @@ div.gt_overview_box > div.graph
 
 dl.gt_bar_chart
 {
-    
+
 }
 
 dl.gt_bar_chart dd
@@ -3998,7 +3998,7 @@ ul.gt_recent_activity > li:hover
     background: #efefef;
 }
 
-ul.gt_recent_activity > li > div:first-child 
+ul.gt_recent_activity > li > div:first-child
 {
     display: inline-block;
     vertical-align: top;
@@ -4125,7 +4125,7 @@ div.gt_popup_rules_divs
 
 div.gt_rule_content
 {
-    
+
 }
 
 div.gt_rule_content_section
@@ -4164,7 +4164,7 @@ div.gt_rule_step_header_right a
   display: block;
   width: 100%;
   text-align: center;
-  height: 20px;
+  /* height: 20px; */
   padding: 10% 0;
   background: #efefef;
   color: #696969;
@@ -4187,7 +4187,7 @@ div.gt_rule_step_header_centre
 {
   width: 88%;
   background: #efefef;
-  height: 20px;
+  /* height: 20px; */
   padding: 1%;
 }
 
@@ -4283,7 +4283,17 @@ img.gt_help_tooltip
     margin-left: 5px;
 }
 
+.gt_disabled
+{
+  pointer-events: none;
+  background: #e3e3e3;
+  opacity: 0.8;
+}
 
+.gt_disabled input
+{
+  background: #e3e3e3 !important;
+}
 
 
 
@@ -4316,29 +4326,29 @@ canvas#firework-canvas, canvas#sparkler-canvas
 progress.gt_progress,          /* All HTML5 progress enabled browsers */
 progress[role].gt_progress     /* polyfill */
 {
- 
+
         /* Turns off styling - not usually needed, but good to know. */
         appearance: none;
         -moz-appearance: none;
         -webkit-appearance: none;
- 
+
         /* gets rid of default border in Firefox and Opera. */
         border: none;
- 
+
         /* Needs to be in here for Safari polyfill so background images work as expected. */
         background-size: auto;
-         
+
         /* Dimensions */
         width: 400px;
         height: 20px;
-         
+
 }
 
 /* Polyfill */
 progress[role].gt_progress:after {
         background-image: none; /* removes default background from polyfill */
 }
- 
+
 /* Ensure fallback text doesn't appear in polyfill */
 progress[role].gt_progress strong {
         display: none;
@@ -4365,7 +4375,7 @@ progress.gt_progress::-moz-progress-bar {
                 rgb(84,240,84) 69%
         );
 }
- 
+
 /* Chrome */
 progress.gt_progress::-webkit-progress-value {
         background-image: -webkit-gradient(
@@ -4381,7 +4391,7 @@ progress.gt_progress::-webkit-progress-value {
                 rgb(84,240,84) 69%
         );
 }
- 
+
 /* Polyfill */
 progress.gt_progress[aria-valuenow]:before {
         background-image: -moz-linear-gradient(
@@ -4406,7 +4416,7 @@ progress.gt_progress[aria-valuenow]:before {
 
 
 /* Firefox - Wasn't showing the borders on some grid cells */
-@-moz-document url-prefix() { 
+@-moz-document url-prefix() {
   table.gt_unit_grid,
   table.gt_student_grid,
   table.gt_student_assessment_grid,

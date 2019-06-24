@@ -9,29 +9,25 @@
 
 <?php $numRuleSets = 0; ?>
 
-<script>
-    var numRuleSets = 0;
-</script>
-
 
 
 <form id="gt_qual_structure_form" action="" method="post" enctype="multipart/form-data">
-        
+
     <div class='gt_form_panel'>
-            
+
         <div class='gt_form_panel_heading'>
             <?= ($Structure->isValid()) ? $string['breadcrumbs:config:structures:qual:edit'] : $string['breadcrumbs:config:structures:qual:new'] ?>
         </div>
 
         <div class='gt_form_panel_body'>
-    
+
             <?php if ($Structure->isValid()): ?>
                 <input type="hidden" name="structure_id" value="<?= $Structure->getID() ?>" />
             <?php endif; ?>
 
             <input type="hidden" name="structure_deleted" value="<?= (int)$Structure->isDeleted() ?>" />
 
-    
+
             <div class='gt_qual_structure'>
 
                 <div class='gt_qual_structure_left'>
@@ -58,7 +54,7 @@
 
                         <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_qual_structure" value="<?= $string['save'] ?>">
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=quals" class="gt_btn gt_btn_small gt_red"><?= $string['cancel'] ?></a>
-                        
+
                     </div>
 
                     <br class='gt_cl'><br>
@@ -70,9 +66,9 @@
                         <?php if ($possibleLevels): ?>
 
                             <?php foreach($possibleLevels as $level): ?>
-                            
+
                                 <div class='gt_level_box <?= ($Structure->isLevelEnabled($level->getID())) ? 'ticked' : ''; ?>'>
-                                    <input type='checkbox' name='levels[<?= $level->getID() ?>]' value='<?= $level->getID() ?>' <?= ($Structure->isLevelEnabled($level->getID())) ? 'checked' : ''; ?> /> 
+                                    <input type='checkbox' name='levels[<?= $level->getID() ?>]' value='<?= $level->getID() ?>' <?= ($Structure->isLevelEnabled($level->getID())) ? 'checked' : ''; ?> />
                                     <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/tick_round.png" alt="ticked" class="gt_ticked" style="<?= ($Structure->isLevelEnabled($level->getID())) ? 'display:inline-block;' : ''; ?>" />
                                     <?= $level->getName() ?>
                                     <?php if ( !is_null($level->getMinSubLevels()) && !is_null($level->getMaxSubLevels()) ): ?>
@@ -102,7 +98,7 @@
                             <?php foreach($possibleFeatures as $feature): ?>
 
                                 <div class='gt_feature_box <?= ($Structure->isFeatureEnabled($feature->id)) ? 'ticked' : ''; ?>'>
-                                    <input type='checkbox' name='features[]' value='<?= $feature->id ?>' <?= ($Structure->isFeatureEnabled($feature->id)) ? 'checked' : ''; ?> /> 
+                                    <input type='checkbox' name='features[]' value='<?= $feature->id ?>' <?= ($Structure->isFeatureEnabled($feature->id)) ? 'checked' : ''; ?> />
                                     <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/tick_round.png" alt="ticked" class="gt_ticked" style="<?= ($Structure->isFeatureEnabled($feature->id)) ? 'display:inline-block;' : ''; ?>" />
                                     <?= $string['features:' . \strtolower(\gt_strip_chars_non_alpha($feature->name))]; ?>
                                     <br>
@@ -138,8 +134,8 @@
 
                                 <?php if ($Structure->getCustomFormElements()): ?>
                                     <?php foreach($Structure->getCustomFormElements() as $element): ?>
-                                        <?php $cntCustomFormElements++ ?>
-                                        <tr id="gt_custom_form_field_row_<?= $cntCustomFormElements ?>">
+                                      <?php $cntCustomFormElements++ ?>
+                                        <tr id="gt_custom_form_field_row_<?= $cntCustomFormElements ?>" class="gt_custom_form_field_row">
                                             <td>
                                                 <input type="hidden" name="custom_form_fields_ids[<?= $cntCustomFormElements ?>]" value="<?= $element->getID() ?>" />
                                                 <input type="text" name="custom_form_fields_names[<?= $cntCustomFormElements ?>]" value="<?= \gt_html($element->getName()) ?>" />
@@ -152,7 +148,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select onchange="toggleFormFieldOptions(this.value, <?= $cntCustomFormElements ?>);return false;" name="custom_form_fields_types[<?= $cntCustomFormElements ?>]">
+                                                <select class="gt_toggle_structure_form_field_type" num="<?= $cntCustomFormElements ?>" name="custom_form_fields_types[<?= $cntCustomFormElements ?>]">
                                                     <option></option>
                                                     <option value="TEXT" <?= ($element->getType() == "TEXT") ? 'selected' : ''; ?>><?= $string['element:text'] ?></option>
                                                     <option value="NUMBER" <?= ($element->getType() == "NUMBER") ? 'selected' : ''; ?>><?= $string['element:number'] ?></option>
@@ -179,40 +175,40 @@
                         <div>
                             <h3><?= $string['rulesets'] ?></h3>
                             <table id='gt_structure_rule_sets'>
-                                
+
                                 <tr>
-                                    <th><a href="#" onclick="gt_addNewRuleSet();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" alt="add new" /></a></th>
+                                    <th><a href="#" id="gt_add_structure_rule_set"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" alt="add new" /></a></th>
                                     <th><?= $string['name'] ?></th>
                                     <th><?= $string['rules'] ?></th>
                                     <th><?= $string['default'] ?></th>
                                     <th><?= $string['enabled'] ?></th>
                                 </tr>
-                                
+
                                 <?php if ($ruleSets = $Structure->getRuleSets()): ?>
                                     <?php foreach($ruleSets as $ruleSet): ?>
-                                        
+
                                         <?php $numRuleSets++; ?>
-                                        
-                                        <tr id='gt_rule_set_row_<?= $numRuleSets ?>'>
+
+                                        <tr id='gt_rule_set_row_<?= $numRuleSets ?>' class='gt_rule_set_row'>
                                             <td></td>
                                             <td><input type='hidden' name='rule_sets[<?= $numRuleSets ?>][id]' value='<?= $ruleSet->getID() ?>' /><input type='text' id='rule_set_name_<?= $numRuleSets ?>' name='rule_sets[<?= $numRuleSets ?>][name]' value='<?= \gt_html($ruleSet->getName()) ?>' /></td>
-                                            <td><a href='#' onclick='gt_openRules(<?= $numRuleSets ?>);return false;'><?= $string['openrules'] ?> <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/open.png' alt='open' /></a></td>
+                                            <td><a href='#' class='gt_structure_open_rules' ruleSetNum='<?= $numRuleSets ?>'><?= $string['openrules'] ?> <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/open.png' alt='open' /></a></td>
                                             <td><input type='radio' name='rule_set_default' value='<?= $numRuleSets ?>' <?= ($ruleSet->isDefault()) ? 'checked' : '' ?> /></td>
                                             <td><input type='checkbox' name='rule_sets[<?= $numRuleSets ?>][enabled]' value='1' <?= ($ruleSet->isEnabled()) ? 'checked' : '' ?> /></td>
-                                            <td><a href='#' onclick='gt_removeRuleSet(<?= $numRuleSets ?>);return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
+                                            <td><a href='#' class='gt_remove_structure_rule_set' ruleSetNum='<?= $numRuleSets ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
                                         </tr>
-                                        
+
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                                
-                                
+
+
                             </table>
-                                                                                             
+
                         </div>
 
                     </div>
-                    
-                    
+
+
                     <div class='gt_structure_settings_box'>
                         <h1><?= $string['settings'] ?></h1>
                         <div>
@@ -250,7 +246,7 @@
                                     <td>
                                         <input type="radio" name="settings[custom_dashboard_view]" value="view-simple" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-simple'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:simple'] ?><br>
                                         <input type="radio" name="settings[custom_dashboard_view]" value="view-criteria-short" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-criteria-short'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:short'] ?><br>
-                                        <input type="radio" name="settings[custom_dashboard_view]" value="view-criteria-full" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-criteria-full'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:full'] ?>  
+                                        <input type="radio" name="settings[custom_dashboard_view]" value="view-criteria-full" <?php if ($Structure->getSetting('custom_dashboard_view') == 'view-criteria-full'): ?> checked <?php endif; ?>> <?= $string['dashboard:display:full'] ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -275,27 +271,27 @@
                 <br class='gt_cl'><br>
 
             </div>
-    
+
         </div>
-        
+
     </div>
-    
+
     <?php $numRulesArray = array() ?>
     <?php $numRuleSteps = array() ?>
-        
+
     <?php if ($ruleSets): ?>
-        
+
         <?php foreach($ruleSets as $ruleSet): ?>
-                  
+
             <?php $ruleSetNum = (isset($ruleSetNum)) ? $ruleSetNum + 1 : 1; ?>
             <?php $numRulesArray[$ruleSetNum] = 0; ?>
             <?php $numRuleSteps[$ruleSetNum] = array() ?>
-            
+
             <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/ruleset.inc.html'; ?>
-            
+
         <?php endforeach; ?>
     <?php endif; ?>
-    
+
 </form>
 
 
@@ -305,33 +301,3 @@
 <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/rulestepcondition.inc.html'; ?>
 <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/rulestepaction.inc.html'; ?>
 <!-- End Templates -->
-
-<script>
-    
-    customFormFields = <?= count($Structure->getCustomFormElements()) ?>;
-    
-    numRuleSets = <?= $numRuleSets ?>;
-    
-    var numRulesArray = [];
-    var numRuleSteps = [];
-    
-    <?php if ($numRulesArray): ?>
-        <?php foreach($numRulesArray as $setNum => $val): ?>
-            numRulesArray[<?= $setNum ?>] = <?= $val ?>;
-        <?php endforeach; ?>
-    <?php endif; ?>
-    
-    <?php if ($numRuleSteps): ?>
-        <?php foreach($numRuleSteps as $setNum => $array): ?>
-            numRuleSteps[<?= $setNum ?>] = [];
-            <?php if ($array): ?>
-                <?php foreach($array as $ruleNum => $numSteps): ?>
-                    numRuleSteps[<?= $setNum ?>][<?= $ruleNum ?>] = <?= $numSteps ?>;
-                <?php endforeach; ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    <?php endif; ?>
-    
-    
-    
-</script>

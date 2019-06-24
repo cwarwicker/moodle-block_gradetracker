@@ -1,5 +1,5 @@
 <div id='gt_rule_content_<?= $ruleSetNum ?>_<?= $ruleNum ?>' class='gt_rule_content' style='display:none;'>
-            
+
     <div class='gt_rule_content_section_float'>
         <div class='gt_rule_settings_heading'><?= $string['rule:setting:details'] ?></div>
         <table class='gt_rule_settings_table'>
@@ -38,30 +38,23 @@
                 </td>
             </tr>
             <?php endforeach; ?>
-        </table>    
+        </table>
     </div>
-    
+
     <div class='gt_rule_content_section'>
         <div class='gt_rule_settings_heading'><?= $string['rule:setting:steps'] ?></div>
-        <a href='#' onclick='gt_addRuleStep(<?= $ruleSetNum ?>, <?= $ruleNum ?>);return false;' class='gt_btn gt_btn_small'><?= $string['createrulestep'] ?></a><br><br>
+        <a href='#' class='gt_add_rule_step gt_btn gt_btn_small' ruleSetNum='<?= $ruleSetNum ?>' ruleNum='<?= $ruleNum ?>'><?= $string['createrulestep'] ?></a><br><br>
         <div id='gt_rule_steps_<?= $ruleSetNum ?>_<?= $ruleNum ?>'>
             <?php if (isset($rule)): ?>
                 <?php foreach($rule->getSteps() as $step): ?>
                     <?php $numRuleSteps[$ruleSetNum][$ruleNum]++ ?>
                     <?php $ruleStepNum = $numRuleSteps[$ruleSetNum][$ruleNum] ?>
                     <?= $rule->getTemplateContent('config/structures/qual/inc/rulestep.inc.html', array('RS' => $ruleSetNum, 'R' => $ruleNum, 'S' => $ruleStepNum, 'step' => $step)) ?>
-                    <script>
-                        $(document).ready( function(){
-                            $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>').removeClass('gt_hidden').addClass('gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>');
-                            $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_condition').removeClass('gt_hidden').addClass('gt_rule_step_condition_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
-                            $('#gt_rule_step_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?> div.gt_rule_step_action').removeClass('gt_hidden').addClass('gt_rule_step_action_<?= $ruleSetNum ?>_<?= $ruleNum ?>_<?= $ruleStepNum ?>');
-                        } );
-                    </script>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
     </div>
-    
+
     <br><br>
 
 </div>

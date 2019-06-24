@@ -1,13 +1,13 @@
 <?php if(!defined('BCGT')) exit; ?>
 
 <form action="" method="post" enctype="multipart/form-data">
-    
+
     <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
     <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
-    
+
     <h2><?= $string['reportsettings'] ?></h2>
     <p><?= $string['reportsettings:desc'] ?></p>
-    
+
     <small><strong><?= $string['config:reporting:categories'] ?></strong> - <?= $string['config:reporting:categories:desc'] ?></small>
     <br>
     <select name='reporting_categories[]' multiple='multiple' style='height:350px;'>
@@ -18,7 +18,7 @@
         <?php endif; ?>
     </select>
     <br><br>
-    
+
     <div class="gt_form_panel">
         <div class="gt_form_panel_heading"><?= $string['reports:critprog'] ?></div>
         <div class="gt_form_panel_body">
@@ -28,7 +28,7 @@
                     <?php if ($structure->isAnyCriteriaLevelEnabled()): ?>
                         <table id='gt_crit_prog_wt_<?= $structure->getID() ?>' class='gt_report_config_table_narrow'>
                             <tr>
-                                <th colspan='3'><?= $structure->getName() ?> <a href="#" onclick="addReportingCritWeightingScore(<?= $structure->getID() ?>);return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" /></a></th>
+                                <th colspan='3'><?= $structure->getName() ?> <a href="#" class="gt_report_add_crit_weighting" structureID="<?= $structure->getID() ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" /></a></th>
                             </tr>
                             <tr>
                                 <td><?= $string['letter'] ?></td>
@@ -66,7 +66,7 @@
                             <?php if ($structure->getSetting('custom_dashboard_view') == 'view-criteria-short'): ?>
                                 <tr>
                                     <td>
-                                        <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="byletter" <?= ($structure->getSetting('reporting_pass_criteria_method') == 'byletter') ? 'checked' : '' ?> /> <?= $string['reports:passprog:byletter'] ?> 
+                                        <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="byletter" <?= ($structure->getSetting('reporting_pass_criteria_method') == 'byletter') ? 'checked' : '' ?> /> <?= $string['reports:passprog:byletter'] ?>
                                     </td>
                                     <td>
                                         <input type="text" name="pass_prog_by_letter[<?= $structure->getID() ?>]" value="<?= ($structure->getSetting('reporting_pass_criteria_method') == 'byletter') ? \gt_html($structure->getSetting('reporting_pass_criteria_method_value')) : '' ?>" />
@@ -75,7 +75,7 @@
                             <?php endif; ?>
                             <tr>
                                 <td>
-                                    <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="bygradestructure" <?= ($structure->getSetting('reporting_pass_criteria_method') == 'bygradestructure') ? 'checked' : '' ?>  /> <?= $string['reports:passprog:bygradestructure'] ?> 
+                                    <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="bygradestructure" <?= ($structure->getSetting('reporting_pass_criteria_method') == 'bygradestructure') ? 'checked' : '' ?>  /> <?= $string['reports:passprog:bygradestructure'] ?>
                                 </td>
                                 <td>
                                     <?php if( ($grading = $structure->getCriteriaGradingStructures(true)) ): ?>
@@ -92,12 +92,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="all" <?= ($structure->getSetting('reporting_pass_criteria_method') == 'all') ? 'checked' : '' ?>  /> <?= $string['reports:passprog:all'] ?> 
+                                    <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="all" <?= ($structure->getSetting('reporting_pass_criteria_method') == 'all') ? 'checked' : '' ?>  /> <?= $string['reports:passprog:all'] ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="disable" <?= (!in_array($structure->getSetting('reporting_pass_criteria_method'), array('byletter', 'bygradestructure', 'all'))) ? 'checked' : '' ?>  /> <?= $string['disable'] ?> 
+                                    <input type="radio" name="pass_prog_method[<?= $structure->getID() ?>]" value="disable" <?= (!in_array($structure->getSetting('reporting_pass_criteria_method'), array('byletter', 'bygradestructure', 'all'))) ? 'checked' : '' ?>  /> <?= $string['disable'] ?>
                                 </td>
                             </tr>
                         </table>
@@ -109,5 +109,5 @@
 
     <br><br>
     <input type="submit" name="submitconfig" class="gt_btn gt_blue"  value="<?= $string['save'] ?>" />
-    
+
 </form>

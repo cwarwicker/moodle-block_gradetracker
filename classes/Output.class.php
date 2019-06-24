@@ -1,0 +1,51 @@
+<?php
+/**
+ * Output
+ *
+ * @copyright 2015 Bedford College
+ * @package Bedford College Grade Tracker
+ * @version 1.0
+ * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+namespace GT;
+
+class Output {
+
+  public function initAMD_structures_grade(){
+    $values = \GT\CriteriaAward::getSupportedSpecialVals();
+    return \GT\CriteriaAward::getSupportedSpecialVals();
+  }
+
+  public static function initAMD($view, $section = null){
+
+    $output = new Output();
+    $method = 'initAMD_' . strtolower($view);
+    if (!is_null($section)){
+      $method .= '_' . strtolower($section);
+    }
+
+    if (method_exists($output, $method)){
+      return array($output->$method());
+    } else {
+      return array();
+    }
+
+  }
+
+
+
+}

@@ -2,13 +2,13 @@
 
 
 <form action="" method="post" enctype="multipart/form-data">
-    
+
     <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
     <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
-    
+
     <h2><?= $string['assessmentsettings'] ?></h2>
     <p><?= $string['assessmentsettings:desc'] ?></p>
-    
+
     <small><strong><?= $string['config:assessments:fields'] ?></strong> - <?= $string['config:assessments:fields:desc'] ?></small>
     <br>
     <table id='gt_custom_assessment_form_fields'>
@@ -20,7 +20,7 @@
         </tr>
 
         <?php $cntCustomFormElements = 0; ?>
-                
+
         <?php if ($fields): ?>
             <?php foreach($fields as $element): ?>
                 <tr class="gt_custom_assessment_form_field_row" id="gt_custom_assessment_form_field_row_<?= $cntCustomFormElements ?>">
@@ -29,7 +29,7 @@
                         <input type="text" name="custom_form_fields_names[<?= $cntCustomFormElements ?>]" value="<?= \gt_html($element->getName()) ?>" />
                     </td>
                     <td>
-                        <select onchange="toggleFormFieldOptions(this.value, <?= $cntCustomFormElements ?>);return false;" name="custom_form_fields_types[<?= $cntCustomFormElements ?>]">
+                        <select class="gt_add_assessment_form_field_type" num="<?= $cntCustomFormElements ?>" name="custom_form_fields_types[<?= $cntCustomFormElements ?>]">
                             <option></option>
                             <option value="TEXT" <?= ($element->getType() == "TEXT") ? 'selected' : ''; ?>><?= $string['element:text'] ?></option>
                             <option value="NUMBER" <?= ($element->getType() == "NUMBER") ? 'selected' : ''; ?>><?= $string['element:number'] ?></option>
@@ -46,18 +46,18 @@
         <?php endif; ?>
 
     </table>
-    
-    
-    
-    
-    
+
+
+
+
+
     <br><br>
-    
+
     <small><strong><?= $string['config:assessments:comments'] ?></strong> - <?= $string['config:assessments:comments:desc'] ?></small>
     <br>
     <input type="checkbox" name="use_assessments_comments" value="1" <?= ($GT->getSetting('use_assessments_comments') == 1) ? 'checked' : '' ?> />
-    
+
     <br><br>
     <input type="submit" name="submitconfig" class="gt_btn gt_blue"  value="<?= $string['save'] ?>" />
-    
+
 </form>

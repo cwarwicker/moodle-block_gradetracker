@@ -2,7 +2,7 @@
 
     <!-- List of rules on set -->
     <div id="gt_popup_rules_table_<?= $ruleSetNum ?>" class="gt_popup_rules_table">
-        <p class='gt_centre'><a href='#' onclick='gt_addNewRule(<?= $ruleSetNum ?>);return false;' class='gt_btn gt_blue'><?= $string['addnewrule'] ?></a></p><br><br>
+        <p class='gt_centre'><a href='#' class='gt_add_rule gt_btn gt_blue' ruleSetNum='<?= $ruleSetNum ?>'><?= $string['addnewrule'] ?></a></p><br><br>
         <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/config/structures/qual/inc/ruletbl.inc.html'; ?>
     </div>
 
