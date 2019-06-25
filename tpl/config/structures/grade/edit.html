@@ -9,9 +9,9 @@
 
 <div class='gt_c'>
     <?php if( ($type == 'unit') || ($type == 'criteria') ): ?>
-    <a href='config.php?view=structures&section=grade&page=new_<?= $type ?>&id=<?= $Structure->getID() ?><?= (isset($Build)) ? '&build=' . $Build->getID() : '' ?>'><input type='button' class='gt_btn' value='<?= $string['addnewstructure'] ?>' /></a>    
+    <a href='config.php?view=structures&section=grade&page=new_<?= $type ?>&id=<?= $Structure->getID() ?><?= (isset($Build)) ? '&build=' . $Build->getID() : '' ?>'><input type='button' class='gt_btn' value='<?= $string['addnewstructure'] ?>' /></a>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <div id='gt_import_div'><a href='#' onclick="$('#gt_upload_div').toggle();return false;" class='gt_btn'><?= $string['importnewstructure'] ?></a></div>
+        <div id='gt_import_div'><a href='#' class='gt_btn gt_toggle' toggle='#gt_upload_div'><?= $string['importnewstructure'] ?></a></div>
         <div id='gt_upload_div' style='display:none;'>
             <br>
             <form action="" method="post" enctype="multipart/form-data">
@@ -25,7 +25,7 @@
 <br>
 
 <div>
-    
+
     <table class="gt_form_table">
 
         <tr>
@@ -40,7 +40,7 @@
         </tr>
 
         <?php if ($type == 'unit'): ?>
-        
+
             <?php if ($Structure->getUnitGradingStructures()): ?>
 
                 <?php foreach($Structure->getUnitGradingStructures() as $grading): ?>
@@ -70,7 +70,7 @@
             <?php endif; ?>
 
         <?php elseif ($type == 'criteria'): ?>
-        
+
             <?php if (($results = $Object->getCriteriaGradingStructures())): ?>
 
                 <?php foreach($results as $grading): ?>
@@ -84,7 +84,7 @@
                                 <input type="image" class="gt_on_off" name="enable_crit_grading_structure" src="<?= ($grading->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" />
                             </form>
                         </td>
-                        
+
                         <?php if (!isset($Build)): ?>
                             <td>
                                 <form action="" method="post">
@@ -93,7 +93,7 @@
                                 </form>
                             </td>
                         <?php endif; ?>
-                        
+
                         <td>
                             <form action="" method="post">
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
@@ -112,7 +112,7 @@
         <?php endif; ?>
 
     </table>
-    
+
 </div>
 
 <br><br>

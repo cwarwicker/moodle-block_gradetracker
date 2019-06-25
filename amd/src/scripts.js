@@ -14,6 +14,32 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     // Core element bindings
     GT.bind = function(){
 
+        // Toggle a target
+        $('.gt_toggle').unbind('click');
+        $('.gt_toggle').bind('click', function(e){
+
+          var target = $(this).attr('toggle');
+          if (target !== undefined){
+            $(target).toggle();
+          }
+
+          e.preventDefault();
+
+        });
+
+        $('.gt_remove').unbind('click');
+        $('.gt_remove').bind('click', function(e){
+
+          var target = $(this).attr('remove');
+          if (target !== undefined){
+            $(target).remove();
+          }
+
+          e.preventDefault();
+
+        });
+
+
         // Stop form submission on [enter] of unit name text input
         $('#gt_filter_qual_name').unbind('keypress');
         $('#gt_filter_qual_name').bind('keypress', function(e){

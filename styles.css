@@ -115,6 +115,7 @@
 div.gt_config
 {
     min-width: 92%;
+    min-height: 600px;
     margin: auto;
     background-color: #efeded;
     border: 1px solid #000;

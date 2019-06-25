@@ -12,11 +12,11 @@
     <form action="" method="post" id="gt_qual_form">
 
         <div class='gt_form_panel'>
-            
+
             <div class='gt_form_panel_heading'>
                 <?= ($Qualification->isValid()) ? $string['editqualification'] : $string['newqualification'] ?>
             </div>
-            
+
             <div class='gt_form_panel_body'>
 
                 <p class="gt_c">
@@ -51,7 +51,7 @@
                             <tr>
                                 <td><?= $string['qualbuilds'] ?></td>
                                 <td>
-                                     <select name="qual_build" class="gt_form_control" onchange="loadBuildDefaults(this.value);return false;">
+                                     <select name="qual_build" class="gt_form_control gt_load_build_defaults">
                                         <option value=""></option>
                                         <?php if ($builds): ?>
                                             <?php foreach($builds as $build): ?>
@@ -92,7 +92,7 @@
                 </div>
 
                 <?php if ($Structure): ?>
-                
+
                 <br><hr><br>
 
                 <?php if ($Structure->isLevelEnabled("Units")): ?>
@@ -119,9 +119,9 @@
                             <?php endif; ?>
 
                             <p>
-                                <input type="button" class="gt_btn" onclick="removeUnitsFromQualSelect();return false;" value="<?= $string['remove'] ?>" />
+                                <input id="gt_remove_unit_from_qual_select" type="button" class="gt_btn" value="<?= $string['remove'] ?>" />
                                 &nbsp;&nbsp;
-                                <a href="" id='gt_qual_units_edit_unit_btn' type="button" class="gt_btn gt_yellow" disabled target="_blank"><?= $string['edit'] ?></a>
+                                <a href="#" id='gt_qual_units_edit_unit_btn' type="button" class="gt_btn gt_yellow" disabled target="_blank"><?= $string['edit'] ?></a>
                             </p>
 
                         </div>
@@ -141,7 +141,7 @@
                                         <?php foreach($structures as $struc): ?>
                                         <option value="<?= $struc->getID() ?>" <?= ($Structure && $Structure->getID() == $struc->getID()) ? 'selected' : '' ?>><?= $struc->getName() ?></option>
                                         <?php endforeach; ?>
-                                    <?php endif; ?> 
+                                    <?php endif; ?>
                                 </select>
 
                                 <select id="gt_filter_units_level" class="gt_half_width">
@@ -150,13 +150,13 @@
                                         <?php foreach($allLevels as $level): ?>
                                         <option value="<?= $level->getID() ?>"><?= $level->getName() ?></option>
                                         <?php endforeach; ?>
-                                    <?php endif; ?> 
+                                    <?php endif; ?>
                                 </select>
 
                                 <br><br>
 
                                 <input type="text" id="gt_filter_units_name" class="gt_80" placeholder="<?= $string['name'] ?>" />
-                                <a href="#" onclick="filterUnitSearch();return false;">
+                                <a href="#" class="gt_filter_units">
                                     <img src="<?= gt_image_url('i/search') ?>" class="gt_middle" alt="search" />
                                 </a>
 
@@ -169,7 +169,7 @@
                                 <br><br>
 
                                 <p>
-                                    <input type="button" class="gt_btn" onclick="addUnitsToQualSelect();return false;" value="<?= $string['add'] ?>" />
+                                    <input id="gt_add_units_to_qual_select" type="button" class="gt_btn" value="<?= $string['add'] ?>" />
                                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=new" class="gt_btn" target="_blank"><?= $string['createnew'] ?></a>
                                 </p>
 
@@ -187,7 +187,7 @@
                         <div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt'><?= $string['coursesonqual'] ?></div>
 
                         <br><br>
-                        
+
                         <select id="qual_courses" class="gt_course_select" multiple="multiple">
                             <?php if ($Qualification->getCourses()): ?>
                                 <?php foreach($Qualification->getCourses() as $course): ?>
@@ -205,7 +205,7 @@
                         <br>
 
                         <p>
-                            <input type="button" class="gt_btn" onclick="removeCoursesFromQualSelect();return false;" value="<?= $string['remove'] ?>" />
+                            <input id="gt_remove_courses_from_qual_select" type="button" class="gt_btn" value="<?= $string['remove'] ?>" />
                             &nbsp;&nbsp;
                             <a href="" id='gt_qual_units_edit_course_btn' type="button" class="gt_btn gt_yellow" disabled target="_blank"><?= $string['edit'] ?></a>
                         </p>
@@ -219,7 +219,7 @@
                         <div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt'><?= $string['courseschoose'] ?></div>
 
                         <br><br>
-                        
+
                         <div>
 
                             <select id="gt_filter_courses_category" class="gt_half_width">
@@ -228,13 +228,13 @@
                                     <?php foreach($allCats as $catID => $catName): ?>
                                         <option value="<?= $catID ?>"><?= $catName ?></option>
                                     <?php endforeach; ?>
-                                <?php endif; ?> 
+                                <?php endif; ?>
                             </select>
 
                             <br><br>
 
                             <input type="text" id="gt_filter_courses_name" class="gt_80" placeholder="<?= $string['searchcourse'] ?>" />
-                            <a href="#" onclick="filterCourseSearch();return false;">
+                            <a href="#" class="gt_filter_courses">
                                 <img src="<?= gt_image_url('i/search') ?>" class="gt_middle" alt="search" />
                             </a>
 
@@ -251,20 +251,20 @@
                             <br><br>
 
                             <p>
-                                <input type="button" class="gt_btn" onclick="addCoursesToQualSelect();return false;" value="<?= $string['add'] ?>" />
+                                <input id="gt_add_courses_to_qual_select" type="button" class="gt_btn" value="<?= $string['add'] ?>" />
                                 <a href="<?= $CFG->wwwroot ?>/course/management.php" target="_blank" class="gt_btn"><?= $string['createnew'] ?></a>
                             </p>
 
                         </div>
 
-                    </div>            
+                    </div>
 
                 </div>
 
                 <br class="gt_cl"><br>
-                
+
                 <?php endif; ?>
-                
+
                 <p class="gt_c">
                     <input type="submit" class="gt_btn gt_blue" name="save_qualification" value="<?= $string['save'] ?>" />
                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
@@ -273,9 +273,9 @@
             </div>
 
         </div>
-        
+
     </form>
-    
+
     <?php if ($User->hasCapability('block/gradetracker:delete_restore_quals')): ?>
         <br><br><br><br>
         <p class='gt_c'>
@@ -289,7 +289,7 @@
             <?php endif; ?>
         </p>
     <?php endif; ?>
-    
+
 </div>
 
 <br class="gt_cl" />

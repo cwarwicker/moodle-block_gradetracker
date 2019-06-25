@@ -41,6 +41,9 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
     });
 
+    // Bind general elements from GT object
+    GT.bind();
+
   }
 
 

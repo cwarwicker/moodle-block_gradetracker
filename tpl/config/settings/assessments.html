@@ -39,7 +39,7 @@
                         </select>
                     </td>
                     <td><input type="text" style="<?= ($element->getType() != 'SELECT') ? 'display:none;' : ''; ?>" id="custom_form_fields_options_<?= $cntCustomFormElements ?>" name="custom_form_fields_options[<?= $cntCustomFormElements ?>]" placeholder="option1,option2,option3" value="<?= \gt_html($element->getOptionsString()) ?>"></td>
-                    <td><a href="#" onclick="$('#gt_custom_assessment_form_field_row_<?= $cntCustomFormElements ?>').remove();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" alt="remove"></a></td>
+                    <td><a href="#" class="gt_remove" remove="#gt_custom_assessment_form_field_row_<?= $cntCustomFormElements ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" alt="remove"></a></td>
                 </tr>
                 <?php $cntCustomFormElements++ ?>
             <?php endforeach; ?>

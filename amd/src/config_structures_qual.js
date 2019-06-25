@@ -123,7 +123,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup'], function($, ui, bcP
                 row += "<td><select class='gt_toggle_structure_form_field_type' num='"+config_structures_quals.numCustomFormFields+"' name='custom_form_fields_types["+config_structures_quals.numCustomFormFields+"]'><option></option><option value='TEXT'>"+M.util.get_string('element:text', 'block_gradetracker')+"</option><option value='NUMBER'>"+M.util.get_string('element:number', 'block_gradetracker')+"</option><option value='TEXTBOX'>"+M.util.get_string('element:textbox', 'block_gradetracker')+"</option><option value='SELECT'>"+M.util.get_string('element:select', 'block_gradetracker')+"</option><option value='CHECKBOX'>"+M.util.get_string('element:checkbox', 'block_gradetracker')+"</option></select></td>";
                 row += "<td><input type='text' style='display:none;' id='custom_form_fields_options_"+config_structures_quals.numCustomFormFields+"' name='custom_form_fields_options["+config_structures_quals.numCustomFormFields+"]' placeholder='option1,option2,option3' /></td>";
                 row += "<td><input type='checkbox' name='custom_form_fields_req["+config_structures_quals.numCustomFormFields+"]' value='1' /></td>";
-                row += "<td><a href='#' onclick='$(\"#gt_custom_form_field_row_"+config_structures_quals.numCustomFormFields+"\").remove();return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='remove' /></a></td>";
+                row += "<td><a href='#' class='gt_remove' remove='#gt_custom_form_field_row_"+config_structures_quals.numCustomFormFields+"'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='remove' /></a></td>";
             row += "</tr>";
 
             $('#gt_custom_form_fields').append(row);
@@ -254,7 +254,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup'], function($, ui, bcP
           GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_rule_form', params: params}, function(data){
 
               // Add row to table
-              var row = '<tr id="gt_rule_row_'+ruleSetNum+'_'+ruleNum+'" class="gt_rule_row_'+ruleSetNum+'"><td><a href="#" id="gt_rule_name_link_'+ruleSetNum+'_'+ruleNum+'" class="gt_edit_rule" ruleSetNum="'+ruleSetNum+'" ruleNum="'+ruleNum+'">'+M.util.get_string('newrule', 'block_gradetracker')+'</a></td><td><span id="gt_rule_event_span_'+ruleSetNum+'_'+ruleNum+'"></span></td><td><span id="gt_rule_steps_span_'+ruleSetNum+'_'+ruleNum+'">0</span></td><td><div class="gt_fancy_checkbox"><input id="chkbox_'+ruleSetNum+'_'+ruleNum+'" type="checkbox" name="rule_sets['+ruleSetNum+'][rules]['+ruleNum+'][enabled]" value="1" checked /><label for="chkbox_'+ruleSetNum+'_'+ruleNum+'"></label></div></td><td><a href="#" onclick="$(\'#gt_rule_row_'+ruleSetNum+'_'+ruleNum+', #gt_rule_content_'+ruleSetNum+'_'+ruleNum+'\').remove();return false;"><img src="'+M.cfg.wwwroot+'/blocks/gradetracker/pix/remove.png" alt="delete" /></a></td></tr>';
+              var row = '<tr id="gt_rule_row_'+ruleSetNum+'_'+ruleNum+'" class="gt_rule_row_'+ruleSetNum+'"><td><a href="#" id="gt_rule_name_link_'+ruleSetNum+'_'+ruleNum+'" class="gt_edit_rule" ruleSetNum="'+ruleSetNum+'" ruleNum="'+ruleNum+'">'+M.util.get_string('newrule', 'block_gradetracker')+'</a></td><td><span id="gt_rule_event_span_'+ruleSetNum+'_'+ruleNum+'"></span></td><td><span id="gt_rule_steps_span_'+ruleSetNum+'_'+ruleNum+'">0</span></td><td><div class="gt_fancy_checkbox"><input id="chkbox_'+ruleSetNum+'_'+ruleNum+'" type="checkbox" name="rule_sets['+ruleSetNum+'][rules]['+ruleNum+'][enabled]" value="1" checked /><label for="chkbox_'+ruleSetNum+'_'+ruleNum+'"></label></div></td><td><a href="#" class="gt_remove" remove="#gt_rule_row_'+ruleSetNum+'_'+ruleNum+', #gt_rule_content_'+ruleSetNum+'_'+ruleNum+'\"><img src="'+M.cfg.wwwroot+'/blocks/gradetracker/pix/remove.png" alt="delete" /></a></td></tr>';
               $('#gt_popup_rules_table_'+ruleSetNum + ' table').append(row);
 
               // Add div
@@ -447,6 +447,12 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup'], function($, ui, bcP
 
           e.preventDefault();
 
+        });
+
+        $('.gt_remove_step_action, .gt_remove_rule_condition').unbind('click');
+        $('.gt_remove_step_action, .gt_remove_rule_condition').bind('click', function(e){
+          $(this).parent().remove();
+          e.preventDefault();
         });
 
 
@@ -701,6 +707,9 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup'], function($, ui, bcP
           config_structures_quals.updateFX();
         });
 
+
+        // Bind general elements from GT object
+        GT.bind();
 
 
     }

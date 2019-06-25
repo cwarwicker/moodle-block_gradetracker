@@ -31,9 +31,9 @@ define(['jquery', 'jqueryui'], function($, ui) {
       var parent = $(this).attr('parent');
 
       if (parent > 0){
-        $('#gt_stud_nav_link_'+parent+'_sub').append('<span id="gt_stud_nav_link_'+num+'" class="gt_stud_nav_link"><input type="text" name="student_grid_nav['+parent+'][sub]['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="student_grid_nav['+parent+'][sub]['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" onclick="$(\'#gt_stud_nav_link_'+num+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a><br></span>');
+        $('#gt_stud_nav_link_'+parent+'_sub').append('<span id="gt_stud_nav_link_'+num+'" class="gt_stud_nav_link"><input type="text" name="student_grid_nav['+parent+'][sub]['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="student_grid_nav['+parent+'][sub]['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" class="gt_remove" remove="#gt_stud_nav_link_'+num+'"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a><br></span>');
       } else {
-        $('#gt_config_stud_grid_nav_links').append('<div id="gt_stud_nav_link_'+num+'" class="gt_stud_nav_link"><br><input type="text" name="student_grid_nav['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="student_grid_nav['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" onclick="$(\'#gt_stud_nav_link_'+num+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a> <a href="#" class="gt_add_link_stud_grid" parent="'+num+'"><img src="'+M.util.image_url('t/add')+'" alt="'+M.util.get_string('addnew', 'block_gradetracker')+'" /></a><br><div id="gt_stud_nav_link_'+num+'_sub"></div></div>');
+        $('#gt_config_stud_grid_nav_links').append('<div id="gt_stud_nav_link_'+num+'" class="gt_stud_nav_link"><br><input type="text" name="student_grid_nav['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="student_grid_nav['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" class="gt_remove" remove="#gt_stud_nav_link_'+num+'"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a> <a href="#" class="gt_add_link_stud_grid" parent="'+num+'"><img src="'+M.util.image_url('t/add')+'" alt="'+M.util.get_string('addnew', 'block_gradetracker')+'" /></a><br><div id="gt_stud_nav_link_'+num+'_sub"></div></div>');
       }
 
       config_settings.bindings();
@@ -52,9 +52,9 @@ define(['jquery', 'jqueryui'], function($, ui) {
       var parent = $(this).attr('parent');
 
       if (parent > 0){
-        $('#gt_unit_nav_link_'+parent+'_sub').append('<span id="gt_unit_nav_link_'+num+'" class="gt_unit_nav_link"><input type="text" name="unit_grid_nav['+parent+'][sub]['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="unit_grid_nav['+parent+'][sub]['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" onclick="$(\'#gt_unit_nav_link_'+num+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a><br></span>');
+        $('#gt_unit_nav_link_'+parent+'_sub').append('<span id="gt_unit_nav_link_'+num+'" class="gt_unit_nav_link"><input type="text" name="unit_grid_nav['+parent+'][sub]['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="unit_grid_nav['+parent+'][sub]['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" class="gt_remove" remove="#gt_unit_nav_link_'+num+'"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a><br></span>');
       } else {
-        $('#gt_config_unit_grid_nav_links').append('<div id="gt_unit_nav_link_'+num+'" class="gt_unit_nav_link"><br><input type="text" name="unit_grid_nav['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="unit_grid_nav['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" onclick="$(\'#gt_unit_nav_link_'+num+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a> <a href="#" class="gt_add_link_unit_grid" parent="'+num+'"><img src="'+M.util.image_url('t/add')+'" alt="'+M.util.get_string('addnew', 'block_gradetracker')+'" /></a><br><div id="gt_unit_nav_link_'+num+'_sub"></div></div>');
+        $('#gt_config_unit_grid_nav_links').append('<div id="gt_unit_nav_link_'+num+'" class="gt_unit_nav_link"><br><input type="text" name="unit_grid_nav['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="unit_grid_nav['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" class="gt_remove" remove="#gt_unit_nav_link_'+num+'"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a> <a href="#" class="gt_add_link_unit_grid" parent="'+num+'"><img src="'+M.util.image_url('t/add')+'" alt="'+M.util.get_string('addnew', 'block_gradetracker')+'" /></a><br><div id="gt_unit_nav_link_'+num+'_sub"></div></div>');
       }
 
       config_settings.bindings();
@@ -73,9 +73,9 @@ define(['jquery', 'jqueryui'], function($, ui) {
       var parent = $(this).attr('parent');
 
       if (parent > 0){
-        $('#gt_class_nav_link_'+parent+'_sub').append('<span id="gt_class_nav_link_'+num+'" class="gt_class_nav_link"><input type="text" name="class_grid_nav['+parent+'][sub]['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="class_grid_nav['+parent+'][sub]['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" onclick="$(\'#gt_class_nav_link_'+num+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a><br></span>');
+        $('#gt_class_nav_link_'+parent+'_sub').append('<span id="gt_class_nav_link_'+num+'" class="gt_class_nav_link"><input type="text" name="class_grid_nav['+parent+'][sub]['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="class_grid_nav['+parent+'][sub]['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" class="gt_remove" remove="#gt_class_nav_link_'+num+'"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a><br></span>');
       } else {
-        $('#gt_config_class_grid_nav_links').append('<div id="gt_class_nav_link_'+num+'" class="gt_class_nav_link"><br><input type="text" name="class_grid_nav['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="class_grid_nav['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" onclick="$(\'#gt_class_nav_link_'+num+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a> <a href="#" class="gt_add_link_class_grid" parent="'+num+'"><img src="'+M.util.image_url('t/add')+'" alt="'+M.util.get_string('addnew', 'block_gradetracker')+'" /></a><br><div id="gt_class_nav_link_'+num+'_sub"></div></div>');
+        $('#gt_config_class_grid_nav_links').append('<div id="gt_class_nav_link_'+num+'" class="gt_class_nav_link"><br><input type="text" name="class_grid_nav['+num+'][name]" value="" placeholder="'+M.util.get_string('name', 'block_gradetracker')+'" /> <input type="text" class="gt_nav_url" name="class_grid_nav['+num+'][url]" value="" placeholder="'+M.util.get_string('url', 'block_gradetracker')+'" /> <a href="#" class="gt_remove" remove="#gt_class_nav_link_'+num+'"><img src="'+M.util.image_url('t/delete')+'" alt="'+M.util.get_string('delete', 'block_gradetracker')+'" /></a> <a href="#" class="gt_add_link_class_grid" parent="'+num+'"><img src="'+M.util.image_url('t/add')+'" alt="'+M.util.get_string('addnew', 'block_gradetracker')+'" /></a><br><div id="gt_class_nav_link_'+num+'_sub"></div></div>');
       }
 
       config_settings.bindings();
@@ -101,7 +101,7 @@ define(['jquery', 'jqueryui'], function($, ui) {
             row += "<td><input type='text' name='custom_form_fields_names["+customFormFields+"]' /></td>";
             row += "<td><select class='gt_add_assessment_form_field_type' num='"+customFormFields+"' name='custom_form_fields_types["+customFormFields+"]'><option></option><option value='TEXT'>"+M.util.get_string('element:text', 'block_gradetracker')+"</option><option value='NUMBER'>"+M.util.get_string('element:number', 'block_gradetracker')+"</option><option value='TEXTBOX'>"+M.util.get_string('element:textbox', 'block_gradetracker')+"</option><option value='SELECT'>"+M.util.get_string('element:select', 'block_gradetracker')+"</option><option value='CHECKBOX'>"+M.util.get_string('element:checkbox', 'block_gradetracker')+"</option></select></td>";
             row += "<td><input type='text' style='display:none;' id='custom_form_fields_options_"+customFormFields+"' name='custom_form_fields_options["+customFormFields+"]' placeholder='option1,option2,option3' /></td>";
-            row += "<td><a href='#' onclick='$(\"#gt_custom_assessment_form_field_row_"+customFormFields+"\").remove();return false;'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='remove' /></a></td>";
+            row += "<td><a href='#' class='gt_remove' remove='#gt_custom_assessment_form_field_row_"+customFormFields+"'><img src='"+M.cfg.wwwroot+"/blocks/gradetracker/pix/remove.png' alt='remove' /></a></td>";
         row += "</tr>";
 
         $('#gt_custom_assessment_form_fields').append(row);
@@ -130,21 +130,28 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
     });
 
+
+    // Report settings
+    //
+    // Add criteria weighting score
+    $('.gt_report_add_crit_weighting').unbind('click');
+    $('.gt_report_add_crit_weighting').bind('click', function(e){
+
+      var structureID = $(this).attr('structureID');
+      $('#gt_crit_prog_wt_'+structureID).append( '<tr><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][letter][]" /></td><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][score][]" /></td><td><a href="#" onclick="$($(this).parents(\'tr\')[0]).remove();return false;"><img src="'+M.cfg.wwwroot+'/blocks/gradetracker/pix/remove.png" /></a></td></tr>' );
+
+      e.preventDefault();
+
+    });
+    
+
+    // General bindings
+    GT.bind();
+
   }
 
 
-  // Report settings
-  //
-  // Add criteria weighting score
-  $('.gt_report_add_crit_weighting').unbind('click');
-  $('.gt_report_add_crit_weighting').bind('click', function(e){
 
-    var structureID = $(this).attr('structureID');
-    $('#gt_crit_prog_wt_'+structureID).append( '<tr><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][letter][]" /></td><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][score][]" /></td><td><a href="#" onclick="$($(this).parents(\'tr\')[0]).remove();return false;"><img src="'+M.cfg.wwwroot+'/blocks/gradetracker/pix/remove.png" /></a></td></tr>' );
-
-    e.preventDefault();
-
-  });
 
 
 

@@ -85,6 +85,9 @@ define(['jquery', 'jqueryui'], function($, ui) {
         GT.read_file(this, '#gt_award_img_preview_'+rowNum);
     } );
 
+    // Bind general elements from GT object
+    GT.bind();
+
   }
 
 

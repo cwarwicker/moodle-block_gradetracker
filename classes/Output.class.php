@@ -30,6 +30,31 @@ class Output {
     return \GT\CriteriaAward::getSupportedSpecialVals();
   }
 
+  public function initAMD_units(){
+
+    global $VARS;
+
+    // Unit object is stored in the global $VARS variable for use elsewhere. Such as here.
+    $unit = $VARS['GUI'];
+
+    $structureID = $unit->getStructureID();
+    $Structure = new \GT\QualificationStructure($structureID);
+
+    $gradingStructures = $Structure->getCriteriaGradingStructures(true);
+
+    $return = array();
+    $return['supportedTypes'] = \GT\Criterion::getSupportedTypes();
+    $return['gradingTypes'] = \GT\CriteriaAward::getSupportedGradingTypes();
+    $return['gradingStructures'] = array();
+    foreach($gradingStructures as $grading){
+      $return['gradingStructures'][] = array('id' => $grading->getID(), 'name' => $grading->getName());
+    }
+
+
+    return $return;
+
+  }
+
   public static function initAMD($view, $section = null){
 
     $output = new Output();

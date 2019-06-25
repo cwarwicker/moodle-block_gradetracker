@@ -7,21 +7,6 @@
     <?= gt_info_alert_box( $string['recordisdeleted'] ) ?>
 <?php endif; ?>
 
-<script>
-    
-    // Numeric criteria stuff
-    var cntNumericSubCriteria = 0;
-    var cntNumericObservationCriteria = 0;
-    var arrayOfNumericSubCriteria = new Array();
-    var arrayOfNumericObservationCriteria = new Array();
-    var maxNumericPoints = <?= \GT\Criteria\NumericCriterion::getMaxPoints(); ?>;
-    
-    // Ranged criteria stuff
-    var cntRangedRangeCriteria = 0;
-    var cntRangedSubCriteria = 0;
-    
-</script>
-
 <div class="gt_full_page">
 
     <form action="" method="post">
@@ -68,7 +53,7 @@
                             <tr>
                                 <td><?= $string['level'] ?></td>
                                 <td>
-                                    <select name="unit_level"  class="gt_form_control" onchange="loadUnitDefaults($('#unit_type_id').val(), this.value);return false;">
+                                    <select id="gt_load_unit_defaults" name="unit_level"  class="gt_form_control">
                                         <option value=""></option>
                                         <?php if (isset($levels) && $levels): ?>
                                             <?php foreach($levels as $level): ?>
@@ -157,7 +142,7 @@
 
                             <div class='gt_form_panel_sub_heading'>
                                 <?= $string['criteria'] ?>
-                                <span><a href="#" onclick="addNewCriterion();return false;"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon gt_middle" alt="<?= $string['add'] ?>" /></a></span>
+                                <span><a href="#" id="gt_add_new_criterion"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon gt_middle" alt="<?= $string['add'] ?>" /></a></span>
                             </div>
 
                             <div class='gt_form_panel_sub_body'>
@@ -194,7 +179,11 @@
                                         <th><?= $string['gradestructure'] ?></th>
                                         <th><?= $string['gradingtype'] ?></th>
                                         <th></th>
-                                        <th></th>
+                                        <th>
+                                          <a href='#' class='gt_remove' remove='.gt_unit_criteria_table_row'>
+                                            <img src='<?= gt_image_url('t/delete') ?>' alt='delete' />
+                                        </a>
+                                      </th>
                                     </tr>
 
                                     <?php if (isset($flatCriteria) && $flatCriteria): ?>
@@ -216,7 +205,7 @@
                                                 </td>
 
                                                 <td>
-                                                    <select name='unit_criteria[<?= $dynamicNum ?>][type]' onchange='changeCriterionType(<?= $dynamicNum ?>, this.value);return false;'>
+                                                    <select id='gt_change_criterion_type' critNum='<?= $dynamicNum ?>' name='unit_criteria[<?= $dynamicNum ?>][type]'>
                                                         <?php foreach(\GT\Criterion::getSupportedTypes() as $type): ?>
                                                             <?php if ($Structure->isLevelEnabled($type->id)): ?>
                                                                 <option value='<?= $type->id ?>' <?= ($criterion->getType() == $type->id) ? 'selected' : ''; ?> ><?= $type->type ?></option>
@@ -228,7 +217,7 @@
                                                 <td id='gt_criterion_options_cell_<?= $dynamicNum ?>' class='gt_criterion_options_cell'>
                                                     <?php foreach((array)$criterion->getFormOptions() as $opt): ?>
                                                         <?php $formElement = \GT\FormElement::create($opt); ?>
-                                                        <small><?= $opt->label ?></small> 
+                                                        <small><?= $opt->label ?></small><br>
                                                         <?= $formElement->display( array('name' => 'unit_criteria['.$dynamicNum.'][options]') ) ?>
                                                         <br>
                                                     <?php endforeach; ?>
@@ -303,7 +292,7 @@
 
                         </div>
 
-                    <?php endif; ?>                
+                    <?php endif; ?>
 
                 </div>
 
@@ -330,7 +319,7 @@
 
                     </div>
                 <?php endif; ?>
-                
+
                 <p class="gt_c">
                     <br>
                     <input type="submit" class="gt_btn gt_blue" name="save_unit" value="<?= $string['save'] ?>" />
@@ -356,11 +345,11 @@
             <?php endif; ?>
         </p>
     <?php endif; ?>
-    
+
 </div>
 
 <?php if ($Structure): ?>
-    <script>
+    <!-- <script>
 
         var cntCrit = <?= count($Unit->getCriteria()) ?>;
         <?php if (isset($dNum)): ?>
@@ -388,5 +377,5 @@
 
         applyCritNameBlurFocus();
 
-    </script>
+    </script> -->
 <?php endif; ?>

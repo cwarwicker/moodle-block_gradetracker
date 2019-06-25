@@ -20,7 +20,7 @@
                         <label for="chkbox_<?= $ruleSetNum ?>_<?= $ruleNum ?>"></label>
                     </div>
                 </td>
-                <td><a href='#' onclick="$('#gt_rule_row_<?= $ruleSetNum ?>_<?= $ruleNum ?>, #gt_rule_content_<?= $ruleSetNum ?>_<?= $ruleNum ?>').remove();return false;"><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
+                <td><a href='#' class='gt_remove' remove='#gt_rule_row_<?= $ruleSetNum ?>_<?= $ruleNum ?>, #gt_rule_content_<?= $ruleSetNum ?>_<?= $ruleNum ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' alt='delete' /></a></td>
             </tr>
         <?php endforeach; ?>
     <?php endif; ?>

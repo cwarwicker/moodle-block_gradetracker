@@ -88,7 +88,7 @@
                                 <td><input type="number" min="0" step="any" name="grade_points[<?= $cntAwards ?>]" placeholder="1" value="<?= $award->getPoints() ?>" /></td>
                                 <td><input type="number" min="0" step="any" name="grade_points_lower[<?= $cntAwards ?>]" placeholder="1.0" value="<?= $award->getPointsLower() ?>" /></td>
                                 <td><input type="number" min="0" step="any" name="grade_points_upper[<?= $cntAwards ?>]" placeholder="1.5" value="<?= $award->getPointsUpper() ?>" /></td>
-                                <td><a href="#" onclick="$('#gt_grading_row_<?= $cntAwards ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
+                                <td><a href="#" class="gt_remove" remove="#gt_grading_row_<?= $cntAwards ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
                             </tr>
 
                         <?php endforeach; ?>
