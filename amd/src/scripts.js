@@ -91,9 +91,33 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         });
 
+        // Check/Uncheck all options of a given class, but when the master is not a checkbox itself, just a link
+        $('a.gt_toggle_check_all').unbind('click');
+        $('a.gt_toggle_check_all').bind('click', function(e){
 
-        $('#chosen_quals').off('change');
-        $('#chosen_quals').on('change', function(){
+            // Get value of the checkbox and attributes to see how we want to select the options
+            var val = $(this).prop('checked');
+            var useClass = $(this).attr('useClass');
+
+            // If no checked property defined, get it from the first checkbox of the class and add it to the link element
+            if (val === undefined){
+              val = $( $('.'+useClass)[0] ).val();
+            }
+
+            // Reverse the property on the master link
+            $(this).prop('checked', !val);
+
+            // Apply properties to class
+            if (useClass !== undefined){
+                $('.'+useClass).prop('checked', val);
+            }
+
+            e.preventDefault();
+
+        });
+
+        $('#chosen_quals').unbind('change');
+        $('#chosen_quals').bind('change', function(){
             var val = $(this).val();
             var numSelected = (val !== null) ? val.length : 0;
             if (numSelected == 1){
@@ -140,6 +164,33 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         };
 
+        // Element bindings for qual picker
+        $('.gt_qual_picker_remove').unbind('click');
+        $('.gt_qual_picker_remove').bind('click', function(e){
+          GT.qual_picker.remove();
+          e.preventDefault();
+        });
+
+        $('.gt_qual_picker_filter').unbind('click');
+        $('.gt_qual_picker_filter').bind('click', function(e){
+          GT.qual_picker.filter();
+          e.preventDefault();
+        });
+
+        $('.gt_qual_picker_add').unbind('click');
+        $('.gt_qual_picker_add').bind('click', function(e){
+          GT.qual_picker.add();
+          e.preventDefault();
+        });
+
+        // Filter on [ENTER]
+        $('#gt_filter_qual_name').unbind('keypress');
+        $('#gt_filter_qual_name').bind('keypress', function(e){
+            if (e.keyCode === 13){
+              GT.qual_picker.filter();
+              e.preventDefault();
+            }
+        });
 
     };
 
@@ -361,7 +412,6 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             $(this).attr('id', 'chosen_qual_opt_'+id);
             $('#chosen_quals').append( $(this) );
 
-
             // Add to hidden input
             $('#gt_chosen_quals_hidden_ids').append( "<input type='hidden' id='hidden_qual_"+id+"' name='quals[]' value='"+id+"' />" );
 
@@ -376,11 +426,18 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         $.each(options, function(){
 
             var id = $(this).val();
+            $(this).prop('selected', false);
+
+            // Add it back to the filtered search
+            $('#gt_filter_quals').append( $(this) );
+
+            // Remove hidden input
             $('#hidden_qual_'+id).remove();
-            $(this).remove();
 
         });
     };
+
+
 
 
     /** Grades **/

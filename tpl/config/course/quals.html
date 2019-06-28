@@ -5,34 +5,34 @@
 
 <?php $nodeSpacing = ''; ?>
 
-<select class="gt_form_control" onchange="switchToCourse(this.value, '<?= $section ?>');return false;">
+<select id="gt_switch_course" section="<?= $section ?>" class="gt_form_control">
 
     <?php foreach($Course->getRelationshipHierarchy() as $node): ?>
-    
+
         <option value="<?= $node->id ?>" <?= ($node->id == $Course->id) ? 'selected' : ''; ?> >
-                
+
                 <?php if (isset($nodeLvl) && $node->hierarchyLevel < $nodeLvl): ?>
                     <?php $nodeSpacing .= str_repeat('&nbsp;', 4) ?>
                 <?php elseif (isset($nodeLvl) && $node->hierarchyLevel > $nodeLvl): ?>
                     <?php $nodeSpacing = substr($nodeSpacing, 0, -24) ?>
                 <?php endif; ?>
-                
+
                 <?php if (isset($nodeSpacing)): ?>
                     <?= $nodeSpacing ?>
                 <?php endif; ?>
-                
+
                 <?= $node->getName() ?>
-                
+
         </option>
-    
+
         <?php $nodeLvl = $node->hierarchyLevel ?>
-        
+
     <?php endforeach; ?>
-    
+
 </select>
 <br>
 <div class="gt_full_page">
-    
+
     <form action="" method="post" id="gt_course_quals_form">
 
         <div class="gt_form_panel">
@@ -46,13 +46,13 @@
                     <a href="<?= $CFG->wwwroot ?>/course/view.php?id=<?= $Course->id ?>" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
                     <br><br>
                 </p>
-                                
+
                 <?= $QualPicker->display() ?>
-                
+
             </div>
 
         </div>
-        
+
     </form>
-        
+
 </div>
