@@ -186,6 +186,7 @@ define(['jquery', 'jqueryui'], function($, ui) {
           // Set checkbox property
           $('.gt_qual_element[type="checkbox"]').prop('checked', false);
 
+          var buildID = $(this).val();
           var params = { buildID: buildID };
 
           GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_build_defaults', params: params}, function(data){

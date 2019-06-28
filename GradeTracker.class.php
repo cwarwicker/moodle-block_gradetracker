@@ -888,7 +888,7 @@ class GradeTracker
 
                 case 'units':
 
-                    $this->displayConfigUnit($TPL, $VARS, $section, $page, $id);
+                    $this->displayConfigUnit($TPL, $section, $page, $id);
 
                 break;
 
@@ -1387,8 +1387,10 @@ class GradeTracker
      * @param type $page
      * @param type $id
      */
-    public function displayConfigUnit($TPL, $VARS, &$section, $page, $id)
+    public function displayConfigUnit($TPL, &$section, $page, $id)
     {
+
+        global $VARS;
 
         // Edit and New use same template, so set it to "new" if it's "edit"
         if ($section == 'edit') $section = 'new';
@@ -1410,6 +1412,7 @@ class GradeTracker
                 $GUI = $VARS['GUI'];
             } else {
                 $GUI = new \GT\Unit\GUI($id);
+                $VARS['GUI'] = $GUI;
             }
 
             $GUI->loadTemplate($TPL);

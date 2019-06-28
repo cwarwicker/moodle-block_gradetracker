@@ -237,11 +237,11 @@
                                                                 <option value='<?= $pDynamicNumber ?>' <?= ( ($criterion->getParentID() > 0 && $criterion->getParentID() == $crit->getID()) || ( $criterion->getParentNumber() == $pDynamicNumber ) ) ? 'selected' : ''; ?> ><?= $crit->getName() ?></option>
                                                             <?php endforeach; ?>
                                                     </select>&nbsp;&nbsp;
-                                                    <a href='#' onclick='addNewChildCriterion(<?= $dynamicNum ?>);return false;'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/node.png' class='gt_16' alt='<?= $string['addchildcrit'] ?>' title='<?= $string['addchildcrit'] ?>' /></a>
+                                                    <a href='#' class='gt_add_child_criterion' critNum='<?= $dynamicNum ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/node.png' class='gt_16' alt='<?= $string['addchildcrit'] ?>' title='<?= $string['addchildcrit'] ?>' /></a>
                                                 </td>
 
                                                 <td>
-                                                    <select name='unit_criteria[<?= $dynamicNum ?>][grading]' id='gt_crit_grading_input_<?= $dynamicNum ?>' onchange='changeCriterionGradingStructure(<?= $dynamicNum ?>);return false;'>
+                                                    <select name='unit_criteria[<?= $dynamicNum ?>][grading]' id='gt_crit_grading_input_<?= $dynamicNum ?>' class='gt_change_criterion_grading_structure' critNum='<?= $dynamicNum ?>'>
                                                         <?php if($criteriaGradingStructures): ?>
                                                             <option value=""></option>
                                                             <?php foreach($criteriaGradingStructures as $grading): ?>
@@ -260,14 +260,14 @@
                                                 </td>
 
                                                 <td>
-                                                    <a href='#' onclick='createDuplicateCriterion(<?= $dynamicNum ?>);return false;'>
+                                                    <a href='#' class='gt_duplicate_criterion' critNum='<?= $dynamicNum ?>'>
                                                         <img src='<?= gt_image_url('t/copy') ?>' alt='copy' />
                                                     </a>
 
                                                 </td>
 
                                                 <td>
-                                                    <a href='#' onclick='removeCriterion(<?= $dynamicNum ?>);return false;'>
+                                                    <a href='#' class='gt_remove_criterion' critNum='<?= $dynamicNum ?>'>
                                                         <img src='<?= gt_image_url('t/delete') ?>' alt='delete' />
                                                     </a>
                                                 </td>
