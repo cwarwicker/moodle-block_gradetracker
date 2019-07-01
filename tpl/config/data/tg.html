@@ -11,9 +11,9 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
+
     <?php if ($exampleFile): ?>
         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
             <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
@@ -21,11 +21,11 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;
 
     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=tg&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
-    
+
 </p>
 <br>
 
@@ -72,39 +72,8 @@
 <hr class="gt_hr">
 <br>
 <form id="tg_calculate_form" action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=tg" method="post" enctype="multipart/form-data">
-<h2><?= $string['calculatetargetgrades'] ?></h2>
-<table>
-    <tbody>
-        <tr>
-            <td>
-                <?= $string['qualifications'] ?>:
-            </td>
-            <td>
-            </td>
-            <td>
-                <?= $string['qualificationselected'] ?>:
-            </td>
-        </tr>
-        <tr>
-            <td>
-        <select id="tg_all_select" multiple size="15" name="all_qualID[]">
-            <?php foreach($allQuals as $qual): ?>
-                <option id="<?= $qual->getID() ?>"><?= $qual->getDisplayName() ?></option>
-            <?php endforeach; ?>       
-        </select>
-            </td>
-            <td>
-                <button type="button" id="tg_add_course" class="gt_btn"><?= $string['add'] ?> &#10095;</button>
-                <br>
-                <button type="button" id="tg_remove_course" class="gt_btn">&#10094; <?= $string['remove'] ?></button>
-            </td>
-            <td>
-                <select id="tg_added_select" multiple size="15" name="added_qualID[]">
-                </select>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<h2><?= $string['calculatetargetgrades'] ?></h2><br>
+<?= $QualPicker->display(); ?>
 
 <br>
 <input type="checkbox" name="options[calc_tg]" /> <?= $string['calculatetargetgrades'] ?><br>
@@ -112,6 +81,7 @@
 <input type="checkbox" name="options[calc_asp]" /> <?= $string['calculateaspirationalgrades'] ?><br><br>
 <input type="checkbox" name="options[calc_pred]" /> <?= $string['calculatepredictedgrades'] ?><br><br>
 <input type="checkbox" name="options[calc_avg]" /> <?= $string['calculateaveragegcsegrades'] ?><br>
+<br>
 
 <?php if (!empty($MSGS['tg_added'])): ?>
     <?= gt_success_alert_box($MSGS['tg_added']) ?>
@@ -123,6 +93,6 @@
 </div>
 <br>
 
-<input type="submit" onclick="select_all()" class="gt_btn gt_blue" name="submit_calculate" value="<?= $string['calculate'] ?>">
+<input type="submit" class="gt_btn gt_blue" name="submit_calculate" value="<?= $string['calculate'] ?>">
 </form>
 

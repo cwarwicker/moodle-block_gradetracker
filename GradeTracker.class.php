@@ -1548,10 +1548,6 @@ class GradeTracker
 
                 if ($page == 'add'){
 
-                    // Bring javascript in
-                    $PAGE->requires->js( '/blocks/gradetracker/js/mod.js' , false );
-                    $PAGE->requires->js_init_call("gt_mod_hook_bindings", null, true);
-
                     $cmID = optional_param('cmid', false, PARAM_INT);
                     $qID = optional_param('qualid', false, PARAM_INT);
                     $uID = optional_param('unitid', false, PARAM_INT);
@@ -1651,10 +1647,14 @@ class GradeTracker
             case 'tg':
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
+                $quals = \GT\Qualification::getAllQualifications();
 
                 $TPL->set("templateFile", \GT\CSV\Template::generateTemplateTargetGradesCSV($reload));
                 $TPL->set("exampleFile", \GT\CSV\Example::generateExampleTargetGradesCSV($reload));
-                $TPL->set("allQuals", \GT\Qualification::getAllQualifications());
+
+                $QualPicker = new \GT\FormElement();
+                $QualPicker->setType('QUALPICKER');
+                $TPL->set("QualPicker", $QualPicker);
 
             break;
 
@@ -2443,7 +2443,7 @@ class GradeTracker
         $GTEXE->min();
         $GTEXE->STUDENT_LOAD_LEVEL = \GT\Execution::STUD_LOAD_LEVEL_UNIT;
 
-        if (isset($_POST['submit_calculate']) && isset($_POST['tg_input']))
+        if (isset($_POST['submit_calculate']) && isset($_POST['quals']))
         {
 
             $student_counter = [0, 0];
@@ -2452,7 +2452,7 @@ class GradeTracker
             if (isset($_POST['options'])){
 
                 $tg_options = $_POST['options'];
-                $tg_added_qualID = $_POST['tg_input'];
+                $tg_added_qualID = $_POST['quals'];
 
                 foreach($tg_added_qualID as $qualid){
 
@@ -4535,9 +4535,7 @@ class GradeTracker
 
         $styles = array(
             new \moodle_url('http://fonts.googleapis.com/css?family=Poiret+One'),
-//            '/blocks/gradetracker/js/jquery/css/ui-lightness/jquery-ui.min.css',
-//            '/blocks/gradetracker/js/jquery/css/ui-lightness/theme.css',
-            '/blocks/gradetracker/js/jquery/css/base.css',
+            '/blocks/gradetracker/css/jquery-ui/base.css',
             '/blocks/gradetracker/js/lib/jquery-slimmenu/slimmenu.css',
             '/blocks/gradetracker/js/lib/jquery-bc-popup/jquery-bc-popup.css',
             '/blocks/gradetracker/js/lib/jquery-bc-notify/jquery-bc-notify.css',
@@ -4549,6 +4547,7 @@ class GradeTracker
             $styles[] = '/blocks/gradetracker/styles.css';
         }
 
+        // Loop through required styles
         foreach($styles as $style)
         {
             if ($external)

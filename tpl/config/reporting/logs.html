@@ -4,10 +4,10 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-        
+
     <div>
         <small><strong><?= $string['logdetails'] ?></strong></small><br>
-        
+
         <select name="log_details">
             <option value=""><?= $string['allactions'] ?></option>
             <optgroup label="<?= \GT\Log::GT_LOG_CONTEXT_GRID ?>">
@@ -76,15 +76,15 @@
                 <option value="<?= \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS ?>" <?= (isset($search['details']) && $search['details'] == \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS) ? 'selected' : '' ?>><?= \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS?></option>
             </optgroup>
         </select>
-                
+
         <input type="text" name="log_user" placeholder="<?= $string['username'] ?>" value="<?= (isset($search['user'])) ? $search['user'] : '' ?>" />
         <input type="text" name="log_date_from" class="gt_date" placeholder="<?= get_string('from') ?> (dd-mm-yyyy)" value="<?= (isset($search['date_from'])) ? $search['date_from'] : '' ?>" />
         <input type="text" name="log_date_to" class="gt_date" placeholder="<?= get_string('to') ?> (dd-mm-yyyy)" value=" <?= (isset($search['date_to'])) ? $search['date_to'] : date('d-m-Y') ?>" />
-        
+
         <br><hr>
-        
+
         <small><strong><?= $string['logattributes'] ?></strong> - <?= $string['logattributes:desc'] ?></small><br>
-        
+
         <table id='gt_log_search_attributes'>
             <tr>
                 <td>
@@ -99,38 +99,38 @@
                     <br>
                     <select id="gt_log_search_unit" name="log_attribute[UNITID]">
                         <option value=""><?= $string['allunits'] ?></option>
-                        
+
                         <?php if (isset($useUnits) && $useUnits): ?>
                             <?php foreach($useUnits as $unit): ?>
                                 <option value="<?= $unit->getID() ?>" <?= (isset($search['atts']['UNITID']) && $search['atts']['UNITID'] == $unit->getID()) ? 'selected' : '' ?> ><?= \gt_html($unit->getDisplayName()) ?> [<?= $unit->getID() ?>]</option>
                             <?php endforeach; ?>
-                        
-                        <?php elseif ($allUnits): ?>
-                            <?php foreach($allUnits as $unit): ?>
-                                <option value="<?= $unit->getID() ?>" <?= (isset($search['atts']['UNITID']) && $search['atts']['UNITID'] == $unit->getID()) ? 'selected' : '' ?> ><?= \gt_html($unit->getDisplayName()) ?> [<?= $unit->getID() ?>]</option>
-                            <?php endforeach; ?>
                         <?php endif; ?>
+
                     </select>
                     <br>
                     <select id='gt_log_search_crit' name="log_attribute[CRITID]">
                         <option value=""><?= $string['allcrit'] ?></option>
+
                         <?php if (isset($useCriteria) && $useCriteria): ?>
                             <?php foreach($useCriteria as $crit): ?>
                                 <option value="<?= $crit->getID() ?>" <?= (isset($search['atts']['CRITID']) && $search['atts']['CRITID'] == $crit->getID()) ? 'selected' : '' ?> ><?= \gt_html($crit->getName()) ?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
+
                     </select>
                     <br>
                     <select id='gt_log_search_ass' name="log_attribute[ASSID]">
                         <option value=""><?= $string['allass'] ?></option>
+
                         <?php if (isset($useAss) && $useAss): ?>
                             <?php foreach($useAss as $ass): ?>
                                 <option value="<?= $ass->getID() ?>" <?= (isset($search['atts']['ASSID']) && $search['atts']['ASSID'] == $ass->getID()) ? 'selected' : '' ?> ><?= \gt_html($ass->getName()) ?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
+                        
                     </select>
                 </td>
-                
+
                 <td>
                     <select id="gt_log_search_course" name="log_attribute[COURSEID]">
                         <option value=""><?= $string['allcourses'] ?></option>
@@ -141,20 +141,20 @@
                         <?php endif; ?>
                         <option value="OTHER" <?= (isset($search['atts']['COURSEID']) && $search['atts']['COURSEID'] == 'OTHER') ? 'selected' : '' ?> ><?= $string['other'] ?></option>
                     </select><br>
-                    <input type='text' id='gt_log_search_course_name' name='log_attribute[COURSENAME]' placeholder="<?= $string['courseshortname'] ?>" value="<?= (isset($search['atts']['COURSENAME'])) ? \gt_html($search['atts']['COURSENAME']) : '' ?>" style='display:<?= (isset($search['atts']['COURSENAME']) && $search['atts']['COURSENAME'] != '') ? 'block' : 'none' ?>;' />
+                    <input type='text' id='gt_log_search_course_name' name='log_attribute[COURSENAME]' placeholder="<?= $string['courseshortname'] ?>" value="<?= (isset($search['atts']['COURSENAME'])) ? \gt_html($search['atts']['COURSENAME']) : '' ?>" style="display:<?= (isset($search['atts']['COURSENAME']) && $search['atts']['COURSENAME'] != '') ? 'block' : 'none' ?>;" />
                 </td>
-                
+
                 <td>
                     <input type="text" name="log_attribute[STUDENTID]" placeholder="<?= $string['affecteduser'] ?> (<?= $string['username'] ?>)" value="<?= (isset($search['atts']['STUDENTID'])) ? \gt_html($search['atts']['STUDENTID']) : '' ?>" />
                 </td>
             </tr>
-        </table>        
-                        
+        </table>
+
     </div>
-    
+
     <p class='gt_centre'><img id="gt_log_search_load" src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" style="display:none;" /></p>
     <p class='gt_centre'><input type='submit' name='search' class='gt_btn' value='<?= $string['search'] ?>' /></p>
-    
+
 </form>
 
 <br><br>
@@ -162,7 +162,7 @@
 <?php if (isset($results)): ?>
 
     <?php if ($results): ?>
-        
+
         <div>
             <div class="gt_form_panel_heading"><?= $string['results'] ?></div>
             <div class="gt_form_panel_body">
@@ -188,24 +188,15 @@
                             <?php endforeach; ?>
                             <td>
                                 <a href="javascript:window.open('<?= $CFG->wwwroot ?>/blocks/gradetracker/log.php?id=<?= $row['id'] ?>', 'log', 'width=650,height=600');"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/page_go.png" /></a>
-                            </td>                            
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
             </div>
         </div>
-        
+
     <?php else: ?>
         <p class='gt_centre'><?= $string['noresults'] ?></p>
     <?php endif; ?>
 
 <?php endif; ?>
-
-<script>
-    var allUnits = [];
-    <?php if ($allUnits): ?>
-        <?php foreach($allUnits as $unit): ?>
-            allUnits.push( {id: <?= $unit->getID() ?>, name: '<?= \gt_html($unit->getDisplayName()) ?>'} );
-        <?php endforeach; ?>
-    <?php endif; ?>        
-</script>

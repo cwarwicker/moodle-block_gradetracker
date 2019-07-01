@@ -192,6 +192,261 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             }
         });
 
+
+
+        // Bind change to unit select
+        $('.gt_mod_hook_units').unbind('change');
+        $('.gt_mod_hook_units').bind('change', function(){
+
+            var cmID = $('#gt_cmid').val();
+            var courseID = $('#gt_cid').val();
+            var qualID = $(this).attr('qualID');
+            var unitID = $(this).val();
+            var params = { qualID: qualID, unitID: unitID, cmID: cmID, courseID: courseID };
+
+            $('#gt_mod_hook_loader_'+qualID).show();
+
+            GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_mod_hook_unit', params: params}, function(data){
+
+                var response = $.parseJSON(data);
+
+                var output = "";
+                output += "<div id='gt_hooked_unit_"+qualID+"_"+unitID+"' class='gt_hooked_unit'>";
+
+                output += ""+response.unit+" <a href='#' class='gt_mod_hook_delete_unit' qualID='"+qualID+"' unitID='"+unitID+"'><img src='"+M.util.image_url('t/delete')+"' /></a><br>";
+
+                output += "<table class='gt_c gt_hook_unit_criteria'>";
+                    output += "<tr>";
+                        $.each(response.criteria, function(indx, crit){
+                            output += "<th>"+crit.name+"</th>";
+                        });
+                    output += "</tr>";
+                    output += "<tr>";
+                        $.each(response.criteria, function(indx, crit){
+
+                            output += "<td>";
+
+                            if (response.parts){
+                                output += "<select name='gt_criteria["+qualID+"]["+unitID+"]["+crit.id+"]'>";
+                                    output += "<option value='0'></option>";
+                                    $.each(response.parts, function(indx, part){
+                                        output += "<option value='"+part.id+"'>"+part.name+"</option>";
+                                    });
+                                output += "</select>";
+                            } else {
+                                output += "<input type='checkbox' name='gt_criteria["+qualID+"]["+unitID+"]["+crit.id+"]' />";
+                            }
+
+                            output += "</td>";
+
+                        });
+                    output += "</tr>";
+                output += "</table>";
+                output += "</div>";
+
+                $('#gt_mod_hook_qual_units_'+qualID).append(output);
+                $('#gt_mod_hook_loader_'+qualID).hide();
+
+                GT.bind();
+
+            });
+
+            // Set selected index to 0
+            $(this).prop('selectedIndex', 0);
+
+            // Disable this option so we can't select it again unless we remove the unit from the form
+            $(this).children('option[value="'+unitID+'"]').prop('disabled', true);
+
+        });
+
+
+        // Bind delete unit buttons
+        $('.gt_mod_hook_delete_unit').unbind('click');
+        $('.gt_mod_hook_delete_unit').bind('click', function(e){
+
+            var qualID = $(this).attr('qualID');
+            var unitID = $(this).attr('unitID');
+            $('#gt_hooked_unit_'+qualID+'_'+unitID).remove();
+            $('#gt_mod_hook_'+qualID+'_units_select').children('option[value="'+unitID+'"]').prop('disabled', false);
+
+            e.preventDefault();
+
+        });
+
+        $('.gt_mod_hook_delete_activity').unbind('click');
+        $('.gt_mod_hook_delete_activity').bind('click', function(e){
+
+            var cmID = $(this).attr('cmID');
+            $('#gt_hooked_activity_'+cmID).remove();
+            $('.gt_mod_activity').children('option[value="'+cmID+'"]').prop('disabled', false);
+
+            e.preventDefault();
+
+        });
+
+        // Bind changing the qualification drop down, to change the units displayed
+        $('.gt_mod_change_qual_units').unbind('change');
+        $('.gt_mod_change_qual_units').bind('change', function(e){
+
+            // Clear activities
+            $('#gt_mod_hook_activities').html('');
+
+            $('#gt_mod_change_qual_units_units').prop('selectedIndex', 0);
+
+            var qualID = $(this).val();
+            $('option.AQU').hide();
+            $('option.Q_'+qualID).show();
+
+
+        });
+
+        // Bind change the qual unit, to get all the activities linked to it
+        $('#gt_mod_change_qual_units_units').unbind('change');
+        $('#gt_mod_change_qual_units_units').bind('change', function(){
+
+            var courseID = $('#gt_cid').val();
+            var qualID = $('.gt_mod_change_qual_units').val();
+            var unitID = $(this).val();
+            var params = { qualID: qualID, unitID: unitID, courseID: courseID };
+
+            // Loader gif
+            $('#gt_mod_hook_loader_activity').show();
+
+            // Clear activities
+            $('#gt_mod_hook_activities').html('');
+
+            // Clear option disables
+            $('.gt_mod_activity').children('option').prop('disabled', false);
+
+
+            GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_mod_hook_unit_activities', params: params}, function(data){
+
+                var response = $.parseJSON(data);
+
+                var output = "";
+
+                $.each(response, function(index, cm){
+
+                    output += "<div id='gt_hooked_activity_"+cm.id+"' class='gt_hooked_unit'>";
+                        output += "<img src='"+cm.icon+"' /> "+cm.name+" <a href='#' class='gt_mod_hook_delete_activity' cmID='"+cm.id+"'><img src='"+M.util.image_url('t/delete')+"' /></a><br>";
+                        output += "<table class='gt_c gt_hook_unit_criteria'>";
+                            output += "<tr>";
+                                $.each(cm.criteria, function(indx, crit){
+                                    output += "<th>"+crit.name+"</th>";
+                                });
+                            output += "</tr>";
+                            output += "<tr>";
+                                $.each(cm.criteria, function(indx, crit){
+
+                                    output += "<td>";
+
+                                        if (cm.parts){
+                                            output += "<select name='gt_criteria["+cm.id+"]["+crit.id+"]'>";
+                                                output += "<option value='0'></option>";
+                                                $.each(cm.parts, function(indx, part){
+                                                    var sel = ( cm.partsLinked[crit.id] !== undefined && cm.partsLinked[crit.id] == part.id ) ? 'selected' : '';
+                                                    output += "<option value='"+part.id+"' "+sel+" >"+part.name+"</option>";
+                                                });
+                                            output += "</select>";
+                                        } else {
+                                            var chk = ( cm.linked.indexOf(crit.id) >= 0 ) ? 'checked' : '';
+                                            output += "<input type='checkbox' name='gt_criteria["+cm.id+"]["+crit.id+"]' "+chk+" />";
+                                        }
+
+                                    output += "</td>";
+
+                                });
+                            output += "</tr>";
+                        output += "</table>";
+                    output += "</div>";
+
+                    // Disable this option so we can't select it again unless we remove the unit from the form
+                    $('.gt_mod_activity').children('option[value="'+cm.id+'"]').prop('disabled', true);
+
+                });
+
+                $('#gt_mod_hook_activities').append(output);
+                $('#gt_mod_hook_loader_activity').hide();
+
+              GT.bind();
+
+            });
+
+            // Set selected index to 0
+            $('.gt_mod_activity').prop('selectedIndex', 0);
+
+        });
+
+        // Bind change to activity select
+        $('.gt_mod_activity').unbind('change');
+        $('.gt_mod_activity').bind('change', function(){
+
+            var cmID = $(this).val();
+            var qualID = $('.gt_mod_change_qual_units').val();
+            var unitID = $('#gt_mod_change_qual_units_units').val();
+            var courseID = $('#gt_cid').val();
+
+            if (qualID == "" || unitID == "" || courseID == "") return false;
+
+            var params = { qualID: qualID, unitID: unitID, courseID: courseID, cmID: cmID };
+
+            $('#gt_mod_hook_loader_activity').show();
+
+            GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_mod_hook_activity', params: params}, function(data){
+
+                var response = $.parseJSON(data);
+                var output = "";
+
+                output += "<div id='gt_hooked_activity_"+response.id+"' class='gt_hooked_unit'>";
+                output += "<img src='"+response.icon+"' /> "+response.name+" <a href='#' class='gt_mod_hook_delete_activity' cmID='"+response.id+"'><img src='"+M.util.image_url('t/delete')+"' /></a><br>";
+
+                output += "<table class='gt_c gt_hook_unit_criteria'>";
+                    output += "<tr>";
+                        $.each(response.criteria, function(indx, crit){
+                            output += "<th>"+crit.name+"</th>";
+                        });
+                    output += "</tr>";
+                    output += "<tr>";
+                        $.each(response.criteria, function(indx, crit){
+
+                            output += "<td>";
+
+                                if (response.parts){
+                                    output += "<select name='gt_criteria["+cmID+"]["+crit.id+"]'>";
+                                        output += "<option value='0'></option>";
+                                        $.each(response.parts, function(indx, part){
+                                            output += "<option value='"+part.id+"'>"+part.name+"</option>";
+                                        });
+                                    output += "</select>";
+                                } else {
+                                    output += "<input type='checkbox' name='gt_criteria["+cmID+"]["+crit.id+"]' />";
+                                }
+
+                            output += "</td>";
+
+                        });
+                    output += "</tr>";
+                output += "</table>";
+                output += "</div>";
+
+                $('#gt_mod_hook_activities').append(output);
+                $('#gt_mod_hook_loader_activity').hide();
+
+                GT.bind();
+
+            });
+
+            // Set selected index to 0
+            $(this).prop('selectedIndex', 0);
+
+            // Disable this option so we can't select it again unless we remove the unit from the form
+            $(this).children('option[value="'+cmID+'"]').prop('disabled', true);
+
+        });
+
+
+
+
     };
 
     //-- Choose Bindings
@@ -352,6 +607,151 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
             }
         });
+
+    };
+
+    GT.ajaxProgress = function( url, params, el, onSuccess ){
+
+            var startTime = false;
+            var max = $(el).attr('max');
+
+            // Button pressed
+            var btn = $('#'+params.params.btn);
+
+            // Reset progress to 0
+            $(el).val(0);
+            $('#gt_progress_errors').remove();
+
+            var req = $.ajax({
+                xhr: function() {
+
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.addEventListener("progress", function(evt){
+
+                        var progress = $(el);
+                        var txt = xhr.responseText;
+
+                        if (txt.length)
+                        {
+
+                            // Check that it's a valid response and not an error
+                            if (txt.charAt(0) !== '{' || txt.charAt(txt.length-1) !== '}'){
+
+                                // Error box
+                                var err = $('#gt_progress_errors');
+                                if (err.length == 0){
+                                    $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
+                                    err = $('#gt_progress_errors');
+                                }
+
+                                err.html( txt );
+                                err.show();
+
+                                $('#gt_report_time_left').text('');
+                                btn.prop('disabled', false);
+                                btn.val( M.util.get_string('run', 'block_gradetracker') );
+
+                                req.abort();
+
+                                return false;
+
+                            }
+
+                            var matches = txt.match(/\{.*?\}/g);
+                            var m = matches.pop();
+
+                            if (m.length > 0){
+
+                                var response = $.parseJSON( m );
+
+                                // Estimated time left
+                                if (startTime === false){
+                                    startTime = response.time;
+                                } else if (response.progress < 100){
+                                    var progressLeft = max - response.progress;
+                                    var timesLeft = progressLeft / response.progress;
+                                    var time = response.time - startTime;
+                                    var remaining = Math.round(time * timesLeft);
+                                    if (remaining > 0){
+                                        $('#gt_report_time_left').text(remaining + ' ' + M.util.get_string('sexleft', 'block_gradetracker'));
+                                    }
+                                }
+
+                                if (response.result == 'pending'){
+                                    progress.val( response.progress );
+                                }
+
+                            }
+
+                        }
+
+                    }, false);
+
+                  return xhr;
+
+                },
+                url: url,
+                type: "POST",
+                data: params,
+                dataType: "text",
+                success: function(data){
+
+                    var matches = data.match(/\{.*?\}/g);
+                    if (matches != null && matches.length > 0){
+                        var m = matches.pop();
+                        if (m.length > 0){
+                            data = $.parseJSON(m);
+                        }
+                    }
+
+                    if (data.length == 0 || data.result == false){
+
+                        // Error box
+                        var err = $('#gt_progress_errors');
+                        if (err.length == 0){
+                            $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
+                            err = $('#gt_progress_errors');
+                        }
+
+                        var error = (data.error !== undefined) ? data.error : 'error';
+
+                        err.html( error );
+                        err.show();
+
+                        btn.prop('disabled', false);
+                        btn.val( M.util.get_string('run', 'block_gradetracker') );
+
+                        return false;
+
+                    }
+
+                    $(el).val(max);
+                    $('#gt_report_time_left').text('');
+                    $('#gt_progress_errors').hide();
+
+                    onSuccess( data );
+
+                },
+            error: function(data){
+
+                // Error box
+                var err = $('#gt_progress_errors');
+                if (err.length == 0){
+                    $(el).before('<div id="gt_progress_errors" class="gt_alert_bad"></div>');
+                    err = $('#gt_progress_errors');
+                }
+
+                err.html( data );
+                err.show();
+
+                $('#gt_report_time_left').text('');
+                btn.prop('disabled', false);
+                btn.val( M.util.get_string('run', 'block_gradetracker') );
+
+                return false;
+
+            }
+          });
 
     };
 

@@ -2601,7 +2601,8 @@ table.gt_assessment_summary_table tr:nth-child(even) td
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-input[type="text"].gt_datepicker
+input[type="text"].gt_datepicker,
+input[type="text"].gt_date
 {
     width: 80px;
 }
