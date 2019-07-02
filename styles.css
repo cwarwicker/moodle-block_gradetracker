@@ -358,6 +358,11 @@ table.gt_config table.gt_course_activities_qual_table tr td
     background-color: #fff;
 }
 
+div#gt_grid_holder
+{
+    height: 600px;
+}
+
 div#gt_grid_holder > div
 {
     margin: auto;
@@ -1528,10 +1533,7 @@ div.gt_grid
 ul.slimmenu li.gt_nav_dropdowns
 {
     width: 200px;
-    padding-top: 13px;
-    padding-right: 10px;
-    padding-left: 20px;
-    padding-bottom: 11px;
+    padding: 12px 64px 13px 16px;
 }
 
 ul.slimmenu li.gt_nav_dropdowns select
@@ -1559,6 +1561,10 @@ input[type="text"].gt_nav_url
     width: 75%;
 }
 
+ul.slimmenu > li
+{
+  margin-right: -4px !important;
+}
 
 
 

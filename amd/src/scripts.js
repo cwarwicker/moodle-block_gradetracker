@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/bcnotify'], function($, ui, bcPopUp, bcNotify) {
+define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/bcnotify', 'block_gradetracker/freezetable'], function($, ui, bcPopUp, bcNotify, freezeTable) {
 
 
 
@@ -7,6 +7,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     var GT = {};
 
     // Gradetracker object variables
+    GT.keyMap = {16: false, 17: false, 191: false};
 
     // Gradetracker object methods
 
@@ -37,16 +38,6 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
           e.preventDefault();
 
-        });
-
-
-        // Stop form submission on [enter] of unit name text input
-        $('#gt_filter_qual_name').unbind('keypress');
-        $('#gt_filter_qual_name').bind('keypress', function(e){
-            if (e.keyCode === 13){
-                GT.bind_choose();
-                e.preventDefault();
-            }
         });
 
 
@@ -446,12 +437,332 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
 
 
+        // Dashboard
+        $('.gt_reporting_dropdown').unbind('click');
+        $('.gt_reporting_dropdown').bind('click', function(e){
 
-    };
+          var qualID = $(this).attr('qualID');
+          var params = {qualid: qualID};
 
-    //-- Choose Bindings
-    GT.bind_choose = function(){
+          if( $('#gt_table_row_'+ qualID).length == 0)
+          {
+              $('#report_icon_'+ qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/ajax-loader.gif')
 
+              GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_qualification_report', params: params}, function(data){
+
+                  $('#gt_row_'+ qualID).after(data);
+                  $('#report_icon_'+ qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/dropup.png');
+
+                  $('#student_table_view_'+qualID).freezeTable();
+                  GT.bind();
+
+              });
+
+          }
+          else
+          {
+              $('#gt_table_row_'+ qualID).remove()
+              $('#report_icon_'+ qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/dropdown.png')
+          }
+
+          e.preventDefault();
+
+        });
+
+        // Filter which students we are looking at in the report
+        $('.gt_filter_qualification_report').unbind('change');
+        $('.gt_filter_qualification_report').bind('change', function(){
+
+          var qualID = $(this).attr('qualID');
+
+          $('.reporting_table_row_'+ qualID).show();
+
+          if ($('#student_filter_'+ qualID +' select').val() == 'allmarked'){
+              $('.reporting_table_row_'+ qualID).each(function(){
+
+                  var unitsawarded = $(this).attr('unitsawarded');
+                  var totalunits = $(this).attr('totalunits');
+
+                  if (unitsawarded != totalunits){
+                      $(this).hide();
+                  }
+
+              });
+          }
+          else if ($('#student_filter_'+ qualID +' select').val() == 'all'){
+              $('.reporting_table_row_'+ qualID).each(function(){
+                  $(this).show();
+              });
+          }
+          else if ($('#student_filter_'+ qualID +' select').val() == 'someoutstanding'){
+              $('.reporting_table_row_'+ qualID).each(function(){
+
+                  var unitsawarded = $(this).attr('unitsawarded');
+                  var totalunits = $(this).attr('totalunits');
+
+                  if (unitsawarded >= totalunits && totalunits != 0){
+                      $(this).hide();
+                  }
+
+              });
+          }
+          else if ($('#student_filter_'+ qualID +' select').val() == 'alloutstanding'){
+              $('.reporting_table_row_'+ qualID).each(function(){
+
+                  var unitsawarded = $(this).attr('unitsawarded');
+
+                  if (unitsawarded != 0){
+                      $(this).hide();
+                  }
+
+              });
+          }
+
+        });
+
+        // Toggle showing the edit section for grades on the report
+        $('.gt_toggle_edit_grades').unbind('click');
+        $('.gt_toggle_edit_grades').bind('click', function(e){
+
+          var type = $(this).attr('type');
+          var qualID = $(this).attr('qualID');
+
+          $('.stud_'+type+'_grade_view_'+qualID).toggle();
+          $('.stud_'+type+'_grade_edit_'+qualID).toggle();
+
+          e.preventDefault();
+
+        });
+
+
+        // Calculate grades on the report
+        $('.gt_calculate_grades').unbind('click');
+        $('.gt_calculate_grades').bind('click', function(e){
+
+          var type = $(this).attr('type');
+          var qualID = $(this).attr('qualID');
+
+          $('#loading_'+qualID).show();
+
+          if (type == 'target'){
+              var action = 'get_refreshed_target_grades';
+              var cellName = 'stud_target_grade_view_'+qualID+'_';
+              var editCellname = 'stud_target_grade_edit_'+qualID+'_';
+              var wCellName = 'stud_weighted_target_grade_view_'+qualID+'_';
+          } else if (type == 'aspirational'){
+              var action = 'get_refreshed_aspirational_grades';
+              var cellName = 'stud_aspirational_grade_view_'+qualID+'_';
+              var editCellname = 'stud_aspirational_grade_edit_'+qualID+'_';
+          } else {
+              $('#loading_'+qualID).hide();
+              return false;
+          }
+
+          var params = {qualID: qualID};
+          GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: action, params: params}, function(data){
+
+              var results = $.parseJSON(data);
+              $.each(results, function(studentID, result){
+
+                  var cell = '#'+cellName+studentID;
+                  var selectCell = '#'+editCellname+studentID;
+                  var weightedCell = '#'+wCellName+studentID;
+
+                  if (type == 'target'){
+
+                      // Target Grades
+                      var tResult = result.target;
+
+                      // Calculated successfully
+                      if (tResult.result == 1){
+                          $(cell).text( tResult.grade );
+                          if (tResult.error !== 0 && tResult.error !== '' && tResult.error !== undefined){
+                              $(cell).append('<small style="color:red";><br>'+tResult.error+'</small>');
+                          }
+                          $(selectCell + ' select').val( tResult.gradeID );
+                          $($(cell).parents('td')[0]).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                      } else {
+                          $(cell).html( '<span style="color:red;">'+tResult.error+'</span>' );
+                          $(selectCell + ' select').val('');
+                          $($(cell).parents('td')[0]).effect( 'highlight', {color: '#f24c3d'}, 3000 );
+                      }
+
+
+                      // Weighted Target Grades
+                      if (result.weighted !== undefined)
+                      {
+
+                          var tResult = result.weighted;
+
+                          // Calculated successfully
+                          if (tResult.result == 1){
+                              $(weightedCell).text( tResult.grade );
+                              if (tResult.error !== 0 && tResult.error !== '' && tResult.error !== undefined){
+                                  $(weightedCell).append('<small style="color:red";><br>'+tResult.error+'</small>');
+                              }
+                              $($(weightedCell).parents('td')[0]).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                          } else {
+                              $(weightedCell).html( '<span style="color:red;">'+tResult.error+'</span>' );
+                              $($(weightedCell).parents('td')[0]).effect( 'highlight', {color: '#f24c3d'}, 3000 );
+                          }
+
+                      }
+
+                  } else {
+
+                      // Calculated successfully
+                      if (result.result == 1){
+                          $(cell).text( result.grade );
+                          if (result.error !== 0 && result.error !== '' && result.error !== undefined){
+                              $(cell).append('<small style="color:red";><br>'+result.error+'</small>');
+                          }
+                          $(selectCell + ' select').val( result.gradeID );
+                          $($(cell).parents('td')[0]).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                      } else {
+                          $(cell).html( '<span style="color:red;">'+result.error+'</span>' );
+                          $(selectCell + ' select').val('');
+                          $($(cell).parents('td')[0]).effect( 'highlight', {color: '#f24c3d'}, 3000 );
+                      }
+
+                  }
+
+
+
+              });
+
+              $('#student_table_view_'+qualID).freezeTable();
+              $('#loading_'+qualID).hide();
+
+          });
+
+          e.preventDefault();
+
+        });
+
+        // Refresh the predicted grades for the qual
+        $('.gt_refresh_predicted_grades').unbind('click');
+        $('.gt_refresh_predicted_grades').bind('click', function(e){
+
+          var qualID = $(this).attr('qualID');
+
+          $('#loading_'+qualID).show();
+
+          var params = { action: 'get_refreshed_predicted_grades', params: { qualID: qualID } };
+
+          GT.ajax( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', params, function(data){
+
+              data = $.parseJSON(data);
+
+              $.each(data, function(sID, row){
+
+                  if ($("#gt_qualAward_Q"+qualID+"_S"+sID+" > div").length > 0){
+                      var cell = "#gt_qualAward_Q"+qualID+"_S"+sID+" > div";
+                  } else {
+                      var cell = "#gt_qualAward_Q"+qualID+"_S"+sID;
+                  }
+
+                  // If there is a final award, use that
+                  if (row['final'] !== undefined && row['final'] !== M.util.get_string('na', 'block_gradetracker')){
+                      $(cell).text( row['final'] + ' (Final)' ).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                  }
+
+                  // Otherwise if there is an average, use that
+                  else if (row['average'] !== undefined && row['average'] !== M.util.get_string('na', 'block_gradetracker')){
+                      $(cell).text( row['average'] + ' (Average)' ).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                  }
+
+                  // Otherwise just print N/A
+                  else {
+                      $(cell).text( M.util.get_string('na', 'block_gradetracker') ).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                  }
+
+              });
+
+
+              $('#loading_'+qualID).hide();
+
+          });
+
+          e.preventDefault();
+
+        });
+
+
+        $('.gt_change_report_tab').unbind('click');
+        $('.gt_change_report_tab').bind('click', function(e){
+
+          var qualID = $(this).attr('qualID');
+          var tab = $(this).attr('tab');
+
+          if (tab == 'students'){
+              if (!$('#students_'+ qualID).hasClass('selected')){
+                  // change tabs
+                  $('#units_'+ qualID).attr("class", "");
+                  $('#students_'+ qualID).attr("class", "selected");
+                  // change tables
+                  $('#student_filter_'+ qualID).show();
+                  $('#student_table_view_'+ qualID).show();
+                  $('#unit_table_view_'+ qualID).hide();
+                  $('#students_view_buttons').show();
+              }
+          }
+          else if (tab == 'units'){
+              if (!$('#units_'+ qualID).hasClass('selected')){
+                  // change tabs
+                  $('#students_'+ qualID).attr("class", "");
+                  $('#units_'+ qualID).attr("class", "selected");
+                  // change tables
+                  $('#student_filter_'+ qualID).hide();
+                  $('#student_table_view_'+ qualID).hide();
+                  $('#unit_table_view_'+ qualID).show();
+                  $('#students_view_buttons').hide();
+              }
+          }
+
+          e.preventDefault();
+
+        });
+
+
+        // Update user grade on report or also used in grids at the bottom
+        $('.gt_update_user_grade').unbind('change');
+        $('.gt_update_user_grade').bind('change', function(){
+
+            var TD = $($(this).parents('td')[0]);
+            var sID = $(this).attr('sID');
+            var qID = $(this).attr('qID');
+            var type = $(this).attr('type');
+            var txtView = $(this).attr('txtView');
+            var val = $(this).val();
+            var params = {sID: sID, qID: qID, type: type, awardID: val};
+
+            GT.ajax( M.cfg.wwwroot + '/blocks/gradetracker/ajax/update.php', { action: 'update_user_grade', params: params }, function(data){
+
+                // If empty data, must have been an error
+                if (data.length === 0){
+
+                    // Highlight cell red
+                    $(TD).effect( 'highlight', {color: '#f24c3d'}, 3000 );
+
+                    // Alert to notify user
+                    alert( M.util.get_string('couldnotupdate', 'block_gradetracker') );
+
+                } else {
+
+                    data = $.parseJSON(data);
+
+                    // Was ok, so let's do stuff
+                    $(TD).effect( 'highlight', {color: '#ccff66'}, 3000 );
+                    $(txtView).text( data.grade );
+
+                }
+
+            } );
+
+        });
+
+
+        // Choose page
         // When we change the qual, set the course to blank
         $('select#gt_choose_filter_all_qual').unbind('change');
         $('select#gt_choose_filter_all_qual').bind('change', function(){
@@ -464,8 +775,6 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             $('select#gt_choose_filter_all_qual').val('');
         });
 
-
-
         // When we change the qual, set the course to blank
         $('select#gt_choose_filter_my_qual').unbind('change');
         $('select#gt_choose_filter_my_qual').bind('change', function(){
@@ -477,6 +786,24 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         $('select#gt_choose_filter_my_course').bind('change', function(){
             $('select#gt_choose_filter_my_qual').val('');
         });
+
+
+
+        // Record key down/up events, so we know when CTRL is pressed
+        $(document).keydown(function(e){
+
+            if (e.keyCode in GT.keyMap){
+                GT.keyMap[e.keyCode] = true;
+            }
+
+        }).keyup(function(e) {
+
+            $.each(GT.keyMap, function(i, item){
+                GT.keyMap[i] = false;
+            });
+
+        });
+
 
 
     };
@@ -1037,6 +1364,16 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     };
 
+    // Check if a key is pressed
+    GT.isKeyPressed = function(keyCode){
+
+      if (keyCode in GT.keyMap){
+          return GT.keyMap[keyCode];
+      } else {
+          return null;
+      }
+
+    };
 
 
     // Set Gradetracker object into global space

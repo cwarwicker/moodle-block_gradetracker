@@ -3,12 +3,12 @@
  * Choose
  *
  * This is where you get lists of students, units, etc... to choose what grid you want to look at
- * 
+ *
  * @copyright 2015 Bedford College
  * @package Bedford College Grade Tracker
  * @version 1.0
  * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 
 require_once '../../config.php';
@@ -38,7 +38,7 @@ $type = optional_param('type', 'student', PARAM_TEXT);
 $searchAllQID = optional_param('searchQualID', false, PARAM_TEXT);
 $searchMyQID = optional_param('searchMyID', false, PARAM_TEXT);
 $searchAllCID = optional_param('searchCourseID', false, PARAM_TEXT);
-        
+
 $myQualID = isset($_REQUEST['myQualID']) ? $_REQUEST['myQualID'] : false;
 $myCourseID = isset($_REQUEST['myCourseID']) ? $_REQUEST['myCourseID'] : false;
 
@@ -62,27 +62,19 @@ if (!gt_has_capability('block/gradetracker:view_'.$type.'_grids')){
 
 $results = null;
 
-//\  \
-// \  \
-//  \  \
-//   \  \
-//    \  \
-//     \  \
-//      \  \
-//       \  \  
 $GT = new \GT\GradeTracker();
 $TPL = new \GT\Template();
 $User = new \GT\User($USER->id);
 
 $searchQualification = false;
 $searchCourse = false;
-    
+
 // Submitted Filter for All Qualifications
 if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST['submit_filter_all'])){
-            
+
     $searchQualification = false;
     $searchCourse = false;
-    
+
     // If searching by all Qualifications
     if (ctype_digit($searchAllQID) && $searchAllQID > 0){
         $searchQualification = new \GT\Qualification($searchAllQID);
@@ -90,7 +82,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST
             $searchQualification = false;
         }
     }
-    
+
     // If searching by all Courses
     if (ctype_digit($searchAllCID) && $searchAllCID > 0){
         $searchCourse = new \GT\Course($searchAllCID);
@@ -98,13 +90,13 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST
             $searchCourse = false;
         }
     }
-    
+
 }
 
 elseif (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST['submit_filter_my'])){
-    
+
     $searchQualification = false;
-    
+
     // Selecting one of My Quals
     if (ctype_digit($myQualID) && $myQualID > 0){
         $searchQualification = new \GT\Qualification($myQualID);
@@ -112,7 +104,7 @@ elseif (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST[
             $searchQualification = false;
         }
     }
-    
+
     // Selecting one of My Courses
     if (ctype_digit($myCourseID) && $myCourseID > 0){
         $searchCourse = new \GT\Course($myCourseID);
@@ -120,7 +112,7 @@ elseif (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST[
             $searchCourse = false;
         }
     }
-    
+
 }
 
 
@@ -178,17 +170,17 @@ switch($type)
         }
 
     break;
-    
-    
+
+
     case 'unit':
-        
+
         if ($searchQualification){
-            
+
             $results = array();
             $results[0][$searchQualification->getID()] = $searchQualification->getUnits();
-                    
+
         } elseif ($searchCourse){
-            
+
             $results = array();
 
             // Does this course have quals?
@@ -223,22 +215,22 @@ switch($type)
                 }
 
             }
-            
+
         }
-        
+
     break;
-    
-    
-    
+
+
+
     case 'class':
-        
+
         if ($searchQualification){
-            
+
             $results = array();
             $results[0][$searchQualification->getID()] = $searchQualification;
-                    
+
         } elseif ($searchCourse){
-            
+
             $results = array();
 
             // Does this course have quals?
@@ -273,9 +265,9 @@ switch($type)
                 }
 
             }
-            
+
         }
-        
+
         // If there is only 1 result, just jump straight to the class grid
         if (count($results) == 1 && count(reset($results)) == 1){
             $cID = key($results);
@@ -283,10 +275,10 @@ switch($type)
             $result = reset($result);
             redirect($CFG->wwwroot . "/blocks/gradetracker/grid.php?type=class&id={$result->getID()}&courseID={$cID}&access=v");
         }
-        
+
     break;
-    
-    
+
+
 
 }
 
@@ -297,9 +289,6 @@ $TPL->set("myQualID", $myQualID);
 $TPL->set("myCourseID", $myCourseID);
 $TPL->set("searchQualification", $searchQualification);
 $TPL->set("searchCourse", $searchCourse);
-        
-
-
 
 
 // Set up PAGE
@@ -326,8 +315,6 @@ if ($course)
 {
     $PAGE->navbar->add( $course->fullname, $CFG->wwwroot . '/course/view.php?id='.$course->id, navigation_node::TYPE_CUSTOM);
 }
-
-$PAGE->requires->js_init_call('gt_choose_bindings', null, true);
 
 $PAGE->set_title( $SITE->shortname . ': ' . $GT->getPluginTitle() . ': ' . get_string('selectgrid', 'block_gradetracker') );
 

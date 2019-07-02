@@ -7,14 +7,14 @@
     <ul class="gt_tabrow">
         <li class="selected"><a href=""><?= $string['trackers']; ?></a></li>
         <?php if (gt_has_capability('block/gradetracker:configure')): ?>
-            <li class=""><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php"><?= $string['config']; ?></a></li> 
+            <li class=""><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php"><?= $string['config']; ?></a></li>
         <?php endif; ?>
         <?php if (gt_has_capability('block/gradetracker:configure_reporting')): ?>
             <li class=""><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=reporting"><?= $string['reporting']; ?></a></li>
         <?php endif; ?>
     </ul>
 
-    
+
 <?php if($qualifications): ?>
 <!--    Qualification List Admin/Staff-->
     <div>
@@ -31,13 +31,13 @@
             </tr>
                 <?php foreach($qualifications as $q): ?>
                     <tr id="gt_row_<?= $q->getID() ?>">
-                        <td class="gt_medium_td"><a href='#' onclick="gtCreateReportingDropdown(<?=$q->getID()?>);return false;"><?= $string['reporting']; ?> <img id='report_icon_<?= $q->getID() ?>' src="<?= gt_image_url('t/dropdown') ?>"/></a></td>
+                        <td class="gt_medium_td"><a href='#' class="gt_reporting_dropdown" qualID="<?= $q->getID() ?>"><?= $string['reporting']; ?> <img id='report_icon_<?= $q->getID() ?>' src="<?= gt_image_url('t/dropdown') ?>"/></a></td>
                         <td><b><?= $q->getDisplayName(); ?></b></td>
                         <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=student&<?= $searchinstance ?>=<?= $q->getID(); ?>&<?= $submitsearch ?>=1">Student</a></td>
                         <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=unit&<?= $searchinstance ?>=<?= $q->getID(); ?>&<?= $submitsearch ?>=1">Unit</a></td>
                         <td class="gt_small_td"><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/choose.php?type=class&<?= $searchinstance ?>=<?= $q->getID(); ?>&<?= $submitsearch ?>=1">Class</a></td>
                     </tr>
-                <?php endforeach; ?>  
+                <?php endforeach; ?>
         </table>
 <?php endif; ?>
 

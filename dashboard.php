@@ -31,11 +31,8 @@ $PAGE->set_url($CFG->wwwroot . '/blocks/gradetracker/dashboard.php');
 $PAGE->navbar->add( $GT->getPluginTitle(), null);
 $PAGE->navbar->add( get_string('dashboard', 'block_gradetracker'), $CFG->wwwroot . '/blocks/gradetracker/dashboard.php', navigation_node::TYPE_CUSTOM);
 
-// prepare JS
 $GT->loadJavascript();
-
-$PAGE->requires->js_init_call("gt_bindings", null, true);
-
+$GT->loadCSS();
 
 echo $OUTPUT->header();
 

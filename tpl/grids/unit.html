@@ -11,14 +11,14 @@
     <div class="gt_c">
 
         <?php if (!isset($print)): ?>
-        
+
         <ul class="slimmenu">
 
             <li class="gt_nav_dropdowns">
 
                 <div>
 
-                    <select id="gt_switch_qual">
+                    <select class="gt_switch_qual">
                         <option value=""><?= $string['switchqual'] ?></option>
                         <?php if($Unit->getQualifications()): ?>
                             <?php foreach($Unit->getQualifications() as $unitQual): ?>
@@ -29,7 +29,7 @@
 
                     <br>
 
-                    <select id="gt_switch_course">
+                    <select class="gt_switch_course">
                         <option value="0"><?= $string['switchcourse'] ?></option>
                         <?php if ($Qualification->getCourses()): ?>
                             <?php foreach($Qualification->getCourses() as $qualCourse): ?>
@@ -50,7 +50,7 @@
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </select>
-                    
+
                     <br>
                     <select id="gt_switch_group">
                         <option value="0"><?= $string['switchgroup'] ?></option>
@@ -63,16 +63,16 @@
                                         <?php endforeach; ?>
                                     </optgroup>
                                 <?php endforeach; ?>
-                            <?php endif; ?>    
-                            
+                            <?php endif; ?>
+
                             <?php if ($groups['direct']): ?>
                                 <optgroup label="<?= \GT\Course::getNameById($courseID) ?>">
                                     <?php foreach($groups['direct'] as $group): ?>
                                         <option value="<?= $group->id ?>" <?= ($groupID == $group->id) ? 'selected' : '' ?> ><?= $group->name ?> (<?= $group->usercnt ?>)</option>
                                     <?php endforeach; ?>
                                 </optgroup>
-                            <?php endif; ?>   
-                            
+                            <?php endif; ?>
+
                             <?php if ($groups['child']): ?>
                                 <?php foreach($groups['child'] as $cID => $childGroups): ?>
                                     <optgroup label="<?= \GT\Course::getNameById($cID) ?>">
@@ -81,8 +81,8 @@
                                         <?php endforeach; ?>
                                     </optgroup>
                                 <?php endforeach; ?>
-                            <?php endif; ?>   
-                            
+                            <?php endif; ?>
+
                         <?php endif; ?>
                     </select>
 
@@ -115,7 +115,7 @@
                 </ul>
 
             </li>
-            
+
             <li>
                 <a href="#"><?= $string['context'] ?></a>
                 <ul>
@@ -174,7 +174,7 @@
 
                 </ul>
             </li>
-            
+
             <?php if ($links): ?>
 
                 <?php foreach($links as $link): ?>
@@ -199,7 +199,7 @@
         </ul>
         <br>
         <?php endif; ?>
-        
+
         <h2 class="gt_h2">
             <?= $Unit->getDisplayName() ?><br>
             <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
@@ -209,9 +209,9 @@
             <?php endif; ?>
         </h2>
         <p><small><?= $Unit->getDescription() ?></small></p>
-        
+
         <br>
-        
+
         <?php if (!isset($print)): ?>
             <p>
                 <input type="button" class="gt_btn" value="<?= $string['view'] ?>" onclick="loadUnitGrid('v');return false;" />
@@ -221,16 +221,16 @@
             </p>
             <br>
         <?php endif; ?>
-        
+
         <div class="gt_grid_key">
-                        
+
             <table>
                 <?php if (!isset($print)): ?>
                 <tr>
                     <th colspan="<?= ( count($allPossibleValues) + 1 ) ?>"><?= $string['gridkey'] ?></th>
                 </tr>
                 <?php endif; ?>
-                
+
                 <tr class="imgs">
                     <?php if ($allPossibleValues): ?>
                         <?php foreach($allPossibleValues as $value): ?>
@@ -251,20 +251,20 @@
                     <?php endif; ?>
                     <td style="width:<?= (100 / (count($allPossibleValues) + 1)) ?>%;"><?= $string['notattempted'] ?></td>
                 </tr>
-            </table>   
-            
+            </table>
+
         </div>
-        
+
         <br>
 
     </div>
-    
+
     <?php if (!isset($print)): ?>
-    
+
         <p id="gt_loading" class="gt_hidden"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="<?= $string['loading'] ?>" /></p>
-        
+
         <?php \gt_display_debug_section() ?>
-        
+
         <?php if ($GT->getSetting('grid_fixed_links') == 1): ?>
             <div id="gt_grid_quick_links">
                 <a href="#" onclick="loadUnitGrid();return false;" title="<?= $string['redraw'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_refresh.png" class="gt_icon" alt="<?= $string['redraw'] ?>" /></a><br>
@@ -273,27 +273,27 @@
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['importdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_imports.png" class="gt_icon" alt="<?= $string['importdatasheet'] ?>" /></a>
             </div>
         <?php endif; ?>
-        
+
         <br class="gt_cl gt_hidden">
-        
+
     <?php endif; ?>
-    
-    
+
+
     <?php if (!isset($print) && isset($reqPages) && $reqPages > 1): ?>
-    
+
         <div class="gt_pagination">
             <?php for($i = 1; $i <= $reqPages; $i++): ?>
                 <a class="gt_pagenumber gt_pagenumber_<?= $i ?> <?= ($page == $i) ? 'active' : '' ?>" page="<?= $i ?>" href="#" onclick="changePage(<?= $i ?>);return false;"><?= $i ?></a>
             <?php endfor; ?>
         </div>
-    
+
     <?php endif; ?>
-    
+
     <div id="gt_grid_holder">
         <?php if (isset($print)): ?>
             <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/grids/unit/grid.html' ?>
         <?php endif; ?>
     </div>
-        
-   
+
+
 </div>

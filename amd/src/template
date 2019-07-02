@@ -11,7 +11,14 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
   config.bindings = function(){
 
+    $('.class').unbind('click');
+    $('.class').bind('click', function(e){
 
+
+
+      e.preventDefault();
+
+    });
 
   }
 

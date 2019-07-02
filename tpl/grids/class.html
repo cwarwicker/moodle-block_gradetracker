@@ -8,16 +8,16 @@
 <input type="hidden" id="gt-assessmentView" value="<?= $assessmentView ?>" />
 
 <div class='gt_full_page gt_grid'>
-    
+
     <div class="gt_c">
 
             <?php if (!isset($print)): ?>
-            
+
             <ul class="slimmenu">
-        
+
                 <li class="gt_nav_dropdowns">
-                    
-                    <select id="gt_switch_group" style="width:90%;">
+
+                    <select class="gt_switch_group" style="width:90%;">
                         <option value="0"><?= $string['switchgroup'] ?></option>
                         <?php if (isset($Course) && ($groups = $Course->getGroups())): ?>
                             <?php if ($groups['parent']): ?>
@@ -28,16 +28,16 @@
                                         <?php endforeach; ?>
                                     </optgroup>
                                 <?php endforeach; ?>
-                            <?php endif; ?>    
-                            
+                            <?php endif; ?>
+
                             <?php if ($groups['direct']): ?>
                                 <optgroup label="<?= $Course->getName() ?>">
                                     <?php foreach($groups['direct'] as $group): ?>
                                         <option value="<?= $group->id ?>" <?= ($groupID == $group->id) ? 'selected' : '' ?> ><?= $group->name ?> (<?= $group->usercnt ?>)</option>
                                     <?php endforeach; ?>
                                 </optgroup>
-                            <?php endif; ?>   
-                            
+                            <?php endif; ?>
+
                             <?php if ($groups['child']): ?>
                                 <?php foreach($groups['child'] as $cID => $childGroups): ?>
                                     <optgroup label="<?= \GT\Course::getNameById($cID) ?>">
@@ -46,15 +46,15 @@
                                         <?php endforeach; ?>
                                     </optgroup>
                                 <?php endforeach; ?>
-                            <?php endif; ?>   
-                            
+                            <?php endif; ?>
+
                         <?php endif; ?>
                     </select>
 
                 </li>
-                
+
                 <li>
-                    
+
                     <a href="#"><?= $string['grid'] ?></a>
                     <ul>
                         <li>
@@ -67,9 +67,9 @@
                             <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=class&qualID=<?= $Qualification->getID() ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : ''; ?>"><?= $string['importdatasheet'] ?></a>
                         </li>
                     </ul>
-                    
+
                 </li>
-                
+
                 <li>
                     <a href="#"><?= $string['context'] ?></a>
                     <ul>
@@ -78,7 +78,7 @@
                                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $Qualification->getID() ?>"><?= $string['editqualification'] ?></a>
                             </li>
                         <?php endif; ?>
-                        
+
                         <?php if ( $courseID > 0 && ($User->isOnCourse($courseID, "STAFF") || $User->hasCapability('block/gradetracker:edit_all_courses')) ): ?>
                             <li>
                                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=userquals&id=<?= $courseID ?>"><?= $string['userquals'] ?></a>
@@ -89,14 +89,14 @@
                         <?php endif; ?>
                     </ul>
                 </li>
-                
+
                 <li>
                     <a href="#"><?= $string['core'] ?></a>
                     <ul>
                         <li>
                             <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/dashboard.php"><?= $string['mydashboard'] ?></a>
                         </li>
-                        
+
                         <?php if ($User->hasCapability('block/gradetracker:view_student_grids')): ?>
                             <li>
                                 <?php if ($courseID > 0): ?>
@@ -106,7 +106,7 @@
                                 <?php endif; ?>
                             </li>
                         <?php endif; ?>
-                        
+
                         <?php if ($User->hasCapability('block/gradetracker:view_unit_grids')): ?>
                             <li>
                                 <?php if ($courseID > 0): ?>
@@ -116,7 +116,7 @@
                                 <?php endif; ?>
                             </li>
                         <?php endif; ?>
-                        
+
                         <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
                             <li>
                                 <?php if ($courseID > 0): ?>
@@ -126,11 +126,11 @@
                                 <?php endif; ?>
                             </li>
                         <?php endif; ?>
-                        
+
                     </ul>
                 </li>
 
-                
+
                 <?php if ($links): ?>
 
                     <?php foreach($links as $link): ?>
@@ -155,13 +155,13 @@
             </ul>
         <br>
         <?php endif; ?>
-        
-        <h2 class="gt_h2"><?= $Qualification->getDisplayName() ?></h2>       
+
+        <h2 class="gt_h2"><?= $Qualification->getDisplayName() ?></h2>
         <br>
-        
-        
+
+
         <?php if ($assessmentView && $hasWeightings && \gt_has_capability('block/gradetracker:see_coefficient_table')): ?>
-        
+
             <table class='gt_coefficient_table'>
                 <tr>
                     <th colspan="<?= $weightingPercentiles + 2 ?>"><?= $string['weightingcoefficients'] ?></th>
@@ -180,10 +180,10 @@
                 </tr>
             </table>
             <br>
-            
+
         <?php endif; ?>
-        
-        
+
+
         <?php if (!isset($print)): ?>
             <p>
                 <input type="button" class="gt_btn" value="<?= $string['view'] ?>" onclick="loadClassGrid('v');return false;" />
@@ -200,16 +200,16 @@
             </p>
             <br>
         <?php endif; ?>
-        
+
 
     </div>
-    
+
     <?php if (!isset($print)): ?>
-    
+
         <p id="gt_loading" class="gt_hidden"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="<?= $string['loading'] ?>" /></p>
-        
+
         <?php \gt_display_debug_section() ?>
-        
+
         <?php if ($GT->getSetting('grid_fixed_links') == 1): ?>
             <div id="gt_grid_quick_links">
                 <a href="#" onclick="loadClassGrid();return false;" title="<?= $string['redraw'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_refresh.png" class="gt_icon" alt="<?= $string['redraw'] ?>" /></a><br>
@@ -218,25 +218,25 @@
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=class&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['importdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_imports.png" class="gt_icon" alt="<?= $string['importdatasheet'] ?>" /></a>
             </div>
         <?php endif; ?>
-        
+
     <?php endif; ?>
-    
-    
+
+
     <?php if (!isset($print) && isset($reqPages) && $reqPages > 1): ?>
-    
+
         <div class="gt_pagination">
             <?php for($i = 1; $i <= $reqPages; $i++): ?>
                 <a class="gt_pagenumber gt_pagenumber_<?= $i ?> <?= ($page == $i) ? 'active' : '' ?>" page="<?= $i ?>" href="#" onclick="changePage(<?= $i ?>);return false;"><?= $i ?></a>
             <?php endfor; ?>
         </div>
-    
+
     <?php endif; ?>
-    
+
     <div id="gt_grid_holder">
         <?php if (isset($print)): ?>
             <?php include $CFG->dirroot . '/blocks/gradetracker/tpl/grids/class/'.$gridFile.'.html' ?>
         <?php endif; ?>
     </div>
-        
-   
+
+
 </div>

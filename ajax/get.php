@@ -499,7 +499,7 @@ switch ($action)
         $score = $user->calculateAverageGCSEScore();
 
         $result = array();
-        $result['score'] = $score;
+        $result['score'] = (float)$score;
 
         echo json_encode($result);
         exit;
