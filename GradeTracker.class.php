@@ -4097,6 +4097,7 @@ class GradeTracker
 
             // Grid settings
             if ($section == 'grid'){
+                $settings['grid_fixed_links'] = (isset($settings['grid_fixed_links'])) ? '1' : '0';
                 $settings['enable_grid_logs'] = (isset($settings['enable_grid_logs'])) ? '1' : '0';
                 $settings['assessment_grid_show_quals_one_page'] = (isset($settings['assessment_grid_show_quals_one_page'])) ? '1' : '0';
                 $settings['student_grid_show_ucas'] = (isset($settings['student_grid_show_ucas'])) ? '1' : '0';

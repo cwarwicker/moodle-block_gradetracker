@@ -144,9 +144,15 @@ switch($type)
         }
 
         if ($courseID > 0){
+
             $Qualification->loadCourse($courseID);
             $Course = new \GT\Course($courseID);
             $TPL->set("Course", $Course);
+
+            if ($groupID > 0){
+              $TPL->set("Group", $Course->getGroup($groupID));
+            }
+
         }
 
         $TPL->set("page", $page);
@@ -280,7 +286,8 @@ $PAGE->requires->js_call_amd("block_gradetracker/grids", 'init', array( array(
   'type' => $type,
   'qualID' => $qualID,
   'id' => $id,
-  'courseID' => $courseID
+  'courseID' => $courseID,
+  'groupID' => $groupID
 )) );
 
 if ( gt_has_capability('block/gradetracker:configure') ){

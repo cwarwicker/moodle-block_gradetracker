@@ -992,12 +992,12 @@ function gt_display_debug_section(){
                 echo "<tr><th colspan='4'>".get_string('console', 'block_gradetracker')."</th></tr>";
                 echo "<tr>";
                     echo "<td>";
-                        echo "<a href='#' onclick='start_script_debugging();return false;' title='".get_string('startdebugging', 'block_gradetracker')."'>";
+                        echo "<a href='#' class='gt_start_debugging' title='".get_string('startdebugging', 'block_gradetracker')."'>";
                             echo "<img class='".((\gt_is_debugging()) ? 'gt_img_disable' : '')." gt_debug_start' src='{$CFG->wwwroot}/blocks/gradetracker/pix/start.png' alt='".get_string('startdebugging', 'block_gradetracker')."' />";
                         echo "</a>";
                     echo "</td>";
                     echo "<td>";
-                        echo "<a href='#' onclick='stop_script_debugging();return false;' title='".get_string('stopdebugging', 'block_gradetracker')."'>";
+                        echo "<a href='#' class='gt_stop_debugging' title='".get_string('stopdebugging', 'block_gradetracker')."'>";
                             echo "<img class='".((!\gt_is_debugging()) ? 'gt_img_disable' : '')." gt_debug_stop' src='{$CFG->wwwroot}/blocks/gradetracker/pix/end.png' alt='".get_string('stopdebugging', 'block_gradetracker')."' />";
                         echo "</td>";
                     echo "</a>";
@@ -1007,18 +1007,16 @@ function gt_display_debug_section(){
                         echo "</a>";
                     echo "</td>";
                     echo "<td>";
-                        echo "<a href='#' onclick='clear_debugging_logs();return false;'>";
+                        echo "<a href='#' class='gt_clear_debugging'>";
                             echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_delete.png' alt='".get_string('clearlogs', 'block_gradetracker')."' title='".get_string('clearlogs', 'block_gradetracker')."' />";
                         echo "</a>";
                     echo "</td>";
                 echo "</tr>";
             echo "</table>";
+
+            echo "<input type='hidden' id='gt_debugging_enabled' value='".(\gt_is_debugging() ? 1 : 0)."' />";
+
         echo "</div>";
-
-        if (\gt_is_debugging()){
-            echo "<script> isDebugging = true; </script>";
-        }
-
 
     }
 

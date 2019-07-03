@@ -669,7 +669,7 @@ function grid_bindings(){
 
 
 
-        // OPen comments popup for normal criteria
+        // Open comments popup for normal criteria
         $('.gt_comment_icon').unbind('click');
         $('.gt_comment_icon').bind('click', function(){
 

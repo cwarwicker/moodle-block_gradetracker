@@ -8,8 +8,20 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     // Gradetracker object variables
     GT.keyMap = {16: false, 17: false, 191: false};
+    GT.isDebugging = 0;
 
     // Gradetracker object methods
+    GT.init = function(){
+
+      // Initalise any variable values
+      var debugging = $('#gt_debugging_enabled').val();
+      GT.isDebugging = debugging;
+
+      // Bind elements
+      GT.bind();
+
+    }
+
 
     //-- Element bindings
     // Core element bindings
@@ -1394,7 +1406,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     client.init = function() {
 
       // Bindings
-      GT.bind();
+      GT.init();
 
       client.log('Loaded gt.js');
 

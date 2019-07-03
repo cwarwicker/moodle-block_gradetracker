@@ -2071,6 +2071,7 @@ div#gt_grid_quick_links
     background: #B0344A;
     padding: 4px;
     border-radius: 20px;
+    z-index: 9999;
 }
 
 div#gt_grid_quick_links a

@@ -17,3 +17,8 @@ notify()
 If that makes no real difference, could also look at caching actual qual/unit/structure objects, so they don't have to be retrieved from DB and loaded each time.
 Would need to ensure any time they are changed, the cache is cleared.
 
+
+
+REQUIREMENTS:
+
+mb_* enabled on server

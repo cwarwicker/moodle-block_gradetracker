@@ -166,8 +166,8 @@
        settings.title = $.trim(settings.title);
 
        // Default variables
-       var overlayZIndex = 100;
-       var zIndex = 101;
+       var overlayZIndex = 999;
+       var zIndex = 1000;
        var layerNum = 1;
        var posX = ( $(window).scrollLeft() + 150 ) + 'px';
        var posY = ( $(window).scrollTop() + 50 ) + 'px';

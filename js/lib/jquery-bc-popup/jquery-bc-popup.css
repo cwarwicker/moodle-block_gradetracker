@@ -10,7 +10,7 @@ div.bc-modal
 	position: absolute;
 	top: -50%;
 	left: -50%;
-	z-index: 101;
+	z-index: 1000;
 }
 
 div.bc-modal-header
@@ -70,11 +70,11 @@ div.bc-overlay
 	top: 0;
 	left: 0;
 	opacity: 0.7;
-	z-index: 100;
+	z-index: 999;
 	cursor: pointer;
 }
 
-div.bc-modal button 
+div.bc-modal button
 {
 	display: inline-block;
 	background: #E3E3E3;
