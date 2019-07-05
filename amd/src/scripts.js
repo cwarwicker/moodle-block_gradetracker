@@ -52,6 +52,15 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         });
 
+        $('.gt_goto').unbind('click');
+        $('.gt_goto').bind('click', function(e){
+
+          var url = $(this).attr('url');
+          window.location = url;
+          e.preventDefault();
+
+        });
+
 
         // Small drop-down menus
         $('.gt_dropdown_toggle').unbind('click');

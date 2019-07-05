@@ -68,7 +68,41 @@ class Output {
 
   }
 
-  public static function initAMD($view, $section = null){
+  public function initAMD_grid($data){
+
+    // Unit Grid
+    if ($data['type'] === 'unit'){
+
+      // We need to get an array of the criteria and the values, for the Mass Update section
+      $data['massUpdate'] = array();
+
+      $GTEXE = \GT\Execution::getInstance();
+      $GTEXE->min();
+
+      $unit = new Unit($data['id']);
+      $criteria = $unit->getHeaderCriteriaNamesFlat();
+
+      foreach($criteria as $critName){
+
+        $criterion = $unit->getCriterionByName($critName);
+        $critArr = array();
+
+        foreach($criterion->getPossibleValues() as $award){
+          $critArr[] = array($award->getName(), $award->getID());
+        }
+
+        $data['massUpdate'][$criterion->getID()] = $critArr;
+
+      }
+
+    }
+
+
+    return $data;
+
+  }
+
+  public static function initAMD($view, $section = null, $data = null){
 
     $output = new Output();
     $method = 'initAMD_' . strtolower($view);
@@ -77,7 +111,7 @@ class Output {
     }
 
     if (method_exists($output, $method)){
-      return array($output->$method());
+      return array($output->$method($data));
     } else {
       return array();
     }

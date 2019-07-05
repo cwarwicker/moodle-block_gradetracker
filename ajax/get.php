@@ -142,12 +142,6 @@ switch ($action)
         $activities = ($view == 'activities') ? $Unit->getActivityLinks() : false;
         $criteriaArray = $Unit->getHeaderCriteriaNamesFlat($view, $activities);
 
-        //Get an array of Criterion of the criterias
-//        $criterion = [];
-//        foreach ($Qualification->getUnits() as $unit){
-//            $criterion[$unit->getID] = $unit->getCriteria();
-//        }
-
         $settings['criteriacnt'] = count($criteriaArray);
         $settings['cnt'] += $settings['criteriacnt'];
 

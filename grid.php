@@ -155,11 +155,15 @@ switch($type)
 
         }
 
+        // Criteria names for mass update section
+        $criteriaNames = $Unit->getHeaderCriteriaNamesFlat();
+
         $TPL->set("page", $page);
         $TPL->set("courseID", $courseID);
         $TPL->set("groupID", $groupID);
         $TPL->set("view", $view);
         $TPL->set("gridFile", $gridFile);
+        $TPL->set("criteriaNames", $criteriaNames);
 
         $title = get_string('unitgrid', 'block_gradetracker') . ' - ' . $Unit->getDisplayName() . ' - ' . $Qualification->getDisplayName();
 
@@ -218,9 +222,15 @@ switch($type)
         }
 
         if ($courseID > 0){
+          
             $Qualification->loadCourse($courseID);
             $Course = new \GT\Course($courseID);
             $TPL->set("Course", $Course);
+
+            if ($groupID > 0){
+              $TPL->set("Group", $Course->getGroup($groupID));
+            }
+
         }
 
         $TPL->set("Qualification", $Qualification);
@@ -282,14 +292,19 @@ $PAGE->set_pagelayout( $GT->getMoodleThemeLayout() );
 $GT->loadJavascript();
 $GT->loadCSS();
 
-$PAGE->requires->js_call_amd("block_gradetracker/grids", 'init', array( array(
+// Init Data
+$data = array(
   'type' => $type,
   'qualID' => $qualID,
   'id' => $id,
   'courseID' => $courseID,
   'groupID' => $groupID
-)) );
+);
 
+// Call the amd module
+$PAGE->requires->js_call_amd("block_gradetracker/grids", 'init', \GT\Output::initAMD('grid', null, $data));
+
+// Which link can we see in the breadcrumbs?
 if ( gt_has_capability('block/gradetracker:configure') ){
     $link = $CFG->wwwroot . '/blocks/gradetracker/config.php';
 } else {
@@ -301,13 +316,6 @@ if (isset($Course) && $Course->isValid()){
 }
 $PAGE->navbar->add( $GT->getPluginTitle(), $link);
 $PAGE->navbar->add( get_string('trackers', 'block_gradetracker'), $CFG->wwwroot . '/blocks/gradetracker/choose.php', navigation_node::TYPE_CUSTOM);
-
-// $PAGE->requires->js( '/blocks/gradetracker/js/grids/scripts.js', true );
-// $PAGE->requires->js( '/blocks/gradetracker/js/grids/'.$type.'.js', true );
-// $PAGE->requires->js_init_call("gt_bindings", null, true);
-// $PAGE->requires->js_init_call("grid_bindings", null, true);
-// $PAGE->requires->js_init_call("{$type}_grid_bindings", null, true);
-
 
 $PAGE->set_title( $SITE->shortname . ': ' . $GT->getPluginTitle() . ': ' . $title );
 

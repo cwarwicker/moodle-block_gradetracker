@@ -11,6 +11,9 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
   config.access = '';
   config.tmpDate = '';
 
+  // ANything extra for specific grids
+  config.extra = {};
+
   config.init = function(data){
 
     // Set grid variables so we know what we're looking at
@@ -27,6 +30,12 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
       config.unit = data.id;
     }
 
+    // Extras
+    // Mass Update for Unit grid
+    if (data.massUpdate !== undefined){
+      config.extra.massUpdate = data.massUpdate;
+    }
+
     // If debugging is enabled, set the notification
     if (GT.isDebugging == 1){
       GT.notify('warning', M.util.get_string('debuggingrunning', 'block_gradetracker'), 'c');
@@ -37,6 +46,8 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     // Bind elements
     config.bindings();
+
+    console.log(config);
 
   }
 
@@ -93,11 +104,13 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     $('.gt_switch_course').bind('change', function(){
 
         var cID = $(this).val();
-        if (config.qualification <= 0 || config.unit <= 0){
+        if (config.qualification <= 0){
             return;
         }
 
-        window.location = M.cfg.wwwroot + '/blocks/gradetracker/grid.php?type='+config.grid+'&id=' + config.unit + '&access=' + config.access + '&qualID=' + config.qualification + '&courseID=' + cID;
+        var id = (config.grid === 'unit') ? config.unit : config.qualification;
+
+        window.location = M.cfg.wwwroot + '/blocks/gradetracker/grid.php?type='+config.grid+'&id=' + id + '&access=' + config.access + '&qualID=' + config.qualification + '&courseID=' + cID;
 
     });
 
@@ -106,11 +119,13 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     $('.gt_switch_group').bind('change', function(){
 
         var groupID = $(this).val();
-        if (config.qualification <= 0 || config.unit <= 0 || config.course <= 0){
+        if (config.qualification <= 0 || config.course <= 0){
             return;
         }
 
-        window.location = M.cfg.wwwroot + '/blocks/gradetracker/grid.php?type='+config.grid+'&id=' + config.unit + '&access=' + config.access + '&qualID=' + config.qualification + '&courseID=' + config.course + '&groupID=' + groupID;
+        var id = (config.grid === 'unit') ? config.unit : config.qualification;
+
+        window.location = M.cfg.wwwroot + '/blocks/gradetracker/grid.php?type='+config.grid+'&id=' + id + '&access=' + config.access + '&qualID=' + config.qualification + '&courseID=' + config.course + '&groupID=' + groupID;
 
     });
 
@@ -133,162 +148,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     $('.gt_refresh_grid_grade').bind('click', function(e){
 
       var type = $(this).attr('type');
-      var studentID = config.student;
-      var qualID = config.qualification;
-      var params = {};
-
-      // Show loading gif
-      $('#gt_refresh_'+type+'_loader').show();
-
-      // Refresh avg gcse score
-      if (type === 'gcse'){
-
-        params = { action: 'get_refreshed_gcse_score', params: { studentID: studentID } };
-
-      }
-
-      // Refresh target grade
-      else if(type === 'tg'){
-
-        // Is there more than 1 qualification on the page? E.g. Assessment view
-        if ( $('.gt-qID').length > 0 ){
-            var qualIDArray = new Array();
-            $('.gt-qID').each( function(){
-                qualIDArray.push( $(this).val() );
-            } );
-            qualID = qualIDArray;
-        }
-
-        var params = { action: 'get_refreshed_target_grade', params: { studentID: studentID, qualID: qualID } };
-
-      }
-
-      // Refresh weighted target grade
-      else if(type === 'wtg'){
-
-        // Is there more than 1 qualification on the page? E.g. Assessment view
-        if ( $('.gt-qID').length > 0 ){
-            var qualIDArray = new Array();
-            $('.gt-qID').each( function(){
-                qualIDArray.push( $(this).val() );
-            } );
-            qualID = qualIDArray;
-        }
-
-        var params = { action: 'get_refreshed_weighted_target_grade', params: { studentID: studentID, qualID: qualID } };
-
-      }
-
-      // Refresh predicted grades
-      else if(type === 'pg'){
-
-        var params = { action: 'get_refreshed_predicted_grades', params: { studentID: studentID, qualID: qualID } };
-
-      }
-
-
-      // Get the data
-      $.post( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', params, function(data){
-
-          data = $.parseJSON(data);
-
-          // Avg GCSE score
-          if (type === 'gcse'){
-
-            if (data['score'] !== undefined){
-                $('#gt_user_gcse_score').text( data['score'] );
-            }
-
-          }
-
-          // Target grade
-          else if(type === 'tg'){
-
-            if (data['gradeID'] instanceof Array || data['gradeID'] instanceof Object)
-            {
-
-                // Grade IDs in the select menus
-                $.each( data['gradeID'], function(qID, val){
-                    if (val.length > 0){
-                        $('#gt_user_target_grade_'+studentID+'_'+qID+' > select.gt_target_grade_award').val( val );
-                    }
-                } );
-
-                // Grade text
-                $.each( data['grade'], function(qID, val){
-                    if (val.length > 0){
-                        $('#gt_user_target_grade_'+studentID+'_'+qID+' > span').text( val );
-                    }
-                } );
-
-            }
-            else
-            {
-
-                // Set the selected value of the dropdown menu
-                if (data['gradeID'] !== undefined){
-                    $('#gt_user_target_grade_'+studentID+'_'+qualID+' > select.gt_target_grade_award').val( data['gradeID'] );
-                }
-
-                // Set the grade text
-                if (data['grade'] !== undefined){
-                    $('#gt_user_target_grade_'+studentID+'_'+qualID+' > span').text( data['grade'] );
-                }
-
-            }
-
-          }
-
-          // Weighted target grade
-          else if(type === 'wtg'){
-
-            if (data['gradeID'] instanceof Array || data['gradeID'] instanceof Object)
-            {
-
-                // Grade text
-                $.each( data['grade'], function(qID, val){
-                    if (val.length > 0){
-                        $('#gt_user_weighted_target_grade_'+studentID+'_'+qID+' > span').text( val );
-                    }
-                } );
-
-            }
-            else
-            {
-
-                // Set the grade text
-                if (data['grade'] !== undefined){
-                    $('#gt_user_weighted_target_grade_'+studentID+'_'+qualID+' > span').text( data['grade'] );
-                }
-
-            }
-
-          }
-
-          // Predicted grades
-          else if(type === 'pg'){
-
-            if (data['average'] !== undefined){
-                $('#gt_user_avg_award').text( data['average'] );
-            }
-
-            if (data['min'] !== undefined){
-                $('#gt_user_min_award').text( data['min'] );
-            }
-
-            if (data['max'] !== undefined){
-                $('#gt_user_max_award').text( data['max'] );
-            }
-
-            if (data['final'] !== undefined){
-                $('#gt_user_final_award').text( data['final'] );
-            }
-
-          }
-
-          $('#gt_refresh_'+type+'_loader').hide();
-
-      });
+      config.refresh_grades(type);
 
       e.preventDefault();
 
@@ -1185,8 +1045,8 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
 
     // Unit Award Select Menu
-    $('.gt_grid_unit_award').unbind('change');
-    $('.gt_grid_unit_award').bind('change', function(){
+    $('select.gt_grid_unit_award').unbind('change');
+    $('select.gt_grid_unit_award').bind('change', function(){
 
         var TD = $($(this).parents('td')[0]);
         var sID = $(TD).attr('sID');
@@ -1215,6 +1075,10 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
                 // Was ok, so let's do stuff
                 config.apply_award_updates(data, sID, qID, uID);
                 $(TD).effect( 'highlight', {color: '#ccff66'}, 3000 );
+
+                // Annoying issue with freezeTable means duplicated inputs in the frozen section don't get the same value
+                // So have to manually set the value on the same class here
+                $('select.gt_grid_unit_award.S'+sID+'_Q'+qID+'_U'+uID).val(value);
 
             }
 
@@ -1632,7 +1496,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     $('.gt_change_grid_page').bind('click', function(e){
 
       var page = $(this).attr('page');
-      
+
       $('#gt-page').val(page);
       $('.gt_pagenumber').removeClass('active');
       $('.gt_pagenumber_'+page).addClass('active');
@@ -1642,6 +1506,73 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     });
 
+    // Unit Grid - Mass Update - Change Criterion
+    $('#gt_mass_switch_crit').unbind('change');
+    $('#gt_mass_switch_crit').bind('change', function(){
+
+        var critID = $(this).val();
+        var valueDropDown = $('#gt_mass_switch_value');
+
+        // If we selected a value
+        if ( critID !== '' ){
+
+          // Set empty option at the top
+          valueDropDown.html('<option></option>');
+
+          // Now loop through valid values
+          var values = config.extra.massUpdate[critID];
+          $.each(values, function(indx, val){
+            valueDropDown.append('<option value="'+val[1]+'">'+val[0]+'</option>');
+          });
+
+        } else {
+          valueDropDown.html('');
+        }
+
+    });
+
+    // Unit Grid - Mass Update - Apply Update
+    $('#gt_mass_update_btn').unbind('click');
+    $('#gt_mass_update_btn').bind('click', function(){
+
+        var qID = $('#gt-qID').val();
+        var uID = $('#gt-uID').val();
+        var cID = $('#gt-crID').val();
+        var groupID = $('#gt-groupID').val();
+        var criterion_switch_value = $("#gt_mass_switch_crit").val();
+        var value_switch_value = $("#gt_mass_switch_value").val();
+
+        $('#gt_mass_update_loading').show();
+
+        var params = new Array();
+
+        params.push( { qualID: qID, unitID: uID, courseID: cID, critID: criterion_switch_value, groupID: groupID, valueID: value_switch_value } );
+
+        GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/update.php', {action: 'mass_update_student_detail_criterion', params: params}, function(data){
+
+            $('#gt_mass_update_loading').hide();
+
+            if (data.length === 0){
+                var col = '#f24c3d';
+            } else {
+                var col = '#ccff66';
+            }
+
+            var element_name = "gt_criteria[" + qID + "][" + uID + "][" + criterion_switch_value + "]";
+            var one_type_crit = $('[name="' + element_name + '"]');
+            for (i = 0; i < one_type_crit.length; i++){
+                one_type_crit[i].value = value_switch_value;
+            }
+            one_type_crit.parent().effect( 'highlight', {color: col}, 3000 );
+
+        });
+
+
+
+    });
+
+
+
     // Example
     $('.class').unbind('click');
     $('.class').bind('click', function(e){
@@ -1649,6 +1580,187 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
 
       e.preventDefault();
+
+    });
+
+  }
+
+  config.refresh_grades = function(type, studentID){
+
+    var qualID = config.qualification;
+
+    if (config.grid === 'student'){
+      studentID = config.student;
+    }
+
+    var params = {};
+
+    // Show loading gif
+    $('#gt_refresh_'+type+'_loader').show();
+
+    // Refresh avg gcse score
+    if (type === 'gcse'){
+      params = { action: 'get_refreshed_gcse_score', params: { studentID: studentID } };
+    }
+
+    // Refresh target grade
+    else if(type === 'tg'){
+
+      // Is there more than 1 qualification on the page? E.g. Assessment view
+      if ( $('.gt-qID').length > 0 ){
+          var qualIDArray = new Array();
+          $('.gt-qID').each( function(){
+              qualIDArray.push( $(this).val() );
+          } );
+          qualID = qualIDArray;
+      }
+
+      var params = { action: 'get_refreshed_target_grade', params: { studentID: studentID, qualID: qualID } };
+
+    }
+
+    // Refresh weighted target grade
+    else if(type === 'wtg'){
+
+      // Is there more than 1 qualification on the page? E.g. Assessment view
+      if ( $('.gt-qID').length > 0 ){
+          var qualIDArray = new Array();
+          $('.gt-qID').each( function(){
+              qualIDArray.push( $(this).val() );
+          } );
+          qualID = qualIDArray;
+      }
+
+      var params = { action: 'get_refreshed_weighted_target_grade', params: { studentID: studentID, qualID: qualID } };
+
+    }
+
+    // Refresh predicted grades
+    else if(type === 'pg'){
+      var params = { action: 'get_refreshed_predicted_grades', params: { studentID: studentID, qualID: qualID } };
+    }
+
+
+    // Get the data
+    GT.ajax( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', params, function(data){
+
+        data = $.parseJSON(data);
+
+        // Avg GCSE score
+        if (type === 'gcse'){
+
+          if (data['score'] !== undefined){
+              $('#gt_user_gcse_score').text( data['score'] );
+          }
+
+        }
+
+        // Target grade
+        else if(type === 'tg'){
+
+          if (data['gradeID'] instanceof Array || data['gradeID'] instanceof Object)
+          {
+
+              // Grade IDs in the select menus
+              $.each( data['gradeID'], function(qID, val){
+                  if (val.length > 0){
+                      $('#gt_user_target_grade_'+studentID+'_'+qID+' > select.gt_target_grade_award').val( val );
+                  }
+              } );
+
+              // Grade text
+              $.each( data['grade'], function(qID, val){
+                  if (val.length > 0){
+                      $('#gt_user_target_grade_'+studentID+'_'+qID+' > span').text( val );
+                  }
+              } );
+
+          }
+          else
+          {
+
+              // Set the selected value of the dropdown menu
+              if (data['gradeID'] !== undefined){
+                  $('#gt_user_target_grade_'+studentID+'_'+qualID+' > select.gt_target_grade_award').val( data['gradeID'] );
+              }
+
+              // Set the grade text
+              if (data['grade'] !== undefined){
+                  $('#gt_user_target_grade_'+studentID+'_'+qualID+' > span').text( data['grade'] );
+              }
+
+          }
+
+        }
+
+        // Weighted target grade
+        else if(type === 'wtg'){
+
+          if (data['gradeID'] instanceof Array || data['gradeID'] instanceof Object)
+          {
+
+              // Grade text
+              $.each( data['grade'], function(qID, val){
+                  if (val.length > 0){
+                      $('#gt_user_weighted_target_grade_'+studentID+'_'+qID+' > span').text( val );
+                  }
+              } );
+
+          }
+          else
+          {
+
+              // Set the grade text
+              if (data['grade'] !== undefined){
+                  $('#gt_user_weighted_target_grade_'+studentID+'_'+qualID+' > span').text( data['grade'] );
+              }
+
+          }
+
+        }
+
+        // Predicted grades
+        else if(type === 'pg'){
+
+          if (data['average'] !== undefined){
+
+              // Student Grid
+              if (config.grid === 'student'){
+                $('#gt_user_avg_award').text( data['average'] );
+              }
+
+              // Class grid
+              else if(config.grid === 'class' || config.grid === 'unit'){
+                $('.qual_award_'+studentID+'_'+qualID).html('Predicted<br>'+data['average']);
+              }
+
+          }
+
+          if (data['min'] !== undefined){
+              $('#gt_user_min_award').text( data['min'] );
+          }
+
+          if (data['max'] !== undefined){
+              $('#gt_user_max_award').text( data['max'] );
+          }
+
+          if (data['final'] !== undefined){
+
+              // Student Grid
+              if (config.grid === 'student'){
+                $('#gt_user_final_award').text( data['final'] );
+              }
+
+              // Class grid
+              else if(config.grid === 'class' || config.grid === 'unit'){
+                $('.qual_award_'+studentID+'_'+qualID).html('Final<br>'+data['final']);
+              }
+
+          }
+
+        }
+
+        $('#gt_refresh_'+type+'_loader').hide();
 
     });
 
@@ -1725,7 +1837,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
       // Refresh Predicted Grades
       // Bit of a shitty way to do it, but I don't want to put that stuff in a separate function just for this one call
-      $('.gt_refresh_grid_grade[type="pg"]').click();
+      config.refresh_grades('pg', sID);
 
   }
 
@@ -1752,25 +1864,27 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
   // Bindings specific to the student grid
   config.student_bindings = function(){
 
-    // Call main bindings first
-    config.bindings();
+    var freeze = $('.gt_grid_freeze_col').length;
+    if (freeze < 1){
+      freeze = 1;
+    }
 
     // Freeze the grids
     $('#gt_grid_holder').freezeTable('destroy');
     $('#gt_grid_holder').freezeTable({
-      columnNum: 1,
+      columnNum: freeze,
       scrollable: true,
       shadow: true,
       freezeHead: true
     });
 
+    // Call main bindings
+    config.bindings();
+
   }
 
-  // Bindings specific to the student grid
+  // Bindings specific to the unit grid
   config.unit_bindings = function(){
-
-    // Call main bindings first
-    config.bindings();
 
     // Freeze the grids
     $('#gt_grid_holder').freezeTable('destroy');
@@ -1784,8 +1898,30 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
       freezeHead: true
     });
 
+    // Call main bindings
+    config.bindings();
+
   }
 
+  // Bindings for class grid
+  config.class_bindings = function(){
+
+    // Freeze the grids
+    $('#gt_grid_holder').freezeTable('destroy');
+
+    var freeze = $('.gt_grid_freeze_col').length;
+
+    $('#gt_grid_holder').freezeTable({
+      columnNum: freeze,
+      scrollable: true,
+      shadow: true,
+      freezeHead: true
+    });
+
+    // Call main bindings
+    config.bindings();
+
+  }
 
   // Load the student grid
   config.load_student_grid = function(access){
@@ -1846,7 +1982,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
   }
 
-
+  // Load the unit grid
   config.load_unit_grid = function(access){
 
     $('#gt_loading').show();
@@ -1858,6 +1994,8 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     var page = $('#gt-page').val();
     var view = $('#gt-view').val();
+
+    $('#gt_unit_mass_update').hide();
 
     // If we clicked on edit and we are holding down the CTRL button (17), go to advancedEdit
     if (GT.isKeyPressed(17) == true && access === 'e'){
@@ -1886,8 +2024,59 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         $('#gt_grid_holder').html( data );
         $('#gt_loading').hide();
 
+        // Show mass update on advanced edit
+        if (access === 'ae'){
+          $('#gt_unit_mass_update').show();
+        }
+
         config.access = access;
         config.unit_bindings();
+
+    });
+
+  }
+
+  // Load the class grid
+  config.load_class_grid = function(access){
+
+    $('#gt_loading').show();
+
+    var qID = config.qualification;
+    var cID = config.course;
+    var groupID = config.group;
+
+    var page = $('#gt-page').val();
+    var assessmentView = $('#gt-assessmentView').val();
+
+    // If we clicked on edit and we are holding down the CTRL button (17), go to advancedEdit
+    if (GT.isKeyPressed(17) == true && access === 'e'){
+        access = 'ae';
+    }
+
+    // If we clicked on Edit, toggle the Advanced Edit button to show now
+    if (access == 'e'){
+        $('#gt_edit_button').hide();
+        $('#gt_adv_edit_button').show();
+    }
+
+    // If we click on Advanced Edit or View, toggle the Edit button to show now
+    else if (access == 'ae' || access == 'v'){
+        $('#gt_adv_edit_button').hide();
+        $('#gt_edit_button').show();
+    }
+
+
+    var params = { qualID: qID, courseID: cID, groupID: groupID, access: access, page: page, assessmentView: assessmentView };
+
+    GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', { action: 'get_class_grid', params: params }, function(data){
+
+        data = $.parseJSON(data);
+
+        $('#gt_grid_holder').html( data );
+        $('#gt_loading').hide();
+
+        config.access = access;
+        config.class_bindings();
 
     });
 

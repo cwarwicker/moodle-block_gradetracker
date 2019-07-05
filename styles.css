@@ -360,7 +360,8 @@ table.gt_config table.gt_course_activities_qual_table tr td
 
 div#gt_grid_holder
 {
-    height: 600px;
+    min-height: 250px;
+    max-height: 600px;
 }
 
 div#gt_grid_holder > div

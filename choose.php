@@ -269,7 +269,7 @@ switch($type)
         }
 
         // If there is only 1 result, just jump straight to the class grid
-        if (count($results) == 1 && count(reset($results)) == 1){
+        if ($results && count($results) == 1 && count(reset($results)) == 1){
             $cID = key($results);
             $result = reset($results);
             $result = reset($result);

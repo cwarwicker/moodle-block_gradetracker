@@ -46,7 +46,7 @@
                     <br>
                     <input type="text" name="student_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" />
                     <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" />
-                    <a href="#" onclick="$('#gt_stud_nav_link_<?= $cnt ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                    <a href="#" class="gt_remove" remove="#gt_stud_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                     <a href="#" class="gt_add_link_stud_grid" parent="<?= $cnt ?>"><img src="<?= gt_image_url('t/add') ?>" alt="<?= $string['addsublink'] ?>" /></a>
                     <br>
                     <div id="gt_stud_nav_link_<?= $cnt ?>_sub">
@@ -57,7 +57,7 @@
                             <span id="gt_stud_nav_link_<?= $cnt ?>" class="gt_stud_nav_link">
                                 <input type="text" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" />
                                 <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" />
-                                <a href="#" onclick="$('#gt_stud_nav_link_<?= $cnt ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                                <a href="#" class="gt_remove" remove="#gt_stud_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -99,7 +99,7 @@
                     <br>
                     <input type="text" name="unit_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" />
                     <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" />
-                    <a href="#" onclick="$('#gt_unit_nav_link_<?= $cnt ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                    <a href="#" class="gt_remove" remove="#gt_unit_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                     <a href="#" class="gt_add_link_unit_grid" parent="<?= $cnt ?>"><img src="<?= gt_image_url('t/add') ?>" alt="<?= $string['addsublink'] ?>" /></a>
                     <br>
                     <div id="gt_unit_nav_link_<?= $cnt ?>_sub">
@@ -110,7 +110,7 @@
                             <span id="gt_unit_nav_link_<?= $cnt ?>" class="gt_unit_nav_link">
                                 <input type="text" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" />
                                 <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" />
-                                <a href="#" onclick="$('#gt_unit_nav_link_<?= $cnt ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                                <a href="#" class="gt_remove" remove="#gt_unit_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -155,7 +155,7 @@
                     <br>
                     <input type="text" name="class_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" />
                     <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" />
-                    <a href="#" onclick="$('#gt_class_nav_link_<?= $cnt ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                    <a href="#" class="gt_remove" remove="#gt_class_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                     <a href="#" class="gt_add_link_class_grid" parent="<?= $cnt ?>"><img src="<?= gt_image_url('t/add') ?>"  alt="<?= $string['addsublink'] ?>" /></a>
                     <br>
                     <div id="gt_class_nav_link_<?= $cnt ?>_sub">
@@ -166,7 +166,7 @@
                             <span id="gt_class_nav_link_<?= $cnt ?>" class="gt_class_nav_link">
                                 <input type="text" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" />
                                 <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" />
-                                <a href="#" onclick="$('#gt_class_nav_link_<?= $cnt ?>').remove();return false;"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                                <a href="#" class="gt_remove" remove="#gt_class_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                                 <br>
                             </span>
                         <?php endforeach; ?>
