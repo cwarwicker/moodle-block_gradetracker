@@ -47,8 +47,6 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     // Bind elements
     config.bindings();
 
-    console.log(config);
-
   }
 
   config.bindings = function(){
@@ -2084,6 +2082,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
 
   var client = {};
+  client.scripts = config;
 
   //-- Log something to console
   client.log = function(log){

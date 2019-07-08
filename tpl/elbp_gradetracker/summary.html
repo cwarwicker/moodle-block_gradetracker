@@ -5,7 +5,7 @@
       <tr>
            <td class="elbp_summary_title" style="background-image:url('<?= $CFG->wwwroot ?><?= $obj->getPath() ?>pix/elbp_gradetracker/icon.png');">
             <?= get_string('mytrackers', 'block_gradetracker') ?>
-          </td>       
+          </td>
       </tr>
     </tbody>
   </table>
@@ -15,7 +15,7 @@
     <tbody>
       <?php if ($quals): foreach($quals as $qual): ?>
       <tr>
-          <td><a href="#" onclick="loadTrackerPopup(<?= $qual->getID() ?>);return false;"><?= $qual->getDisplayName() ?></a></td>
+          <td><a href="#" class="gt_elbp_load_popup" qualID="<?= $qual->getID() ?>"><?= $qual->getDisplayName() ?></a></td>
       </tr>
       <?php endforeach; else: ?>
       <tr>
