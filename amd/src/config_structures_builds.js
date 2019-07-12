@@ -32,11 +32,13 @@ define(['jquery', 'jqueryui'], function($, ui) {
             row += '<td><input type="number" step="any" min="0" name="build_award_qoe_lower['+cntAwards+']" value="" /></td>';
             row += '<td><input type="number" step="any" min="0" name="build_award_qoe_upper['+cntAwards+']" value="" /></td>';
             row += '<td><input type="number" step="any" min="0" name="build_award_ucas['+cntAwards+']" value="" /></td>';
-            row += '<td><a href="#" onclick="$(\'#gt_build_award_row_'+cntAwards+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="delete" /></a></td>';
+            row += '<td><a href="#" class="gt_remove" remove="#gt_build_award_row_'+cntAwards+'"><img src="'+M.util.image_url('t/delete')+'" alt="delete" /></a></td>';
 
         row += '</tr>';
 
         $('#gt_build_award_table').append(row);
+        
+        config_structures_builds.bindings();
         e.preventDefault();
 
     });

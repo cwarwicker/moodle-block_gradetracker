@@ -639,7 +639,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup'], function($, ui, bcP
         });
 
 
-        // Bind the onChange event for the select menus
+        // Bind the on change event for the select menus
         $('.gt_rule_fx_element_option').off('change');
         $('.gt_rule_fx_element_option').on('change', function(){
 

@@ -1002,7 +1002,7 @@ function gt_display_debug_section(){
                         echo "</td>";
                     echo "</a>";
                     echo "<td>";
-                        echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/download.php?f=".\gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/debug/'.$USER->id.'.txt' )."&t=".time()."' onclick='gtRefreshUrlTimeParam(this);' target='_blank' title='".get_string('viewlogs', 'block_gradetracker')."'>";
+                        echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/download.php?f=".\gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/debug/'.$USER->id.'.txt' )."&t=".time()."' class='gt_refresh_url_time' target='_blank' title='".get_string('viewlogs', 'block_gradetracker')."'>";
                             echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_text.png' alt='".get_string('viewlogs', 'block_gradetracker')."' />";
                         echo "</a>";
                     echo "</td>";

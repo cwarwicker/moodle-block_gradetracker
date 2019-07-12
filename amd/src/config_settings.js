@@ -138,12 +138,13 @@ define(['jquery', 'jqueryui'], function($, ui) {
     $('.gt_report_add_crit_weighting').bind('click', function(e){
 
       var structureID = $(this).attr('structureID');
-      $('#gt_crit_prog_wt_'+structureID).append( '<tr><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][letter][]" /></td><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][score][]" /></td><td><a href="#" onclick="$($(this).parents(\'tr\')[0]).remove();return false;"><img src="'+M.cfg.wwwroot+'/blocks/gradetracker/pix/remove.png" /></a></td></tr>' );
+      $('#gt_crit_prog_wt_'+structureID).append( '<tr><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][letter][]" /></td><td><input type="text" class="gt_text_small" name="crit_weight_scores['+structureID+'][score][]" /></td><td><a href="#" class="gt_remove" remove="parent-row"><img src="'+M.cfg.wwwroot+'/blocks/gradetracker/pix/remove.png" /></a></td></tr>' );
 
+      config_settings.bindings();
       e.preventDefault();
 
     });
-    
+
 
     // General bindings
     GT.bind();

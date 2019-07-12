@@ -1717,24 +1717,6 @@ class GradeTracker
 
             break;
 
-            case 'block_bcgt':
-
-                $oldGT = new \GT\OldGradeTrackerSystem();
-                $allStructures = \GT\QualificationStructure::getAllStructures();
-                $allQuals = \GT\Qualification::getAllQualifications();
-
-                if ($page == 'data'){
-                    $newQuals = \GT\OldGradeTrackerSystem::getNewMappedQualifications();
-                    $TPL->set("newQuals", $newQuals);
-                }
-
-                $TPL->set("oldGT", $oldGT);
-                $TPL->set("allStructures", $allStructures);
-                $TPL->set("allQuals", $allQuals);
-
-
-            break;
-
         }
 
     }
@@ -2051,9 +2033,6 @@ class GradeTracker
                     break;
                     case 'wcoe':
                         $this->saveConfigDataWeightingCoefficients();
-                    break;
-                    case 'block_bcgt':
-                        $this->saveConfigDataBlockBCGT();
                     break;
                     case 'ass':
                         $this->saveConfigDataAssessmentGrades();
@@ -2657,221 +2636,7 @@ class GradeTracker
 
     }
 
-    /**
-     * Transfer data from old GT to new GT
-     * @global \GT\type $MSGS
-     */
-    private function saveConfigDataBlockBCGT()
-    {
-
-        global $MSGS, $TPL, $VARS;
-
-        $oldGT = new \GT\OldGradeTrackerSystem();
-
-        if (isset($_POST['save_mappings']))
-        {
-            $oldGT->saveStructureMappings();
-            $MSGS['success'] = get_string('blockbcdbdata:datamapping:saved', 'block_gradetracker');
-            $detail = \GT\Log::GT_LOG_DETAILS_UPDATED_DATA_MAPPINGS;
-        }
-
-        // Transfer only specifications
-        elseif (isset($_POST['submit_transfer_specs']) && !empty($_POST['submit_transfer_specs']))
-        {
-            $output = $oldGT->handleDataTransfer('specs', $_POST['block_bcgt_quals']);
-            $MSGS['output'] = $output;
-
-            if (!isset($MSGS['errors'])){
-                $detail = \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_SPECS;
-            }
-
-        }
-
-        // Import bespoke qualification specification
-        elseif (isset($_POST['submit_import_bespoke'])){
-
-            $qualID = (isset($_POST['qual'])) ? $_POST['qual'] : false;
-            $file = (isset($_FILES['spec'])) ? $_FILES['spec'] : false;
-
-            $DataImport = new \GT\DataImport($file);
-            $DataImport->checkFileOldQualSpec($qualID);
-
-            if ($DataImport->getErrors()){
-                $MSGS['bespoke_errors'] = $DataImport->getErrors();
-            } else {
-                $MSGS['bespoke_output'] = $DataImport->getOutput();
-            }
-
-        }
-
-        elseif (isset($_POST['confirm_import_bespoke']) && isset($_POST['tmp_file']) && isset($_POST['qualID'])){
-
-            $qualID = $_POST['qualID'];
-            $tmpFile = $_POST['tmp_file'];
-
-            $DataImport = new \GT\DataImport($tmpFile);
-            $DataImport->runImportOldQualSpec($qualID);
-
-            if ($DataImport->getErrors()){
-                $MSGS['bespoke_errors'] = $DataImport->getErrors();
-            } else {
-                $MSGS['bespoke_output'] = $DataImport->getOutput();
-                $detail = \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_SPECS;
-            }
-
-        }
-
-
-        // Transfer user Data
-        elseif (isset($_POST['submit_data_next'])){
-
-            $newStage = 1;
-            $stage = isset($_POST['stage']) ? $_POST['stage'] : false;
-
-            if ($stage){
-
-                // Stage 1 - Choose Qualifications
-                if ($stage == 1 || $stage == 2 || $stage == 3)
-                {
-
-                    // Make sure at least 1 qualification has been selected
-                    $quals = array();
-                    $qualIDs = isset($_POST['quals']) ? $_POST['quals'] : false;
-                    if ($qualIDs)
-                    {
-                        foreach($qualIDs as $qualID)
-                        {
-                            $obj = new \GT\Qualification($qualID);
-                            if ($obj->isValid() && !$obj->isDeleted())
-                            {
-                                $quals[$obj->getID()] = $obj;
-                            }
-                        }
-                    }
-
-                    if ($quals){
-                        $TPL->set("qualsSelected", $quals);
-                        $newStage = 2;
-                    }
-
-                }
-
-                // Stage 2 - Choose Students
-                if ($stage == 2 || $stage == 3)
-                {
-
-                    $students = array();
-                    $studentIDs = isset($_POST['students']) ? $_POST['students'] : false;
-
-                    if ($studentIDs && $quals)
-                    {
-                        foreach($quals as $qual)
-                        {
-                            $qualStudents = $studentIDs[$qual->getID()];
-                            $students[$qual->getID()] = array();
-                            if ($qualStudents)
-                            {
-                                foreach($qualStudents as $studentID)
-                                {
-                                    $obj = new \GT\User($studentID);
-                                    if ($obj->isValid())
-                                    {
-                                        $students[$qual->getID()][$studentID] = $obj;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Set to stage 3
-                    if ($students){
-                        $TPL->set("studentsSelected", $students);
-                        $newStage = 3;
-                    }
-
-                }
-
-
-                // Stage 3 - Choose units
-                if ($stage == 3)
-                {
-
-                    $numCheckBox = 0;
-
-                    $units = array();
-                    $unitIDs = isset($_POST['units']) ? $_POST['units'] : false;
-
-                    if ($unitIDs && $quals && $students)
-                    {
-                        foreach($quals as $qual)
-                        {
-                            $qualUnits = $unitIDs[$qual->getID()];
-                            $units[$qual->getID()] = array();
-                            if ($qualUnits)
-                            {
-                                foreach($qualUnits as $unitID)
-                                {
-                                    $obj = $qual->getUnit($unitID);
-                                    if ($obj && $obj->isValid() && !$obj->isDeleted())
-                                    {
-                                        $units[$qual->getID()][$unitID] = $obj;
-                                        $numCheckBox += count($students[$qual->getID()]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $max = ini_get('max_input_vars');
-                    if ($numCheckBox >= $max){
-                        print_error( 'errors:max_input_vars', 'block_gradetracker' );
-                    }
-
-                    // Set to stage 4
-                    if ($units){
-                        $TPL->set("unitsSelected", $units);
-                        $newStage = 4;
-                    }
-
-                }
-
-
-            }
-
-            $TPL->set("stage", $newStage);
-            $TPL->set("oldGT", $oldGT);
-            $VARS['TPL'] = $TPL;
-
-        }
-
-
-        // Confirm user data transfer
-        elseif (isset($_POST['confirm_data_transfer'])){
-
-            $data = (isset($_POST['data'])) ? $_POST['data'] : false;
-            $output = $oldGT->handleDataTransfer('data', $data);
-            $MSGS['output'] = $output;
-
-            if (!isset($MSGS['errors'])){
-                $detail = \GT\Log::GT_LOG_DETAILS_TRANSFERRED_OLD_DATA;
-            }
-
-        }
-
-
-
-        if (isset($detail)){
-            // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = $detail;
-            $Log->afterjson = $_POST;
-            $Log->save();
-            // ------------ Logging Info
-        }
-
-
-    }
+    
 
     /**
      * Save the configuration from the course settings
@@ -4486,41 +4251,7 @@ class GradeTracker
 
         global $PAGE;
 
-        $output = "";
-
-
-        $scripts = array(
-            '/blocks/gradetracker/js/lib/gvs/gridviewscroll.min.js',
-            '/blocks/gradetracker/js/lib/jquery-taphold/taphold.js',
-            '/blocks/gradetracker/js/lib/jquery-slimmenu/jquery.slimmenu.min.js',
-            '/blocks/gradetracker/js/lib/jquery-bc-popup/jquery-bc-popup.js',
-            '/blocks/gradetracker/js/lib/jquery-bc-notify/jquery-bc-notify.js',
-            '/blocks/gradetracker/js/lib/tablesorter/jquery.tablesorter.js',
-            '/blocks/gradetracker/js/lib/misc/fw.js',
-            '/blocks/gradetracker/js/lib/misc/spk.js',
-            '/blocks/gradetracker/js/scripts.js'
-        );
-
-
-
-
-        // If loaded from external, we want to echo out these with script tags, otherwise use the Moodle requires->js
-//        foreach($scripts as $script)
-//        {
-//            if ($external)
-//            {
-//                $output .= "<script src='{$script}' type='text/javascript'></script>";
-//            }
-//            else
-//            {
-//                $PAGE->requires->js( $script );
-//            }
-//        }
-
-
         $PAGE->requires->js_call_amd("block_gradetracker/scripts", 'init');
-
-        return $output;
 
     }
 

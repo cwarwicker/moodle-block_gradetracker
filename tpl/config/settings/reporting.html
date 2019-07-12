@@ -41,7 +41,7 @@
                                     <tr>
                                         <td><input type="text" class="gt_text_small" name="crit_weight_scores[<?= $structure->getID() ?>][letter][]" value="<?= \gt_html($row->letter); ?>" /></td>
                                         <td><input type="text" class="gt_text_small" name="crit_weight_scores[<?= $structure->getID() ?>][score][]" value="<?= \gt_html($row->score) ?>" /></td>
-                                        <td><a href="#" onclick="$($(this).parents('tr')[0]).remove();return false;"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" /></a></td>
+                                        <td><a href="#" class="gt_remove" remove="parent-row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" /></a></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

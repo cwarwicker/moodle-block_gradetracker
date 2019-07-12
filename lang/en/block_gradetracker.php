@@ -66,6 +66,9 @@ $string['gradetracker:view_unit_grids'] = 'View unit grids';
 $string['filenotfound'] = 'File not found';
 $string['invalidaccess'] = 'Invalid Access. You do not have the permissions to access this.';
 
+$string['errors:ajax'] = 'No data was returned by this request. Your Moodle session may have timed out, please refresh the page and see if you need to login again.';
+
+
 $string['errors:invalidparams'] = 'Invalid parameters';
 $string['errors:form'] = 'Invalid form';
 $string['errors:save'] = 'Unknown error saving record';
@@ -305,128 +308,7 @@ $string['bc_dashboard:numberofqoe'] = 'No. QoE';
 $string['bc_dashboard:award'] = 'Award';
 $string['bc_dashboard:valueadded'] = 'Value Added';
 
-
 $string['before'] = 'Before';
-$string['blockbcgtdata'] = 'Data Transfer';
-$string['blockbcgtdata:datamapping'] = 'Data Mapping';
-$string['blockbcdbdata:datamapping:saved'] = 'Data mappings saved';
-$string['blockbcgtdata:datamapped'] = 'Data Mapped';
-$string['blockbcgtdata:datamapped:desc'] = 'Here you can see all the data which has already been mapped by transfering it into the new system (Qualifications, Units, Criteria, etc...)';
-$string['blockbcgtdata:desc'] = 'Here you can transfer Qualifications, Units and Criteria from the old Gradetracker system (block_bcgt) to the new Grade Tracker';
-$string['blockbcgtdata:transfer'] = 'Transfer';
-$string['blockbcgtdata:transfer:desc'] = 'This lets you choose from a list of all the Qualifications in the old system (block_bcgt), and transfer only the ones you want into the new system (block_gradetracker).<br><br>It will attempt to create any Qualification Levels, SubTypes or Builds it cannot find.';
-$string['blockbcgtdata:mapping:desc'] = 'Here you will need to map across the different structures from the old system to the new, so that data is inserted into the correct places.';
-$string['blockbcgtdata:hidequalsnocourses'] = 'Hide Qualifications not linked to any Courses';
-$string['blockbcgtdata:warning'] = 'It is recommended you take a backup of your Moodle database before running this script, as a precautionary measure.';
-$string['blockbcgtdata:transferdata:desc'] = 'This lets you choose from a list of the Qualifications and Units you have transferred across from the old system (block_bcgt) into the new system (block_gradetracker) and transfer any student data associated with them into the newly mapped Qualifications/Units<br><br>Data Transfer only supports the transferring of unit/criteria data, not that of assessment data.';
-$string['blockbcgtdata:qualfam'] = 'Qualification Family';
-$string['blockbcgtdata:transferspecs'] = 'Transfer Specifications';
-$string['blockbcgtdata:transferdata'] = 'Transfer User Data';
-$string['blockbcgtdata:unitgradetype'] = 'Old Unit Grading Type';
-$string['blockbcgtdata:unitgrademap'] = 'Unit Grade Mapping';
-$string['blockbcgtdata:critgrademap'] = 'Criteria Grade Mapping';
-$string['blockbcgtdata:linktocourses'] = 'Link new Qualification to same Courses as old Qualification';
-$string['blockbcgtdata:bespokeimport'] = 'Bespoke Import';
-$string['blockbcgtdata:bespokeimport:desc'] = 'Due to the complexities of transferring Bespoke qualifications to the new system, you will need to use "Export Qualification Specification" feature on the old bcgt block to generate an Excel spreadsheet, which we will then import into the new system.<br><br>You will need to go through the spreadsheet and match up the "Unit Grading Structure" and "Criteria Grading Structure" columns to valid Grading Structures in the new system, and the "Level" to match a valid level name.<br><br>You will need to create the Qualification in the new system first, then select which Qualification you want to import the specification into.';
-$string['blockbcgtdata:oldid'] = 'Old ID';
-$string['blockbcgtdata:newid'] = 'New ID';
-$string['blockbcgtdata:transferdata:stage1'] = 'Stage 1 - Choose Qualifications';
-$string['blockbcgtdata:transferdata:stage2'] = 'Stage 2 - Choose Students';
-$string['blockbcgtdata:transferdata:stage3'] = 'Stage 3 - Choose Units';
-$string['blockbcgtdata:transferdata:stage4'] = 'Stage 4 - Confirm Transfer';
-$string['blockbcgtdata:mappedagainst'] = 'Mapped Against';
-
-
-$string['blockbcgtdata:err:qualarray'] = 'No old Qualifications selected';
-$string['blockbcgtdata:err:cannotmakefile'] = 'Cannot create file in Moodle Data directory. Please check directory permissions.';
-$string['blockbcgtdata:err:invalidmethod'] = 'Invalid Transfer Method';
-$string['blockbcgtdata:err:invalidfamilyqualstructure'] = 'Cannot find a Qualification Structure with a name matching this old Qualification Family';
-$string['blockbcgtdata:err:invalidlevel'] = 'Invalid Level and attempt to create new one failed';
-$string['blockbcgtdata:err:invalidsubtype'] = 'Invalid SubType and attempt to create new one failed';
-$string['blockbcgtdata:err:invalidbuild'] = 'Invalid Qualification Build and attempt to create new one failed';
-$string['blockbcgtdata:err:invalidqual'] = 'Failed to create new Qualification';
-$string['blockbcgtdata:err:loadqual'] = 'Cannot load old Qualification';
-$string['blockbcgtdata:err:loadnewqual'] = 'Cannot load new Qualification';
-$string['blockbcgtdata:err:loadunit'] = 'Cannot load old Unit';
-$string['blockbcgtdata:err:loadnewunit'] = 'Cannot load new Unit';
-
-$string['blockbcgtdata:err:qualtype'] = 'Invalid Qualification Type';
-$string['blockbcgtdata:err:coding:mappings'] = 'Coding Error: Required Mappings not defined for this type';
-$string['blockbcgtdata:err:missingmapping'] = 'Mapping missing';
-$string['blockbcgtdata:err:invalidqualstructure'] = 'Invalid Qualification Structure';
-$string['blockbcgtdata:err:invalidunit'] = 'Failed to create new Unit';
-$string['blockbcgtdata:err:invalidcrit'] = 'Failed to create new Criterion';
-$string['blockbcgtdata:err:invalidgradingstructure'] = 'Invalid Grading Structure';
-$string['blockbcgtdata:err:mapping:crit'] = 'Cannot find valid mapping for Criterion';
-$string['blockbcgtdata:err:mapping:critparent'] = 'Cannot find valid mapping for Criterion\'s parent';
-$string['blockbcgtdata:err:notmapped'] = 'Item is not mapped';
-$string['blockbcgtdata:err:mappingerrors'] = 'Mapping Errors, cannot continue';
-$string['blockbcgtdata:err:invaliduser'] = 'Invalid User';
-$string['blockbcgtdata:err:notonunit'] = 'User is not on this unit';
-$string['blockbcgtdata:err:nousercrit'] = 'Could not find a User Criterion record in the old system';
-$string['blockbcgtdata:err:invalidoldcritval'] = 'Could not find Criterion Value record in the old system';
-$string['blockbcgtdata:err:invalidnewcritval'] = 'Could not find corresponding Criterion Value in the new system';
-$string['blockbcgtdata:err:invalidoldunitval'] = 'Could not find Unit Value record in the old system';
-$string['blockbcgtdata:err:invalidnewunitval'] = 'Could not find corresponding Unit Value record in the new system';
-$string['blockbcgtdata:err:metaward'] = 'Could not find a "MET" award on the Grading Structure, or there was more than one so did not know which one to use';
-$string['blockbcgtdata:err:saveusercrit'] = 'Error saving User Criterion';
-$string['blockbcgtdata:err:saveuserunit'] = 'Error saving User Unit';
-
-
-
-$string['blockbcgtdata:process:warning:oldlevel'] = 'Warning: Could not find old Unit Level, so new Unit will need to be updated with a valid Level';
-$string['blockbcgtdata:process:warning:gradingstructure'] = 'Warning: Could not work out which Grading Structure to use, so new Object will need to be updated with a valid Grading Structure';
-
-
-
-$string['blockbcgtdata:process:success'] = 'success';
-$string['blockbcgtdata:process:loaded'] = 'Loaded mappings file';
-$string['blockbcgtdata:process:transferspecs'] = 'Beginning transfer of selected Specifications';
-$string['blockbcgtdata:process:transferdata'] = 'Beginning transfer of User Data for selected qualifications';
-$string['blockbcgtdata:process:loadedqualscnt'] = 'Loaded (%d) Qualifications';
-$string['blockbcgtdata:process:loadqual'] = 'Loaded old Qualification';
-$string['blockbcgtdata:process:loadunit'] = 'Loaded old Unit';
-$string['blockbcgtdata:process:loadcrit'] = 'Loaded old Criterion';
-$string['blockbcgtdata:process:loadnewqual'] = 'Loaded new Qualification';
-$string['blockbcgtdata:process:loadnewunit'] = 'Loaded new Unit';
-$string['blockbcgtdata:process:loadnewcrit'] = 'Loaded new Criterion';
-$string['blockbcgtdata:process:loaduser'] = 'Loaded User';
-$string['blockbcgtdata:process:loadusercrit'] = 'Loaded User Criterion record';
-$string['blockbcgtdata:process:loaduserunit'] = 'Loaded User Unit record';
-$string['blockbcgtdata:process:loadcritval'] = 'Loaded old Criterion value';
-$string['blockbcgtdata:process:loadunitval'] = 'Loaded old Unit award';
-$string['blockbcgtdata:process:loadrngob'] = 'Loaded old Range Observation';
-$string['blockbcgtdata:process:foundnewcritval'] = 'Found corresponding Criterion Value';
-$string['blockbcgtdata:process:foundnewunitval'] = 'Found corresponding Unit Value';
-$string['blockbcgtdata:process:saveusercrit'] = 'Saved User Criterion';
-$string['blockbcgtdata:process:saveuserunit'] = 'Saved User Unit';
-$string['blockbcgtdata:process:nousercrit'] = 'Could not find a User Criterion record in the old system';
-$string['blockbcgtdata:process:nouserunit'] = 'Could not find a User Unit record in the old system';
-$string['blockbcgtdata:process:createlvl'] = 'Attempting to create new Level';
-$string['blockbcgtdata:process:createsubtype'] = 'Attempting to create new SubType';
-$string['blockbcgtdata:process:findbuild'] = 'Searching for a Qualification Build with Structure (%s), Level (%s) and SubType (%s)';
-$string['blockbcgtdata:process:createbuild'] = 'Attempting to create new Qualification Build, with Structure (%s), Level (%s) and SubType (%s)';
-$string['blockbcgtdata:process:createqual'] = 'Attempting to create new Qualification, with Build (%s) (%s) (%s) and name (%s)';
-$string['blockbcgtdata:process:alreadymapped'] = 'This item is already mapped. ItemType: (%s), oldID: (%d), newID: (%d)';
-$string['blockbcgtdata:process:loadqualunits'] = 'Loading Units on Qualification';
-$string['blockbcgtdata:process:foundunits'] = 'Found (%d) Units';
-$string['blockbcgtdata:process:createunit'] = 'Attempting to create new Unit, with name (%s) and level (%s)';
-$string['blockbcgtdata:process:createcrit'] = 'Attempting to create new Criterion, with name (%s)';
-$string['blockbcgtdata:process:parentlink'] = 'Linked Criterion (%s) up to its Parent Criterion (%s)';
-$string['blockbcgtdata:process:linkedcourse'] = 'Linked Qualification up to Course (%s)';
-$string['blockbcgtdata:process:createconvchart'] = 'Attempting to create new Conversion Chart for Range (%s) and old Grade (%s)';
-$string['blockbcgtdata:process:transferredsettings'] = 'Transferred Qualification settings';
-$string['blockbcgtdata:process:noerrorsplsconfirm'] = 'No errors found in Excel document. Please confirm Import of the following units: ';
-$string['blockbcgtdata:process:import:success'] = 'Successfully imported %d unit specifications. <small><a href="#" onclick="$(\'#gt_import_output_cmd\').toggle();return false;">[Show/Hide details]</a></small>';
-$string['blockbcgtdata:process:checkingunits'] = 'Checking Units';
-$string['blockbcgtdata:process:nounitstoprocess'] = 'No units found, so no data to transfer';
-$string['blockbcgtdata:process:allunitsok'] = 'All units mapped to new system, proceeding to transfer data';
-$string['blockbcgtdata:process:OK'] = 'OK';
-$string['blockbcgtdata:process:transferspecs:success'] = 'Specification transfer complete. <small><a href="#" onclick="$(\'#gt_transspec_cmd\').toggle();return false;">[Show/Hide details]</a></small>';
-$string['blockbcgtdata:process:transferdata:success'] = 'User Data transfer complete. <small><a href="#" onclick="$(\'#gt_transdata_cmd\').toggle();return false;">[Show/Hide details]</a></small>';
-$string['blockbcgtdata:process:HR'] = '<hr>';
-
-
 
 $string['breadcrumbs:config:settings'] = 'Plugin Settings';
 $string['breadcrumbs:config:settings:overview'] = 'System Overview';
@@ -644,7 +526,7 @@ $string['config:assessments:comments'] = 'Enable/Disable Comments';
 $string['config:assessments:comments:desc'] = 'Enable or Disable the ability to add comments to a student\'s Assessment';
 $string['config:assessments:fields'] = 'Assessment Columns';
 $string['config:assessments:fields:desc'] = 'If there are any other form fields you would like to appear to be filled out on the Assessment Grid, to go with the Grade/CETA/Comments columns, you can create them here';
-$string['config:data:studentsadded'] = 'Calculated grades for %s Students, on %s Qualifications  <a href="#" onclick="$(\'#gt_calc_output\').toggle();return false;"><small>[View Output]</small></a>';
+$string['config:data:studentsadded'] = 'Calculated grades for %s Students, on %s Qualifications  <a href="#" class="gt_toggle" toggle="#gt_calc_output"><small>[View Output]</small></a>';
 $string['config:qual:coefficient:percentiles'] = 'Weighting Percentiles';
 $string['config:qual:coefficient:percentiles:desc'] = 'The number of percentile columns to use';
 $string['config:qual:coefficient:percentilecolours'] = 'Percentile Colours';
@@ -864,13 +746,13 @@ $string['import:tg:targetgrades:desc'] = 'Calculate the Target Grade for any row
 $string['import:tg:weightedtargetgrades:desc'] = 'Calculate the Weighted Target Grade based on the Target Grade, using whichever calculation method you have chosen in your Grade Settings';
 $string['import:tg:updated'] = 'Target Grade for %s on qualification %s updated to %s';
 $string['import:tg:avggcseupdated'] = 'Average GCSE score for %s updated to %g';
-$string['import:tg:processed'] = 'CSV successfully processed and imported with %d errors. <a href="#" onclick="$(\'#gt_import_output\').toggle();return false;"><small>[View Output]</small></a>';
+$string['import:tg:processed'] = 'CSV successfully processed and imported with %d errors. <a href="#" class="gt_toggle" toggle="#gt_import_output"><small>[View Output]</small></a>';
 $string['import:cg:updated'] = 'CETA Grade for %s on %s updated to %s';
 $string['import:qoe:insertgrades:desc'] = 'If selected, this will create any QoE Grades from the CSV that do not currently exist in Moodle';
 $string['import:qoe:insertquals:desc'] = 'If selected, this will create any Quals on Entry from the CSV that do not currently exist in Moodle';
 $string['import:qoe:insertsubjects:desc'] = 'If selected, this will create any QoE Subjects from the CSV that do not currently exist in Moodle';
 $string['import:qoe:insertusers:desc'] = 'If selected, this will create any Users from the CSV that do not currently exist in Moodle';
-$string['import:qoe:processed'] = 'CSV successfully processed and imported with %d errors. <a href="#" onclick="$(\'#gt_import_output\').toggle();return false;"><small>[View Output]</small></a>';
+$string['import:qoe:processed'] = 'CSV successfully processed and imported with %d errors. <a href="#" class="gt_toggle" toggle="#gt_import_output"><small>[View Output]</small></a>';
 $string['import:qoe:createdsubject'] = 'Created QoE subject %s';
 $string['import:qoe:createdqual'] = 'Created QoE type %s Level %s';
 $string['import:qoe:createdgrade'] = 'Created QoE grade %s for %s Level %s';
@@ -906,7 +788,7 @@ $string['import:datasheet:process:error:criterion'] = 'Error: Could not load cri
 $string['import:datasheet:process:error:value'] = 'Error: Invalid criterion value (%s)';
 $string['import:datasheet:process:error:ass'] = 'Error: Could not find Assessment from Worksheet';
 $string['import:datasheet:process:error:studass'] = 'Error: Could not load assessment (%s)';
-$string['import:datasheet:process:summary'] = 'Successfully updated %d records. <small><a href="#" onclick="$(\'#gt_import_output_cmd\').toggle();return false;">[Show/Hide details]</a></small>';
+$string['import:datasheet:process:summary'] = 'Successfully updated %d records. <small><a href="#" class="gt_toggle" toggle="#gt_import_output_cmd">[Show/Hide details]</a></small>';
 $string['import:datasheet:process:deletedfile'] = 'Deleted temporary file %s ...';
 $string['import:datasheet:process:autocalcunit'] = 'Recalculated unit award for %s to %s ...';
 $string['import:datasheet:process:autocalcstudunit'] = 'Recalculated %s\'s unit award for %s to %s ...';

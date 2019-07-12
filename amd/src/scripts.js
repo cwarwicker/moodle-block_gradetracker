@@ -28,8 +28,8 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     GT.bind = function(){
 
         // Toggle a target
-        $('.gt_toggle').unbind('click');
-        $('.gt_toggle').bind('click', function(e){
+        $('.gt_toggle').off('click');
+        $('.gt_toggle').on('click', function(e){
 
           var target = $(this).attr('toggle');
           if (target !== undefined){
@@ -40,10 +40,57 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         });
 
+        $('.gt_show').off('click');
+        $('.gt_show').on('click', function(e){
+
+          var target = $(this).attr('show');
+          if (target !== undefined){
+            $(target).show();
+          }
+
+          e.preventDefault();
+
+        });
+
+        $('.gt_hide').off('click');
+        $('.gt_hide').on('click', function(e){
+
+          var target = $(this).attr('hide');
+          if (target !== undefined){
+            $(target).hide();
+          }
+
+          e.preventDefault();
+
+        });
+
+        $('.gt_show_hide').off('click');
+        $('.gt_show_hide').on('click', function(e){
+
+          var show = $(this).attr('show');
+          var hide = $(this).attr('hide');
+
+          if (show !== undefined){
+            $(show).show();
+          }
+
+          if (hide !== undefined){
+            $(hide).hide();
+          }
+
+          e.preventDefault();
+
+        });
+
         $('.gt_remove').unbind('click');
         $('.gt_remove').bind('click', function(e){
 
           var target = $(this).attr('remove');
+
+          if (target === 'parent-row'){
+            target = $($(this).parents('tr')[0]);
+          }
+
           if (target !== undefined){
             $(target).remove();
           }
@@ -61,6 +108,24 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         });
 
+        $('.gt_popup_url').off('click');
+        $('.gt_popup_url').on('click', function(e){
+
+          var title = $(this).attr('title');
+          var url = $(this).attr('url');
+
+          GT.open_url(title, url);
+
+          e.preventDefault();
+
+        });
+
+        $('.gt_refresh_url_time').off('click');
+        $('.gt_refresh_url_time').on('click', function(e){
+
+          GT.refresh_url_time(this);
+
+        });
 
         // Small drop-down menus
         $('.gt_dropdown_toggle').unbind('click');
@@ -945,6 +1010,12 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             },
             success: function(d){
 
+                // If no data returned, or attempted redirect - display alert
+                if (d.length === 0 || d.indexOf("<!DOCTYPE") >= 0){
+                  alert( 'No data was returned by this request. Your Moodle session may have timed out, please refresh the page and see if you need to login again.' );
+                  return false;
+                }
+
                 // Run specified callback after the ajax request
                 if (callback){
                     callback(d);
@@ -1128,7 +1199,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         $('#gt_filter_quals_loading').show();
         $('#gt_filter_quals').html('');
 
-        $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_filtered_quals', params: params}, function(data){
+        GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_filtered_quals', params: params}, function(data){
 
             var quals = $.parseJSON(data);
             $.each(quals, function(indx, qual){
@@ -1210,7 +1281,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         }
 
         var params = {qualID: qualID};
-        $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: action, params: params}, function(data){
+        GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: action, params: params}, function(data){
 
             var results = $.parseJSON(data);
             $.each(results, function(studentID, result){
@@ -1298,7 +1369,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         var cellName = 'stud_'+type+'_grade_view_'+qualID+'_';
 
         var params = {sID: userID, qID: qualID, awardID: awardID, type: type};
-        $.post(M.cfg.wwwroot + '/blocks/gradetracker/ajax/update.php', {action: 'update_user_grade', params: params}, function(data){
+        GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/update.php', {action: 'update_user_grade', params: params}, function(data){
 
             var result = $.parseJSON(data);
             var cell = '#'+cellName+userID;
@@ -1332,7 +1403,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         var params = { action: 'get_refreshed_predicted_grades', params: { qualID: qID } };
 
-        $.post( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', params, function(data){
+        GT.ajax( M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', params, function(data){
 
             data = $.parseJSON(data);
 

@@ -45,29 +45,10 @@
 
 <p class="c">
     <?php if ($grid == 'student'): ?>
-        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>">
+        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&ass=<?= (int)$isAssessmentView ?>">
     <?php elseif ($grid == 'unit'): ?>
         <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>">
     <?php elseif ($grid == 'class'): ?>
-        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>">
+        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>&ass=<?= (int)$isAssessmentView ?>">
     <?php endif; ?>
 </p>
-
-
-
-
-
-
-
-<script>
-
-   $(document).ready( function(){
-
-        $('#uploadBtn').unbind('change');
-        $('#uploadBtn').bind('change', function(){
-             $('#uploadFile').val( $('#uploadBtn').val() );
-        });
-
-    } );
-
-</script>

@@ -1442,7 +1442,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     $('input.gt_assessment_custom_field').unbind('change').unbind('click').unbind('blur');
     $('textbox.gt_assessment_custom_field').unbind('change').unbind('click').unbind('blur');
 
-    // Select menus, tetx inputs and textboxes are onChange
+    // Select menus, tetx inputs and textboxes are on change
     $('select.gt_assessment_custom_field, input[type!="checkbox"].gt_assessment_custom_field, textarea.gt_assessment_custom_field').bind('change', customBoundFunc);
 
     // When you blur it, remove the little Unsaved notification, if nothing has changed since we Focussed on it
@@ -1466,7 +1466,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     });
 
-    // Checkbox is onClick
+    // Checkbox is on click
     $('input[type="checkbox"].gt_assessment_custom_field').bind('click', customBoundFunc);
 
     // Write a little message for these ones reminding people it's not saved until they click away

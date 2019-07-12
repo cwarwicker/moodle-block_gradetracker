@@ -11,6 +11,11 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
   config.bindings = function(){
 
+    $('#uploadBtn').off('change');
+    $('#uploadBtn').on('change', function(){
+         $('#uploadFile').val( $('#uploadBtn').val() );
+    });
+
     $('.class').off('click');
     $('.class').on('click', function(e){
 
@@ -38,7 +43,7 @@ define(['jquery', 'jqueryui'], function($, ui) {
     // Bindings
     config.init();
 
-    client.log('Loaded config_[file].js');
+    client.log('Loaded import.js');
 
   }
 

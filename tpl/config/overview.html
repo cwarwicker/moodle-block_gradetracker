@@ -1,7 +1,7 @@
 <div class="gt_full_page">
-    
+
     <div class='gt_form_panel_side'>
-               
+
             <div class='gt_form_panel_heading'><?= $string['recentactivity'] ?></div>
             <div class="gt_form_panel_body">
                 <ul class='gt_recent_activity'>
@@ -22,71 +22,71 @@
             </div>
 
         <br>
-        
+
     </div>
-    
+
     <div class='gt_form_panel_centre'>
         <div class='gt_form_panel_heading'><?= $string['systeminfo'] ?></div>
         <div class="gt_form_panel_body">
-            
+
             <table id="gt_sys_info">
-                
+
                 <tr>
                     <td><strong><?= $string['system:moodleversion'] ?></strong></td>
                     <td><?= $Site->moodleversion ?> (<?= $Site->moodlebuild ?>)</td>
                 </tr>
-                
+
                 <tr>
                     <td><strong><?= $string['system:gtversion'] ?></strong></td>
                     <td><?= $Site->gtversion ?> (<?= $Site->gtbuild ?>)</td>
                 </tr>
-                
+
                 <tr>
                     <td><strong><?= $string['system:updatesavailable'] ?></strong></td>
                     <td><?= $GT->printVersionCheck( true, $string['uptodate'] ) ?></td>
                 </tr>
-                
+
                 <tr>
                     <td><strong><?= $string['system:dataroot'] ?></strong></td>
                     <td><em><?= \GT\GradeTracker::dataroot() ?></em> <?= (is_writeable(\GT\GradeTracker::dataroot())) ? "<span style='color:green;'>(".$string['writeable'].")</span>" : "<span style='color:red;'>(".$string['notwriteable'].")</span>" ?></td>
                 </tr>
-                
+
                 <tr>
                     <td colspan="2"><hr></td>
                 </tr>
-                
+
 <!--                <tr>
                     <td><strong><?= $string['system:registered'] ?></strong></td>
                     <td>
                         <?php if (\GT\Site::registered()): ?>
                             <span><?= \sprintf($string['system:registered:yes'], $Site->uin, \GT\Site::lastUpdated('D jS M Y, H:i'), \gt_time_ago(\GT\Site::lastUpdated())) ?></span><br>
                             <?= \gt_info_alert_box( sprintf( $string['system:registered:task'], date('D jS M Y, H:i', $task->get_next_scheduled_time()) ) ) ?>
-                            <input type='button' value='<?= $string['update'] ?>' class='gt_btn gt_btn_small gt_blue' onclick='$("#gt_register_site").toggle();return false;' />
+                            <input type='button' value='<?= $string['update'] ?>' class='gt_btn gt_btn_small gt_blue gt_toggle' toggle='#gt_register_site' />
                         <?php else: ?>
                             <span><?= $string['system:registered:no'] ?></span><br>
-                            <input type='button' value='<?= $string['registersite'] ?>' class='gt_btn gt_btn_small gt_blue' onclick='$("#gt_register_site").toggle();return false;' />
+                            <input type='button' value='<?= $string['registersite'] ?>' class='gt_btn gt_btn_small gt_blue gt_toggle' toggle='#gt_register_site' />
                         <?php endif; ?>
                     </td>
                 </tr>-->
-                
-            </table>           
-            
+
+            </table>
+
         </div>
-        
+
         <br>
-        
+
         <div id='gt_register_site' style='display:none;'>
             <div class='gt_form_panel_heading'><?= $string['system:registered'] ?></div>
             <div class="gt_form_panel_body">
                 <form id='gt_site_register_form' onsubmit='return false;'>
-                
+
                     <table id='gt_register_site_table'>
-                        
+
                         <tr>
                             <td><strong><?= $string['registration:sitename'] ?></strong></td>
                             <td><input type='text' name='name' value='<?= \gt_html($Site->name) ?>' /></td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['registration:url'] ?></strong></td>
                             <td>
@@ -94,7 +94,7 @@
                                 <span><?= $Site->url ?></span>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['registration:privacy'] ?></strong></td>
                             <td>
@@ -106,17 +106,17 @@
                                 </select>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['registration:admin'] ?></strong></td>
                             <td><input type='text' name='admin' value='<?= $Site->admin ?>' /></td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['registration:adminemail'] ?></strong></td>
                             <td><input type='text' name='adminemail' value='<?= $Site->adminemail ?>' /></td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['system:moodleversion'] ?></strong> <img src='<?= gt_image_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:moodleversion:info']) ?>' /></td>
                             <td>
@@ -125,7 +125,7 @@
                                 <span><?= $Site->moodleversion ?> (<?= $Site->moodlebuild ?>)</span>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['system:gtversion'] ?></strong></td>
                             <td>
@@ -134,7 +134,7 @@
                                 <span><?= $Site->gtversion ?> (<?= $Site->gtbuild ?>)</span>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td><strong><?= $string['system:gtinfo'] ?></strong> <img src='<?= gt_image_url("help") ?>' alt='info' class='gt_help_tooltip' content='<?= \gt_html($string['system:gtinfo:info']) ?>' /></td>
                             <td>
@@ -148,26 +148,26 @@
                                 <span><?= $string['system:count:criteria'] ?> (<?= $Site->getStat('criteria') ?>)</span><br>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td>
-                                <input id='gt_reg_site_btn' type='button' name='register' onclick='gt_register_site();return false;' class='gt_btn gt_btn_small <?= (\GT\Site::registered()) ? "gt_pink" : "gt_green" ?>' value='<?= (\GT\Site::registered()) ? $string['updateregistration'] : $string['registergt'] ?>' />
+                                <input id='gt_reg_site_btn' type='button' name='register' class='gt_btn gt_btn_small gt_register_site <?= (\GT\Site::registered()) ? "gt_pink" : "gt_green" ?>' value='<?= (\GT\Site::registered()) ? $string['updateregistration'] : $string['registergt'] ?>' />
                             </td>
                             <td>
                                 <span id='gt_reg_site_output'></span>
                             </td>
                         </tr>
-                        
+
                     </table>
                 </form>
             </div>
         </div>
-        
-        
+
+
     </div>
-    
+
     <div class='gt_form_panel_side'>
-        
+
         <div class='gt_form_panel_heading'><?= $string['stats'] ?></div>
         <div class="gt_form_panel_body">
             <table>
@@ -183,11 +183,11 @@
                     <td><?= $string['criteria'] ?></td>
                     <td><?= $Site->getStat('criteria') ?></td>
                 </tr>
-                
+
                 <tr>
                     <td><br><br></td>
                 </tr>
-                
+
                 <tr>
                     <td><?= $string['users'] ?></td>
                     <td><?= $countUsers ?></td>
@@ -196,11 +196,11 @@
                     <td><?= $string['courses'] ?></td>
                     <td><?= $countCourses ?></td>
                 </tr>
-                
+
             </table>
         </div>
-    
-        
+
+
         <div class='gt_form_panel_heading'><?= $string['structures'] ?></div>
         <div class="gt_form_panel_body">
             <table>
@@ -214,10 +214,10 @@
                 <?php endif; ?>
             </table>
         </div>
-    
+
         <br>
-        
-        
+
+
     </div>
-    
+
 </div>

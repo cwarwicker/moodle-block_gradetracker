@@ -4,22 +4,20 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div>
-    
+
     <table class="gt_config" style="width:inherit;">
-                
+
         <tr>
-            <th></th>
             <th><?= $string['name'] ?></th>
             <th><?= $string['unit'] ?></th>
             <th><?= $string['criteria'] ?></th>
         </tr>
-        
+
         <?php if ($qualStructures): ?>
-        
+
             <?php foreach($qualStructures as $structure): ?>
 
                 <tr>
-                    <td><img src="<?= $structure->getImageURL() ?>" alt="icon" /></td>
                     <td><?= $structure->getName() ?><br><small>(<?= $structure->getDisplayName() ?>)</small></td>
                     <td>
                         <?php if ($structure->isLevelEnabled("Units")): ?>
@@ -28,11 +26,11 @@
                     </td>
                     <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&id=<?= $structure->getID() ?>&type=criteria"><img src="<?= gt_image_url('t/edit') ?>" alt="edit" /></a></td>
                 </tr>
-            
+
             <?php endforeach; ?>
-            
+
         <?php endif; ?>
-        
+
     </table>
-    
+
 </div>

@@ -32,11 +32,12 @@ define(['jquery', 'jqueryui'], function($, ui) {
             row += '<td><input type="number" min="0" step="any" name="grade_points['+cntGrades+']" placeholder="1" value="" /></td>';
             row += '<td><input type="number" min="0" step="any" name="grade_points_lower['+cntGrades+']" placeholder="1.0" value="" /></td>';
             row += '<td><input type="number" min="0" step="any" name="grade_points_upper['+cntGrades+']" placeholder="1.5" value="" /></td>';
-            row += '<td><a href="#" onclick="$(\'#gt_grading_row_'+cntGrades+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="delete" /></a></td>';
+            row += '<td><a href="#" class="gt_remove" remove="#gt_grading_row_'+cntGrades+'"><img src="'+M.util.image_url('t/delete')+'" alt="delete" /></a></td>';
         row += '</tr>';
 
         $('#gt_grading_structure_table').append(row);
 
+        config_structures_grade.bindings();
         e.preventDefault();
 
     });
@@ -68,7 +69,7 @@ define(['jquery', 'jqueryui'], function($, ui) {
             row += '<td><input type="number" min="0" step="any" name="grade_points['+cntGrades+']" placeholder="1" value="" /></td>';
             row += '<td><input type="number" min="0" step="any" name="grade_points_lower['+cntGrades+']" placeholder="1.0" value="" /></td>';
             row += '<td><input type="number" min="0" step="any" name="grade_points_upper['+cntGrades+']" placeholder="1.5" value="" /></td>';
-            row += '<td><a href="#" onclick="$(\'#gt_grading_row_'+cntGrades+'\').remove();return false;"><img src="'+M.util.image_url('t/delete')+'" alt="delete" /></a></td>';
+            row += '<td><a href="#" class="gt_remove" remove="#gt_grading_row_'+cntGrades+'"><img src="'+M.util.image_url('t/delete')+'" alt="delete" /></a></td>';
         row += '</tr>';
 
         $('#gt_grading_structure_table').append(row);
