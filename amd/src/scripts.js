@@ -1474,6 +1474,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
     // Client object definition
     var client = {};
+    client.scripts = GT;
 
     // CLient object tmethods
 

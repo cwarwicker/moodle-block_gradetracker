@@ -739,15 +739,15 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
     }
 
     // TODO: Apply all 3.7 database updates
-    if ($oldversion < XXXXXXXXXX){
-
-      // Delete Detail Critiera type
-      $DB->delete_records('bcgt_qual_structure_levels', array('name' => 'Detail Criteria'));
-
-      // Change any existing Detail Criteria to Standard
-      //
-
-    }
+    // if ($oldversion < XXXXXXXXXX){
+    //
+    //   // Delete Detail Critiera type
+    //   $DB->delete_records('bcgt_qual_structure_levels', array('name' => 'Detail Criteria'));
+    //
+    //   // Change any existing Detail Criteria to Standard
+    //   //
+    //
+    // }
 
 
 

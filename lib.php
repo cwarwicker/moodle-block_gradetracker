@@ -762,6 +762,18 @@ function gt_is_empty($txt){
 }
 
 /**
+ * Get a role record by its id
+ * @param  [type] $id [description]
+ * @return [type]     [description]
+ */
+function gt_get_role($id){
+
+  global $DB;
+  return $DB->get_record("role", array("id" => $id));
+
+}
+
+/**
  * Get a role record by its shortname
  * @global type $DB
  * @param type $shortname
@@ -771,6 +783,20 @@ function gt_get_role_by_shortname($shortname){
 
     global $DB;
     return $DB->get_record("role", array("shortname" => $shortname));
+
+}
+
+function gt_get_user_role_from_context($instanceID, $level, $userID){
+
+  global $DB;
+
+  $context = $DB->get_record("context", array("contextlevel" => $level, "instanceid" => $instanceID));
+  if (!$context) return false;
+
+  $role = $DB->get_record("role_assignments", array("userid" => $userID, "contextid" => $context->id));
+  if (!$role) return false;
+
+  return $role;
 
 }
 

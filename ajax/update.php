@@ -1080,6 +1080,8 @@ switch($action)
             unset($_SESSION['gt_debug']);
         }
 
+        echo 'OK';
+
         exit;
 
     break;
@@ -1092,6 +1094,8 @@ switch($action)
         if (file_exists($file)){
             file_put_contents($file, '');
         }
+
+        echo 'OK';
 
         exit;
 

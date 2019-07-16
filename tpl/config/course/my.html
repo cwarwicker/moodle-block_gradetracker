@@ -1,15 +1,29 @@
-<table class="gt_config">
+<table class="gt_config_plain">
     <tr>
-        <th><?= $string['config:coursename'] ?></th>
-        <th><?= $string['quals'] ?></th>
+        <th><?= $string['course'] ?></th>
+        <th><?= $string['edit'] ?></th>
         <th><?= $string['gotocoursepage'] ?></th>
+        <th><?= $string['system:count:quals'] ?></th>
+        <th><?= $string['system:count:staff'] ?></th>
+        <th><?= $string['system:count:students'] ?></th>
     </tr>
     <?php if ($courses): ?>
         <?php foreach($courses as $course): ?>
             <tr>
-                <td><a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'><?= $course->fullname ?></a></td>
+                <td><?= $course->fullname ?></td>
+                <td>
+                  <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'>
+                    <img src="<?= gt_image_url('t/edit') ?>" />
+                  </a>
+                </td>
+                <td>
+                  <a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'>
+                    <img src="<?= gt_image_url('t/viewdetails') ?>" />
+                  </a>
+                </td>
                 <td><?= $course->countCourseQualifications(true); ?></td>
-                <td><a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'><img src="<?= gt_image_url('e/fullpage') ?>"></a></td>
+                <td><?= $course->countStaff(); ?></td>
+                <td><?= $course->countStudents(); ?></td>
             </tr>
         <?php endforeach; ?>
     <?php endif; ?>

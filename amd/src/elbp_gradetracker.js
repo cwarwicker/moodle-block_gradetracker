@@ -1,7 +1,8 @@
-define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/grids'], function($, ui, elbp, grids) {
+define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/scripts', 'block_gradetracker/grids'], function($, ui, elbp, gt, grids) {
 
   var config = {};
   var elbp = elbp.scripts;
+  var gt = gt.scripts;
   var grids = grids.scripts;
 
   config.init = function(){
@@ -50,11 +51,13 @@ define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/grids'],
         $('#elbp_gradetracker_content').html(d);
         elbp.set_view_link(el);
 
-        grids.bindings();
-        grids.student_bindings();
+        gt.bind(); // Standard GT bindings
+        grids.bindings(); // Grid-related bindings
+        // grids.student_bindings(); // Disabled for now, doens't work properly in popup
 
         // Set a smaller max-height for grids, since they are in a popup
         $('#gt_grid_holder').css('max-height', '400px');
+        $('#gt_grid_holder').css('overflow-y', 'scroll');
 
     }, function(d){
         $('#elbp_gradetracker_content').html('<img src="'+M.cfg.wwwroot+'/blocks/elbp/pix/loader.gif" alt="" />');

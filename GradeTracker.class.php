@@ -2636,7 +2636,7 @@ class GradeTracker
 
     }
 
-    
+
 
     /**
      * Save the configuration from the course settings
@@ -3857,7 +3857,12 @@ class GradeTracker
 
             // Checkboxes need int values
             if ($section == 'general'){
-                $settings['use_theme_jquery'] = (isset($settings['use_theme_jquery'])) ? '1' : '0';
+
+              $settings['use_auto_enrol_quals'] = (isset($settings['use_auto_enrol_quals'])) ? '1': '0';
+              $settings['use_auto_enrol_units'] = (isset($settings['use_auto_enrol_units'])) ? '1': '0';
+              $settings['use_auto_unenrol_quals'] = (isset($settings['use_auto_unenrol_quals'])) ? '1': '0';
+              $settings['use_auto_unenrol_units'] = (isset($settings['use_auto_unenrol_units'])) ? '1': '0';
+
             }
 
             // Grid settings

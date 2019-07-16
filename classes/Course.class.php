@@ -421,6 +421,14 @@ class Course {
 
     }
 
+    public function countStaff(){
+      return count($this->getStaff());
+    }
+
+    public function countStudents(){
+      return count($this->getStudents());
+    }
+
 
     /** Get the students on this course, on any role as defined in our student role setting
      * @global \GT\type $DB

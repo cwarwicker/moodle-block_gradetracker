@@ -1,7 +1,7 @@
 <?php if(!defined('BCGT')) exit; ?>
 
 <div class="gt_full_page">
-    
+
     <form id="course_search" method="post">
 
         <div class="gt_form_panel">
@@ -27,7 +27,7 @@
                         <td>
                         <input type="text" class="gt_form_control" name="coursename" />
                         </td>
-                    </tr> 
+                    </tr>
                     <tr>
                         <td></td>
                         <td>
@@ -38,29 +38,43 @@
                 </table>
 
                 <?php if (isset($courses)): ?>
-                    <table class="gt_config">
-                        <tr>
-                            <th><?= $string['config:coursename'] ?></th>
-                            <th><?= $string['quals'] ?></th>
-                            <th><?= $string['gotocoursepage'] ?></th>
-                        </tr>
-                        <?php if ($courses): ?>
-                            <?php foreach($courses as $course): ?>
-                                <tr>
-                                    <td><a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'><?= $course->fullname ?></a></td>
-                                    <td><?= count($course->getCourseQualifications()); ?></td>
-                                    <td><a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'><img src="<?= gt_image_url('e/fullpage') ?>"></a></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr><td colspan="3"><?= $string['nodata'] ?></td></tr>
-                        <?php endif; ?>
+                  <table class="gt_config_plain">
+                      <tr>
+                          <th><?= $string['course'] ?></th>
+                          <th><?= $string['edit'] ?></th>
+                          <th><?= $string['gotocoursepage'] ?></th>
+                          <th><?= $string['system:count:quals'] ?></th>
+                          <th><?= $string['system:count:staff'] ?></th>
+                          <th><?= $string['system:count:students'] ?></th>
+                      </tr>
+                      <?php if($courses): ?>
+                        <?php foreach($courses as $course): ?>
+                          <tr>
+                              <td><?= $course->fullname ?></td>
+                              <td>
+                                <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'>
+                                  <img src="<?= gt_image_url('t/edit') ?>" />
+                                </a>
+                              </td>
+                              <td>
+                                <a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'>
+                                  <img src="<?= gt_image_url('t/viewdetails') ?>" />
+                                </a>
+                              </td>
+                              <td><?= $course->countCourseQualifications(true); ?></td>
+                              <td><?= $course->countStaff(); ?></td>
+                              <td><?= $course->countStudents(); ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php else: ?>
+                          <tr><td colspan="6"><?= $string['nodata'] ?></td></tr>
+                      <?php endif; ?>
                     </table>
                 <?php endif; ?>
             </div>
 
         </div>
-        
+
     </form>
-    
+
 </div>

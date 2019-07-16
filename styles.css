@@ -328,6 +328,13 @@ ul.gt_vertical_menu li a.selected{
     color: #FFF;
 }
 
+table.gt_config_plain
+{
+  min-width: 50%;
+  margin: auto;
+  text-align: center;
+}
+
 table.gt_config table.gt_course_activities_qual_table
 {
     font-size: 8pt;
