@@ -68,7 +68,7 @@
 
                                     <?php foreach($courseQuals as $qual): ?>
                                         <!-- Had to put this on 1 line or whitespace stops :empty style working -->
-                                        <td class='gt_cQ'><?php if ($Course->isQualificationOnCourse($qual->getID())): ?><input type="checkbox" class="gt_user_qual_user_<?= $student->id ?>_<?= $Course->id ?> gt_user_qual_qual_<?= $qual->getID() ?>_<?= $Course->id ?>" name="user_quals[<?= $qual->getID() ?>][]" value="<?= $student->id ?>" <?= ( $student->isOnQual( $qual->getID(), "STUDENT" ) ) ? 'checked' : ''; ?>  /><?php endif; ?></td>
+                                        <td class='gt_cQ'><?php if ($Course->isQualificationOnCourse($qual->getID())): ?><input type="checkbox" class="gt_freeze_table_checkbox gt_user_qual_user_<?= $student->id ?>_<?= $Course->id ?> gt_user_qual_qual_<?= $qual->getID() ?>_<?= $Course->id ?>" name="user_quals[<?= $qual->getID() ?>][]" value="<?= $student->id ?>" <?= ( $student->isOnQual( $qual->getID(), "STUDENT" ) ) ? 'checked' : ''; ?>  /><?php endif; ?></td>
                                     <?php endforeach; ?>
 
                                 </tr>
@@ -112,7 +112,7 @@
 
                                         <?php foreach($courseQuals as $qual): ?>
                                             <!-- Had to put this on 1 line or whitespace stops :empty style working -->
-                                            <td class='gt_cQ'><?php if ($child->isQualificationOnCourse($qual->getID())): ?><input type="checkbox" class="gt_user_qual_user_<?= $student->id ?>_<?= $child->id ?> gt_user_qual_qual_<?= $qual->getID() ?>_<?= $child->id ?>" name="user_quals[<?= $qual->getID() ?>][]" value="<?= $student->id ?>" <?= ( $student->isOnQual( $qual->getID(), "STUDENT" ) ) ? 'checked' : ''; ?>  /><?php endif; ?></td>
+                                            <td class='gt_cQ'><?php if ($child->isQualificationOnCourse($qual->getID())): ?><input type="checkbox" class="gt_freeze_table_checkbox gt_user_qual_user_<?= $student->id ?>_<?= $child->id ?> gt_user_qual_qual_<?= $qual->getID() ?>_<?= $child->id ?>" name="user_quals[<?= $qual->getID() ?>][]" value="<?= $student->id ?>" <?= ( $student->isOnQual( $qual->getID(), "STUDENT" ) ) ? 'checked' : ''; ?>  /><?php endif; ?></td>
                                         <?php endforeach; ?>
 
                                     </tr>

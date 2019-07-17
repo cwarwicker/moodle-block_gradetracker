@@ -34,15 +34,16 @@ $PAGE->navbar->add( get_string('dashboard', 'block_gradetracker'), $CFG->wwwroot
 $GT->loadJavascript();
 $GT->loadCSS();
 
-echo $OUTPUT->header();
-
+// Can we view all qualifications?
 if(gt_has_capability('block/gradetracker:view_all_quals')){
     $user = false;
     $qualifications = \GT\Qualification::getAllQualifications();
     $searchinstance = "searchQualID";
     $submitsearch = "submit_filter_all";
 }
-else{
+
+// Otherwise just try and get ours
+else {
     $user = new \GT\User($USER->id);
     $qualifications = $user->getQualifications('STAFF');
     $searchinstance = "myQualID";
@@ -51,6 +52,14 @@ else{
 
 $studentuser = new \GT\User($USER->id);
 $studentquals = $studentuser->getQualifications('STUDENT');
+
+// If they are only on 1 qualification, just take them straight to it
+if ($studentquals && count($studentquals) == 1){
+    $qualification = reset($studentquals);
+    redirect($CFG->wwwroot . "/blocks/gradetracker/grid.php?type=student&id={$USER->id}&qualID={$qualification->getID()}");
+}
+
+echo $OUTPUT->header();
 
 $TPL = new \GT\Template();
 $TPL->set("user", $user);

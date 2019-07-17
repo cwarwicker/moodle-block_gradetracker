@@ -98,7 +98,7 @@
 
                                                   <?php foreach($qual->getUnits() as $unit): ?>
                                                       <td>
-                                                          <input type="checkbox" class="gt_user_unit_checkbox gt_user_unit_user_<?= $qual->getID() ?>_<?= $user->id ?> gt_user_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_user_unit_unit_<?= $qual->getID() ?>" role="STUDENT" sID="<?= $user->id ?>" qID="<?= $qual->getID() ?>" uID="<?= $unit->getID() ?>" credits="<?= $unit->getCredits() ?>" name="user_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STUDENT" ) ) ? 'checked' : ''; ?> />
+                                                          <input type="checkbox" class="gt_freeze_table_checkbox gt_user_unit_checkbox gt_user_unit_user_<?= $qual->getID() ?>_<?= $user->id ?> gt_user_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_user_unit_unit_<?= $qual->getID() ?>" role="STUDENT" sID="<?= $user->id ?>" qID="<?= $qual->getID() ?>" uID="<?= $unit->getID() ?>" credits="<?= $unit->getCredits() ?>" name="user_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STUDENT" ) ) ? 'checked' : ''; ?> />
                                                       </td>
                                                   <?php endforeach; ?>
 
@@ -143,7 +143,7 @@
 
                                                       <?php foreach($qual->getUnits() as $unit): ?>
                                                           <td>
-                                                              <input type="checkbox" class="gt_staff_unit_staff_<?= $qual->getID() ?>_<?= $user->id ?> gt_staff_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_staff_unit_unit_<?= $qual->getID() ?>" role="STAFF" uID="<?= $unit->getID() ?>" name="staff_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STAFF" ) ) ? 'checked' : ''; ?> />
+                                                              <input type="checkbox" class="gt_freeze_table_checkbox gt_staff_unit_staff_<?= $qual->getID() ?>_<?= $user->id ?> gt_staff_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_staff_unit_unit_<?= $qual->getID() ?>" role="STAFF" uID="<?= $unit->getID() ?>" name="staff_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STAFF" ) ) ? 'checked' : ''; ?> />
                                                           </td>
                                                       <?php endforeach; ?>
 

@@ -1839,3 +1839,27 @@ function gt_image_url($imagename, $component = 'moodle'){
 
 
 }
+
+
+function gt_print_sql($sql, $params, $print = true){
+
+  global $DB;
+
+  $output = "";
+
+  $data = $DB->fix_sql_params($sql, $params);
+
+  $sql = $data[0];
+  $params = $data[1];
+
+  $output = preg_replace_callback('/\?/', function($match) use (&$params){
+    return "'" . array_shift($params) . "'";
+  }, $sql);
+
+  if ($print){
+    print_object($output);
+  } else {
+    return $output;
+  }
+
+}

@@ -124,6 +124,7 @@
                             <?php $assessment->setQualification($qualification); ?>
                             <?php $assessment->reloadStudent() ?>
 
+                                <div id='pU_<?= $Student->id ?>_<?= $qualification->getID() ?>_<?= $assessment->getID() ?>' class='gt_popup' title='<?= \gt_html($assessment->getName()) ?>'></div>
 
                                 <!-- Custom Fields -->
                                 <?php if (array_key_exists($assessment->getID(), $customFieldsArray) && $customFieldsArray[$assessment->getID()]): ?>
@@ -139,7 +140,6 @@
                                     <?php if ($assessment->getSetting('grading_method') != 'none'): ?>
                                         <td class='gt_assessment_grade_ceta_cell gt_grid_cell gt_assessment_grid_cell_<?= $params['access'] ?>' qID='<?= $qualification->getID() ?>' sID='<?= $Student->id ?>' aID='<?= $assessment->getID() ?>' type='grade' aName='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>' title='<?= \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
                                             <?= $assessment->getGradeCell($params['access'], $Student) ?>
-                                            <div id='pU_<?= $Student->id ?>_<?= $qualification->getID() ?>_<?= $assessment->getID() ?>' class='gt_popup' title='<?= \gt_html($assessment->getName()) ?>'></div>
                                         </td>
                                     <?php endif; ?>
                                 <?php else: ?>

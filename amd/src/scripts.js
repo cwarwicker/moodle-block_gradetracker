@@ -193,6 +193,14 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         });
 
+        // Freeze table messes up forms, as it duplicates inputs and so the submitted values get all screwed up
+        $('.gt_freeze_table_checkbox').off('click');
+        $('.gt_freeze_table_checkbox').on('click', function(){
+          var checked = $(this).is(':checked');
+          var cls = $(this).attr('class').replace(/\s/g, '.');
+          $('.'+cls).prop('checked', checked);
+        });
+
         $('#chosen_quals').unbind('change');
         $('#chosen_quals').bind('change', function(){
             var val = $(this).val();

@@ -385,7 +385,7 @@ class Course {
         $and = '';
         if ($direct)
         {
-            $and = " AND ra.component = '' ";
+            $and = " AND ra.component != 'enrol_meta' ";
         }
 
         $in = \gt_create_sql_placeholders($roles);
