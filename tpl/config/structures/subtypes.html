@@ -9,17 +9,23 @@
 
 <br>
 <div>
-            
+
     <?php if ($subTypes): ?>
 
         <table class="gt_config" style="width:inherit;">
 
+          <thead>
+            <tr>
+              <th colspan="4"><?= $string['subtypes'] ?></th>
+            </tr>
             <tr>
                 <th><?= $string['name'] ?></th>
                 <th><?= $string['shortname'] ?></th>
                 <th></th>
                 <th></th>
             </tr>
+          </thead>
+          <tbody>
 
             <?php foreach($subTypes as $subType): ?>
 
@@ -39,7 +45,8 @@
                 </tr>
 
             <?php endforeach; ?>
-
+            
+          </tbody>
         </table>
 
     <?php else: ?>
@@ -48,5 +55,5 @@
 
     <?php endif; ?>
 
-    
+
 </div>

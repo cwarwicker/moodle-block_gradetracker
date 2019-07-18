@@ -845,15 +845,17 @@ table.gt_config {
 table.gt_config th, table.gt_config td {
     text-align: center;
     vertical-align: top;
-    border: 1px solid #184E24;
+    border: 1px solid #efeded;
     padding: 4px;
 }
 
 table.gt_config th, table.gt_config > tbody > tr > th a {
-    text-transform: uppercase;
-    background-color: #61E67D;
-    color: #000;
-    padding-bottom: 10px;
+  padding: 10px;
+  color: #fff;
+  background-color: #428bca;
+  border-color: #efeded;
+  font-weight: normal;
+  text-transform: uppercase;
 }
 
 table.gt_config th.gt_left, table.gt_config td.gt_left
@@ -872,8 +874,17 @@ table.gt_config td {
     vertical-align: middle;
 }
 
+table.gt_config thead tr:first-child th[colspan]
+{
+  border-radius: 10px 10px 0 0;
+}
+
 table.gt_config tr:nth-child(odd) td {
-    background-color: #f6fff7;
+    background-color: #eef2f9;
+}
+
+table.gt_config tr:hover td, table.gt_config tr:nth-child(odd):hover td {
+    background-color: #e1e6ff;
 }
 
 table.gt_config tr.gt_seperator td {

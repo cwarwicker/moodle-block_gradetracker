@@ -9,11 +9,15 @@
 
 <br>
 <div>
-            
+
     <?php if ($levels): ?>
 
         <table class="gt_config" style="width:inherit;">
 
+          <thead>
+            <tr>
+              <th colspan="5"><?= $string['levels'] ?></th>
+            </tr>
             <tr>
                 <th><?= $string['name'] ?></th>
                 <th><?= $string['shortname'] ?></th>
@@ -21,6 +25,8 @@
                 <th></th>
                 <th></th>
             </tr>
+          </thead>
+          <tbody>
 
             <?php foreach($levels as $level): ?>
 
@@ -41,7 +47,7 @@
                 </tr>
 
             <?php endforeach; ?>
-
+          </tbody>
         </table>
 
     <?php else: ?>
@@ -50,5 +56,5 @@
 
     <?php endif; ?>
 
-    
+
 </div>

@@ -39,6 +39,10 @@
 
         <table class="gt_config" style="width:inherit;">
 
+          <thead>
+            <tr>
+              <th colspan="7"><?= $string['qualbuilds'] ?></th>
+            </tr>
             <tr>
                 <th><?= $string['type'] ?></th>
                 <th><?= $string['level'] ?></th>
@@ -48,7 +52,8 @@
                 <th><?= $string['defaults'] ?></th>
                 <th></th>
             </tr>
-
+          </thead>
+          <tbody>
             <?php foreach($builds as $build): ?>
 
                 <tr>
@@ -79,7 +84,7 @@
                 </tr>
 
             <?php endforeach; ?>
-
+          </tbody>
         </table>
 
     <?php else: ?>

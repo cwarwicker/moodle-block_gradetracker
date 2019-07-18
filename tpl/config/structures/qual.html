@@ -36,32 +36,38 @@
 
     <table class="gt_config" style="width:inherit;">
 
-        <tr>
-            <th><?= $string['name'] ?></th>
-            <th><?= $string['enabled'] ?></th>
-            <th><?= $string['duplicate'] ?></th>
-            <th><?= $string['export'] ?></th>
-            <!--<th><?= $string['stats'] ?></th>-->
-            <th><?= $string['edit'] ?></th>
-            <th><?= $string['delete'] ?></th>
-        </tr>
+        <thead>
+          <tr>
+            <th colspan="6"><?= $string['qualstructures'] ?></th>
+          </tr>
+          <tr>
+              <th><?= $string['name'] ?></th>
+              <th><?= $string['enabled'] ?></th>
+              <th><?= $string['duplicate'] ?></th>
+              <th><?= $string['export'] ?></th>
+              <th><?= $string['edit'] ?></th>
+              <th><?= $string['delete'] ?></th>
+          </tr>
+        </thead>
 
-        <?php if ($qualStructures): ?>
+        <tbody>
+          <?php if ($qualStructures): ?>
 
-            <?php foreach($qualStructures as $structure): ?>
+              <?php foreach($qualStructures as $structure): ?>
 
-            <tr>
-                <td><?= $structure->getName() ?><br><small>(<?= $structure->getDisplayName() ?>)</small></td>
-                <td><form action="" method="post"><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" class="gt_on_off" name="enable_structure" src="<?= ($structure->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($structure->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" /></form></td>
-                <td><form action="" method="post"><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" name="copy_structure" src="<?= gt_image_url('t/copy') ?>" /></form></td>
-                <td><form action="" method="post"><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" name="export_structure" src="<?= gt_image_url('i/export') ?>" /></form></td>
-                <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=edit&id=<?= $structure->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="settings" /></a></td>
-                <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=delete&id=<?= $structure->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
-            </tr>
+              <tr>
+                  <td><?= $structure->getName() ?><br><small>(<?= $structure->getDisplayName() ?>)</small></td>
+                  <td><form action="" method="post"><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" class="gt_on_off" name="enable_structure" src="<?= ($structure->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($structure->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" /></form></td>
+                  <td><form action="" method="post"><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" name="copy_structure" src="<?= gt_image_url('t/copy') ?>" /></form></td>
+                  <td><form action="" method="post"><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" name="export_structure" src="<?= gt_image_url('i/export') ?>" /></form></td>
+                  <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=edit&id=<?= $structure->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="settings" /></a></td>
+                  <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=delete&id=<?= $structure->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
+              </tr>
 
-            <?php endforeach; ?>
+              <?php endforeach; ?>
 
-        <?php endif; ?>
+          <?php endif; ?>
+        </tbody>
 
     </table>
 
