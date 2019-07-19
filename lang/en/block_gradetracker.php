@@ -1165,6 +1165,12 @@ $string['standard'] = 'Standard';
 $string['standardcriteria'] = 'Standard Criteria';
 $string['startdebugging'] = 'Start Debugging Script';
 $string['stats'] = 'Stats';
+
+$string['stat:quals'] = 'No. Qualifications';
+$string['stat:units'] = 'No. Units';
+$string['stat:criteria'] = 'No. Criteria';
+$string['stat:structures'] = 'No. Structures';
+
 $string['step'] = 'Step';
 $string['stopdebugging'] = 'Stop Debugging Script';
 $string['structure'] = 'Structure';
