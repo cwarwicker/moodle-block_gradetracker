@@ -1170,6 +1170,8 @@ $string['stat:quals'] = 'No. Qualifications';
 $string['stat:units'] = 'No. Units';
 $string['stat:criteria'] = 'No. Criteria';
 $string['stat:structures'] = 'No. Structures';
+$string['stat:studwithgrid'] = 'No. Students w/ Grids';
+$string['stat:staffwithgrid'] = 'No. Staff w/ Grids';
 
 $string['step'] = 'Step';
 $string['stopdebugging'] = 'Stop Debugging Script';

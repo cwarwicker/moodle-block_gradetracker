@@ -6,5 +6,6 @@ $plugin->requires = 2014111006; // Moodle 2.8
 $plugin->cron = 3600;
 $plugin->component = 'block_gradetracker';
 $plugin->dependencies = array(
-    'block_bc_dashboard' => 2017110800
+    'block_bc_dashboard' => 2017110800,
+    'local_df_hub' => 2019071900
 );

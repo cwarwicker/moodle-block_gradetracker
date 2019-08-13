@@ -158,7 +158,8 @@ div.gt_config small
 
 div.gt_config input[type='submit'], div.gt_config input[type='button']
 {
-    /*padding: 8px 0px 9px;*/
+    font-size: 10pt;
+    padding: 6px;
     cursor: pointer;
 }
 
@@ -1135,6 +1136,10 @@ div.gt_config input, div.gt_config select, div.gt_config textarea
     font-size: 10pt;
 }
 
+div.gt_config div.gt_form_panel_body select
+{
+  max-width: 80%;
+}
 
 div.gt_config select[multiple="multiple"]
 {
