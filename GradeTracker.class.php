@@ -56,13 +56,13 @@ class GradeTracker
         $this->DB = $DB;
         $this->string = get_string_manager()->load_component_strings('block_gradetracker', $this->CFG->lang, true);
 
-        $this->cache = \cache::make('block_gradetracker', 'settings');
-        if ($this->cache->get('settings') === false){
-            $settings = \gt_get_overriden_settings();
-            if ($settings){
-                $this->cache->set('settings', \gt_get_overriden_settings());
-            }
-        }
+        // $this->cache = \cache::make('block_gradetracker', 'settings');
+        // if ($this->cache->get('settings') === false){
+        //     $settings = \gt_get_overriden_settings();
+        //     if ($settings){
+        //         $this->cache->set('settings', \gt_get_overriden_settings());
+        //     }
+        // }
 
     }
 
