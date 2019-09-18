@@ -1892,14 +1892,14 @@ class Qualification {
      */
     public function getSystemSetting($setting, $userID = null){
 
-        $GT = new \GT\GradeTracker();
-        $settings = unserialize( $GT->cache->get('settings') );
-        $buildID = $this->getBuildID();
-
-        // Is this setting for this qual build cached?
-        if (isset( $settings->$buildID->$setting )){
-            return $settings->$buildID->$setting;
-        }
+        // $GT = new \GT\GradeTracker();
+        // $settings = unserialize( $GT->cache->get('settings') );
+        // $buildID = $this->getBuildID();
+        //
+        // // Is this setting for this qual build cached?
+        // if (isset( $settings->$buildID->$setting )){
+        //     return $settings->$buildID->$setting;
+        // }
 
         // Otherwise return normal setting
         return \GT\Setting::getSetting($setting, $userID);
