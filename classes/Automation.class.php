@@ -23,9 +23,10 @@
  * limitations under the License.
  *
  */
-defined('MOODLE_INTERNAL') || die();
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') || die();
 
 class Automation
 {
