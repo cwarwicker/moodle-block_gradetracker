@@ -4486,6 +4486,7 @@ div#elbp_prior_learning_content div#avggcse
     width: 150px;
     margin: auto;
     border-radius: 30px;
+    text-align: center;
 }
 
 table#gt_log_search select
