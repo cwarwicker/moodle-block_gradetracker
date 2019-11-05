@@ -167,138 +167,144 @@ class GradeTracker
 
 
         // Install Qualification Levels (e.g. Level 1, Level 2, etc...(
-        $levels = json_decode( file_get_contents($installDir.'/structures/level/levels.json') );
-        if ($levels)
+        if (file_exists($installDir.'/structures/level/levels.json'))
         {
-
-            foreach($levels as $level)
+            $levels = json_decode( file_get_contents($installDir.'/structures/level/levels.json') );
+            if ($levels)
             {
 
-                $check = $DB->get_record("bcgt_qual_levels", array("name" => $level->name, "deleted" => 0));
-                if ($check)
-                {
-                    $check->shortname = $level->shortname;
-                    $check->ordernum = $level->ordernum;
-                    $result = $DB->update_record("bcgt_qual_levels", $check);
-                }
-                else
-                {
-                    $obj = new \stdClass();
-                    $obj->name = $level->name;
-                    $obj->shortname = $level->shortname;
-                    $obj->ordernum = $level->ordernum;
-                    $result = $DB->insert_record("bcgt_qual_levels", $obj);
-                }
-
-                mtrace('Trying to insert/update qual_level ' . $level->name . '...' . (int)$result, "\n<br>");
-
-            }
-
-        }
-
-
-
-
-        // Install Qualification SubTypes (e.g. Diploma, Certificate, Award, etc...(
-        $subtypes = json_decode( file_get_contents($installDir.'/structures/subtype/subtypes.json') );
-        if ($subtypes)
-        {
-
-            foreach($subtypes as $subtype)
-            {
-
-                $check = $DB->get_record("bcgt_qual_subtypes", array("name" => $subtype->name, "deleted" => 0));
-                if ($check)
-                {
-                    $check->shortname = $subtype->shortname;
-                    $result = $DB->update_record("bcgt_qual_subtypes", $check);
-                }
-                else
-                {
-                    $obj = new \stdClass();
-                    $obj->name = $subtype->name;
-                    $obj->shortname = $subtype->shortname;
-                    $result = $DB->insert_record("bcgt_qual_subtypes", $obj);
-                }
-
-                mtrace('Trying to insert/update qual_subtype ' . $subtype->name . '...' . (int)$result, "\n<br>");
-
-            }
-
-        }
-
-
-
-        // Install support for Mods activity links (e.g. assign, turnitintooltwo)
-        $mods = json_decode( file_get_contents($installDir.'/mods/mods.json') );
-        if ($mods)
-        {
-
-            foreach($mods as $mod)
-            {
-
-                // First need to check if this mod is installed
-                $result = false;
-                $moduleRecord = $DB->get_record("modules", array("name" => $mod->mod));
-                if ($moduleRecord)
+                foreach($levels as $level)
                 {
 
-                    $check = $DB->get_record("bcgt_mods", array("modid" => $moduleRecord->id, "deleted" => 0));
+                    $check = $DB->get_record("bcgt_qual_levels", array("name" => $level->name, "deleted" => 0));
                     if ($check)
                     {
-                        $check->modtable = $mod->modtable;
-                        $check->modcoursecol = $mod->modcoursecol;
-                        $check->modstartcol = $mod->modstartcol;
-                        $check->modduecol = $mod->modduecol;
-                        $check->modtitlecol = $mod->modtitlecol;
-                        $check->submissiontable = $mod->submissiontable;
-                        $check->submissionusercol = $mod->submissionusercol;
-                        $check->submissiondatecol = $mod->submissiondatecol;
-                        $check->submissionmodcol = $mod->submissionmodcol;
-                        $check->auto = $mod->auto;
-                        $check->enabled = $mod->enabled;
-                        $check->deleted = $mod->deleted;
-                        $check->submissionstatuscol = $mod->submissionstatuscol;
-                        $check->submissionstatusval = $mod->submissionstatusval;
-                        $check->parttable = $mod->parttable;
-                        $check->partmodcol = $mod->partmodcol;
-                        $check->parttitlecol = $mod->parttitlecol;
-                        $check->submissionpartcol = $mod->submissionpartcol;
-                        $result = $DB->update_record("bcgt_mods", $check);
+                        $check->shortname = $level->shortname;
+                        $check->ordernum = $level->ordernum;
+                        $result = $DB->update_record("bcgt_qual_levels", $check);
                     }
                     else
                     {
                         $obj = new \stdClass();
-                        $obj->modid = $moduleRecord->id;
-                        $obj->modtable = $mod->modtable;
-                        $obj->modcoursecol = $mod->modcoursecol;
-                        $obj->modstartcol = $mod->modstartcol;
-                        $obj->modduecol = $mod->modduecol;
-                        $obj->modtitlecol = $mod->modtitlecol;
-                        $obj->submissiontable = $mod->submissiontable;
-                        $obj->submissionusercol = $mod->submissionusercol;
-                        $obj->submissiondatecol = $mod->submissiondatecol;
-                        $obj->submissionmodcol = $mod->submissionmodcol;
-                        $obj->auto = $mod->auto;
-                        $obj->enabled = $mod->enabled;
-                        $obj->deleted = $mod->deleted;
-                        $obj->submissionstatuscol = $mod->submissionstatuscol;
-                        $obj->submissionstatusval = $mod->submissionstatusval;
-                        $obj->parttable = $mod->parttable;
-                        $obj->partmodcol = $mod->partmodcol;
-                        $obj->parttitlecol = $mod->parttitlecol;
-                        $obj->submissionpartcol = $mod->submissionpartcol;
-                        $result = $DB->insert_record("bcgt_mods", $obj);
+                        $obj->name = $level->name;
+                        $obj->shortname = $level->shortname;
+                        $obj->ordernum = $level->ordernum;
+                        $result = $DB->insert_record("bcgt_qual_levels", $obj);
                     }
+
+                    mtrace('Trying to insert/update qual_level ' . $level->name . '...' . (int)$result, "\n<br>");
 
                 }
 
-                mtrace('Trying to insert/update bcgt_mods ' . $mod->mod . '...' . (int)$result, "\n<br>");
-
             }
-
         }
 
+
+
+        // Install Qualification SubTypes (e.g. Diploma, Certificate, Award, etc...(
+        if (file_exists($installDir.'/structures/subtype/subtypes.json'))
+        {
+            $subtypes = json_decode( file_get_contents($installDir.'/structures/subtype/subtypes.json') );
+            if ($subtypes)
+            {
+
+                foreach($subtypes as $subtype)
+                {
+
+                    $check = $DB->get_record("bcgt_qual_subtypes", array("name" => $subtype->name, "deleted" => 0));
+                    if ($check)
+                    {
+                        $check->shortname = $subtype->shortname;
+                        $result = $DB->update_record("bcgt_qual_subtypes", $check);
+                    }
+                    else
+                    {
+                        $obj = new \stdClass();
+                        $obj->name = $subtype->name;
+                        $obj->shortname = $subtype->shortname;
+                        $result = $DB->insert_record("bcgt_qual_subtypes", $obj);
+                    }
+
+                    mtrace('Trying to insert/update qual_subtype ' . $subtype->name . '...' . (int)$result, "\n<br>");
+
+                }
+
+            }
+        }
+
+
+        // Install support for Mods activity links (e.g. assign, turnitintooltwo)
+        if (file_exists($installDir.'/mods/mods.json'))
+        {
+            $mods = json_decode( file_get_contents($installDir.'/mods/mods.json') );
+            if ($mods)
+            {
+
+                foreach($mods as $mod)
+                {
+
+                    // First need to check if this mod is installed
+                    $result = false;
+                    $moduleRecord = $DB->get_record("modules", array("name" => $mod->mod));
+                    if ($moduleRecord)
+                    {
+
+                        $check = $DB->get_record("bcgt_mods", array("modid" => $moduleRecord->id, "deleted" => 0));
+                        if ($check)
+                        {
+                            $check->modtable = $mod->modtable;
+                            $check->modcoursecol = $mod->modcoursecol;
+                            $check->modstartcol = $mod->modstartcol;
+                            $check->modduecol = $mod->modduecol;
+                            $check->modtitlecol = $mod->modtitlecol;
+                            $check->submissiontable = $mod->submissiontable;
+                            $check->submissionusercol = $mod->submissionusercol;
+                            $check->submissiondatecol = $mod->submissiondatecol;
+                            $check->submissionmodcol = $mod->submissionmodcol;
+                            $check->auto = $mod->auto;
+                            $check->enabled = $mod->enabled;
+                            $check->deleted = $mod->deleted;
+                            $check->submissionstatuscol = $mod->submissionstatuscol;
+                            $check->submissionstatusval = $mod->submissionstatusval;
+                            $check->parttable = $mod->parttable;
+                            $check->partmodcol = $mod->partmodcol;
+                            $check->parttitlecol = $mod->parttitlecol;
+                            $check->submissionpartcol = $mod->submissionpartcol;
+                            $result = $DB->update_record("bcgt_mods", $check);
+                        }
+                        else
+                        {
+                            $obj = new \stdClass();
+                            $obj->modid = $moduleRecord->id;
+                            $obj->modtable = $mod->modtable;
+                            $obj->modcoursecol = $mod->modcoursecol;
+                            $obj->modstartcol = $mod->modstartcol;
+                            $obj->modduecol = $mod->modduecol;
+                            $obj->modtitlecol = $mod->modtitlecol;
+                            $obj->submissiontable = $mod->submissiontable;
+                            $obj->submissionusercol = $mod->submissionusercol;
+                            $obj->submissiondatecol = $mod->submissiondatecol;
+                            $obj->submissionmodcol = $mod->submissionmodcol;
+                            $obj->auto = $mod->auto;
+                            $obj->enabled = $mod->enabled;
+                            $obj->deleted = $mod->deleted;
+                            $obj->submissionstatuscol = $mod->submissionstatuscol;
+                            $obj->submissionstatusval = $mod->submissionstatusval;
+                            $obj->parttable = $mod->parttable;
+                            $obj->partmodcol = $mod->partmodcol;
+                            $obj->parttitlecol = $mod->parttitlecol;
+                            $obj->submissionpartcol = $mod->submissionpartcol;
+                            $result = $DB->insert_record("bcgt_mods", $obj);
+                        }
+
+                    }
+
+                    mtrace('Trying to insert/update bcgt_mods ' . $mod->mod . '...' . (int)$result, "\n<br>");
+
+                }
+
+            }
+        }
 
 
 
@@ -374,69 +380,73 @@ class GradeTracker
 
 
         // Quals On Entry Types
-        $types = json_decode( file_get_contents($installDir.'/qoe/types.json') );
-        if ($types)
+        if (file_exists($installDir.'/qoe/types.json'))
         {
-            foreach($types as $type)
+            $types = json_decode( file_get_contents($installDir.'/qoe/types.json') );
+            if ($types)
             {
-                $check = $DB->get_record("bcgt_qoe_types", array("name" => $type->name));
-                if ($check)
+                foreach($types as $type)
                 {
-                    $check->lvl = $type->lvl;
-                    $check->weighting = $type->weighting;
-                    $result = $DB->update_record("bcgt_qoe_types", $check);
-                }
-                else
-                {
-                    $obj = new \stdClass();
-                    $obj->name = $type->name;
-                    $obj->lvl = $type->lvl;
-                    $obj->weighting = $type->weighting;
-                    $result = $DB->insert_record("bcgt_qoe_types", $obj);
-                }
-
-                mtrace('Trying to insert/update qoe_type ' . $type->name . '...' . (int)$result, "\n<br>");
-
-            }
-
-        }
-
-
-
-
-        // Quals On Entry Grades
-        $grades = json_decode( file_get_contents($installDir.'/qoe/grades.json') );
-        if ($grades)
-        {
-            foreach($grades as $grade)
-            {
-                $type = $DB->get_record("bcgt_qoe_types", array("name" => $grade->type));
-                if ($type)
-                {
-                    $check = $DB->get_record("bcgt_qoe_grades", array("qoeid" => $type->id, "grade" => $grade->grade));
+                    $check = $DB->get_record("bcgt_qoe_types", array("name" => $type->name));
                     if ($check)
                     {
-                        $check->points = $grade->points;
-                        $check->weighting = $grade->weighting;
+                        $check->lvl = $type->lvl;
+                        $check->weighting = $type->weighting;
                         $result = $DB->update_record("bcgt_qoe_types", $check);
                     }
                     else
                     {
                         $obj = new \stdClass();
-                        $obj->qoeid = $type->id;
-                        $obj->grade = $grade->grade;
-                        $obj->points = $grade->points;
-                        $obj->weighting = $grade->weighting;
-                        $result = $DB->insert_record("bcgt_qoe_grades", $obj);
+                        $obj->name = $type->name;
+                        $obj->lvl = $type->lvl;
+                        $obj->weighting = $type->weighting;
+                        $result = $DB->insert_record("bcgt_qoe_types", $obj);
                     }
+
+                    mtrace('Trying to insert/update qoe_type ' . $type->name . '...' . (int)$result, "\n<br>");
+
                 }
 
-                mtrace('Trying to insert/update qoe_grade ' . $grade->grade . '...' . (int)$result, "\n<br>");
-
             }
-
         }
 
+
+
+        // Quals On Entry Grades
+        if (file_exists($installDir.'/qoe/grades.json'))
+        {
+            $grades = json_decode( file_get_contents($installDir.'/qoe/grades.json') );
+            if ($grades)
+            {
+                foreach($grades as $grade)
+                {
+                    $type = $DB->get_record("bcgt_qoe_types", array("name" => $grade->type));
+                    if ($type)
+                    {
+                        $check = $DB->get_record("bcgt_qoe_grades", array("qoeid" => $type->id, "grade" => $grade->grade));
+                        if ($check)
+                        {
+                            $check->points = $grade->points;
+                            $check->weighting = $grade->weighting;
+                            $result = $DB->update_record("bcgt_qoe_types", $check);
+                        }
+                        else
+                        {
+                            $obj = new \stdClass();
+                            $obj->qoeid = $type->id;
+                            $obj->grade = $grade->grade;
+                            $obj->points = $grade->points;
+                            $obj->weighting = $grade->weighting;
+                            $result = $DB->insert_record("bcgt_qoe_grades", $obj);
+                        }
+                    }
+
+                    mtrace('Trying to insert/update qoe_grade ' . $grade->grade . '...' . (int)$result, "\n<br>");
+
+                }
+
+            }
+        }
 
 
 
