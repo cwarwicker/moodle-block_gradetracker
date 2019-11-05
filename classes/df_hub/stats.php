@@ -1,5 +1,9 @@
 <?php
 
+defined('MOODLE_INTERNAL') || die();
+
+global $DB;
+
 require_once $CFG->dirroot . '/blocks/gradetracker/lib.php';
 
 // Count Structures

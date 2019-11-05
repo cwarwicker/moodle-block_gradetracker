@@ -851,9 +851,6 @@ class GradeTracker
                     // Require hub
                     require_once $CFG->dirroot . '/local/df_hub/lib.php';
 
-                    // Recent activity
-                    $TPL->set("logs", \ELBP\Log::parseListOfLogs( \ELBP\Log::getRecentLogs(15) ));
-
                     $site = new \DF\Site();
                     $TPL->set("site", $site);
 
