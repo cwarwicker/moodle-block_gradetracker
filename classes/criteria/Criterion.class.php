@@ -600,7 +600,18 @@ abstract class Criterion {
 
     }
 
+    /**
+     * Get the criterion type name, e.g. "Standard Criterion"
+     * @return [type]
+     */
+    public function getTypeName() {
 
+        global $DB;
+
+        $check = $DB->get_record("bcgt_qual_structure_levels", array("id" => $this->type));
+        return ($check) ? $check->name : false;
+
+    }
 
     /**
      * Get the user award for this student
@@ -747,7 +758,13 @@ abstract class Criterion {
      * @return type
      */
     public function getAttributes(){
+
+        if (!$this->attributes){
+            $this->loadAttributes();
+        }
+
         return $this->attributes;
+        
     }
 
     /**

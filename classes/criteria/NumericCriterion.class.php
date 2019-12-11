@@ -828,7 +828,7 @@ class NumericCriterion extends \GT\Criterion {
      * Get the conversion chart for this criterion
      * @return type
      */
-    private function getConversionChart(){
+    public function getConversionChart(){
 
         $return = array();
 

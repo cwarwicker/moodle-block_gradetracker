@@ -211,6 +211,31 @@ switch($type)
         endswitch;
     break;
 
+    // Should move all structure exports to this, instead of in their saveConfig methods.
+    case 'structure':
+
+        $structure = required_param('structure', PARAM_TEXT);
+        $id = required_param('structure_id', PARAM_INT);
+
+        switch($structure)
+        {
+
+            case 'unit':
+
+                $unit = new \GT\Unit($id);
+                if (!$unit->isValid())
+                {
+                    print_error('norecord', 'block_gradetracker');
+                }
+
+                $unit->export();
+
+            break;
+
+        }
+
+    break;
+
     case 'sql':
         if ($User->hasCapability('block/gradetracker:run_sql_report'))
         {

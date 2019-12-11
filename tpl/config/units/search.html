@@ -4,7 +4,7 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class="gt_full_page">
-    
+
     <form action="#results" method="post">
 
         <div class="gt_form_panel">
@@ -42,7 +42,7 @@
                             </select>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td><?= $string['unitnumber'] ?></td>
                         <td>
@@ -56,27 +56,27 @@
                             <input type="text" class="gt_form_control" name="code" value="<?= (isset($searchParams['code'])) ? \gt_html($searchParams['code']) : ''; ?>" />
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td><?= $string['unitname'] ?></td>
                         <td>
                             <input type="text" class="gt_form_control" name="name" value="<?= (isset($searchParams['name'])) ? \gt_html($searchParams['name']) : ''; ?>" />
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td></td>
                         <td>
                             <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?= $string['search'] ?>" />
                         </td>
                     </tr>
-                    
+
                 </table>
-                
+
                 <?php if (isset($results)): ?>
-                
+
                     <div class="gt_full_page">
-     
+
                             <div>
 
                                 <table id="gt_qual_results" class="gt_config">
@@ -87,11 +87,11 @@
                                         <th><?= $string['level'] ?></th>
                                         <th><?= $string['quals'] ?></th>
                                         <th><?= $string['options'] ?></th>
-                                        
+
                                     </tr>
-                                    
+
                                     <?php if ($results): ?>
-                                    
+
                                         <?php foreach($results as $result): ?>
                                         <tr>
                                             <td><?= $result->getStructureRealName() ?></td>
@@ -109,13 +109,15 @@
                                                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
                                                 &nbsp;&nbsp;
                                                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=copy&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/copy') ?>" alt="<?= $string['duplicate'] ?>" /></a>
+                                                &nbsp;&nbsp;
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/download') ?>" alt="<?= $string['export'] ?>" /></a>
                                                 <?php if ($User->hasCapability('block/gradetracker:delete_restore_units')): ?>
                                                     &nbsp;&nbsp;
                                                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
-                                        <?php endforeach; ?>       
+                                        <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
                                             <td colspan='5'><?= $string['noresults'] ?></td>
@@ -136,21 +138,21 @@
                                                     </form>
                                                 </td>
                                                 </tr>
-                                                <?php endforeach; ?> 
+                                                <?php endforeach; ?>
                                         <?php endif; ?>
                                     <?php endif; ?>
                                 </table>
 
                             </div>
-                
-                    </div>                    
-                
+
+                    </div>
+
                 <?php endif; ?>
-                
+
             </div>
 
         </div>
-        
+
     </form>
-    
+
 </div>
