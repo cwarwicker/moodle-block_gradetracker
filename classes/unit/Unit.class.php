@@ -2175,9 +2175,6 @@ class Unit {
                         // Set the new attribute.
                         $newCrit->setAttribute($newAttName, $newCritAttValue);
 
-                        var_dump('Replacing attr: ' . $newCritAttName);
-                        var_dump('With: ' . $newAttName);
-
                     }
 
                 }
