@@ -107,7 +107,7 @@ class NumericCriterion extends \GT\Criterion {
         }
 
         // Must have at least 1 sub criterion. Cannot just have Observations with no sub criteria
-        if (!$this->hasChildrenOfType('Criterion') && !$parent)
+        if (!$this->hasChildrenOfType('Criterion') && !$parent && !defined('GT_IMPORTING'))
         {
             $this->errors[] = sprintf( get_string('errors:crit:numeric:sub', 'block_gradetracker'), $this->name );
         }

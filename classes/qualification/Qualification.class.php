@@ -1273,12 +1273,6 @@ class Qualification {
                                 break;
 
 
-                                // Detail criterion - Only top level go in the header
-                                case 'GT\Criteria\DetailCriterion':
-
-                                break;
-
-
                                 // Numeric criterion - Only top level go in the header
                                 case 'GT\Criteria\NumericCriterion':
 

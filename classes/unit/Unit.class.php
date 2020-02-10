@@ -1165,8 +1165,13 @@ class Unit {
         $check = $DB->get_records("bcgt_units", array("name" => $this->name, "unitnumber" => $this->unitNumber, "code" => $this->code, "structureid" => $this->structureID, "levelid" => $this->levelID, "deleted" => 0));
         if (isset($check[$this->id])){
             unset($check[$this->id]);
+        }
+
+        // Just get first element of the array, as there should only be 1 anyway max.
+        if ($check) {
             $check = reset($check);
         }
+
         if ($check && $check->id <> $this->id){
             $this->errors[] = get_string('errors:unit:name:duplicate', 'block_gradetracker');
         }
@@ -1608,12 +1613,6 @@ class Unit {
                         break;
 
 
-                        // Detail criterion - Only top level go in the header
-                        case 'GT\Criteria\DetailCriterion':
-
-                        break;
-
-
                         // Numeric criterion - Only top level go in the header
                         case 'GT\Criteria\NumericCriterion':
 
@@ -1864,6 +1863,7 @@ class Unit {
 
                 $attributes = $criterion->getAttributes();
                 if ($attributes) {
+
                     foreach ($attributes as $attribute => $value) {
 
                         $att = $attributesxml->addChild($attribute, $value);
@@ -1876,9 +1876,10 @@ class Unit {
                             $award = new \GT\CriteriaAward($awardID);
                             $att->addAttribute('award', $award->getName());
 
-                        } 
+                        }
 
                     }
+
                 }
 
                 // If it has a parent, add that node and any other sub-criteria nodes.
@@ -1895,6 +1896,348 @@ class Unit {
         }
 
         return $doc;
+
+    }
+
+    public static function importXML($file) {
+
+        // We are importing, so there are certain error checks we want to skip.
+        define('GT_IMPORTING', true);
+
+        $result = array();
+        $result['result'] = false;
+        $result['errors'] = array();
+        $result['output'] = '';
+
+        // Required XML nodes
+        $requiredNodes = array('qualificationStructure', 'level', 'number', 'name', 'uniqueCode', 'description', 'credits', 'gradingStructure', 'criteria');
+
+        // Check file exists
+        if (!file_exists($file)){
+            $result['errors'][] = get_string('errors:import:file', 'block_gradetracker') . ' - (' . $file . ')';
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Check mime type of file to make sure it is XML
+        $fInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($fInfo, $file);
+        finfo_close($fInfo);
+
+        // Has to be XML file or a zip file, otherwise error and return
+        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml'){
+            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml, text/xml, text/plain or application/zip', $mime);
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // If it's a zip file, we need to unzip it and run on each of the XML files inside
+        if ($mime == 'application/zip'){
+            return self::importXMLZip($file) ;
+        }
+
+        // Open file
+        $doc = \simplexml_load_file($file);
+        if (!$doc){
+            $result['errors'][] = get_string('errors:import:xml:load', 'block_gradetracker') . ' - (' . $file . ')';
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Make sure it is wrapped in Unit tag
+        if (!isset($doc->Unit)){
+            $result['errors'][] = get_string('errors:import:xml:missingnodes', 'block_gradetracker') . ' - Unit';
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Get the nodes inside that tag
+        $xml = $doc->Unit;
+
+        // Check for required nodes
+        $missingNodes = array();
+        foreach ($requiredNodes as $node) {
+            if (!property_exists($xml, $node)) {
+                $missingNodes[] = $node;
+            }
+        }
+
+        // If there are missing nodes, error.
+        if ($missingNodes){
+            foreach($missingNodes as $node){
+                $result['errors'][] = get_string('errors:import:xml:missingnodes', 'block_gradetracker') . ' - ' . $node;
+                $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+                return $result;
+            }
+        }
+
+        // Get each node into a variable.
+        $nodes = array();
+        foreach($requiredNodes as $node) {
+            // Decode htmlspecialchars as if there was an & in the QualStructure name, it becomes &amp; in the XML and needs converting back.
+            $nodes[$node] = htmlspecialchars_decode((string)$xml->{$node});
+        }
+
+        // Check Qual structure exists
+        $QualStructure = \GT\QualificationStructure::findByName($nodes['qualificationStructure']);
+        if (!$QualStructure){
+            $result['errors'][] = get_string('errors:qualbuild:type', 'block_gradetracker') . ' - ' . $nodes['qualificationStructure'];
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Check Level exists
+        $Level = \GT\Level::findByName($nodes['level']);
+        if (!$Level) {
+            $result['errors'][] = get_string('errors:qualbuild:level', 'block_gradetracker') . ' - ' . $nodes['level'];
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Check QualBuild for this Structure and level exists.
+        $Build = \GT\QualificationBuild::find($QualStructure->getID(), $Level->getID());
+        if (!$Build || (is_array($Build) && count($Build) <> 1)) {
+            $result['errors'][] = get_string('errors:qualawards:buildid', 'block_gradetracker') . ' - ' . $nodes['qualificationStructure'] . '/' . $nodes['level'];
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Should only be one element in this array.
+        $Build = reset($Build);
+
+        // Now actually get the QualificationBuild object instead of stdClass;
+        $Build = new \GT\QualificationBuild($Build->id);
+
+        // Check grading structure exists.
+        $GradingStructure = \GT\UnitAwardStructure::findByName($nodes['gradingStructure'], $QualStructure->getID());
+        if (!$GradingStructure) {
+            $result['errors'][] = get_string('errors:unit:grading', 'block_gradetracker') . ' - ' . $nodes['gradingStructure'];
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        $newUnit = new Unit();
+        $newUnit->setStructureID($QualStructure->getID());
+        $newUnit->setLevelID($Level->getID());
+        $newUnit->setUnitNumber($nodes['number']);
+        $newUnit->setName($nodes['name']);
+        $newUnit->setCode($nodes['uniqueCode']);
+        $newUnit->setDescription($nodes['description']);
+        $newUnit->setCredits($nodes['credits']);
+        $newUnit->setGradingStructureID($GradingStructure->getID());
+
+        $criteriaArray = array();
+        $parentArray = array();
+        $dynamicArray = array();
+
+        // Criteria
+        if ($xml->criteria) {
+
+            foreach ($xml->criteria->children() as $critNode) {
+
+                // This is just a numeric index of the exported criteria (technically the ID from the system it was exported to).
+                $exportID = (int)$critNode->exportID;
+
+                $type = (string)$critNode->type;
+                switch($type) {
+                    case 'Ranged Criteria':
+                        $criterion = new \GT\Criteria\RangedCriterion();
+                    break;
+                    case 'Numeric Criteria':
+                        $criterion = new \GT\Criteria\NumericCriterion();
+                    break;
+                    default:
+                        $criterion = new \GT\Criteria\StandardCriterion();
+                    break;
+                }
+
+                $StructureLevel = \GT\QualificationStructureLevel::getByName($type);
+
+                $criterion->setDynamicNumber($exportID);
+                $criterion->setQualStructureID($QualStructure->getID());
+                $criterion->setType($StructureLevel->getID());
+                $criterion->setName( (string)$critNode->name );
+                $criterion->setDescription( (string)$critNode->description );
+                if (!empty($critNode->subCritType)) {
+                    $criterion->setSubCritType( (string)$critNode->subCritType );
+                }
+
+                // Check crit grading structure exists as well.
+                $critGradingStructure = \GT\CriteriaAwardStructure::findByName((string)$critNode->gradingStructure, $QualStructure->getID(), $Build->getID());
+                if (!$critGradingStructure) {
+                    $result['errors'][] = get_string('invalidgradingstructure', 'block_gradetracker') . ' - ' . (string)$critNode->gradingStructure;
+                    $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+                    return $result;
+                }
+
+                $criterion->setGradingStructureID($critGradingStructure->getID());
+
+                // Add the name of the criterion against its dynamic id.
+                $dynamicArray[$exportID] = $criterion->getName();
+
+                // Set all the criterion attributes.
+                if ($critNode->attributes) {
+
+                    foreach ($critNode->attributes->children() as $attNode) {
+
+                        $attName = $attNode->getName();
+
+                        // Conversion chart needs the award name attribute converted to an id.
+                        if (strpos($attName, 'conversion_chart') === 0){
+
+                            $award = $critGradingStructure->getAwardByName($attNode['award']);
+                            if (!$award) {
+                                $result['errors'][] = get_string('invalidaward', 'block_gradetracker') . ' - ' . $attNode['award'];
+                                $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+                                return $result;
+                            }
+
+                            // Change the name of the attribute, to use the real id from our system, instead of the exported system.
+                            $attName = 'conversion_chart_' . $award->getID();
+
+                        }
+
+                        // Maxpoints will need to be adjusted after the criteria have been saved so we can get their IDs.
+
+                        $criterion->setAttribute( $attName, (string)$attNode );
+
+                    }
+
+                }
+
+                $newUnit->addCriterion($criterion);
+
+                // We can't set the parent IDs yet, as the criteria won't be saved until the unit is saved.
+                // So we will have to store numeric indexes against the name of their parent and then re-save them afterwards.
+                if (!empty($critNode->parent)) {
+                    $parentArray[$exportID] = (string)$critNode->parent;
+                }
+
+            }
+
+        }
+
+        // Now do the general error checks done when we save a unit.
+        if (!$newUnit->hasNoErrors()) {
+            $result['errors'][] = $newUnit->getErrors();
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Try to save the unit.
+        $result['result'] = $newUnit->save();
+        if (!$result['result']) {
+            $result['errors'][] = $newUnit->getErrors();
+            $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
+            return $result;
+        }
+
+        // Now go through the parent array and re-save the criteria parents.
+        // Also adjust any attributes which need adjusting with real ID values.
+        if ($newUnit->getCriteria()) {
+
+            foreach($newUnit->getCriteria() as $newCrit) {
+
+                // Is this dynamic number in the parent array?
+                if (array_key_exists($newCrit->getDynamicNumber(), $parentArray)) {
+
+                    // Get the criterion off the unit, by its name.
+                    $parentCrit = $newUnit->getCriterionByName($parentArray[$newCrit->getDynamicNumber()]);
+
+                    // Now set the parent id.
+                    $newCrit->setParentID($parentCrit->getID());
+
+                }
+
+                // Check attributes.
+                foreach ($newCrit->getAttributes() as $newCritAttName => $newCritAttValue) {
+
+                    if (strpos($newCritAttName, 'maxpoints_') === 0){
+
+                        // Get the ids from the attribute as it is at the moment.
+                        preg_match_all('/\d+/', $newCritAttName, $matches);
+                        $oldIDs = $matches[0];
+
+                        $newAttName = 'maxpoints';
+
+                        // Loop through the old IDs, as found in the attribute name, get the criterion name associated with them from the
+                        // dynamic array, then get the ID of that new criterion record and replace in the attribute.
+                        foreach ($oldIDs as $oldID) {
+
+                            $crit = $newUnit->getCriterionByName( $dynamicArray[$oldID] );
+                            $newAttName .= '_' . $crit->getID();
+
+                        }
+
+                        // Delete the old attribute.
+                        $newCrit->unsetAttribute($newCritAttName);
+
+                        // Set the new attribute.
+                        $newCrit->setAttribute($newAttName, $newCritAttValue);
+
+                        var_dump('Replacing attr: ' . $newCritAttName);
+                        var_dump('With: ' . $newAttName);
+
+                    }
+
+                }
+
+                // Save any changes we made.
+                $newCrit->save();
+
+            }
+
+        }
+
+        $result['result'] = true;
+        return $result;
+
+    }
+
+    /**
+     * Import a zip file containing XML files of Units
+     * @param $file
+     * @return array
+     * @throws \coding_exception
+     */
+    public static function importXMLZip($file) {
+
+        global $USER;
+
+        $result = array();
+        $result['result'] = true;
+        $result['errors'] = array();
+        $result['output'] = '';
+
+        // Unzip the file
+        $fp = \get_file_packer();
+        $tmpFileName = 'import-unit-' . time() . '-' . $USER->id . '.zip';
+        $extracted = $fp->extract_to_pathname($file, \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName);
+
+        if ($extracted)
+        {
+            foreach($extracted as $extractedFile => $bool)
+            {
+
+                $result['output'] .= sprintf( get_string('import:datasheet:process:file', 'block_gradetracker'), $extractedFile ) . '<br>';
+
+                $load = \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName . '/' . $extractedFile;
+                $import = \GT\Unit::importXML($load);
+
+                // Append to result
+                $result['result'] = $result['result'] && $import['result'];
+                $result['errors'][] = $import['errors'];
+                $result['output'] .= $import['output'];
+
+            }
+        }
+        else
+        {
+            $result['result'] = false;
+            $result['errors'][] = get_string('errors:import:zipfile', 'block_gradetracker');
+        }
+
+        return $result;
 
     }
 

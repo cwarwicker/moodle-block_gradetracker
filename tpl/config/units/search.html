@@ -106,14 +106,14 @@
                                             <td><?= $result->getLevelName() ?></td>
                                             <td><?= $result->countQuals() ?></td>
                                             <td>
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" title="<?= $string['edit'] ?>" alt="<?= $string['edit'] ?>" /></a>
                                                 &nbsp;&nbsp;
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=copy&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/copy') ?>" alt="<?= $string['duplicate'] ?>" /></a>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=copy&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/copy') ?>" title="<?= $string['duplicate'] ?>" alt="<?= $string['duplicate'] ?>" /></a>
                                                 &nbsp;&nbsp;
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/download') ?>" alt="<?= $string['export'] ?>" /></a>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/download') ?>" title="<?= $string['export'] ?>" alt="<?= $string['export'] ?>" /></a>
                                                 <?php if ($User->hasCapability('block/gradetracker:delete_restore_units')): ?>
                                                     &nbsp;&nbsp;
-                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" title="<?= $string['delete'] ?>" alt="<?= $string['delete'] ?>" /></a>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>

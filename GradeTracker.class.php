@@ -2914,6 +2914,24 @@ class GradeTracker
             $MSGS['success'] = get_string('unitrestored', 'block_gradetracker');
         }
 
+        // Import a unit from XML.
+        else if(isset($_POST['submit_import_unit'])) {
+
+            $result = \GT\Unit::importXML($_FILES['file']['tmp_name']);
+            if ($result['result'])
+            {
+                $MSGS['success'] = get_string('unitsimported', 'block_gradetracker');
+                unset($MSGS['errors']);
+            }
+            else
+            {
+                $MSGS['errors'] = $result['errors'];
+            }
+
+            $MSGS['import_output'] = $result['output'];
+
+        }
+
 
         if (!isset($MSGS['errors']) && isset($detail)){
             // ------------ Logging Info

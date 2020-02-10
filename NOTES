@@ -1,8 +1,0 @@
-REQUIREMENTS:
-  - mb_* enabled on server
-
-
-TODO:
-
-- Put final version in upgrade.php
-- Update plugins to require moodle 3.7

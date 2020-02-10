@@ -764,7 +764,7 @@ abstract class Criterion {
         }
 
         return $this->attributes;
-        
+
     }
 
     /**
@@ -789,6 +789,14 @@ abstract class Criterion {
      */
     public function setAttribute($attribute, $value){
         $this->attributes[$attribute] = $value;
+    }
+
+    /**
+     * Remove an attribute from the array.
+     * @param string $attribute
+     */
+    public function unsetAttribute($attribute) {
+        unset($this->attributes[$attribute]);
     }
 
     /**
@@ -924,7 +932,7 @@ abstract class Criterion {
         }
 
 
-        if ($levelObj->isValid()){
+        if ($levelObj->isValid() && !defined('GT_IMPORTING')){
 
             $maxLevels = $QualStructure->getLevelMaxSubCriteria($this->type);
             $minLevels = $levelObj->getMinSubLevels();
@@ -1726,10 +1734,6 @@ abstract class Criterion {
 
             case 'Standard':
                 return new \GT\Criteria\StandardCriterion($id);
-            break;
-
-            case 'Detail':
-                return new \GT\Criteria\DetailCriterion($id);
             break;
 
             case 'Numeric':

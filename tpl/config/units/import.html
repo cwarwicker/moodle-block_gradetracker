@@ -1,0 +1,21 @@
+<?php if(!defined('BCGT')) exit; ?>
+
+<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+
+<br>
+<?php if (!empty($MSGS['import_output'])): ?>
+<div id='gt_import_output' class='gt_cmd'>
+    <?= $MSGS['import_output'] ?>
+</div>
+<br>
+<?php endif; ?>
+<br>
+
+<div class="gt_confirm_box">
+    <h4><?= $string['breadcrumbs:config:units:import'] ?></h4>
+    <form action="" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" /><br><br>
+        <input type="submit" name="submit_import_unit" class="gt_blue" value="<?= $string['import'] ?>" />
+    </form>
+</div>
