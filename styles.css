@@ -4465,7 +4465,7 @@ progress.gt_progress[aria-valuenow]:before {
 
 .ui-dialog.gt_jq_dialog
 {
-    z-index: 999 !important;
+    z-index: 3001 !important;
 }
 
 

@@ -373,6 +373,12 @@ class UnitAwardStructure {
             {
                 foreach($array as $relevantID => $points)
                 {
+
+                    // Relevant ID must be an ID. Otherwise probably the system doesn't have the Level installed which you want to use.
+                    if (!is_numeric($relevantID)){
+                        throw new \moodle_exception('Invalid Level in Unit Points. Make sure you install the Levels you need before the Qualification Structure.');
+                    }
+
                     if (is_array($points) && $points)
                     {
                         foreach($points as $awardID => $point)
