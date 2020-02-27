@@ -2878,8 +2878,8 @@ class QualificationStructure
         finfo_close($fInfo);
 
         // Has to be XML file, otherwise error and return
-        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip'){
-            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml or application/zip', $mime);
+        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml'){
+            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml, text/xml, text/plain or application/zip', $mime);
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
@@ -3055,8 +3055,8 @@ class QualificationStructure
             $mime = finfo_file($fInfo, $file);
         finfo_close($fInfo);
         // Has to be XML file, otherwise error and return
-        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip'){
-            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml or application/zip', $mime);
+        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip'  && $mime != 'text/xml'){
+            $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml, text/xml, text/plain or application/zip', $mime);
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
@@ -3454,7 +3454,7 @@ class QualificationStructure
         return array(
                 'Units' => array(null, null),
                 'Standard Criteria' => array(0, 2),
-                'Ranged Criteria' => array(1, 2), 
+                'Ranged Criteria' => array(1, 2),
                 'Numeric Criteria' => array(1, 2)
             );
     }
