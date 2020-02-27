@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui'], function($, ui) {
+define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
   var config_structures_builds = {};
   config_structures_builds.cntAwards = 0;
@@ -37,7 +37,7 @@ define(['jquery', 'jqueryui'], function($, ui) {
         row += '</tr>';
 
         $('#gt_build_award_table').append(row);
-        
+
         config_structures_builds.bindings();
         e.preventDefault();
 

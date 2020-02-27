@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui', 'block_gradetracker/freezetable'], function($, ui, freezeTable) {
+define(['jquery', 'jqueryui', 'block_gradetracker/freezetable', 'block_gradetracker/scripts'], function($, ui, freezeTable, gtScripts) {
 
   var config = {};
 

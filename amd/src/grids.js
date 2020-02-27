@@ -1,4 +1,5 @@
-define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/freezetable', 'block_gradetracker/slimmenu'], function($, ui, bcPopUp, freezeTable, slimmenu) {
+define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/freezetable', 'block_gradetracker/slimmenu', 'block_gradetracker/scripts'],
+    function($, ui, bcPopUp, freezeTable, slimmenu, gtScripts) {
 
   var config = {};
   config.qualification = 0;

@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui'], function($, ui) {
+define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
   var config = {};
 
@@ -11,7 +11,7 @@ define(['jquery', 'jqueryui'], function($, ui) {
 
   config.bindings = function(){
 
-    
+
 
   }
 

@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup'], function($, ui, bcPopUp) {
+define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/scripts'], function($, ui, bcPopUp, gtScripts) {
 
     var config_structures_quals = {};
 
