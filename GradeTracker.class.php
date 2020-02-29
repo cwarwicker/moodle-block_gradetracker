@@ -2138,8 +2138,8 @@ class GradeTracker
                     $weight = trim($_POST['weightings'][$i]);
                     if (empty($name)) continue;
 
-                    // Set default weight to 1 if not valid
-                    if ($weight == '' || $weight < 0) $weight = 1;
+                    // Set default weight to 0 if not valid
+                    if ($weight == '') $weight = 0;
 
                     // Append to idArray so we can delete ones we haven't saved
                     $idArray[] = $id;

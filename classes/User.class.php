@@ -876,34 +876,67 @@ class User {
         $numEntries = 0;
         $totalPoints = 0;
 
+        \gt_debug("Calculating Average QoE score for {$this->getName()}");
+
         if ($qoe)
         {
             foreach($qoe as $entry)
             {
 
-                // Only use GCSEs
-                if (!in_array($entry->getType()->name, array(\GT\QualOnEntry::GCSENORMAL, \GT\QualOnEntry::GCSEDOUBLE, \GT\QualOnEntry::GCSESHORT))) continue;
+                $grade = $entry->getGradeObject();
+                $type = $entry->getType();
 
-                // If not valid grade for it, or the grade has 0 points (and is not a GCSE U) then skip
-                if (!$entry->getGradeObject() || ($entry->getGradeObject()->points <= 0 && $entry->getGradeObject()->grade != 'U')) continue;
+                \gt_debug($entry->__toString());
+
+                // If the Type does not have a weighting, then skip it.
+                if (!$type || $type->weighting <= 0) {
+                    \gt_debug(' Type ('.$type->name.') does not have a weighting. So skipping this record.');
+                    continue;
+                }
+
+                // If not valid grade for it then skip
+                if (!$grade) {
+                    \gt_debug(' No grade record found.');
+                    continue;
+                }
+
+                \gt_debug(' Grade Points: ' .  $grade->points);
+                \gt_debug(' Grade Weighting: ' .  $grade->weighting);
+                \gt_debug(' Type ('.$type->name.') Weighting: ' .  $type->weighting);
 
                 // Set weighting to 1 if it's not set or is 0
-                if (!$entry->getGradeObject()->weighting || $entry->getGradeObject()->weighting == 0) $entry->getGradeObject()->weighting = 1;
-                if (!$entry->getType()->weighting || $entry->getType()->weighting == 0) $entry->getType()->weighting = 1;
+                if (!$grade->weighting || $grade->weighting == 0) {
+                    \gt_debug(' Setting Grade Weighting to 1');
+                    $grade->weighting = 1;
+                }
 
-                $numEntries += ( $entry->getGradeObject()->weighting * $entry->getType()->weighting );
-                $totalPoints += ( $entry->getGradeObject()->points * $entry->getType()->weighting );
+                if (!$type->weighting || $type->weighting == 0) {
+                    \gt_debug(' Setting Type Weighting to 1');
+                    $type->weighting = 1;
+                }
+
+                $numEntries += ( $grade->weighting * $type->weighting );
+                $totalPoints += ( $grade->points * $type->weighting );
+
+                \gt_debug(' numEntries = numEntries + (Grade Weighting * Type Weighting) = ' . $numEntries);
+                \gt_debug(' totalPoints = totalPoints + (Grade Points * Type Weighting) = ' . $totalPoints);
 
             }
         }
 
+        \gt_debug('Finished going through QoE records');
+
         // Work out average
         if ($numEntries > 0){
 
+            \gt_debug('Calculating avg QoE score: ROUND(totalPoints / numEntries, 2)');
+            \gt_debug("ROUND({$totalPoints} / {$numEntries}, 2)");
             $avg = round( $totalPoints / $numEntries, 2 );
             $this->setAverageGCSEScore($avg);
 
         }
+
+        \gt_debug('Average QoE: ' . $avg);
 
         return $avg;
 
