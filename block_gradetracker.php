@@ -44,7 +44,7 @@ class block_gradetracker extends block_base {
         $context = context_course::instance($COURSE->id);
         $course = new \GT\Course($COURSE->id);
 
-        if ($this->content !== null || !$USER || $USER->id < 1) {
+        if ($this->content !== null || !$USER || is_guest($context, $USER)) {
             return $this->content;
         }
 
