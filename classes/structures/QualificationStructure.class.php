@@ -156,12 +156,12 @@ class QualificationStructure
 
         // If we have a tmp file, e.g. if we've got an error so we haven't got as far as saving img properly yet
         if (isset($this->iconTmp)){
-            return $CFG->wwwroot . '/blocks/gradetracker/download.php?f=' . gt_get_data_path_code( \GT\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
+            return $CFG->wwwroot . '/blocks/gradetracker/download.php?f=' . gt_get_data_path_code( 'tmp/' . $this->iconTmp );
         }
 
         return (!is_null($this->icon) && strlen($this->icon) > 0 && file_exists( \GT\GradeTracker::dataroot() . '/img/' . $this->icon ))
                     ?
-                        $CFG->wwwroot . '/blocks/gradetracker/download.php?f=' . gt_get_data_path_code( \GT\GradeTracker::dataroot() . '/img/' . $this->icon )
+                        $CFG->wwwroot . '/blocks/gradetracker/download.php?f=' . gt_get_data_path_code( 'img/' . $this->icon )
                     :
                         $CFG->wwwroot . '/blocks/gradetracker/pix/no_image.jpg';
     }

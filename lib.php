@@ -455,6 +455,12 @@ function gt_create_data_path_code($path){
 
     global $DB;
 
+    // Strip the dataroot from the beginning.
+    $path = str_replace(\GT\GradeTracker::dataroot(), '', $path);
+    if (strpos($path, DIRECTORY_SEPARATOR) === 0) {
+        $path = ltrim($path, DIRECTORY_SEPARATOR);
+    }
+
     // See if one already exists for this path
     $record = $DB->get_record("bcgt_file_codes", array("path" => $path));
     if ($record){
