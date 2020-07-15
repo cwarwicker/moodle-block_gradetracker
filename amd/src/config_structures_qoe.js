@@ -1,90 +1,86 @@
 define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
-  var config_structures_qoe = {};
+    var config_structures_qoe = {};
 
-  // Initialise QOE config object
-  config_structures_qoe.init = function(specialVals){
+    // Initialise QOE config object
+    config_structures_qoe.init = function(specialVals){
+
+        // Bind elements
+        config_structures_qoe.bindings();
+
+    }
 
     // Bind elements
-    config_structures_qoe.bindings();
+    config_structures_qoe.bindings = function(){
 
-  }
+        $('.gt_add_qoe_subject').unbind('click');
+        $('.gt_add_qoe_subject').bind('click', function(e){
 
-  // Bind elements
-  config_structures_qoe.bindings = function(){
+            $('#gt_subjects_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_subjects');
 
-    $('.gt_add_qoe_subject').unbind('click');
-    $('.gt_add_qoe_subject').bind('click', function(e){
+            // Rebind new elements
+            config_structures_qoe.bindings();
 
-      $('#gt_subjects_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_subjects');
+            e.preventDefault();
 
-      // Rebind new elements
-      config_structures_qoe.bindings();
+        });
 
-      e.preventDefault();
+        $('.gt_add_qoe_type').unbind('click');
+        $('.gt_add_qoe_type').bind('click', function(e){
 
-    });
+            $('#gt_types_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_types');
 
-    $('.gt_add_qoe_type').unbind('click');
-    $('.gt_add_qoe_type').bind('click', function(e){
+            // Rebind new elements
+            config_structures_qoe.bindings();
 
-      $('#gt_types_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_types');
+            e.preventDefault();
 
-      // Rebind new elements
-      config_structures_qoe.bindings();
+        });
 
-      e.preventDefault();
+        $('.gt_add_qoe_grade').unbind('click');
+        $('.gt_add_qoe_grade').bind('click', function(e){
 
-    });
+            $('#gt_grades_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_grades');
 
-    $('.gt_add_qoe_grade').unbind('click');
-    $('.gt_add_qoe_grade').bind('click', function(e){
+            // Rebind new elements
+            config_structures_qoe.bindings();
 
-      $('#gt_grades_cloneme').clone().attr('id', '').removeClass('gt_hidden').appendTo('#gt_qoe_grades');
+            e.preventDefault();
 
-      // Rebind new elements
-      config_structures_qoe.bindings();
+        });
 
-      e.preventDefault();
+        $('.gt_remove_qoe_row').unbind('click');
+        $('.gt_remove_qoe_row').bind('click', function(e){
 
-    });
+            $(this).parents('tr').remove();
 
-    $('.gt_remove_qoe_row').unbind('click');
-    $('.gt_remove_qoe_row').bind('click', function(e){
+            e.preventDefault();
 
-      $(this).parents('tr').remove();
+        });
 
-      e.preventDefault();
+        // Bind general elements from GT object
+        GT.bind();
 
-    });
+    }
 
-    // Bind general elements from GT object
-    GT.bind();
+    var client = {};
 
-  }
+    //-- Log something to console
+    client.log = function(log){
+        console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
+    }
 
+    //-- Initialise the scripts
+    client.init = function(data) {
 
+        // Bindings
+        config_structures_qoe.init(data);
 
+        client.log('Loaded config_structures_qoe.js');
 
-  var client = {};
+    }
 
-  //-- Log something to console
-  client.log = function(log){
-      console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-  }
-
-  //-- Initialise the scripts
-  client.init = function(data) {
-
-    // Bindings
-    config_structures_qoe.init(data);
-
-    client.log('Loaded config_structures_qoe.js');
-
-  }
-
-  // Return client object
-  return client;
-
+    // Return client object
+    return client;
 
 });
