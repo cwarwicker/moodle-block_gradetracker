@@ -1,41 +1,40 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Update AJAX
- *
  * AJAX script to update grids
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @package    block_gradetracker
+ * @copyright  2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @author     Conn Warwicker
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-require_once '../../../config.php';
-require_once $CFG->dirroot . '/blocks/gradetracker/lib.php';
+require_once('../../../config.php');
+require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
 
 // Have they timed out?
-if ($USER->id <= 0){
-  exit;
+if ($USER->id <= 0) {
+    exit;
 }
 
 $PAGE->set_context( context_system::instance() );
 require_login();
 
 $action = optional_param('action', false, PARAM_TEXT);
-$params = (isset($_POST['params'])) ? $_POST['params'] : false;
+$params = optional_param_array('params', false, PARAM_TEXT);
 
 $GT = new \GT\GradeTracker();
 $TPL = new \GT\Template();
@@ -43,16 +42,12 @@ $User = new \GT\User($USER->id);
 
 \gt_debug("Called update.php: " . print_r($_POST, true));
 
-// If action not defined exit. Don't use reqired_param as the error message will mess up our ajax call
-if (!$action) exit;
+// If action not defined exit.
+if (!$action) {
+    exit;
+}
 
-
-
-
-
-
-switch($action)
-{
+switch($action) {
 
     case 'update_student_criterion':
 
@@ -70,12 +65,12 @@ switch($action)
         $obNum = (isset($params['obNum']) && $params['obNum'] > 0) ? $params['obNum'] : false;
 
         // If the date was set, convert that to a unix timestamp
-        if ($date){
+        if ($date) {
             $date = strtotime($date);
         }
 
         // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$unitID || !$critID || ($met === false && $value === false && $date === false)){
+        if (!$studentID || !$qualID || !$unitID || !$critID || ($met === false && $value === false && $date === false)) {
             \gt_debug("missing params");
             exit;
         }
@@ -85,66 +80,61 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             \gt_debug("Either qualification or student is invalid");
             exit;
         }
 
         // Make sure the unit is valid
         $unit = $Qualification->getUnit($unitID);
-        if (!$unit){
+        if (!$unit) {
             \gt_debug("Could not find unit ID ({$unitID}) on qualification ({$Qualification->getID()} - {$Qualification->getName()})");
             exit;
         }
 
         // Make sure the criterion is valid
         $criterion = $unit->getCriterion($critID);
-        if (!$criterion){
+        if (!$criterion) {
             \gt_debug("Could not find criterion on unit");
             exit;
         }
 
         // We can only do a tickbox or DATE if it has ONE met value
-        if ($met !== false || $date !== false)
-        {
+        if ($met !== false || $date !== false) {
             $awards = $criterion->getPossibleValues(true);
-            if (count($awards) <> 1){
+            if (count($awards) <> 1) {
                 \gt_debug("More or Less than 1 'met' criteria award, so cannot do tickbox");
                 exit;
             }
 
             // If we ticked it
-            if ($met || $date){
+            if ($met || $date) {
                 $award = reset($awards);
             } else {
                 // If we unticked it
                 $award = new \GT\CriteriaAward(0);
             }
 
-        }
-
-        // Using a select menu to send a value id instead
-        elseif ($value !== false)
-        {
+        } else if ($value !== false) {
+            // Using a select menu to send a value id instead
             $award = new \GT\CriteriaAward($value);
         }
 
-
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditUnit($qualID, $unitID)){
+        if (!$User->canEditUnit($qualID, $unitID)) {
             \gt_debug("User has no editing access on this qual unit");
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
             \gt_debug("Student is not assigned to this qual unit");
             exit;
         }
 
         // If we have passed through an Observation Number, this is a Ranged criterion we are storing a
         // value against a Observation with
-        if ($obNum > 0){
+        if ($obNum > 0) {
 
             $criterion->setCriterionObservationValue($obNum, $rangeID, $award->getID(), $date);
 
@@ -153,9 +143,9 @@ switch($action)
             // Otherwise just a normal criterion update
             $criterion->setUserAward($award);
 
-            if ($date !== false){
+            if ($date !== false) {
                 $criterion->setUserAwardDate($date);
-            } elseif (!$award->isMet()) {
+            } else if (!$award->isMet()) {
 
                 // If the value is not MET, reset the award date as that's only for MET values
                 $criterion->setUserAwardDate(0);
@@ -176,24 +166,22 @@ switch($action)
         );
 
         // Merge in the results from the rules
-        if (isset($GLOBALS['rule_response']['awards'])){
-            if (!is_array($result['awards'])){
+        if (isset($GLOBALS['rule_response']['awards'])) {
+            if (!is_array($result['awards'])) {
                 $result['awards'] = array();
             }
             $result['awards'] = $result['awards'] + $GLOBALS['rule_response']['awards'];
         }
 
-        if (isset($GLOBALS['rule_response']['unitawards'])){
-            if (!is_array($result['unitawards'])){
+        if (isset($GLOBALS['rule_response']['unitawards'])) {
+            if (!is_array($result['unitawards'])) {
                 $result['unitawards'] = array();
             }
             $result['unitawards'] = $result['unitawards'] + $GLOBALS['rule_response']['unitawards'];
         }
 
-
         echo json_encode($result);
         exit;
-
 
     break;
 
@@ -207,7 +195,7 @@ switch($action)
         $gradingMethod = (isset($params['gradingMethod'])) ? $params['gradingMethod'] : false;
 
         // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$assessmentID || !in_array($type, array('grade', 'ceta'))){
+        if (!$studentID || !$qualID || !$assessmentID || !in_array($type, array('grade', 'ceta'))) {
             exit;
         }
 
@@ -216,49 +204,46 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Do we have the permissions to edit this qual?
-        if (!$User->canEditQual($qualID)){
+        if (!$User->canEditQual($qualID)) {
             exit;
         }
 
         // Make sure the Assessment is valid
         $Assessment = new \GT\Assessment($assessmentID);
-        if (!$Assessment->isValid()){
+        if (!$Assessment->isValid()) {
             exit;
         }
 
         $award = false;
 
         // If we're using a grading structure, check the award is valid
-        if ($gradingMethod != 'numeric')
-        {
-            if ($type == 'grade'){
+        if ($gradingMethod != 'numeric') {
+            if ($type == 'grade') {
                 $award = new \GT\CriteriaAward($value);
                 // If we specified an actual value, then check if that value is valid
                 // Otherwise we passed through an invalid value in the first place, so must be setting to null
-                if ($value > 0 && !$award->isValid()){
+                if ($value > 0 && !$award->isValid()) {
                     exit;
                 }
-            } elseif ($type == 'ceta'){
+            } else if ($type == 'ceta') {
                 $award = new \GT\QualificationAward($value);
                 // Same as above
-                if ($value > 0 && !$award->isValid()){
+                if ($value > 0 && !$award->isValid()) {
                     exit;
                 }
             }
-        }
-        elseif ($gradingMethod == 'numeric')
-        {
+        } else if ($gradingMethod == 'numeric') {
 
             // Check is within min and max of assessment
             $min = $Assessment->getSetting('numeric_grading_min');
             $max = $Assessment->getSetting('numeric_grading_max');
 
-            if (!is_numeric($value) || $value < $min || $value > $max){
+            if (!is_numeric($value) || $value < $min || $value > $max) {
                 exit;
             }
 
@@ -268,13 +253,13 @@ switch($action)
         $Assessment->setQualification( $Qualification );
         $Assessment->loadStudent( $studentID );
 
-        if ($type == 'grade'){
-            if ($gradingMethod == 'numeric'){
+        if ($type == 'grade') {
+            if ($gradingMethod == 'numeric') {
                 $Assessment->setUserScore($value);
             } else {
                 $Assessment->setUserGrade($award);
             }
-        } elseif ($type == 'ceta'){
+        } else if ($type == 'ceta') {
             $Assessment->setUserCeta($award);
         }
 
@@ -297,7 +282,7 @@ switch($action)
         $value = (isset($params['value'])) ? trim($params['value']) : null;
 
         // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$assessmentID || !$fieldID){
+        if (!$studentID || !$qualID || !$assessmentID || !$fieldID) {
             exit;
         }
 
@@ -306,23 +291,23 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Do we have the permissions to edit this qual?
-        if (!$User->canEditQual($qualID)){
+        if (!$User->canEditQual($qualID)) {
             exit;
         }
 
         // Make sure the Assessment is valid
         $Assessment = new \GT\Assessment($assessmentID);
-        if (!$Assessment->isValid()){
+        if (!$Assessment->isValid()) {
             exit;
         }
 
         $Field = new \GT\FormElement($fieldID);
-        if (!$Field->isValid()){
+        if (!$Field->isValid()) {
             exit;
         }
 
@@ -341,8 +326,6 @@ switch($action)
 
     break;
 
-
-
     case 'update_student_unit':
 
         $studentID = (isset($params['studentID'])) ? $params['studentID'] : false;
@@ -351,7 +334,7 @@ switch($action)
         $value = (isset($params['value'])) ? $params['value'] : false;
 
         // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$unitID || $value === false){
+        if (!$studentID || !$qualID || !$unitID || $value === false) {
             exit;
         }
 
@@ -360,23 +343,23 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Make sure the unit is valid
         $unit = $Qualification->getUnit($unitID);
-        if (!$unit){
+        if (!$unit) {
             exit;
         }
 
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditUnit($qualID, $unitID)){
+        if (!$User->canEditUnit($qualID, $unitID)) {
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
             exit;
         }
 
@@ -394,15 +377,15 @@ switch($action)
         );
 
         // Merge in the results from the rules
-        if (isset($GLOBALS['rule_response']['awards'])){
-            if (!is_array($result['awards'])){
+        if (isset($GLOBALS['rule_response']['awards'])) {
+            if (!is_array($result['awards'])) {
                 $result['awards'] = array();
             }
             $result['awards'] = $result['awards'] + $GLOBALS['rule_response']['awards'];
         }
 
-        if (isset($GLOBALS['rule_response']['unitawards'])){
-            if (!is_array($result['unitawards'])){
+        if (isset($GLOBALS['rule_response']['unitawards'])) {
+            if (!is_array($result['unitawards'])) {
                 $result['unitawards'] = array();
             }
             $result['unitawards'] = $result['unitawards'] + $GLOBALS['rule_response']['unitawards'];
@@ -411,9 +394,7 @@ switch($action)
         echo json_encode($result);
         exit;
 
-
     break;
-
 
     // Just the award date, not the value
     case 'update_student_criterion_award_date':
@@ -425,12 +406,12 @@ switch($action)
         $date = (isset($params['date'])) ? $params['date'] : false;
 
         // If the date was set, convert that to a unix timestamp
-        if ($date){
+        if ($date) {
             $date = strtotime($date);
         }
 
         // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$unitID || !$critID || $date === false){
+        if (!$studentID || !$qualID || !$unitID || !$critID || $date === false) {
             exit;
         }
 
@@ -439,39 +420,37 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Make sure the unit is valid
         $unit = $Qualification->getUnit($unitID);
-        if (!$unit){
+        if (!$unit) {
             exit;
         }
 
         // Make sure the criterion is valid
         $criterion = $unit->getCriterion($critID);
-        if (!$criterion){
+        if (!$criterion) {
             exit;
         }
 
 
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditUnit($qualID, $unitID)){
+        if (!$User->canEditUnit($qualID, $unitID)) {
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
             exit;
         }
 
         $criterion->setUserAwardDate($date);
         $criterion->saveUser();
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
@@ -489,12 +468,12 @@ switch($action)
         $date = (isset($params['date'])) ? $params['date'] : false;
 
         // If the date was set, convert that to a unix timestamp
-        if ($date){
+        if ($date) {
             $date = strtotime($date);
         }
 
         // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$unitID || !$rangeID || !$obNum || $date === false){
+        if (!$studentID || !$qualID || !$unitID || !$rangeID || !$obNum || $date === false) {
             exit;
         }
 
@@ -503,39 +482,37 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Make sure the unit is valid
         $unit = $Qualification->getUnit($unitID);
-        if (!$unit){
+        if (!$unit) {
             exit;
         }
 
         // Make sure the criterion is valid
         $range = $unit->getCriterion($rangeID);
-        if (!$range){
+        if (!$range) {
             exit;
         }
 
 
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditUnit($qualID, $unitID)){
+        if (!$User->canEditUnit($qualID, $unitID)) {
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
             exit;
         }
 
         // Uses a setting
         $range->setUserObservationAwardDate($obNum, $date);
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
@@ -552,7 +529,7 @@ switch($action)
         $value = (isset($params['value'])) ? $params['value'] : false;
 
          // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$unitID || !$critID || $value === false){
+        if (!$studentID || !$qualID || !$unitID || !$critID || $value === false) {
             exit;
         }
 
@@ -561,38 +538,36 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Make sure the unit is valid
         $unit = $Qualification->getUnit($unitID);
-        if (!$unit){
+        if (!$unit) {
             exit;
         }
 
         // Make sure the criterion is valid
         $criterion = $unit->getCriterion($critID);
-        if (!$criterion){
+        if (!$criterion) {
             exit;
         }
 
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditUnit($qualID, $unitID)){
+        if (!$User->canEditUnit($qualID, $unitID)) {
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
             exit;
         }
 
         $criterion->setUserComments($value);
         $criterion->saveUser();
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
@@ -602,11 +577,9 @@ switch($action)
     // This one is for when we have a popup for the Criterion because we have levels of sub crit
     case 'update_student_sub_criterion_comments':
 
-        if (isset($params))
-        {
+        if (isset($params)) {
 
-            foreach($params as $param)
-            {
+            foreach ($params as $param) {
 
                 $studentID = (isset($param['studentID'])) ? $param['studentID'] : false;
                 $qualID = (isset($param['qualID'])) ? $param['qualID'] : false;
@@ -615,7 +588,7 @@ switch($action)
                 $value = (isset($param['value'])) ? $param['value'] : false;
 
                  // If any of these are not set, stop
-                if (!$studentID || !$qualID || !$unitID || !$critID || $value === false){
+                if (!$studentID || !$qualID || !$unitID || !$critID || $value === false) {
                     exit;
                 }
 
@@ -624,29 +597,29 @@ switch($action)
                 $Qualification->loadStudent($studentID);
 
                 // Make sure Qual & Student are valid
-                if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+                if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
                     exit;
                 }
 
                 // Make sure the unit is valid
                 $unit = $Qualification->getUnit($unitID);
-                if (!$unit){
+                if (!$unit) {
                     exit;
                 }
 
                 // Make sure the criterion is valid
                 $criterion = $unit->getCriterion($critID);
-                if (!$criterion){
+                if (!$criterion) {
                     exit;
                 }
 
                 // Do we have the permissions to edit this unit?
-                if (!$User->canEditUnit($qualID, $unitID)){
+                if (!$User->canEditUnit($qualID, $unitID)) {
                     exit;
                 }
 
                 // Is the student actually on this qualification and this unit?
-                if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+                if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
                     exit;
                 }
 
@@ -657,17 +630,12 @@ switch($action)
 
         }
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
 
     break;
-
-
-
 
     case 'update_student_assessment_comments':
 
@@ -677,7 +645,7 @@ switch($action)
         $value = (isset($params['value'])) ? $params['value'] : false;
 
          // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$assID || $value === false){
+        if (!$studentID || !$qualID || !$assID || $value === false) {
             exit;
         }
 
@@ -686,48 +654,41 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Make sure the assessment is valid
         $assessment = $Qualification->getAssessment($assID);
-        if (!$assessment){
+        if (!$assessment) {
             exit;
         }
 
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditQual($qualID)){
+        if (!$User->canEditQual($qualID)) {
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQual($qualID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQual($qualID, "STUDENT")) {
             exit;
         }
-
 
         $assessment->setUserComments($value);
         $assessment->saveUser();
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
 
     break;
 
-
-
     case 'update_student_detail_criterion':
 
-        if (isset($params))
-        {
+        if (isset($params)) {
 
-            foreach($params as $param)
-            {
+            foreach ($params as $param) {
 
                 $studentID = (isset($param['studentID'])) ? $param['studentID'] : false;
                 $qualID = (isset($param['qualID'])) ? $param['qualID'] : false;
@@ -737,12 +698,12 @@ switch($action)
                 $value = (isset($param['value'])) ? $param['value'] : false;
 
                  // If any of these are not set, stop
-                if (!$studentID || !$qualID || !$unitID || !$critID || !$type || $value === false){
+                if (!$studentID || !$qualID || !$unitID || !$critID || !$type || $value === false) {
                     exit;
                 }
 
                 // Must be valid type
-                if ($type != 'custom_value' && $type != 'comments'){
+                if ($type != 'custom_value' && $type != 'comments') {
                     exit;
                 }
 
@@ -751,35 +712,35 @@ switch($action)
                 $Qualification->loadStudent($studentID);
 
                 // Make sure Qual & Student are valid
-                if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+                if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
                     exit;
                 }
 
                 // Make sure the unit is valid
                 $unit = $Qualification->getUnit($unitID);
-                if (!$unit){
+                if (!$unit) {
                     exit;
                 }
 
                 // Make sure the criterion is valid
                 $criterion = $unit->getCriterion($critID);
-                if (!$criterion){
+                if (!$criterion) {
                     exit;
                 }
 
                 // Do we have the permissions to edit this unit?
-                if (!$User->canEditUnit($qualID, $unitID)){
+                if (!$User->canEditUnit($qualID, $unitID)) {
                     exit;
                 }
 
                 // Is the student actually on this qualification and this unit?
-                if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+                if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
                     exit;
                 }
 
-                if ($type == 'custom_value'){
+                if ($type == 'custom_value') {
                     $criterion->setUserCustomValue($value);
-                } elseif ($type == 'comments'){
+                } elseif ($type == 'comments') {
                     $criterion->setUserComments($value);
                 }
 
@@ -789,23 +750,18 @@ switch($action)
 
         }
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
 
     break;
 
-
     case 'mass_update_student_detail_criterion':
 
-        if (isset($params))
-        {
+        if (isset($params)) {
 
-            foreach($params as $param)
-            {
+            foreach ($params as $param) {
 
                 $qualID = (isset($param['qualID'])) ? $param['qualID'] : false;
                 $unitID = (isset($param['unitID'])) ? $param['unitID'] : false;
@@ -815,56 +771,53 @@ switch($action)
                 $valueID = (isset($param['valueID'])) ? $param['valueID'] : false;
 
                 // If any of these are not set, stop
-                if ( $qualID === false || $unitID === false || $critID === false || $courseID === false || $valueID === false){
+                if ( $qualID === false || $unitID === false || $critID === false || $courseID === false || $valueID === false) {
                     exit;
                 }
 
                 // Load the UserQualification object and load the specified user into it
                 $Qualification = new \GT\Qualification\UserQualification($qualID);
-                // $Qualification->loadStudent($studentID);
-                //
+
                 // Make sure Qual
-                if (!$Qualification->isValid()){
+                if (!$Qualification->isValid()) {
                     exit;
                 }
 
                 // Make sure the unit is valid
                 $unit = $Qualification->getUnit($unitID);
-                if (!$unit){
+                if (!$unit) {
                     exit;
                 }
 
                 // Make sure the criterion is valid
                 $criterion = $unit->getCriterion($critID);
-                if (!$criterion){
+                if (!$criterion) {
                     exit;
                 }
 
                 $students = $unit->getUsers("STUDENT", false, $courseID, $groupID);
 
                 // Do we have the permissions to edit this unit?
-                if (!$User->canEditUnit($qualID, $unitID)){
+                if (!$User->canEditUnit($qualID, $unitID)) {
                     exit;
                 }
 
-
                 $award = new \GT\CriteriaAward($valueID);
-
 
                 foreach ($students as $student) {
                     $Qualification->loadStudent($student);
 
                     $unit = $Qualification->getUnit($unitID);
-                    if (!$unit){
+                    if (!$unit) {
                         exit;
                     }
 
                     $criterion = $unit->getCriterion($critID);
-                    if (!$criterion){
+                    if (!$criterion) {
                         exit;
                     }
 
-                    if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+                    if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
                         exit;
                     }
 
@@ -872,21 +825,16 @@ switch($action)
                     $criterion->saveUser();
                 }
 
-
-
             }
 
         }
 
-        $result = array(
-
-        );
+        $result = array();
 
         echo json_encode($result);
         exit;
 
     break;
-
 
     case 'update_student_numeric_point':
 
@@ -898,7 +846,7 @@ switch($action)
         $value = (isset($params['value'])) ? $params['value'] : false;
 
          // If any of these are not set, stop
-        if (!$studentID || !$qualID || !$unitID || !$critID || $value === false){
+        if (!$studentID || !$qualID || !$unitID || !$critID || $value === false) {
             exit;
         }
 
@@ -907,35 +855,35 @@ switch($action)
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
-        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()){
+        if (!$Qualification->isValid() || !$Qualification->getStudent() || !$Qualification->getStudent()->isValid()) {
             exit;
         }
 
         // Make sure the unit is valid
         $unit = $Qualification->getUnit($unitID);
-        if (!$unit){
+        if (!$unit) {
             exit;
         }
 
         // Make sure the criterion is valid
         $criterion = $unit->getCriterion($critID);
-        if (!$criterion){
+        if (!$criterion) {
             exit;
         }
 
         // Do we have the permissions to edit this unit?
-        if (!$User->canEditUnit($qualID, $unitID)){
+        if (!$User->canEditUnit($qualID, $unitID)) {
             exit;
         }
 
         // Is the student actually on this qualification and this unit?
-        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")){
+        if (!$Qualification->getStudent()->isOnQualUnit($qualID, $unitID, "STUDENT")) {
             exit;
         }
 
-        if ($rangeID){
+        if ($rangeID) {
             $range = $unit->getCriterion($rangeID);
-            if (!$range){
+            if (!$range) {
                 exit;
             }
         }
@@ -945,7 +893,7 @@ switch($action)
         $parentAwardID = 0;
 
         // If we are on a Range, we store in the user_range table
-        if ($rangeID){
+        if ($rangeID) {
 
             $parent = $unit->getCriterion( $criterion->getParentID() );
 
@@ -966,7 +914,7 @@ switch($action)
 
             // Get the new total points
             $parent = $unit->getCriterion( $criterion->getParentID() );
-            if ($parent){
+            if ($parent) {
                 $totalPoints = $parent->getTotalPoints();
             }
 
@@ -991,15 +939,23 @@ switch($action)
     case 'update_user_grade':
 
         $student = new \GT\User($params['sID']);
-        if (!$student->isValid()) exit;
+        if (!$student->isValid()) {
+            exit;
+        }
 
         // Should be valid type of grade
-        if ($params['type'] != 'target' && $params['type'] != 'aspirational' && $params['type'] != 'ceta') exit;
+        if ($params['type'] != 'target' && $params['type'] != 'aspirational' && $params['type'] != 'ceta') {
+            exit;
+        }
 
         // Do we have the permission to do this?
-        if ($params['type'] == 'target' && !$User->hasUserCapability('block/gradetracker:edit_target_grades', $student->id, $params['qID'])) exit;
-        elseif ($params['type'] == 'aspirational' && !$User->hasUserCapability('block/gradetracker:edit_aspirational_grades', $student->id, $params['qID'])) exit;
-        elseif ($params['type'] == 'ceta' && !$User->hasUserCapability('block/gradetracker:edit_ceta_grades', $student->id, $params['qID'])) exit;
+        if ($params['type'] == 'target' && !$User->hasUserCapability('block/gradetracker:edit_target_grades', $student->id, $params['qID'])) {
+            exit;
+        } else if ($params['type'] == 'aspirational' && !$User->hasUserCapability('block/gradetracker:edit_aspirational_grades', $student->id, $params['qID'])) {
+            exit;
+        } else if ($params['type'] == 'ceta' && !$User->hasUserCapability('block/gradetracker:edit_ceta_grades', $student->id, $params['qID'])) {
+            exit;
+        }
 
         $award = new \GT\QualificationAward($params['awardID']);
 
@@ -1020,44 +976,56 @@ switch($action)
 
     case 'update_user_attribute':
 
-        if (!isset($params['attribute']) || !isset($params['type']) || !isset($params['value']) || !isset($params['studentID'])) exit;
+        if (!isset($params['attribute']) || !isset($params['type']) || !isset($params['value']) || !isset($params['studentID'])) {
+            exit;
+        }
 
         $student = new \GT\User($params['studentID']);
-        if (!$student->isValid()) exit;
+        if (!$student->isValid()) {
+            exit;
+        }
 
-        switch($params['type'])
-        {
+        switch($params['type']) {
+
             // User unit attribute
             case 'unit':
 
                 // need unitID and qualID to make sure they are actually on the unit somewhere
-                if (!isset($params['unitID']) || !isset($params['qualID'])) exit;
+                if (!isset($params['unitID']) || !isset($params['qualID'])) {
+                    exit;
+                }
 
                 // Do we have the permissions to edit this unit?
-                if (!$User->canEditUnit($params['qualID'], $params['unitID'])){
+                if (!$User->canEditUnit($params['qualID'], $params['unitID'])) {
                     exit;
                 }
 
                 // Get qual and load student into it
                 $qual = new \GT\Qualification\UserQualification($params['qualID']);
-                if (!$qual->isValid() || !$qual->loadStudent($params['studentID'])) exit;
+                if (!$qual->isValid() || !$qual->loadStudent($params['studentID'])) {
+                    exit;
+                }
 
                 // Get unit from qual
                 $unit = $qual->getUnit($params['unitID']);
-                if (!$unit) exit;
+                if (!$unit) {
+                    exit;
+                }
 
                 // Check user is on unit
-                if (!$student->isOnQualUnit($qual->getID(), $unit->getID(), "STUDENT")) exit;
+                if (!$student->isOnQualUnit($qual->getID(), $unit->getID(), "STUDENT")) {
+                    exit;
+                }
 
                 $value = trim($params['value']);
-                if ($value == '') $value = null;
+                if ($value == '') {
+                    $value = null;
+                }
 
                 // Update the attribute, don't use the qualID though, units are qual independant
                 $unit->updateAttribute($params['attribute'], $value, $student->id);
 
-                $result = array(
-
-                );
+                $result = array();
 
                 echo json_encode($result);
                 exit;
@@ -1071,10 +1039,12 @@ switch($action)
 
     case 'set_debugging':
 
-        if (!\is_siteadmin()) exit;
+        if (!\is_siteadmin()) {
+            exit;
+        }
 
         $value = (isset($params['value'])) ? $params['value'] : false;
-        if ($value){
+        if ($value) {
             $_SESSION['gt_debug'] = true;
         } else {
             unset($_SESSION['gt_debug']);
@@ -1088,10 +1058,12 @@ switch($action)
 
     case 'clear_debugging':
 
-        if (!\is_siteadmin()) exit;
+        if (!\is_siteadmin()) {
+            exit;
+        }
 
         $file = \GT\GradeTracker::dataroot() . "/debug/{$USER->id}.txt";
-        if (file_exists($file)){
+        if (file_exists($file)) {
             file_put_contents($file, '');
         }
 
@@ -1103,7 +1075,9 @@ switch($action)
 
     case 'register_site':
 
-        if (!\is_siteadmin()) exit;
+        if (!\is_siteadmin()) {
+            exit;
+        }
 
         $Site = new \GT\Site();
         $Site->load($params);
@@ -1113,7 +1087,5 @@ switch($action)
         exit;
 
     break;
-
-
 
 }
