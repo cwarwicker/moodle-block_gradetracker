@@ -1,34 +1,35 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * GT\Qualification\Data
- *
  * This class handles all the reporting functionality and data for Qualifications
- * 
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
+ * @copyright 2020 Conn Warwicker
+ * @package block_gradetracker
+ * @version 2.0
+ * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT\Qualification;
 
-require_once 'Qualification.class.php';
+defined('MOODLE_INTERNAL') or die();
+
+require_once('Qualification.class.php');
 
 class DataQualification extends \GT\Qualification {
-    
+
     /**
      * Build the SQL query to get a full report on all the students on this qualification
      * @global \GT\Qualification\type $DB
@@ -40,22 +41,21 @@ class DataQualification extends \GT\Qualification {
      * @param type $specificAwards
      * @return type
      */
-    public function getQualificationReportStudents($unitAwards, $view, $criteriaNames, $shortCriteriaNames, $courseID = false, $specificAwards = false){
-        
+    public function getQualificationReportStudents($unitAwards, $view, $criteriaNames, $shortCriteriaNames, $courseID = false, $specificAwards = false) {
+
         global $DB;
-        
-                                  
+
         $usedFieldNames = array();
         $usedFieldNames['unit'] = array();
         $usedFieldNames['crit'] = array();
-        
+
         $inSpecificAwards = '';
-        if ($specificAwards){
+        if ($specificAwards) {
             $inSpecificAwards = " OR a.name IN (".  gt_create_sql_placeholders($specificAwards).") ";
         }
-        
+
         $params = array();
-        
+
         $sql = "SELECT DISTINCT 
                 u.id, u.username, u.firstname, u.lastname, 
                 tg.name as targetgrade, tg.id as targetgradeid, tg.rank as targetgraderank,
@@ -69,39 +69,32 @@ class DataQualification extends \GT\Qualification {
                 uu.cnt as unitscount, uu.ccnt as creditscount,
                 uua.cnt as unitsawardedcount, uua.ccnt as creditsawardedcount,
                 tbl_cA_all.cnt as critawardcnt_all,tbl_c_all.cnt as critcnt_all,";
-        
-                if ($unitAwards)
-                {
-                    foreach($unitAwards as $award)
-                    {
-                        $fieldName = \gt_make_db_field_safe($award, $usedFieldNames['unit']);
-                        $sql .= "tbl_uA_{$fieldName}.cnt as unitawardcnt_{$fieldName},";
-                    }
-                }       
-                
-                if ($view == 'view-criteria-short' && $shortCriteriaNames)
-                {
 
-                    foreach($shortCriteriaNames as $name)
-                    {
-                        $name = \gt_make_db_field_safe($name, $usedFieldNames['crit']);
-                        $sql .= "tbl_cA_{$name}.cnt as critawardcnt_{$name},";
-                        $sql .= "tbl_c_{$name}.cnt as critcnt_{$name},";
-                    }
+        if ($unitAwards) {
+            foreach ($unitAwards as $award) {
+                $fieldName = \gt_make_db_field_safe($award, $usedFieldNames['unit']);
+                $sql .= "tbl_uA_{$fieldName}.cnt as unitawardcnt_{$fieldName},";
+            }
+        }
 
-                }
-                elseif ($view == 'view-criteria-full' && $criteriaNames)
-                {
+        if ($view == 'view-criteria-short' && $shortCriteriaNames) {
 
-                    foreach($criteriaNames as $name)
-                    {
-                        $name = \gt_make_db_field_safe($name['name'], $usedFieldNames['crit']);
-                        $sql .= "tbl_cA_{$name}.cnt as critawardcnt_{$name},";
-                        $sql .= "tbl_c_{$name}.cnt as critcnt_{$name},";
-                    }
+            foreach ($shortCriteriaNames as $name) {
+                $name = \gt_make_db_field_safe($name, $usedFieldNames['crit']);
+                $sql .= "tbl_cA_{$name}.cnt as critawardcnt_{$name},";
+                $sql .= "tbl_c_{$name}.cnt as critcnt_{$name},";
+            }
 
-                }
-        
+        } else if ($view == 'view-criteria-full' && $criteriaNames) {
+
+            foreach ($criteriaNames as $name) {
+                $name = \gt_make_db_field_safe($name['name'], $usedFieldNames['crit']);
+                $sql .= "tbl_cA_{$name}.cnt as critawardcnt_{$name},";
+                $sql .= "tbl_c_{$name}.cnt as critcnt_{$name},";
+            }
+
+        }
+
         $sql .= "1
                 FROM {user} u 
                 INNER JOIN {bcgt_user_quals} uq ON uq.userid = u.id 
@@ -169,7 +162,7 @@ class DataQualification extends \GT\Qualification {
                 ) uua ON uua.userid = u.id
                 
                 ";
-        
+
         $params[] = $this->id;
         $params[] = $this->id;
         $params[] = $this->id;
@@ -177,12 +170,10 @@ class DataQualification extends \GT\Qualification {
         $params[] = $this->id;
         $params[] = $this->id;
         $params[] = $this->id;
-        
+
         // Unit awards
-        if ($unitAwards)
-        {
-            foreach($unitAwards as $award)
-            {
+        if ($unitAwards) {
+            foreach ($unitAwards as $award) {
                 $fieldName = \gt_make_db_field_safe($award, $usedFieldNames['unit']);
                 $sql .= "LEFT JOIN (
 
@@ -200,18 +191,16 @@ class DataQualification extends \GT\Qualification {
                 $params[] = $award;
             }
         }
-        
+
         // Criteria
-                        
+
         // Short criteria names, e.g. for BTEC where we want to group them by first letter "P", "M", "D"
-        if ($view == 'view-criteria-short' && $shortCriteriaNames)
-        {
-            
-            foreach($shortCriteriaNames as $name)
-            {
-                
+        if ($view == 'view-criteria-short' && $shortCriteriaNames) {
+
+            foreach ($shortCriteriaNames as $name) {
+
                 $name = \gt_make_db_field_safe($name, $usedFieldNames['crit']);
-                
+
                 // How many awarded
                 $sql .= "LEFT JOIN ( 
                             SELECT uc.userid, COUNT(uc.id) as cnt
@@ -224,15 +213,15 @@ class DataQualification extends \GT\Qualification {
                             GROUP BY uc.userid
                         ) tbl_cA_{$name} ON tbl_cA_{$name}.userid = u.id ";
                 $params[] = $this->id;
-                
-                if ($specificAwards){
-                    foreach($specificAwards as $specificName){
+
+                if ($specificAwards) {
+                    foreach ($specificAwards as $specificName) {
                         $params[] = $specificName;
                     }
                 }
-                
+
                 $params[] = "{$name}%";
-                
+
                 // How many in total
                 $sql .= "LEFT JOIN (
 
@@ -244,24 +233,21 @@ class DataQualification extends \GT\Qualification {
                             GROUP BY uqu.userid
 
                         ) tbl_c_{$name} ON tbl_c_{$name}.userid = u.id ";
-                
+
                 $params[] = $this->id;
                 $params[] = "{$name}%";
-                
+
             }
-            
-        }
-        
-        // Full criteria names, where we only have a few different criteria names across all units and we want
-        // to see the stats for each one, e.g. "Task 1", "Task 2"
-        elseif ($view == 'view-criteria-full' && $criteriaNames)
-        {
-                        
-            foreach($criteriaNames as $name)
-            {
-                
+
+        } else if ($view == 'view-criteria-full' && $criteriaNames) {
+
+            // Full criteria names, where we only have a few different criteria names across all units and we want
+            // to see the stats for each one, e.g. "Task 1", "Task 2"
+
+            foreach ($criteriaNames as $name) {
+
                 $name = \gt_make_db_field_safe($name['name'], $usedFieldNames['crit']);
-                
+
                 // How many awarded
                 $sql .= "LEFT JOIN ( 
                             SELECT uc.userid, COUNT(uc.id) as cnt
@@ -274,15 +260,15 @@ class DataQualification extends \GT\Qualification {
                             GROUP BY uc.userid
                         ) tbl_cA_{$name} ON tbl_cA_{$name}.userid = u.id ";
                 $params[] = $this->id;
-                
-                if ($specificAwards){
-                    foreach($specificAwards as $specificName){
+
+                if ($specificAwards) {
+                    foreach ($specificAwards as $specificName) {
                         $params[] = $specificName;
                     }
                 }
-                
+
                 $params[] = $name;
-                
+
                 // How many in total
                 $sql .= "LEFT JOIN (
 
@@ -294,14 +280,14 @@ class DataQualification extends \GT\Qualification {
                             GROUP BY uqu.userid
 
                         ) tbl_c_{$name} ON tbl_c_{$name}.userid = u.id ";
-                
+
                 $params[] = $this->id;
                 $params[] = $name;
-                
+
             }
-            
+
         }
-        
+
         $sql .= "
                 LEFT JOIN ( 
                     SELECT uc.userid, COUNT(uc.id) as cnt
@@ -313,15 +299,15 @@ class DataQualification extends \GT\Qualification {
                     WHERE uqu.qualid = ? AND (a.met = 1 {$inSpecificAwards}) AND c.deleted = 0
                     GROUP BY uc.userid
                 ) tbl_cA_all ON tbl_cA_all.userid = u.id ";
-                
+
         $params[] = $this->id;
-        
-        if ($specificAwards){
-            foreach($specificAwards as $specificName){
+
+        if ($specificAwards) {
+            foreach ($specificAwards as $specificName) {
                 $params[] = $specificName;
             }
         }
-                    
+
         $sql .= "LEFT JOIN (
                     SELECT COUNT(c.id) as cnt, uqu.userid
                     FROM {bcgt_user_qual_units} uqu
@@ -331,11 +317,11 @@ class DataQualification extends \GT\Qualification {
                     GROUP BY uqu.userid
 
                 ) tbl_c_all ON tbl_c_all.userid = u.id  ";
-        
+
         $params[] = $this->id;
-        
+
         // Course
-        if ($courseID > 0){
+        if ($courseID > 0) {
             $sql .= "LEFT JOIN (
                         SELECT ra.userid
                         FROM {role_assignments} ra
@@ -348,18 +334,18 @@ class DataQualification extends \GT\Qualification {
 
         $sql .= " WHERE uq.qualid = ? AND uq.role = 'student' AND u.deleted = 0 ";
         $params[] = $this->id;
-        
+
         // Course
-        if ($courseID > 0){
+        if ($courseID > 0) {
             $sql .= "AND tbl_role_assign.userid IS NOT NULL ";
         }
-        
+
         $sql .= "ORDER BY u.lastname, u.firstname, u.username";
-                                               
+
         $records = $DB->get_records_sql($sql, $params);
-        
+
         return $records;
-        
+
     }
     /**
      * Build the SQL query to get the full report on all the units on this qual
@@ -368,27 +354,24 @@ class DataQualification extends \GT\Qualification {
      * @param type $unitAwards
      * @return type
      */
-    public function getQualificationReportUnits($unitAwards){
-        
+    public function getQualificationReportUnits($unitAwards) {
+
         global $CFG, $DB;
-        
+
         $usedFieldNames = array();
         $usedFieldNames['unit'] = array();
-        
+
         $params = array();
-        
+
         $sql = "SELECT u.id, uu.cnt as studsonunit, uua.cnt as studsawardedunit, ";
-        
-        if ($unitAwards)
-        {
-            foreach($unitAwards as $award)
-            {
+
+        if ($unitAwards) {
+            foreach ($unitAwards as $award) {
                 $fieldName = \gt_make_db_field_safe($award, $usedFieldNames['unit']);
                 $sql .= "tbl_uA_{$fieldName}.cnt as unitawardcnt_{$fieldName},";
             }
-        }       
+        }
 
-        
         $sql .= "1
                 FROM {bcgt_units} u
                 INNER JOIN {bcgt_qual_units} qu ON qu.unitid = u.id
@@ -408,16 +391,13 @@ class DataQualification extends \GT\Qualification {
                     WHERE uu.awardid > 0 AND qu.qualid = ?
                     GROUP BY uu.unitid
                 ) as uua ON uua.unitid = u.id ";
-        
+
         $params[] = $this->id;
         $params[] = $this->id;
-        
-         
+
         // Unit awards
-        if ($unitAwards)
-        {
-            foreach($unitAwards as $award)
-            {
+        if ($unitAwards) {
+            foreach ($unitAwards as $award) {
                 $fieldName = \gt_make_db_field_safe($award, $usedFieldNames['unit']);
                 $sql .= "LEFT JOIN (
 
@@ -434,19 +414,18 @@ class DataQualification extends \GT\Qualification {
                 $params[] = $award;
             }
         }
-        
-        
+
         $sql .= " WHERE qu.qualid = ?
                 ORDER BY u.unitnumber * 1, u.unitnumber, u.name";
-        
+
         $params[] = $this->id;
 
         $records = $DB->get_records_sql($sql, $params);
-                
+
         return $records;
-        
+
     }
-    
+
     /**
      * Count the criteria on a qual, with a given grading structure id
      * @global type $DB
@@ -454,22 +433,22 @@ class DataQualification extends \GT\Qualification {
      * @param type $gradingStructureID
      * @return type
      */
-    public function countCriteriaByGradingStructureID($gradingStructureID){
-        
+    public function countCriteriaByGradingStructureID($gradingStructureID) {
+
         global $DB;
-        
+
         $sql = "SELECT COUNT(distinct c.id) as 'cnt'
                 FROM {bcgt_criteria} c
                 INNER JOIN {bcgt_units} u ON u.id = c.unitid
                 INNER JOIN {bcgt_qual_units} qu ON qu.unitid = u.id
                 WHERE qu.qualid = ? AND c.gradingstructureid = ?";
-        
+
         $record = $DB->get_record_sql($sql, array($this->id, $gradingStructureID));
-        
+
         return ($record) ? $record->cnt : 0;
-        
+
     }
-    
+
     /**
      * Count number of criteria on this qualification with this grading structure that this student has achieved
      * @global \GT\Qualification\type $DB
@@ -477,10 +456,10 @@ class DataQualification extends \GT\Qualification {
      * @param type $studentID
      * @return type
      */
-    public function countCriteriaAwardsByGradingStructure($gradingStructureID, $studentID){
-        
+    public function countCriteriaAwardsByGradingStructure($gradingStructureID, $studentID) {
+
         global $DB;
-        
+
         $sql = "SELECT COUNT(uc.id) as 'cnt'
                 FROM {bcgt_criteria} c
                 INNER JOIN {bcgt_units} u ON u.id = c.unitid
@@ -488,11 +467,11 @@ class DataQualification extends \GT\Qualification {
                 INNER JOIN {bcgt_user_criteria} uc ON uc.critid = c.id
                 INNER JOIN {bcgt_criteria_awards} a ON a.id = uc.awardid
                 WHERE qu.qualid = ? AND c.gradingstructureid = ? AND uc.userid = ? AND a.met = 1";
-        
+
         $record = $DB->get_record_sql($sql, array($this->id, $gradingStructureID, $studentID));
-        
+
         return ($record) ? $record->cnt : 0;
-        
+
     }
-    
+
 }

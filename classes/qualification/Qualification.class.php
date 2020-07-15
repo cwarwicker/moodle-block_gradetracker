@@ -1,31 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Qualification
- *
  * This is the overall class that deals with Qualification
  *
  * This stores the general information about the qualification
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright 2020 Conn Warwicker
+ * @package block_gradetracker
+ * @version 2.0
+ * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class Qualification {
 
@@ -56,12 +57,10 @@ class Qualification {
 
         $this->hash = \gt_rand_str(5);
 
-        if ($id)
-        {
+        if ($id) {
 
             $record = $DB->get_record("bcgt_qualifications", array("id" => $id));
-            if ($record)
-            {
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->name = $record->name;
@@ -69,7 +68,7 @@ class Qualification {
                 $this->deleted = $record->deleted;
 
                 // Load custom form elements
-                if (!isset($GTEXE->QUAL_MIN_LOAD) || !$GTEXE->QUAL_MIN_LOAD){
+                if (!isset($GTEXE->QUAL_MIN_LOAD) || !$GTEXE->QUAL_MIN_LOAD) {
                     $this->loadCustomFormElements();
                 }
 
@@ -82,43 +81,43 @@ class Qualification {
      * Is it a valid qual from the DB?
      * @return type
      */
-    public function isValid(){
+    public function isValid() {
         return ($this->id !== false);
     }
 
-    public function isDeleted(){
+    public function isDeleted() {
         return ($this->deleted == 1);
     }
 
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
-    public function getName(){
+    public function getName() {
         return \gt_html($this->name);
     }
 
-    public function setID($id){
+    public function setID($id) {
         $this->id = $id;
         return $this;
     }
 
-    public function setName($name){
+    public function setName($name) {
         $this->name = trim($name);
     }
 
-    public function setBuildID($id){
+    public function setBuildID($id) {
         $this->buildID = $id;
         $this->build = null;
         return $this;
     }
 
-    public function setDeleted($val){
+    public function setDeleted($val) {
         $this->delete = $val;
         return $this;
     }
 
-    public function setStructureID($id){
+    public function setStructureID($id) {
         $this->structureID = $id;
         return $this;
     }
@@ -127,15 +126,15 @@ class Qualification {
      * Get the display name of the qualification
      * @return type
      */
-    public function getDisplayName(){
+    public function getDisplayName() {
 
-        if (isset($this->displayName)){
+        if (isset($this->displayName)) {
             return $this->displayName;
         }
 
         // CHeck if we have a custom display name first
         $QualStructure = new \GT\QualificationStructure($this->getStructureID());
-        if ( ($format = $QualStructure->getCustomDisplayNameFormat()) ){
+        if ( ($format = $QualStructure->getCustomDisplayNameFormat()) ) {
 
             $level = $this->getBuild()->getLevel();
             $subType = $this->getBuild()->getSubType();
@@ -169,9 +168,9 @@ class Qualification {
      * Get the short display name of the qualification
      * @return type
      */
-    public function getShortDisplayName(){
+    public function getShortDisplayName() {
 
-        if (isset($this->shortDisplayName)){
+        if (isset($this->shortDisplayName)) {
             return $this->shortDisplayName;
         }
 
@@ -188,7 +187,7 @@ class Qualification {
 
     }
 
-    public function getBuildID(){
+    public function getBuildID() {
         return $this->buildID;
     }
 
@@ -196,9 +195,9 @@ class Qualification {
      * Get the Build object from the build id
      * @return type
      */
-    public function getBuild(){
+    public function getBuild() {
 
-        if (!isset($this->build)){
+        if (!isset($this->build)) {
 
             $this->build = false;
             $build = new \GT\QualificationBuild($this->buildID);
@@ -214,10 +213,12 @@ class Qualification {
      * Get the default number of credits expected by the Build of this Qualification
      * @return boolean
      */
-    public function getDefaultCredits(){
+    public function getDefaultCredits() {
 
         $this->getBuild();
-        if (!$this->build || !$this->build->isValid()) return false;
+        if (!$this->build || !$this->build->isValid()) {
+            return false;
+        }
 
         return $this->build->getDefaultCredits();
 
@@ -227,18 +228,16 @@ class Qualification {
      * Count up the number of credits on the units on this qualification
      * @return type
      */
-    public function countUnitCredits(){
+    public function countUnitCredits() {
 
         $total = 0;
 
-        if (!$this->units){
+        if (!$this->units) {
             $this->loadUnits();
         }
 
-        if ($this->units)
-        {
-            foreach($this->units as $unit)
-            {
+        if ($this->units) {
+            foreach ($this->units as $unit) {
                 $total += $unit->getCredits();
             }
         }
@@ -247,13 +246,13 @@ class Qualification {
 
     }
 
-    public function getDeleted(){
+    public function getDeleted() {
         return $this->deleted;
     }
 
-    public function getStructureID(){
+    public function getStructureID() {
 
-        if (!is_null($this->structureID)){
+        if (!is_null($this->structureID)) {
             return $this->structureID;
         }
 
@@ -262,7 +261,7 @@ class Qualification {
 
     }
 
-    public function getStructure(){
+    public function getStructure() {
 
         $structure = new \GT\QualificationStructure($this->getStructureID());
         return $structure;
@@ -272,7 +271,7 @@ class Qualification {
      * Get the structure name
      * @return \GT\QualificationStructure
      */
-    public function getStructureName(){
+    public function getStructureName() {
 
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getDisplayName() : false;
@@ -283,7 +282,7 @@ class Qualification {
      * Get the structure name
      * @return \GT\QualificationStructure
      */
-    public function getStructureExactName(){
+    public function getStructureExactName() {
 
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getName() : false;
@@ -294,7 +293,7 @@ class Qualification {
      * Get the level name
      * @return type
      */
-    public function getLevelName(){
+    public function getLevelName() {
 
         $level = $this->getBuild()->getLevel();
         return ($level) ? $level->getName() : false;
@@ -305,14 +304,14 @@ class Qualification {
      * Get the shortname of the level
      * @return type
      */
-    public function getLevelShortName(){
+    public function getLevelShortName() {
 
         $level = $this->getBuild()->getLevel();
         return ($level) ? $level->getShortName() : false;
 
     }
 
-    public function getLevelOrderNum(){
+    public function getLevelOrderNum() {
 
         $level = $this->getBuild()->getLevel();
         return ($level) ? $level->getOrderNumber() : false;
@@ -323,7 +322,7 @@ class Qualification {
      * Get the subtype name
      * @return type
      */
-    public function getSubTypeName(){
+    public function getSubTypeName() {
 
         $subType = $this->getBuild()->getSubType();
         return ($subType) ? $subType->getName() : false;
@@ -334,7 +333,7 @@ class Qualification {
      * Get the subtype shortname
      * @return type
      */
-    public function getSubTypeShortName(){
+    public function getSubTypeShortName() {
 
         $subType = $this->getBuild()->getSubType();
         return ($subType) ? $subType->getShortName() : false;
@@ -347,21 +346,20 @@ class Qualification {
      * @param type $unitID
      * @return \GT\Unit|boolean
      */
-    public function getOneUnit($unitID){
+    public function getOneUnit($unitID) {
 
         global $DB;
 
         // If it's already been retrieved, return that
-        if (array_key_exists($unitID, $this->units)){
+        if (array_key_exists($unitID, $this->units)) {
             return $this->units[$unitID];
         }
 
         // Otherwise get it out of the database and load it into the units array
         $qualUnit = $DB->get_record("bcgt_qual_units", array("qualid" => $this->id, "unitid" => $unitID));
-        if ($qualUnit){
+        if ($qualUnit) {
             $unit = new \GT\Unit($qualUnit->unitid);
-            if ($unit->isValid())
-            {
+            if ($unit->isValid()) {
                 $unit->setQualStructureID($this->getStructureID());
                 $this->units[$unit->getID()] = $unit;
                 return $unit;
@@ -378,7 +376,7 @@ class Qualification {
      * @param int $unitID
      * @return type
      */
-    public function getUnit($unitID){
+    public function getUnit($unitID) {
 
         $this->getUnits();
         return ($this->units && array_key_exists($unitID, $this->units)) ? $this->units[$unitID] : false;
@@ -389,10 +387,10 @@ class Qualification {
      * Return the units on this qualification. Loading them first if we've not tried yet.
      * @return type
      */
-    public function getUnits(){
+    public function getUnits() {
 
         // If units is false, that means we've not tried to access them yet in this object
-        if ($this->units === false){
+        if ($this->units === false) {
             $this->loadUnits();
         }
 
@@ -404,7 +402,7 @@ class Qualification {
      * Count units on qual
      * @return type
      */
-    public function countUnits(){
+    public function countUnits() {
 
         $units = $this->getUnits();
         return count($units);
@@ -415,7 +413,7 @@ class Qualification {
      * Load the units on this qualification
      * @global \GT\type $DB
      */
-    public function loadUnits(){
+    public function loadUnits() {
 
         global $DB;
 
@@ -423,13 +421,10 @@ class Qualification {
 
         $this->units = array();
         $qualUnits = $DB->get_records("bcgt_qual_units", array("qualid" => $this->id));
-        if ($qualUnits)
-        {
-            foreach($qualUnits as $qualUnit)
-            {
+        if ($qualUnits) {
+            foreach ($qualUnits as $qualUnit) {
                 $unit = new \GT\Unit($qualUnit->unitid);
-                if ($unit->isValid() && !$unit->isDeleted())
-                {
+                if ($unit->isValid() && !$unit->isDeleted()) {
                     $unit->setQualStructureID($this->getStructureID());
                     $this->units[$unit->getID()] = $unit;
                 }
@@ -437,19 +432,19 @@ class Qualification {
         }
 
         // Default sort
-        if (!isset($GTEXE->UNIT_NO_SORT) || !$GTEXE->UNIT_NO_SORT){
+        if (!isset($GTEXE->UNIT_NO_SORT) || !$GTEXE->UNIT_NO_SORT) {
             $this->sortUnits();
         }
 
     }
 
-    protected function sortUnits(){
+    protected function sortUnits() {
 
         $Sorter = new \GT\Sorter();
         $structure = $this->getStructure();
 
         $customOrder = $structure->getCustomOrder('units');
-        if ($customOrder){
+        if ($customOrder) {
             $Sorter->sortUnitsCustom($this->units, $customOrder);
         } else {
             $Sorter->sortUnits($this->units);
@@ -461,16 +456,15 @@ class Qualification {
      * Get a unique list of the unit award names for all units on this qual, used in reporting
      * @return type
      */
-    public function getUnitAwards(){
+    public function getUnitAwards() {
 
         $return = array();
         $units = $this->getUnits();
 
-        if ($units)
-        {
-            foreach ($units as $unit){
+        if ($units) {
+            foreach ($units as $unit) {
                 $unitAwards = $unit->getPossibleAwards();
-                foreach ($unitAwards as $award){
+                foreach ($unitAwards as $award) {
                     $return[] = $award->getName();
                 }
             }
@@ -486,11 +480,11 @@ class Qualification {
      * @param int $courseID If this is set, then the user must also be enrolled on this course in this role
      * @return type
      */
-    public function getUsers($role, $courseID = false, $groupID = false, $page = false){
+    public function getUsers($role, $courseID = false, $groupID = false, $page = false) {
 
         // Reload them if we haven't loaded yet, or if we specify a page
         // If we are using a page number, they don't get stored in the array
-        if (!isset($this->users[$role][$courseID][$groupID]) || $page > 0){
+        if (!isset($this->users[$role][$courseID][$groupID]) || $page > 0) {
             return $this->loadUsers($role, $courseID, $groupID, $page);
         }
 
@@ -503,7 +497,7 @@ class Qualification {
      * @param type $role
      * @return type
      */
-    public function countUsers($role){
+    public function countUsers($role) {
 
         $users = $this->getUsers($role);
         return count($users);
@@ -516,12 +510,12 @@ class Qualification {
      * @param type $role
      * @param int $courseID If this is set, then the user must also be enrolled on this course in this role
      */
-    public function loadUsers($role, $courseID = false, $groupID = false, $page = false){
+    public function loadUsers($role, $courseID = false, $groupID = false, $page = false) {
 
         global $DB, $GT;
 
         // Store in array so don't have to get this exact lot again in this process
-        if (!$page){
+        if (!$page) {
             $this->users[$role][$courseID][$groupID] = array();
         }
 
@@ -532,13 +526,11 @@ class Qualification {
                 FROM {user} u
                 INNER JOIN {bcgt_user_quals} uq ON uq.userid = u.id ";
 
-
         // Only apply course & group filters when we're getting students
-        if ($role == 'STUDENT')
-        {
+        if ($role == 'STUDENT') {
 
             // Group ID
-            if ($groupID > 0){
+            if ($groupID > 0) {
 
                 $sql .= "
                             INNER JOIN
@@ -551,10 +543,7 @@ class Qualification {
 
                 $params[] = $groupID;
 
-            }
-
-            // Course ID
-            elseif ($courseID > 0){
+            } else if ($courseID > 0) {
 
                 $shortnames = $GT->getStudentRoles();
                 $in = \gt_create_sql_placeholders($shortnames);
@@ -585,9 +574,11 @@ class Qualification {
 
         // Page - If we are looking at a class grid
         $limit = \GT\Setting::getSetting('class_grid_paging');
-        if ($limit <= 0) $limit = false;
+        if ($limit <= 0) {
+            $limit = false;
+        }
 
-        if ($page && is_numeric($limit)){
+        if ($page && is_numeric($limit)) {
             $start = ($page - 1) * $limit;
         } else {
             $limit = null;
@@ -596,10 +587,8 @@ class Qualification {
 
         $records = $DB->get_records_sql($sql, $params, $start, $limit);
 
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $user = new \GT\User($record->id);
                 $return[] = $user;
             }
@@ -609,9 +598,8 @@ class Qualification {
         $Sorter = new \GT\Sorter();
         $Sorter->sortUsers($return);
 
-
         // Store in array
-        if (!$page){
+        if (!$page) {
             $this->users[$role][$courseID][$groupID] = $return;
         }
 
@@ -624,9 +612,9 @@ class Qualification {
      * Loading them if they haven't already been loaded
      * @return type
      */
-    public function getCourses(){
+    public function getCourses() {
 
-        if ($this->courses === false){
+        if ($this->courses === false) {
             $this->loadCourses();
         }
 
@@ -639,7 +627,7 @@ class Qualification {
      * @param type $courseID
      * @return type
      */
-    public function getCourse($courseID){
+    public function getCourse($courseID) {
 
         $courses = $this->getCourses();
         return (array_key_exists($courseID, $courses)) ? $courses[$courseID] : false;
@@ -651,18 +639,15 @@ class Qualification {
      * @global \GT\type $DB
      * @return \GT\Course
      */
-    public function loadCourses(){
+    public function loadCourses() {
 
         global $DB;
 
         $records = $DB->get_records("bcgt_course_quals", array("qualid" => $this->id));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $course = new \GT\Course($record->courseid);
-                if ($course->isValid())
-                {
+                if ($course->isValid()) {
                     $this->courses[$course->id] = $course;
                 }
             }
@@ -677,14 +662,14 @@ class Qualification {
      * emptyGroups variable is for hiding empty groups
      * @return type
      */
-    public function getGroups($courseID){
+    public function getGroups($courseID) {
 
-        if (!$this->groups){
+        if (!$this->groups) {
             $this->groups = array();
         }
 
         // Load the groups on this course
-        if (!array_key_exists($courseID, $this->groups)){
+        if (!array_key_exists($courseID, $this->groups)) {
             $this->groups[$courseID] = $this->loadGroups($courseID);
         }
 
@@ -698,9 +683,9 @@ class Qualification {
      * @global \GT\type $DB
      * @return \GT\Course
      */
-    public function loadGroups($courseID){
+    public function loadGroups($courseID) {
 
-        if (!$this->groups){
+        if (!$this->groups) {
             $this->groups = array();
         }
 
@@ -711,35 +696,34 @@ class Qualification {
         );
 
         $course = $this->getCourse($courseID);
-        if ($course)
-        {
+        if ($course) {
 
             // Direct
             $groups = groups_get_all_groups($course->id);
-            foreach($groups as $group){
+            foreach ($groups as $group) {
                 $members = groups_get_members($group->id);
                 $group->usercnt = count($members);
-                if ($group->usercnt > 0){
+                if ($group->usercnt > 0) {
                     $this->groups[$courseID]['direct'][$group->id] = $group;
                 }
             }
 
             // Parent
             $parents = $course->getParentCourses();
-            if ($parents){
-                foreach($parents as $parent){
+            if ($parents) {
+                foreach ($parents as $parent) {
                     $this->groups[$courseID]['parent'][$parent->id] = array();
                     $groups = groups_get_all_groups($parent->id);
-                    foreach($groups as $group){
+                    foreach ($groups as $group) {
                         $members = groups_get_members($group->id);
                         $group->usercnt = count($members);
-                        if ($group->usercnt > 0){
+                        if ($group->usercnt > 0) {
                             $this->groups[$courseID]['parent'][$parent->id][$group->id] = $group;
                         }
                     }
 
                     // Remove empty
-                    if (!$this->groups[$courseID]['parent'][$parent->id]){
+                    if (!$this->groups[$courseID]['parent'][$parent->id]) {
                         unset($this->groups[$courseID]['parent'][$parent->id]);
                     }
 
@@ -748,20 +732,20 @@ class Qualification {
 
             // Children
             $children = $course->getChildCourses();
-            if ($children){
-                foreach($children as $child){
+            if ($children) {
+                foreach ($children as $child) {
                     $this->groups[$courseID]['child'][$child->id] = array();
                     $groups = groups_get_all_groups($child->id);
-                    foreach($groups as $group){
+                    foreach ($groups as $group) {
                         $members = groups_get_members($group->id);
                         $group->usercnt = count($members);
-                        if ($group->usercnt > 0){
+                        if ($group->usercnt > 0) {
                             $this->groups[$courseID]['child'][$child->id][$group->id] = $group;
                         }
                     }
 
                     // Remove empty
-                    if (!$this->groups[$courseID]['child'][$child->id]){
+                    if (!$this->groups[$courseID]['child'][$child->id]) {
                         unset($this->groups[$courseID]['child'][$child->id]);
                     }
 
@@ -779,35 +763,40 @@ class Qualification {
      * Count the number of columns we need in the assessment student grid, so we can do the colspans correctly
      * @return int
      */
-    public function countAssessmentGridColumns(){
+    public function countAssessmentGridColumns() {
 
         $cols = 0;
 
         $cols++; // Qual title
 
         // Target Grade
-        if ($this->isFeatureEnabledByName("targetgrades"))
+        if ($this->isFeatureEnabledByName("targetgrades")) {
             $cols++;
+        }
 
         // Weighted target Grade
-        if ($this->isFeatureEnabledByName("weightedtargetgrades"))
+        if ($this->isFeatureEnabledByName("weightedtargetgrades")) {
             $cols++;
+        }
 
         // CETA
-        if ($this->isFeatureEnabledByName("cetagrades"))
+        if ($this->isFeatureEnabledByName("cetagrades")) {
             $cols++;
+        }
 
         // Qual Weighting (ALPS)
         //todo
 
         // Assessments
         $assessments = $this->getAssessments();
-        if ($assessments)
+        if ($assessments) {
             $cols += count($assessments);
+        }
 
         // If ceta grades enabled, add an extra column for each assessment
-        if ($this->isFeatureEnabledByName("cetagrades"))
+        if ($this->isFeatureEnabledByName("cetagrades")) {
             $cols += count($assessments);
+        }
 
         return $cols;
 
@@ -817,9 +806,9 @@ class Qualification {
      * Get the (formal) assessments linked to the qualification
      * @return array
      */
-    public function getAssessments(){
+    public function getAssessments() {
 
-        if (!$this->assessments){
+        if (!$this->assessments) {
             $this->loadAssessments();
         }
 
@@ -832,7 +821,7 @@ class Qualification {
      * @param type $id
      * @return type
      */
-    public function getAssessment($id){
+    public function getAssessment($id) {
 
         $this->getAssessments();
         return (array_key_exists($id, $this->assessments)) ? $this->assessments[$id] : false;
@@ -845,7 +834,7 @@ class Qualification {
      * @global \GT\type $DB
      * @return \GT\Assessment
      */
-    protected function loadAssessments(){
+    protected function loadAssessments() {
 
         global $DB;
 
@@ -853,18 +842,15 @@ class Qualification {
         $return = array();
 
         $records = $DB->get_records("bcgt_assessment_quals", array("qualid" => $this->id));
-        if($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $assessment = new \GT\Assessment($record->assessmentid);
-                if ($assessment->isValid())
-                {
+                if ($assessment->isValid()) {
                     $assessment->setQualification($this);
 
                     // If we are actually in the UserQualification when this is called and we have a student loaded
                     // load them into each assessment as well
-                    if (isset($this->student) && $this->student){
+                    if (isset($this->student) && $this->student) {
                         $assessment->loadStudent($this->student->id);
                     }
 
@@ -882,9 +868,6 @@ class Qualification {
 
     }
 
-
-
-
     /**
      * Get the assessment that is current, based on date (closest one not in the future)
      * e.g. If the date is Jan 10th and you have 3 assessments: Jan 1st, Jan 8th, Jan 11th
@@ -895,11 +878,10 @@ class Qualification {
      * @param bool $mustHaveCetaGrade Only return ones where the student actually has a grade for it
      * @return boolean
      */
-    public function getCurrentAssessment($from = false, $cetaEnabledOnly = false)
-    {
+    public function getCurrentAssessment($from = false, $cetaEnabledOnly = false) {
 
         $assessments = $this->getAssessments();
-        if (!$assessments){
+        if (!$assessments) {
             return false;
         }
 
@@ -912,24 +894,20 @@ class Qualification {
 
         $now = time();
 
-        foreach($assessments as $assessment)
-        {
+        foreach ($assessments as $assessment) {
 
             // If we are loading from the summary, we want only assessments who are enabled in the summary
-            if ($from == 'summary' && !$assessment->isSummaryEnabled())
-            {
+            if ($from == 'summary' && !$assessment->isSummaryEnabled()) {
                 continue;
             }
 
             // If we want ceta enabled only, byt it doesn't have it enabled, skip it
-            if ($cetaEnabledOnly && !$assessment->isCetaEnabled())
-            {
+            if ($cetaEnabledOnly && !$assessment->isCetaEnabled()) {
                 continue;
             }
 
             // If the assessment's date is before or equal to today, use this one
-            if ($assessment->getDate() <= $now)
-            {
+            if ($assessment->getDate() <= $now) {
                 return $assessment;
             }
 
@@ -946,26 +924,24 @@ class Qualification {
      * @param type $type
      * @return boolean
      */
-    public function getValueAddedComparison($value, $targetValue, $type, $defaultReturn = false)
-    {
+    public function getValueAddedComparison($value, $targetValue, $type, $defaultReturn = false) {
 
-        if (!$value || !$targetValue || !$value->isValid() || !$targetValue->isValid() || ($type != 'grade' && $type != 'ceta')){
+        if (!$value || !$targetValue || !$value->isValid() || !$targetValue->isValid() || ($type != 'grade' && $type != 'ceta')) {
             return $defaultReturn;
         }
 
         // This is comparing the grade given to an assessment, with the target or weighted target
         // That means comparing the "points" of a CriteriaAward object, with the "rank" of a QualificationAward object
-        if ($type == 'grade'){
+        if ($type == 'grade') {
 
             $points = $value->getPoints();
             $rank = $targetValue->getRank();
             return ($points - $rank);
 
-        }
+        } else if ($type == 'ceta') {
 
-        // This is comparing the CETA given to an assessment, with the target/weighted target
-        // This means comparing the "rank" of two QualificationAward objects
-        elseif ($type == 'ceta'){
+            // This is comparing the CETA given to an assessment, with the target/weighted target
+            // This means comparing the "rank" of two QualificationAward objects
 
             $current = $value->getRank();
             $target = $targetValue->getRank();
@@ -977,26 +953,20 @@ class Qualification {
 
     }
 
-
-
-
     /**
      * Set the units by ids
      * @param type $unitIDs
      */
-    public function setUnitsByID($unitIDs){
+    public function setUnitsByID($unitIDs) {
 
         // Clear any loaded units
         $this->units = array();
 
         // Load these ones
-        if ($unitIDs)
-        {
-            foreach($unitIDs as $unitID)
-            {
+        if ($unitIDs) {
+            foreach ($unitIDs as $unitID) {
                 $unit = new \GT\Unit($unitID);
-                if ($unit->isValid())
-                {
+                if ($unit->isValid()) {
                     $this->units[$unit->getID()] = $unit;
                 }
             }
@@ -1008,7 +978,7 @@ class Qualification {
      * Add a unit to the Qual, to be saved
      * @param type $unit
      */
-    public function addUnit($unit){
+    public function addUnit($unit) {
         $this->units[$unit->getID()] = $unit;
     }
 
@@ -1016,19 +986,16 @@ class Qualification {
      * Set the courses by the ids
      * @param type $courseIDs
      */
-    public function setCoursesByID($courseIDs){
+    public function setCoursesByID($courseIDs) {
 
         // Clear any loaded units
         $this->courses = array();
 
         // Load these ones
-        if ($courseIDs)
-        {
-            foreach($courseIDs as $courseID)
-            {
+        if ($courseIDs) {
+            foreach ($courseIDs as $courseID) {
                 $course = new \GT\Course($courseID);
-                if ($course->isValid())
-                {
+                if ($course->isValid()) {
                     $this->courses[$course->id] = $course;
                 }
             }
@@ -1041,27 +1008,22 @@ class Qualification {
      * @param type $array
      * @return \GT\Qualification
      */
-    public function setCustomElementValues($array){
+    public function setCustomElementValues($array) {
 
         // Reset saved values on all elements
-        if ($this->customFormElements)
-        {
-            foreach($this->customFormElements as $element)
-            {
+        if ($this->customFormElements) {
+            foreach ($this->customFormElements as $element) {
                 $element->setValue(null);
             }
         }
 
         // Now load in the ones we have submitted
-        if ($array)
-        {
+        if ($array) {
 
-            foreach($array as $name => $value)
-            {
+            foreach ($array as $name => $value) {
 
                 $element = $this->getCustomFormElementByName($name);
-                if ($element)
-                {
+                if ($element) {
                     $element->setValue($value);
                 }
 
@@ -1076,7 +1038,7 @@ class Qualification {
      * Get the array of FormElement objects
      * @return type
      */
-    public function getCustomFormElements(){
+    public function getCustomFormElements() {
         return $this->customFormElements;
     }
 
@@ -1085,7 +1047,7 @@ class Qualification {
      * @param type $name
      * @return type
      */
-    public function getCustomFormElementValue($name){
+    public function getCustomFormElementValue($name) {
 
         $element = $this->getCustomFormElementByName($name);
         return ($element) ? $element->getValue() : false;
@@ -1097,13 +1059,13 @@ class Qualification {
      * @param type $name
      * @return boolean
      */
-    public function getCustomFormElementByName($name){
+    public function getCustomFormElementByName($name) {
 
-        if ($this->customFormElements){
+        if ($this->customFormElements) {
 
-            foreach($this->customFormElements as $element){
+            foreach ($this->customFormElements as $element) {
 
-                if ($element->getName() == $name){
+                if ($element->getName() == $name) {
                     return $element;
                 }
 
@@ -1119,26 +1081,23 @@ class Qualification {
      * Get any errors
      * @return type
      */
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
     /**
      * Load the custom form elements into the qualification, with any values as well
      */
-    public function loadCustomFormElements(){
+    public function loadCustomFormElements() {
 
         // Get the possible elements for the qualification form
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         $elements = $structure->getCustomFormElements('qualification');
 
         // Get the saved
-        if ($this->isValid())
-        {
-            if ($elements)
-            {
-                foreach($elements as $element)
-                {
+        if ($this->isValid()) {
+            if ($elements) {
+                foreach ($elements as $element) {
                     $value = $this->getAttribute("custom_{$element->getID()}");
                     $element->setValue($value);
                 }
@@ -1153,24 +1112,24 @@ class Qualification {
      * Gets a distinct list of all the possible criteria values for this qualification to put into the key
      * @return array
      */
-    public function getAllPossibleValues(){
+    public function getAllPossibleValues() {
 
         $values = array();
 
-        if ($this->getUnits()){
+        if ($this->getUnits()) {
 
-            foreach($this->getUnits() as $unit){
+            foreach ($this->getUnits() as $unit) {
 
                 $criteria = $unit->loadCriteriaIntoFlatArray();
 
-                if ($criteria){
+                if ($criteria) {
 
-                    foreach($criteria as $criterion){
+                    foreach ($criteria as $criterion) {
 
                         $possibleValues = $criterion->getPossibleValues();
-                        if ($possibleValues){
+                        if ($possibleValues) {
 
-                            foreach($possibleValues as $value){
+                            foreach ($possibleValues as $value) {
 
                                 $values[$value->getShortName().':'.$value->getName()] = $value;
 
@@ -1198,14 +1157,14 @@ class Qualification {
      * @param type $names
      * @return type
      */
-    public function getHeaderCriteriaNamesShort($names = false){
+    public function getHeaderCriteriaNamesShort($names = false) {
 
-        if (!$names){
+        if (!$names) {
             $names = $this->getHeaderCriteriaNames();
         }
 
         $unique = array();
-        foreach ($names as $name){
+        foreach ($names as $name) {
             $shortname = substr($name['name'], 0, 1);
             $unique[] = $shortname;
         }
@@ -1219,51 +1178,49 @@ class Qualification {
      * types and their sub levels
      * @return type
      */
-    public function getHeaderCriteriaNames($forceReload = false){
+    public function getHeaderCriteriaNames($forceReload = false) {
 
-        if (!$forceReload && isset($this->headerCriteriaNames)){
+        if (!$forceReload && isset($this->headerCriteriaNames)) {
             return $this->headerCriteriaNames;
         }
 
         $names = array();
 
-        if ($this->getUnits()){
+        if ($this->getUnits()) {
 
-            foreach($this->getUnits() as $unit){
+            foreach ($this->getUnits() as $unit) {
 
                 // If this is being called from the UserQualification we want to only gets ones the student
                 // is attached to
-                if (isset($this->student) && $this->student && $this->student->isValid() && !$this->student->isOnQualUnit($this->id, $unit->getID(), "STUDENT")){
+                if (isset($this->student) && $this->student && $this->student->isValid() && !$this->student->isOnQualUnit($this->id, $unit->getID(), "STUDENT")) {
                     continue;
                 }
 
                 $criteria = $unit->getCriteria();
 
-                if ($criteria){
+                if ($criteria) {
 
-                    foreach($criteria as $criterion){
+                    foreach ($criteria as $criterion) {
 
                         // If this isn't already in the array, add it
-                        if (!array_key_exists($criterion->getName(), $names)){
+                        if (!array_key_exists($criterion->getName(), $names)) {
                             $names[$criterion->getName()] = array("name" => $criterion->getName(), "sub" => array());
                         }
 
                         // If this has child levels, we might want some of them in the header as well
                         if ($criterion->countChildLevels() > 0) {
 
-                            switch( get_class($criterion) )
-                            {
+                            switch( get_class($criterion) ) {
 
                                 // Standard criterion
                                 case 'GT\Criteria\StandardCriterion':
 
                                     // If only 1 level of sub criteria, add them in
                                     // Though if this top level criterion has the setting "force popup" don't show the sub criteria in the grid table
-                                    if ($criterion->getAttribute('forcepopup') != 1)
-                                    {
-                                        foreach($criterion->getChildren() as $child){
+                                    if ($criterion->getAttribute('forcepopup') != 1) {
+                                        foreach ($criterion->getChildren() as $child) {
 
-                                            if (!in_array($child->getName(), $names[$criterion->getName()]['sub'])){
+                                            if (!in_array($child->getName(), $names[$criterion->getName()]['sub'])) {
                                                 $names[$criterion->getName()]['sub'][] = $child->getName();
                                             }
 
@@ -1272,12 +1229,10 @@ class Qualification {
 
                                 break;
 
-
                                 // Numeric criterion - Only top level go in the header
                                 case 'GT\Criteria\NumericCriterion':
 
                                 break;
-
 
                                 // Ranged criterion - Only top level go in the header
                                 case 'GT\Criteria\RangedCriterion':
@@ -1299,7 +1254,7 @@ class Qualification {
         $Sorter = new \GT\Sorter();
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         $customOrder = $structure->getCustomOrder('criteria');
-        if ($customOrder){
+        if ($customOrder) {
             $Sorter->sortCriteriaCustom($names, $customOrder, false, true);
         } else {
             $Sorter->sortCriteria($names, false, true);
@@ -1314,7 +1269,7 @@ class Qualification {
      * Parse a URL and replace things like %qid% and %sid% with relevant values
      * @param type $url
      */
-    public function parseURL($url, $params = false){
+    public function parseURL($url, $params = false) {
 
         global $CFG;
 
@@ -1337,15 +1292,17 @@ class Qualification {
      * @param type $name
      * @return boolean
      */
-    public function isFeatureEnabledByName($name){
+    public function isFeatureEnabledByName($name) {
 
         // if we already checked, return that result, don't load up the structure and waste processing time
-        if (array_key_exists($name, $this->featuresEnabled)){
+        if (array_key_exists($name, $this->featuresEnabled)) {
             return $this->featuresEnabled[$name];
         }
 
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
-        if (!$structure->isValid()) return false;
+        if (!$structure->isValid()) {
+            return false;
+        }
 
         $this->featuresEnabled[$name] = $structure->isFeatureEnabledByName($name);
         return $this->featuresEnabled[$name];
@@ -1357,16 +1314,17 @@ class Qualification {
      * @param type $name
      * @return boolean
      */
-    public function isLevelEnabled($name){
+    public function isLevelEnabled($name) {
 
         // if we already checked, return that result, don't load up the structure and waste processing time
-        if (array_key_exists($name, $this->levelsEnabled)){
+        if (array_key_exists($name, $this->levelsEnabled)) {
             return $this->levelsEnabled[$name];
         }
 
-
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
-        if (!$structure->isValid()) return false;
+        if (!$structure->isValid()) {
+            return false;
+        }
 
         $this->levelsEnabled[$name] = $structure->isLevelEnabled($name);
         return $this->levelsEnabled[$name];
@@ -1378,47 +1336,43 @@ class Qualification {
      * @global \GT\type $DB
      * @return type
      */
-    public function hasNoErrors(){
+    public function hasNoErrors() {
 
         global $DB;
 
         $Structure = new \GT\QualificationStructure( $this->structureID );
 
         // Check build is valid
-        if (!$this->getBuild()->isValid()){
+        if (!$this->getBuild()->isValid()) {
             $this->errors[] = get_string('errors:qual:build', 'block_gradetracker');
         }
 
         // Check name
-        if (strlen($this->name) == 0){
+        if (strlen($this->name) == 0) {
             $this->errors[] = get_string('errors:qual:name', 'block_gradetracker');
         }
 
         // Check for duplicate name & build combination
         $check = $DB->get_records("bcgt_qualifications", array("name" => $this->name, "buildid" => $this->buildID, "deleted" => 0));
-        if ($check)
-        {
-            foreach($check as $checkQual)
-            {
-                if ($checkQual->id <> $this->id)
-                {
+        if ($check) {
+            foreach ($check as $checkQual) {
+                if ($checkQual->id <> $this->id) {
                     $this->errors[] = get_string('errors:qual:name:duplicate', 'block_gradetracker');
                 }
             }
         }
 
-
         // Check custom elements
         $elements = $Structure->getCustomFormElements('qualification');
-        if ($elements){
+        if ($elements) {
 
-            foreach($elements as $element){
+            foreach ($elements as $element) {
 
                 // Is it required?
-                if ($element->hasValidation("REQUIRED")){
+                if ($element->hasValidation("REQUIRED")) {
 
                     $value = $this->getCustomFormElementValue($element->getName());
-                    if (strlen($value) == 0 || $value === false){
+                    if (strlen($value) == 0 || $value === false) {
                         $this->errors[] = sprintf( get_string('errors:qual:custom', 'block_gradetracker'), $element->getName() );
                     }
 
@@ -1429,27 +1383,23 @@ class Qualification {
         }
 
         // Check units
-        if ($this->units)
-        {
-            foreach($this->units as $unit)
-            {
+        if ($this->units) {
+            foreach ($this->units as $unit) {
 
                 // Unit should be of the same type (structure) as the qual, otherwise we could have CG units on BTEC quals, etc...
-                if ($unit->getStructureID() <> $this->structureID)
-                {
+                if ($unit->getStructureID() <> $this->structureID) {
                     $this->errors[] = sprintf( get_string('errors:qual:unit', 'block_gradetracker'), $unit->getName(), $unit->getStructureName(), $this->getStructureName() );
                 }
 
             }
         }
 
-
         return (!$this->errors);
 
     }
 
     /**Delete qual sets the deleted attribute to 1*/
-    public function delete(){
+    public function delete() {
 
         global $DB;
 
@@ -1463,7 +1413,7 @@ class Qualification {
     }
 
     /**Restore qual sets the deleted attribute to 0*/
-    public function restore(){
+    public function restore() {
 
         global $DB;
 
@@ -1476,7 +1426,7 @@ class Qualification {
         return $DB->update_record("bcgt_qualifications", $obj);
     }
 
-    public function copyQual(){
+    public function copyQual() {
 
         global $CFG;
 
@@ -1487,10 +1437,8 @@ class Qualification {
 
         // Attach same units
         $units = $this->getUnits();
-        if ($units)
-        {
-            foreach($this->units as $unit)
-            {
+        if ($units) {
+            foreach ($this->units as $unit) {
                 $newqual->addUnit($unit);
             }
         }
@@ -1499,7 +1447,7 @@ class Qualification {
 
         // get attribute information
         $atts = $this->getQualificationAttributes();
-        foreach ($atts as $a){
+        foreach ($atts as $a) {
             $newqual->updateAttribute($a->attribute, $a->value);
         }
 
@@ -1508,8 +1456,7 @@ class Qualification {
 
     }
 
-
-    public function save(){
+    public function save() {
 
         global $DB;
 
@@ -1518,7 +1465,7 @@ class Qualification {
         $obj->name = $this->name;
         $obj->deleted = $this->deleted;
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $obj->id = $this->id;
             $result = $DB->update_record("bcgt_qualifications", $obj);
         } else {
@@ -1526,11 +1473,10 @@ class Qualification {
             $result = $this->id;
         }
 
-        if (!$result){
+        if (!$result) {
             $this->errors[] = get_string('errors:save', 'block_gradetracker');
             return false;
         }
-
 
         // Custom Form Elements
 
@@ -1538,9 +1484,9 @@ class Qualification {
         $DB->delete_records("bcgt_qual_attributes", array("qualid" => $this->id, "userid" => null));
 
         // Save new ones
-        if ($this->customFormElements){
+        if ($this->customFormElements) {
 
-            foreach($this->customFormElements as $element){
+            foreach ($this->customFormElements as $element) {
 
                 $this->updateAttribute("custom_{$element->getID()}", $element->getValue());
 
@@ -1548,16 +1494,13 @@ class Qualification {
 
         }
 
-
         // Qual Units
         $this->saveQualUnits();
 
         // Qual Courses
         $this->saveQualCourses();
 
-
         return true;
-
 
     }
 
@@ -1565,20 +1508,16 @@ class Qualification {
      * Save the qual unit links
      * @global \GT\type $DB
      */
-    public function saveQualUnits()
-    {
+    public function saveQualUnits() {
 
         global $DB;
 
         // Loop through loaded units and add them to qual_units table if not there
-        if ($this->units)
-        {
-            foreach($this->units as $unit)
-            {
+        if ($this->units) {
+            foreach ($this->units as $unit) {
 
                 $check = $DB->get_records("bcgt_qual_units", array("qualid" => $this->id, "unitid" => $unit->getID()));
-                if (!$check)
-                {
+                if (!$check) {
                     $obj = new \stdClass();
                     $obj->qualid = $this->id;
                     $obj->unitid = $unit->getID();
@@ -1590,12 +1529,9 @@ class Qualification {
 
         // Then remove any links to ones we've removed
         $records = $DB->get_records("bcgt_qual_units", array("qualid" => $this->id));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
-                if (!array_key_exists($record->unitid, $this->units))
-                {
+        if ($records) {
+            foreach ($records as $record) {
+                if (!array_key_exists($record->unitid, $this->units)) {
                     $DB->delete_records("bcgt_qual_units", array("id" => $record->id));
                 }
             }
@@ -1608,16 +1544,13 @@ class Qualification {
      * Save the qual course links
      * @global \GT\type $DB
      */
-    private function saveQualCourses()
-    {
+    private function saveQualCourses() {
 
         global $DB;
 
         // Loop through loaded courses and add them to qual_units table if not there
-        if ($this->courses)
-        {
-            foreach($this->courses as $course)
-            {
+        if ($this->courses) {
+            foreach ($this->courses as $course) {
 
                 $Course = new \GT\Course($course->id);
                 $Course->addCourseQual($this->id);
@@ -1627,12 +1560,9 @@ class Qualification {
 
         // Then remove any links to ones we've removed
         $records = $DB->get_records("bcgt_course_quals", array("qualid" => $this->id));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
-                if (!array_key_exists($record->courseid, $this->courses))
-                {
+        if ($records) {
+            foreach ($records as $record) {
+                if (!array_key_exists($record->courseid, $this->courses)) {
                     $DB->delete_records("bcgt_course_quals", array("id" => $record->id));
                 }
             }
@@ -1648,7 +1578,7 @@ class Qualification {
      * Remove students who are attached to the qual, but not any of its courses
      * @global \GT\type $DB
      */
-    public function removeStudentsNotOnQualCourse(){
+    public function removeStudentsNotOnQualCourse() {
 
         global $DB;
 
@@ -1673,10 +1603,8 @@ class Qualification {
                 )";
 
         $records = $DB->get_records_sql($sql, array($this->id, CONTEXT_COURSE, $this->id));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\User($record->id);
                 $obj->removeFromQual($this->id);
             }
@@ -1687,20 +1615,20 @@ class Qualification {
     /**
      * Get the weighting percentile for the current FA grade
      */
-    public function getClassAssessmentWeightingPercentile(\GT\Assessment $assessment, array $students){
+    public function getClassAssessmentWeightingPercentile(\GT\Assessment $assessment, array $students) {
 
-        if (!$assessment) return false;
+        if (!$assessment) {
+            return false;
+        }
 
         // Defaults
         $assessmentUCAS = 0;
         $targetUCAS = 0;
         $userCnt = 0;
 
-        if ($students)
-        {
+        if ($students) {
 
-            foreach($students as $student)
-            {
+            foreach ($students as $student) {
 
                 // Load the student into the assessment
                 $assessment->loadStudent($student->id);
@@ -1708,7 +1636,7 @@ class Qualification {
                 // Get the grade for this assessment
                 $assessmentAward = false;
                 $assessmentGrade = $assessment->getUserGrade();
-                if ($assessmentGrade){
+                if ($assessmentGrade) {
                     $assessmentAward = \GT\QualificationAward::findAwardByName($this->getBuildID(), $assessmentGrade->getName());
                 }
 
@@ -1716,7 +1644,7 @@ class Qualification {
                 $targetGrade = $student->getUserGrade('target', array('qualID' => $this->id), false, true);
 
                 // If they have both
-                if ($targetGrade && $assessmentAward){
+                if ($targetGrade && $assessmentAward) {
                     $targetUCAS += $targetGrade->getUcas();
                     $assessmentUCAS += $assessmentAward->getUcas();
                     $userCnt++;
@@ -1727,9 +1655,7 @@ class Qualification {
         }
 
         // If they there is a total UCAS points for the assessment grade and target grades
-        if ($assessmentUCAS && $targetUCAS && $userCnt)
-        {
-
+        if ($assessmentUCAS && $targetUCAS && $userCnt) {
 
             // Get the multiplier for this build
             $multiplier = $this->getBuild()->getAttribute('build_default_weighting_multiplier');
@@ -1747,20 +1673,20 @@ class Qualification {
     /**
      * Get the weighting percentile for the current FA grade
      */
-    public function getClassAssessmentCetaWeightingPercentile(\GT\Assessment $assessment, array $students){
+    public function getClassAssessmentCetaWeightingPercentile(\GT\Assessment $assessment, array $students) {
 
-        if (!$assessment) return false;
+        if (!$assessment) {
+            return false;
+        }
 
         // Defaults
         $assessmentUCAS = 0;
         $targetUCAS = 0;
         $userCnt = 0;
 
-        if ($students)
-        {
+        if ($students) {
 
-            foreach($students as $student)
-            {
+            foreach ($students as $student) {
 
                 // Load the student into the assessment
                 $assessment->loadStudent($student->id);
@@ -1772,7 +1698,7 @@ class Qualification {
                 $targetGrade = $student->getUserGrade('target', array('qualID' => $this->id), false, true);
 
                 // If they have both
-                if ($targetGrade && $cetaGrade && $cetaGrade->isValid()){
+                if ($targetGrade && $cetaGrade && $cetaGrade->isValid()) {
                     $targetUCAS += $targetGrade->getUcas();
                     $assessmentUCAS += $cetaGrade->getUcas();
                     $userCnt++;
@@ -1783,8 +1709,7 @@ class Qualification {
         }
 
         // If they there is a total UCAS points for the assessment grade and target grades
-        if ($assessmentUCAS && $targetUCAS && $userCnt)
-        {
+        if ($assessmentUCAS && $targetUCAS && $userCnt) {
 
             // Get the multiplier for this build
             $multiplier = $this->getBuild()->getAttribute('build_default_weighting_multiplier');
@@ -1806,7 +1731,7 @@ class Qualification {
      * @param type $userID
      * @return type
      */
-    public function getAttribute($attribute, $userID = null){
+    public function getAttribute($attribute, $userID = null) {
 
         global $DB;
 
@@ -1815,7 +1740,7 @@ class Qualification {
 
     }
 
-    public function getQualificationAttributes(){
+    public function getQualificationAttributes() {
         global $DB;
         $check = $DB->get_records("bcgt_qual_attributes", array ("qualid" => $this->id));
         return $check;
@@ -1830,19 +1755,16 @@ class Qualification {
      * @param type $value
      * @param type $userID
      */
-    public function updateAttribute($attribute, $value, $userID = null){
+    public function updateAttribute($attribute, $value, $userID = null) {
 
         global $DB;
 
         $check = $DB->get_record("bcgt_qual_attributes", array("qualid" => $this->id, "userid" => $userID, "attribute" => $attribute));
-        if ($check)
-        {
+        if ($check) {
             $check->value = $value;
             $check->lastupdate = time();
             $DB->update_record("bcgt_qual_attributes", $check);
-        }
-        else
-        {
+        } else {
             $ins = new \stdClass();
             $ins->qualid = $this->id;
             $ins->userid = $userID;
@@ -1858,18 +1780,18 @@ class Qualification {
      * Get the weighting coefficient of this qualification
      * @return boolean
      */
-    public function getWeightingCoefficient(){
+    public function getWeightingCoefficient() {
 
         // Which percentile are we using?
         $default = \GT\Setting::getSetting('default_weighting_percentile');
-        if (!$default){
+        if (!$default) {
             \gt_debug("No default percentile defined in the configuration settings");
             return false;
         }
 
         // Get the coefficient for this qual and this percentile
         $coefficient = $this->getAttribute('coefficient_' . $default);
-        if (!$coefficient){
+        if (!$coefficient) {
             \gt_debug("No coefficient defined for this qualification, and percentile {$default}");
             return false;
         }
@@ -1884,18 +1806,7 @@ class Qualification {
      * @param type $userID
      * @return type
      */
-    public function getSystemSetting($setting, $userID = null){
-
-        // $GT = new \GT\GradeTracker();
-        // $settings = unserialize( $GT->cache->get('settings') );
-        // $buildID = $this->getBuildID();
-        //
-        // // Is this setting for this qual build cached?
-        // if (isset( $settings->$buildID->$setting )){
-        //     return $settings->$buildID->$setting;
-        // }
-
-        // Otherwise return normal setting
+    public function getSystemSetting($setting, $userID = null) {
         return \GT\Setting::getSetting($setting, $userID);
     }
 
@@ -1903,7 +1814,7 @@ class Qualification {
      * Get all the qualifications from the system
      * @return type
      */
-    public static function getAllQualifications($enabled = false){
+    public static function getAllQualifications($enabled = false) {
 
         $params = ($enabled) ? array('enabled' => true) : false;
         return self::search($params);
@@ -1916,7 +1827,7 @@ class Qualification {
      * @param type $params
      * @return type
      */
-    public static function search($params){
+    public static function search($params) {
 
         global $DB;
 
@@ -1934,7 +1845,7 @@ class Qualification {
                  AND b.deleted = 0 ";
 
         // Enabled?
-        if (isset($params['enabled']) && $params['enabled']){
+        if (isset($params['enabled']) && $params['enabled']) {
             $sql .= "AND s.enabled = 1 ";
         }
 
@@ -1942,39 +1853,35 @@ class Qualification {
         $sqlParams[] = (isset($params['deleted'])) ? $params['deleted'] : 0;
 
         // Structure
-        if (isset($params['structureID']) && $params['structureID']){
+        if (isset($params['structureID']) && $params['structureID']) {
             $sql .= "AND b.structureid = ? ";
             $sqlParams[] = $params['structureID'];
         }
 
         // Level
-        if (isset($params['levelID']) && $params['levelID']){
+        if (isset($params['levelID']) && $params['levelID']) {
             $sql .= "AND b.levelid = ? ";
             $sqlParams[] = $params['levelID'];
         }
 
         // Sub Type
-        if (isset($params['subTypeID']) && $params['subTypeID']){
+        if (isset($params['subTypeID']) && $params['subTypeID']) {
             $sql .= "AND b.subtypeid = ? ";
             $sqlParams[] = $params['subTypeID'];
         }
 
         // Name
-        if (isset($params['name']) && strlen($params['name'])){
+        if (isset($params['name']) && strlen($params['name'])) {
 
             // Exact
-            if (preg_match("/[\"|'](.*?)[\"|']/U", $params['name'], $match)){
+            if (preg_match("/[\"|'](.*?)[\"|']/U", $params['name'], $match)) {
                 $sql .= "AND q.name = ? ";
                 $sqlParams[] = $match[1];
-            }
-
-            // Like
-            else
-            {
+            } else {
+                // Like
                 $sql .= "AND q.name LIKE ? ";
                 $sqlParams[] = '%'.$params['name'].'%';
             }
-
 
         }
 
@@ -1982,31 +1889,24 @@ class Qualification {
         $sql .= "ORDER BY s.name ASC, l.ordernum ASC, st.name ASC, q.name ASC";
 
         $records = $DB->get_records_sql($sql, $sqlParams);
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\Qualification($record->id);
-                if ($obj->isValid())
-                {
+                if ($obj->isValid()) {
 
                     $ok = true;
 
                     // Are we also checking custom form elements?
-                    if (isset($params['structureID']) && $params['structureID'] && isset($params['custom']) && $params['custom'])
-                    {
-                        foreach($params['custom'] as $id => $value)
-                        {
-                            if ($obj->getAttribute("custom_{$id}") != $value)
-                            {
+                    if (isset($params['structureID']) && $params['structureID'] && isset($params['custom']) && $params['custom']) {
+                        foreach ($params['custom'] as $id => $value) {
+                            if ($obj->getAttribute("custom_{$id}") != $value) {
                                 $ok = false;
                             }
                         }
                     }
 
                     // Are we ok to include this result?
-                    if ($ok)
-                    {
+                    if ($ok) {
                         $results[] = $obj;
                     }
 
@@ -2023,10 +1923,12 @@ class Qualification {
      * @param type $qID
      * @return type
      */
-    public static function getNameByID($qID, $name=false){
+    public static function getNameByID($qID, $name=false) {
 
         $qual = new \GT\Qualification($qID);
-        if ($name) return ($qual->isValid()) ? $qual->getName() : false;
+        if ($name) {
+            return ($qual->isValid()) ? $qual->getName() : false;
+        }
         return ($qual->isValid()) ? $qual->getDisplayName() : false;
 
     }
@@ -2040,7 +1942,7 @@ class Qualification {
      * @param type $name
      * @return type
      */
-    public static function retrieve($type, $level, $subType, $name){
+    public static function retrieve($type, $level, $subType, $name) {
 
         global $DB;
 
@@ -2066,7 +1968,7 @@ class Qualification {
      * @param type $qID
      * @return type
      */
-    public static function hasAssessments($qID){
+    public static function hasAssessments($qID) {
 
         $qual = new \GT\Qualification($qID);
         return $qual->getAssessments();
@@ -2079,13 +1981,12 @@ class Qualification {
      * @param type $qualID
      * @return boolean|\GT\QualificationBuild
      */
-    public static function getBuildFromQualID($qualID){
+    public static function getBuildFromQualID($qualID) {
 
         global $DB;
 
         $record = $DB->get_record("bcgt_qualifications", array("id" => $qualID));
-        if ($record)
-        {
+        if ($record) {
             return new \GT\QualificationBuild($record->buildid);
         }
 
@@ -2099,16 +2000,14 @@ class Qualification {
      * @param type $qualID
      * @return boolean|\GT\QualificationStructure
      */
-    public static function getStructureFromQualID($qualID){
+    public static function getStructureFromQualID($qualID) {
 
         global $DB;
 
         $record = $DB->get_record("bcgt_qualifications", array("id" => $qualID));
-        if ($record)
-        {
+        if ($record) {
             $qualBuild = new \GT\QualificationBuild($record->buildid);
-            if ($qualBuild->isValid())
-            {
+            if ($qualBuild->isValid()) {
                 return new \GT\QualificationStructure($qualBuild->getStructureID());
             }
         }
@@ -2122,7 +2021,7 @@ class Qualification {
      * @global \GT\type $DB
      * @return type
      */
-    public static function countQuals(){
+    public static function countQuals() {
 
         global $DB;
 
