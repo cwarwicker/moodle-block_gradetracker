@@ -1,14 +1,32 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * This class handles Template csvs for data imports
+ *
+ * @copyright 2020 Conn Warwicker
+ * @package block_gradetracker
+ * @version 2.0
+ * @author Conn Warwicker <conn@cmrwarwicker.com>
+ */
 namespace GT\CSV;
 
-/**
- * Description of Template
- *
- * @author cwarwicker
- */
+defined('MOODLE_INTERNAL') or die();
+
 class Template {
-    
+
     public static $headersTargetGrades = array(
         'QualType',
         'QualLevel',
@@ -19,7 +37,7 @@ class Template {
         'WeightedTargetGrade',
         'AvgGCSE'
     );
-    
+
     public static $headersAspirationalGrades = array(
         'QualType',
         'QualLevel',
@@ -28,7 +46,7 @@ class Template {
         'Username',
         'AspirationalGrade'
     );
-    
+
     public static $headersCetaGrades = array(
         'QualType',
         'QualLevel',
@@ -38,7 +56,7 @@ class Template {
         'Ceta',
         'Course'
     );
-    
+
     public static $headersQOE = array(
         'Username',
         'Subject',
@@ -47,7 +65,7 @@ class Template {
         'Grade',
         'Year'
     );
-    
+
     public static $headersWCoe = array(
         'QualType',
         'QualLevel',
@@ -56,7 +74,7 @@ class Template {
         'PercentileNumber',
         'Value',
     );
-    
+
     public static $headersAssGrades = array(
         'Username',
         'Course',
@@ -67,220 +85,212 @@ class Template {
         'Grade',
         'CETA'
     );
-    
+
     public static $headersAvgGCSE = array(
         'Username',
         'Score'
     );
-    
+
     /**
      * Given a file and the headers, create a template file
      * @param type $file
      * @param type $headers
      * @return boolean
      */
-    public static function createTemplate($file, $headers){
-        
+    public static function createTemplate($file, $headers) {
+
         // Using "w" we truncate the file if it already exists
         $fh = fopen($file, 'w');
-        if ($fh === false){
+        if ($fh === false) {
             return false;
         }
-        
+
         $fp = fputcsv($fh, $headers);
-        
-        if ($fp === false){
+
+        if ($fp === false) {
             return false;
         }
-        
-        fclose($fh); 
+
+        fclose($fh);
         return true;
-        
+
     }
-    
+
     /**
      * Generate the template for Target Grades csv import
      * @param type $reload
      * @return boolean
      */
-    public static function generateTemplateTargetGradesCSV($reload = false){
-        
+    public static function generateTemplateTargetGradesCSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/targetgrades.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersTargetGrades;
         self::createTemplate($file, $headers);
-               
-        return $code;     
-        
-        
+
+        return $code;
+
     }
-    
+
     /**
      * Generate the template for Target Grades csv import
      * @param type $reload
      * @return boolean
      */
-    public static function generateTemplateAspirationalGradesCSV($reload = false){
-        
+    public static function generateTemplateAspirationalGradesCSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/aspirationalgrades.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersAspirationalGrades;
         self::createTemplate($file, $headers);
-               
-        return $code;     
-        
-        
+
+        return $code;
+
     }
-    
-    public static function generateTemplateCetaGradesCSV($reload = false){
-        
+
+    public static function generateTemplateCetaGradesCSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/cetagrades.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersCetaGrades;
         self::createTemplate($file, $headers);
-               
-        return $code;     
-        
-        
+
+        return $code;
+
     }
-    
-    
+
     /**
      * Generate the template for Target Grades csv import
      * @param type $reload
      * @return boolean
      */
-    public static function generateTemplateQoECSV($reload = false){
-        
+    public static function generateTemplateQoECSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/qoe.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersQOE;
         self::createTemplate($file, $headers);
-               
-        return $code;     
-        
-        
+
+        return $code;
+
     }
-    
-    
+
     /**
      * Generate the template for Target Grades csv import
      * @param type $reload
      * @return boolean
      */
-    public static function generateTemplateWCoeCSV($reload = false){
-        
+    public static function generateTemplateWCoeCSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/wcoe.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersWCoe;
         self::createTemplate($file, $headers);
-               
-        return $code;     
-        
-        
+
+        return $code;
+
     }
-    
+
     /**
      * Generate template CSV for avg gcse import
      * @param type $reload
      * @return type
      */
-    public static function generateTemplateAvgGCSECSV($reload = false){
-        
+    public static function generateTemplateAvgGCSECSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/avggcse.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersAvgGCSE;
         self::createTemplate($file, $headers);
-               
-        return $code;  
-        
+
+        return $code;
+
     }
-    
+
     /**
      * Create template file for Assessment Grades
      * @param type $reload
      * @return type
      */
-    public static function generateTemplateAssGradesCSV($reload = false){
-        
+    public static function generateTemplateAssGradesCSV($reload = false) {
+
         $file = \GT\GradeTracker::dataroot() . '/csv/templates/assgrades.csv';
         $code = \gt_create_data_path_code($file);
-        
+
         // If it already exists and we don't want to reload it, just return
-        if (file_exists($file) && !$reload){
+        if (file_exists($file) && !$reload) {
             return $code;
         }
-                
+
         // Create the directories if they don't exist
         \gt_create_data_directory( 'csv/templates' );
-        
+
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
         $headers = self::$headersAssGrades;
         self::createTemplate($file, $headers);
-               
-        return $code;  
-        
+
+        return $code;
+
     }
-    
-    
+
 }
