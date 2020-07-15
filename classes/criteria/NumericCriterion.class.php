@@ -1,31 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * GT\Criteria\NumericCriterion
- *
  * This is the class for Numeric Criteria
  *
  * These allow you to enter points scores which can be calculated into grades using conversion charts
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright 2020 Conn Warwicker
+ * @package block_gradetracker
+ * @version 2.0
+ * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT\Criteria;
+
+defined('MOODLE_INTERNAL') or die();
 
 class NumericCriterion extends \GT\Criterion {
 
@@ -42,12 +43,10 @@ class NumericCriterion extends \GT\Criterion {
 
         global $DB;
 
-        if ($id)
-        {
+        if ($id) {
 
             $check = $DB->get_record("bcgt_criteria", array("id" => $id));
-            if ($check)
-            {
+            if ($check) {
 
                 $this->id = $check->id;
                 $this->unitID = $check->unitid;
@@ -69,7 +68,7 @@ class NumericCriterion extends \GT\Criterion {
      * Does this criterion type need a sub row in the unit creation form for extra stuff?
      * @return mixed
      */
-    public function hasFormSubRow(){
+    public function hasFormSubRow() {
         return 'numeric';
     }
 
@@ -77,7 +76,7 @@ class NumericCriterion extends \GT\Criterion {
      * This doesn't have auto calculation, as the criterion award is based on the points
      * @return boolean
      */
-    protected function hasAutoCalculation(){
+    protected function hasAutoCalculation() {
         return false;
     }
 
@@ -102,13 +101,12 @@ class NumericCriterion extends \GT\Criterion {
         parent::hasNoErrors($parent);
 
         // If it's a top level Numeric Criterion, it cannot have a parent
-        if (is_null($this->subCritType) && $this->parentNumber > 0){
+        if (is_null($this->subCritType) && $this->parentNumber > 0) {
             $this->errors[] = sprintf( get_string('errors:crit:numeric:parent', 'block_gradetracker'), $this->name );
         }
 
         // Must have at least 1 sub criterion. Cannot just have Observations with no sub criteria
-        if (!$this->hasChildrenOfType('Criterion') && !$parent && !defined('GT_IMPORTING'))
-        {
+        if (!$this->hasChildrenOfType('Criterion') && !$parent && !defined('GT_IMPORTING')) {
             $this->errors[] = sprintf( get_string('errors:crit:numeric:sub', 'block_gradetracker'), $this->name );
         }
 
@@ -118,7 +116,7 @@ class NumericCriterion extends \GT\Criterion {
 
         // Numeric criteria cannot be readonly
         // The top level needs to have a grading structure, then the Range and the Criteria don't have any, though in the DB they are stored with the same as the parent
-        if (!array_key_exists($this->gradingStructureID, $GradingStructures)){
+        if (!array_key_exists($this->gradingStructureID, $GradingStructures)) {
             $this->errors[] = sprintf( get_string('errors:crit:gradingstructure', 'block_gradetracker'), $this->name );
         }
 
@@ -130,26 +128,21 @@ class NumericCriterion extends \GT\Criterion {
      * Load in extra data for NumericCriteria
      * @param type $criterion
      */
-    public function loadExtraPostData($criterion){
+    public function loadExtraPostData($criterion) {
 
         $subCriteria = array();
         $observations = array();
 
         // Criteria-only conversion chart
-        if (isset($criterion['chart']))
-        {
-            foreach($criterion['chart'] as $awardID => $points)
-            {
+        if (isset($criterion['chart'])) {
+            foreach ($criterion['chart'] as $awardID => $points) {
                 $this->setAttribute("conversion_chart_{$awardID}", (int)$points);
             }
         }
 
-
         // Now the sub criteria
-        if (isset($criterion['subcriteria']))
-        {
-            foreach($criterion['subcriteria'] as $subDNum => $sub)
-            {
+        if (isset($criterion['subcriteria'])) {
+            foreach ($criterion['subcriteria'] as $subDNum => $sub) {
 
                 $id = (isset($sub['id'])) ? $sub['id'] : false;
                 $subObj = new \GT\Criteria\NumericCriterion($id);
@@ -159,7 +152,7 @@ class NumericCriterion extends \GT\Criterion {
                 $subObj->setSubCritType("Criterion");
                 $subObj->setDynamicNumber( floatval($this->dynamicNumber . '.' . $subDNum) );
                 $subObj->setGradingStructureID($this->gradingStructureID);
-                if (isset($sub['points'])){
+                if (isset($sub['points'])) {
                     $subObj->setAttribute("maxpoints", $sub['points']);
                 }
                 $subObj->setAttribute("gradingtype", "NORMAL");
@@ -171,10 +164,8 @@ class NumericCriterion extends \GT\Criterion {
         }
 
         // Now the observations
-        if (isset($criterion['observation']))
-        {
-            foreach($criterion['observation'] as $obNum => $observation)
-            {
+        if (isset($criterion['observation'])) {
+            foreach ($criterion['observation'] as $obNum => $observation) {
 
                 $id = (isset($observation['id'])) ? $observation['id'] : false;
                 $subObj = new \GT\Criteria\NumericCriterion($id);
@@ -187,9 +178,8 @@ class NumericCriterion extends \GT\Criterion {
                 $subObj->setAttribute("gradingtype", "NORMAL");
 
                 // Chart
-                if (isset($criterion['charts'][$obNum])){
-                    foreach($criterion['charts'][$obNum] as $awardID => $points)
-                    {
+                if (isset($criterion['charts'][$obNum])) {
+                    foreach ($criterion['charts'][$obNum] as $awardID => $points) {
                         $subObj->setAttribute("conversion_chart_{$awardID}", (int)$points);
                     }
                 }
@@ -201,10 +191,8 @@ class NumericCriterion extends \GT\Criterion {
             }
         }
 
-        if (isset($criterion['points']))
-        {
-            foreach($criterion['points'] as $link => $points)
-            {
+        if (isset($criterion['points'])) {
+            foreach ($criterion['points'] as $link => $points) {
 
                 $link = explode("|", $link);
                 $subCritNum = $link[0];
@@ -219,7 +207,6 @@ class NumericCriterion extends \GT\Criterion {
             }
         }
 
-
     }
 
     /**
@@ -228,7 +215,7 @@ class NumericCriterion extends \GT\Criterion {
      * @param type $observation
      * @param type $points
      */
-    public function addPointsLink($subCriterion, $observation, $points){
+    public function addPointsLink($subCriterion, $observation, $points) {
 
         $this->pointLinks[] = array(
             'Criterion' => $subCriterion,
@@ -241,19 +228,19 @@ class NumericCriterion extends \GT\Criterion {
     /**
      * Save the links between criteria and observations and points
      */
-    public function savePointLinks(){
+    public function savePointLinks() {
 
-        if (isset($this->pointLinks)){
+        if (isset($this->pointLinks)) {
 
-            foreach($this->pointLinks as $link){
+            foreach ($this->pointLinks as $link) {
 
-                if (is_numeric($link['Criterion'])){
+                if (is_numeric($link['Criterion'])) {
                     $cID = $link['Criterion'];
                 } else {
                     $cID = $link['Criterion']->getID();
                 }
 
-                if (is_numeric($link['Range'])){
+                if (is_numeric($link['Range'])) {
                     $rID = $link['Range'];
                 } else {
                     $rID = $link['Range']->getID();
@@ -268,7 +255,6 @@ class NumericCriterion extends \GT\Criterion {
 
     }
 
-
     /**
      *
      * @global type $CFG
@@ -276,7 +262,7 @@ class NumericCriterion extends \GT\Criterion {
      * @param type $fromSub
      * @return string
      */
-    protected function getCellEdit($advanced = false, $fromSub = false){
+    protected function getCellEdit($advanced = false, $fromSub = false) {
 
         global $CFG;
 
@@ -284,16 +270,13 @@ class NumericCriterion extends \GT\Criterion {
 
         $elID = "S{$this->student->id}_Q{$this->qualID}_U{$this->unitID}_C{$this->id}";
 
-        if (!$fromSub)
-        {
+        if (!$fromSub) {
             // Show the icon to pop it up into a...popup
             $img = ($this->getUserAward()->isMet()) ? 'openA.png' : 'open.png';
             $output .= "<a href='#' class='gt_open_numeric_criterion_window'>";
                 $output .= "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/symbols/default/{$img}' alt='".get_string('open', 'block_gradetracker')."' />";
             $output .= "</a>";
-        }
-        else
-        {
+        } else {
 
             $values = $this->getPossibleValues();
 
@@ -303,16 +286,14 @@ class NumericCriterion extends \GT\Criterion {
 
                 $lastMet = true;
 
-                foreach($values as $award)
-                {
-                    if ($award->isMet() !== $lastMet)
-                    {
-                        $output .= "<option value='' disabled>----------</option>";
-                    }
-                    $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
-                    $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
-                    $lastMet = $award->isMet();
+            foreach ($values as $award) {
+                if ($award->isMet() !== $lastMet) {
+                    $output .= "<option value='' disabled>----------</option>";
                 }
+                $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
+                $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
+                $lastMet = $award->isMet();
+            }
 
             $output .= "</select>";
 
@@ -321,8 +302,6 @@ class NumericCriterion extends \GT\Criterion {
         return $output;
 
     }
-
-
 
     /**
      *
@@ -343,15 +322,15 @@ class NumericCriterion extends \GT\Criterion {
 
             $output .= "<div class='gt_c'>";
 
-                if ($this->student){
+                if ($this->student) {
                     $output .= "<br><span class='gt-popup-studname'>{$this->student->getDisplayName()}</span><br>";
                 }
 
-                if ($qualification){
+                if ($qualification) {
                     $output .= "<span class='gt-popup-qualname'>{$qualification->getDisplayName()}</span><br>";
                 }
 
-                if ($unit){
+                if ($unit) {
                     $output .= "<span class='gt-popup-unitname'>{$unit->getDisplayName()}</span><br>";
                 }
 
@@ -367,8 +346,7 @@ class NumericCriterion extends \GT\Criterion {
                 $totalPoints = 0;
                 $totalMaxPoints = 0;
 
-                if ($ranges)
-                {
+                if ($ranges) {
 
                     $Range = reset($ranges);
                     $Range->loadStudent($this->student);
@@ -376,8 +354,7 @@ class NumericCriterion extends \GT\Criterion {
 
                     $output .= "<ul class='gt_tabbed_list'>";
 
-                    foreach($ranges as $range)
-                    {
+                    foreach ($ranges as $range) {
                         $class = ($Range->getID() == $range->getID()) ? 'active' : '';
                         $output .= "<li class='{$class}'><a href='#' class='gt_load_range' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$range->getID()}'>{$range->getName()}</a></li>";
                     }
@@ -387,23 +364,19 @@ class NumericCriterion extends \GT\Criterion {
                     // Get the first range and do that one
 
                     $output .= "<div id='gt_popup_range_info'>";
-                        $output .= $Range->getRangePopUpContent();
+                    $output .= $Range->getRangePopUpContent();
                     $output .= "</div>";
 
-                }
-                else
-                {
+                } else {
 
                     // No ranges, only criteria
                     $children = $this->getChildOfSubCritType("Criterion");
-                    if ($children)
-                    {
+                    if ($children) {
 
                         $output .= "<table class='gt_popup_table'>";
                         $output .= "<tr class='gt_lightblue'><th>".get_string('name')."</th><th>".get_string('comments', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th></tr>";
 
-                        foreach($children as $child)
-                        {
+                        foreach ($children as $child) {
 
                             $child->loadStudent( $this->student );
 
@@ -413,43 +386,39 @@ class NumericCriterion extends \GT\Criterion {
                                 $output .= "<td>{$child->getName()}</td>";
                                 $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}'>";
 
-                                if ($maxPoints > 0)
-                                {
+                                if ($maxPoints > 0) {
                                     $output .= "<textarea type='comments' class='gt_update_comments gt_comments_sub_large'>".\gt_html($child->getUserComments(), true)."</textarea>";
                                 }
 
                                 $output .= "</td>";
                                 $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."'>";
 
-                                    if ($maxPoints > 0)
-                                    {
-                                        $points = $child->getUserCustomValue();
-                                        $totalPoints += $points;
-                                        $totalMaxPoints += $maxPoints;
+                                if ($maxPoints > 0) {
+                                    $points = $child->getUserCustomValue();
+                                    $totalPoints += $points;
+                                    $totalMaxPoints += $maxPoints;
 
-                                        $output .= "<table class='gt_numeric_values_table'>";
-                                        $output .= "<tr>";
+                                    $output .= "<table class='gt_numeric_values_table'>";
+                                    $output .= "<tr>";
 
-                                        for ($p = 0; $p <= $maxPoints; $p++)
-                                        {
-                                            $output .= "<th>{$p}</th>";
-                                        }
-
-                                        $output .= "</tr>";
-                                        $output .= "<tr>";
-
-                                        for ($p = 0; $p <= $maxPoints; $p++)
-                                        {
-                                            $chk = ($points == $p) ? 'checked' : '';
-                                            $output .= "<td>";
-                                                $output .= "<input type='radio' name='C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' {$chk} />";
-                                            $output .= "</td>";
-                                        }
-
-                                        $output .= "</tr>";
-                                        $output .= "</table>";
-
+                                    for ($p = 0; $p <= $maxPoints; $p++) {
+                                        $output .= "<th>{$p}</th>";
                                     }
+
+                                    $output .= "</tr>";
+                                    $output .= "<tr>";
+
+                                    for ($p = 0; $p <= $maxPoints; $p++) {
+                                        $chk = ($points == $p) ? 'checked' : '';
+                                        $output .= "<td>";
+                                            $output .= "<input type='radio' name='C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' {$chk} />";
+                                        $output .= "</td>";
+                                    }
+
+                                    $output .= "</tr>";
+                                    $output .= "</table>";
+
+                                }
 
                                 $output .= "</td>";
                             $output .= "</tr>";
@@ -460,32 +429,29 @@ class NumericCriterion extends \GT\Criterion {
 
                     }
 
-
                     $output .= "<table class='gt_detail_criterion_overall_table gt_criterion_wrapper' style='background-color:#fff;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>";
 
-                        // Overall for this Criterion
-                        $output .= "<tr class=''>";
-                            $output .= "<th>".get_string('totalpoints', 'block_gradetracker')."</th>";
-                            $output .= "<td colspan='2' class='gt_grid_cell' ><span id='gt_total_points'>{$totalPoints}</span> / {$totalMaxPoints}</td>";
-                        $output .= "</tr>";
+                    // Overall for this Criterion
+                    $output .= "<tr class=''>";
+                    $output .= "<th>".get_string('totalpoints', 'block_gradetracker')."</th>";
+                    $output .= "<td colspan='2' class='gt_grid_cell' ><span id='gt_total_points'>{$totalPoints}</span> / {$totalMaxPoints}</td>";
+                    $output .= "</tr>";
 
+                    $output .= "<tr class=''>";
+                    $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
+                    $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($this->userComments, true)."</textarea></td>";
+                    $output .= "</tr>";
 
-                        $output .= "<tr class=''>";
-                            $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
-                            $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($this->userComments, true)."</textarea></td>";
-                        $output .= "</tr>";
+                    $output .= "<tr class=''>";
+                    $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
+                    $output .= "<td colspan='2' id='gt_criterion_value_{$this->id}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
+                    $output .= "</tr>";
 
-
-                        $output .= "<tr class=''>";
-                            $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
-                            $output .= "<td colspan='2' id='gt_criterion_value_{$this->id}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
-                        $output .= "</tr>";
-
-                        $output .= "<tr class=''>";
-                            $date = ($this->userAwardDate > 0) ? $this->getUserAwardDate('d-m-Y') : '';
-                            $output .= "<th>".get_string('date')."</th>";
-                            $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
-                        $output .= "</tr>";
+                    $output .= "<tr class=''>";
+                    $date = ($this->userAwardDate > 0) ? $this->getUserAwardDate('d-m-Y') : '';
+                    $output .= "<th>".get_string('date')."</th>";
+                    $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
+                    $output .= "</tr>";
 
                     $output .= "</table>";
 
@@ -503,7 +469,7 @@ class NumericCriterion extends \GT\Criterion {
      * Get the content for the range part of the popup, so we can switch between range tabs
      * @return string
      */
-    public function getRangePopUpContent(){
+    public function getRangePopUpContent() {
 
         $qualification = $this->getQualification();
         $unit = $this->getUnit();
@@ -517,14 +483,12 @@ class NumericCriterion extends \GT\Criterion {
         $output = "";
 
         $children = $parent->getChildOfSubCritType("Criterion");
-        if ($children)
-        {
+        if ($children) {
 
             $output .= "<table class='gt_popup_table'>";
             $output .= "<tr class='gt_lightblue'><th>".get_string('name')."</th><th>".get_string('comments', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th></tr>";
 
-            foreach($children as $child)
-            {
+            foreach ($children as $child) {
 
                 $child->loadStudent( $this->student );
 
@@ -537,24 +501,20 @@ class NumericCriterion extends \GT\Criterion {
                         $points = $this->getRangeCriterionValue($this->getID(), $child->getID());
                         $totalPoints += $points;
 
-                        if ($maxPoints > 0)
-                        {
+                        if ($maxPoints > 0) {
                             $totalMaxPoints += $maxPoints;
-
 
                             $output .= "<table class='gt_numeric_values_table'>";
                             $output .= "<tr>";
 
-                            for ($p = 0; $p <= $maxPoints; $p++)
-                            {
+                            for ($p = 0; $p <= $maxPoints; $p++) {
                                 $output .= "<th>{$p}</th>";
                             }
 
                             $output .= "</tr>";
                             $output .= "<tr>";
 
-                            for ($p = 0; $p <= $maxPoints; $p++)
-                            {
+                            for ($p = 0; $p <= $maxPoints; $p++) {
                                 $chk = ($points == $p) ? 'checked' : '';
                                 $output .= "<td>";
                                     $output .= "<input type='radio' name='R{$this->getID()}C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}' rID='{$this->getID()}' {$chk} />";
@@ -574,7 +534,6 @@ class NumericCriterion extends \GT\Criterion {
             $output .= "</table>";
 
         }
-
 
         // This is the Range overall
         $output .= "<table class='gt_detail_criterion_overall_table gt_criterion_wrapper' style='background-color:#fff;margin-bottom:1px;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'>";
@@ -603,8 +562,6 @@ class NumericCriterion extends \GT\Criterion {
             $output .= "</tr>";
 
         $output .= "</table>";
-
-
 
         // This is the overall criterion
         $output .= "<table class='gt_detail_criterion_overall_table gt_detail_criterion_overall_table_2 gt_criterion_wrapper' style='background-color:#fff;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'>";
@@ -638,7 +595,7 @@ class NumericCriterion extends \GT\Criterion {
      * Get the info for the info popup
      * @return string
      */
-    public function getPopUpInfo(){
+    public function getPopUpInfo() {
 
         $output = "";
 
@@ -647,22 +604,21 @@ class NumericCriterion extends \GT\Criterion {
 
         $output .= "<div class='gt_criterion_popup_info'>";
 
-        if ($this->student){
+        if ($this->student) {
             $output .= "<br><span class='gt-popup-studname'>{$this->student->getDisplayName()}</span><br>";
         }
 
-        if ($qualification){
+        if ($qualification) {
             $output .= "<span class='gt-popup-qualname'>{$qualification->getDisplayName()}</span><br>";
         }
 
-        if ($unit){
+        if ($unit) {
             $output .= "<span class='gt-popup-unitname'>{$unit->getDisplayName()}</span><br>";
         }
 
         $output .= "<span class='gt-popup-critname'>{$this->getName()}</span><br>";
 
         $output .= "<p><i>{$this->getDescription()}</i></p>";
-
 
         $output .= "<div class='gt_criterion_info_popup_heading'>".get_string('value', 'block_gradetracker')."</div>";
         $output .= "<div class='gt_c'>";
@@ -676,14 +632,12 @@ class NumericCriterion extends \GT\Criterion {
 
         $output .= "</div>";
 
-        if ($this->hasUserComments())
-        {
+        if ($this->hasUserComments()) {
             $output .= "<div class='gt_criterion_info_popup_heading'>".get_string('comments', 'block_gradetracker')."</div>";
             $output .= "<div class='gt_criterion_info_comments'>";
                 $output .= gt_html($this->userComments, true);
             $output .= "</div>";
         }
-
 
         // Does it have ranges?
         $ranges = $this->getChildOfSubCritType("Range");
@@ -699,38 +653,27 @@ class NumericCriterion extends \GT\Criterion {
                 $output .= "<th style='border-top:none;'>".get_string('criterion', 'block_gradetracker')."</th>";
                 $output .= "<th style='border-top:none;'>".get_string('comments', 'block_gradetracker')."</th>";
 
-                if ($ranges)
-                {
-                    foreach($ranges as $range)
-                    {
+                if ($ranges) {
+                    foreach ($ranges as $range) {
                         $output .= "<th>{$range->getName()}</th>";
                     }
-                }
-                else
-                {
+                } else {
                     $output .= "<th>".get_string('points', 'block_gradetracker')."</th>";
                 }
 
             $output .= "</tr>";
 
-
             // If there are sub criteria
-            if ($criteria)
-            {
-                foreach($criteria as $crit)
-                {
+            if ($criteria) {
+                foreach ($criteria as $crit) {
                     $output .= "<tr>";
                         $output .= "<td>{$crit->getName()}</td>";
                         $output .= "<td><em>{$crit->getUserComments()}</em></td>";
-                        if ($ranges)
-                        {
-                            foreach($ranges as $range)
-                            {
+                        if ($ranges) {
+                            foreach ($ranges as $range) {
                                 $output .= "<td class='gt_c'>{$crit->getCriterionPoints($range)}</td>";
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $output .= "<td class='gt_c'>{$crit->getCriterionPoints()}</td>";
                         }
                     $output .= "</tr>";
@@ -738,24 +681,20 @@ class NumericCriterion extends \GT\Criterion {
             }
 
             // Range Comments
-            if ($ranges)
-            {
+            if ($ranges) {
                 $output .= "<tr>";
                 $output .= "<th colspan='2' class='gt_right'>".get_string('comments', 'block_gradetracker')."</th>";
-                foreach($ranges as $range)
-                {
+                foreach ($ranges as $range) {
                     $output .= "<td><em>{$range->getUserComments()}</em></td>";
                 }
                 $output .= "</tr>";
             }
 
             // Range awards
-            if ($ranges)
-            {
+            if ($ranges) {
                 $output .= "<tr>";
                 $output .= "<th colspan='2' class='gt_right'>".get_string('awards', 'block_gradetracker')."</th>";
-                foreach($ranges as $range)
-                {
+                foreach ($ranges as $range) {
                     $output .= "<td class='gt_c gt_bold'>{$range->getUserAward()->getName()}</td>";
                 }
                 $output .= "</tr>";
@@ -771,22 +710,20 @@ class NumericCriterion extends \GT\Criterion {
 
     }
 
-
-
-
     /**
      * Get the total number of points awarded in this criterion
      * @return string
      */
-    public function getTotalPoints(){
+    public function getTotalPoints() {
 
-        if (!$this->student) return false;
+        if (!$this->student) {
+            return false;
+        }
 
         $total = 0;
 
         // Is this a range we are looking at?
-        if ($this->subCritType == "Range")
-        {
+        if ($this->subCritType == "Range") {
 
             global $DB;
             $record = $DB->get_record_sql("SELECT SUM(value) as ttl
@@ -799,19 +736,15 @@ class NumericCriterion extends \GT\Criterion {
 
         // Only do it this way if we don't have ranges
         $ranges = $this->getChildOfSubCritType("Range");
-        if (!$ranges){
+        if (!$ranges) {
 
             $children = $this->getChildOfSubCritType("Criterion");
-            if ($children)
-            {
-                foreach($children as $child)
-                {
+            if ($children) {
+                foreach ($children as $child) {
                     $maxPoints = $child->getAttribute('maxpoints');
-                    if ($maxPoints > 0)
-                    {
+                    if ($maxPoints > 0) {
                         $points = $child->getUserCustomValue();
-                        if ($points > 0)
-                        {
+                        if ($points > 0) {
                             $total += $points;
                         }
                     }
@@ -828,7 +761,7 @@ class NumericCriterion extends \GT\Criterion {
      * Get the conversion chart for this criterion
      * @return type
      */
-    public function getConversionChart(){
+    public function getConversionChart() {
 
         $return = array();
 
@@ -836,14 +769,11 @@ class NumericCriterion extends \GT\Criterion {
         $GradingStructure = new \GT\CriteriaAwardStructure($this->gradingStructureID);
         $awards = $GradingStructure->getAwards(true);
 
-        if ($awards)
-        {
-            foreach($awards as $award)
-            {
+        if ($awards) {
+            foreach ($awards as $award) {
                 $points = $this->getAttribute('conversion_chart_' . $award->getID());
                 // Don't bother to include it if we didn;t give it a value, it's of no use to us
-                if ($points && $points > 0)
-                {
+                if ($points && $points > 0) {
                     $return[$award->getID()] = $points;
                 }
             }
@@ -857,7 +787,7 @@ class NumericCriterion extends \GT\Criterion {
     }
 
 
-    public function autoCalculateAwardFromRanges(){
+    public function autoCalculateAwardFromRanges() {
 
         $ranges = $this->getChildOfSubCritType("Range");
         $awards = array();
@@ -865,25 +795,20 @@ class NumericCriterion extends \GT\Criterion {
 
         $cntRanges = count($ranges);
 
-        if ($ranges)
-        {
-            foreach($ranges as $range)
-            {
+        if ($ranges) {
+            foreach ($ranges as $range) {
                 $award = $range->getUserAward();
-                if ($award->isMet())
-                {
+                if ($award->isMet()) {
                     $awards[] = $award;
                 }
             }
         }
 
         // If all of the ranges are met, work out the award to give the overall criterion
-        if ($awards && count($awards) == $cntRanges)
-        {
+        if ($awards && count($awards) == $cntRanges) {
 
             $points = 0;
-            foreach($awards as $award)
-            {
+            foreach ($awards as $award) {
                 $points += $award->getPoints();
             }
 
@@ -893,21 +818,16 @@ class NumericCriterion extends \GT\Criterion {
             $grading = new \GT\CriteriaAwardStructure($this->getGradingStructureID());
             $possibleAwards = $grading->getAwards(true);
 
-
             // Loop through them and see if we have one with point ranges
-            if ($possibleAwards)
-            {
-                foreach($possibleAwards as $possibleAward)
-                {
-                    if ($avg >= $possibleAward->getPointsLower() && $avg <= $possibleAward->getPointsUpper())
-                    {
+            if ($possibleAwards) {
+                foreach ($possibleAwards as $possibleAward) {
+                    if ($avg >= $possibleAward->getPointsLower() && $avg <= $possibleAward->getPointsUpper()) {
                         $userAward = $possibleAward;
                     }
                 }
             }
 
-            if ($userAward)
-            {
+            if ($userAward) {
                 $this->setUserAward($userAward);
                 $this->saveUser();
                 return $userAward->getID();
@@ -922,13 +842,13 @@ class NumericCriterion extends \GT\Criterion {
     /**
      * From the conversion chart work out what award the criterion or the range should have from the points
      */
-    public function autoCalculateAwardFromConversionChart(){
+    public function autoCalculateAwardFromConversionChart() {
 
         $userAwardID = false;
         $allScored = true;
 
         // Must all the criteria be scored in order to calculate an award?
-        if ($this->parentCritID){
+        if ($this->parentCritID) {
             $parent = $this->getUnit()->getCriterion($this->parentCritID);
             $mustBeScored = ($parent->getAttribute('reqallscored') == 1);
             $children = $parent->getChildOfSubCritType("Criterion");
@@ -939,29 +859,25 @@ class NumericCriterion extends \GT\Criterion {
 
         // First check if we actually have a conversion chart with valid scores, if not, no point continuing
         $conversionChart = $this->getConversionChart();
-        if (!$conversionChart) return null;
+        if (!$conversionChart) {
+            return null;
+        }
 
-
-        if ($children)
-        {
+        if ($children) {
 
             // If this is a range
-            if ($this->subCritType == "Range")
-            {
+            if ($this->subCritType == "Range") {
 
                 // First check if they are all scored (if they need to be)
-                if ($mustBeScored)
-                {
+                if ($mustBeScored) {
 
-                    foreach($children as $child)
-                    {
+                    foreach ($children as $child) {
 
                         $child->loadStudent($this->student);
                         $maxPoints = $parent->getAttribute("maxpoints_{$child->getID()}_{$this->getID()}");
 
                         // If this one has not been given a points score, stop as we can go no further
-                        if ($maxPoints > 0 && $child->getCriterionPoints($this) <= 0)
-                        {
+                        if ($maxPoints > 0 && $child->getCriterionPoints($this) <= 0) {
                             $allScored = false;
                         }
 
@@ -969,22 +885,17 @@ class NumericCriterion extends \GT\Criterion {
 
                 }
 
-            }
-            else
-            {
+            } else {
 
                 // First check if they are all scored (if they need to be)
-                if ($mustBeScored)
-                {
+                if ($mustBeScored) {
 
-                    foreach($children as $child)
-                    {
+                    foreach ($children as $child) {
 
                         $maxPoints = $child->getAttribute('maxpoints');
 
                         // If this one has not been given a points score, stop as we can go no further
-                        if ($maxPoints > 0 && $child->getCriterionPoints() <= 0)
-                        {
+                        if ($maxPoints > 0 && $child->getCriterionPoints() <= 0) {
                             $allScored = false;
                         }
 
@@ -995,14 +906,11 @@ class NumericCriterion extends \GT\Criterion {
             }
 
             // All is well so far, we let's get our total points and see where we sit in the chart
-            if ($allScored)
-            {
+            if ($allScored) {
                 $totalPoints = $this->getTotalPoints();
 
-                foreach($conversionChart as $awardID => $chartPoints)
-                {
-                    if ($totalPoints >= $chartPoints)
-                    {
+                foreach ($conversionChart as $awardID => $chartPoints) {
+                    if ($totalPoints >= $chartPoints) {
                         $userAwardID = $awardID;
                         break;
                     }
@@ -1011,13 +919,12 @@ class NumericCriterion extends \GT\Criterion {
 
         }
 
-
         // If we have a new award ID to set, do it now
-        if ($allScored && $userAwardID){
+        if ($allScored && $userAwardID) {
             $this->setUserAwardID($userAwardID);
             $this->saveUser();
             return $userAwardID;
-        } elseif (!$allScored || ($allScored && !$userAwardID)){
+        } else if (!$allScored || ($allScored && !$userAwardID)) {
             $this->setUserAwardID(null);
             $this->saveUser();
             return false;
@@ -1034,11 +941,13 @@ class NumericCriterion extends \GT\Criterion {
      * @param type $critID
      * @return type
      */
-    private function getRangeCriterionValue($rangeID, $critID){
+    private function getRangeCriterionValue($rangeID, $critID) {
 
         global $DB;
 
-        if (!$this->student) return false;
+        if (!$this->student) {
+            return false;
+        }
 
         $record = $DB->get_record("bcgt_user_ranges", array("userid" => $this->student->id, "rangeid" => $rangeID, "critid" => $critID));
         return ($record) ? $record->value : false;
@@ -1050,9 +959,9 @@ class NumericCriterion extends \GT\Criterion {
      * @param type $range
      * @return type
      */
-    private function getCriterionPoints($range = false){
+    private function getCriterionPoints($range = false) {
 
-        if (!$range){
+        if (!$range) {
             return $this->getUserCustomValue();
         } else {
             return $this->getRangeCriterionValue($range->getID(), $this->getID());
@@ -1068,11 +977,13 @@ class NumericCriterion extends \GT\Criterion {
      * @param type $value
      * @return boolean
      */
-    public function setRangeCriterionValue($rangeID, $critID, $value){
+    public function setRangeCriterionValue($rangeID, $critID, $value) {
 
         global $DB;
 
-        if (!$this->student) return false;
+        if (!$this->student) {
+            return false;
+        }
 
         $record = $DB->get_record("bcgt_user_ranges", array("userid" => $this->student->id, "rangeid" => $rangeID, "critid" => $critID));
 
@@ -1085,14 +996,10 @@ class NumericCriterion extends \GT\Criterion {
         );
         // ------------ Logging Info
 
-
-        if ($record)
-        {
+        if ($record) {
             $record->value = $value;
             $result = $DB->update_record("bcgt_user_ranges", $record);
-        }
-        else
-        {
+        } else {
             $ins = new \stdClass();
             $ins->userid = $this->student->id;
             $ins->rangeid = $rangeID;
@@ -1100,8 +1007,6 @@ class NumericCriterion extends \GT\Criterion {
             $ins->value = $value;
             $result = $DB->insert_record("bcgt_user_ranges", $ins);
         }
-
-
 
         // ----------- Log the action
         $Log->afterjson = array(
@@ -1119,19 +1024,15 @@ class NumericCriterion extends \GT\Criterion {
         $Log->save();
         // ----------- Log the action
 
-
-
         return $result;
 
     }
-
-
 
     /**
      * Get the options to be displayed for this criterion type in the criteria creation form
 =     * @return string
      */
-    public function getFormOptions(){
+    public function getFormOptions() {
 
         $return = array();
 
@@ -1153,7 +1054,7 @@ class NumericCriterion extends \GT\Criterion {
      * @global type $GT
      * @return type
      */
-    public static function getMaxPoints(){
+    public static function getMaxPoints() {
 
         global $GT;
 
