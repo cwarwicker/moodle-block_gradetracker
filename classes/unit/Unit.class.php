@@ -1,31 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * GT\Unit
- *
  * This class handles the overall unit information.
  *
  * This stores the general information about the unit and will be rarely instantiated itself
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class Unit {
 
@@ -64,10 +65,10 @@ class Unit {
 
         $GTEXE = \GT\Execution::getInstance();
 
-        if ($id){
+        if ($id) {
 
             $record = $DB->get_record("bcgt_units", array("id" => $id));
-            if ($record){
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->structureID = $record->structureid;
@@ -81,7 +82,7 @@ class Unit {
                 $this->deleted = $record->deleted;
 
                 // Load custom form elements
-                if (!isset($GTEXE->UNIT_MIN_LOAD) || !$GTEXE->UNIT_MIN_LOAD){
+                if (!isset($GTEXE->UNIT_MIN_LOAD) || !$GTEXE->UNIT_MIN_LOAD) {
                     $this->loadCustomFormElements();
                 }
 
@@ -95,81 +96,85 @@ class Unit {
      * Count the number of qualifications this unit is attached to
      * @return type
      */
-    public function countQuals(){
+    public function countQuals() {
 
-        $quals= $this->getQualifications();
+        $quals = $this->getQualifications();
         return count($quals);
 
     }
 
-    public function isValid(){
+    public function isValid() {
         return ($this->id !== false);
     }
 
-    public function isDeleted(){
+    public function isDeleted() {
         return ($this->deleted == 1);
     }
 
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
-    public function setID($id){
+    public function setID($id) {
         $this->id = $id;
     }
 
-    public function getStructureID(){
+    public function getStructureID() {
         return $this->structureID;
     }
 
-    public function getStructure(){
+    public function getStructure() {
 
-        if (isset($this->structure)) return $this->structure;
+        if (isset($this->structure)) {
+            return $this->structure;
+        }
 
         $this->structure = new \GT\QualificationStructure($this->structureID);
         return $this->structure;
 
     }
 
-    public function setStructureID($id){
+    public function setStructureID($id) {
         $this->structureID = $id;
         return $this;
     }
 
-    public function getLevelID(){
+    public function getLevelID() {
         return $this->levelID;
     }
 
-    public function getLevel(){
+    public function getLevel() {
 
-        if (isset($this->level)) return $this->level;
+        if (isset($this->level)) {
+            return $this->level;
+        }
 
         $this->level = new \GT\Level($this->levelID);
         return $this->level;
 
     }
 
-    public function setLevelID($id){
+    public function setLevelID($id) {
         $this->levelID = $id;
         return $this;
     }
 
-    public function getUnitNumber(){
+    public function getUnitNumber() {
         return $this->unitNumber;
     }
 
-    public function setUnitNumber($number){
+    public function setUnitNumber($number) {
         $this->unitNumber = trim($number);
         return $this;
     }
 
-    public function getName(){
+    public function getName() {
         return \gt_html($this->name);
     }
 
-    public function getDisplayName(){
+    public function getDisplayName() {
 
-        if (strlen($this->unitNumber)){
+        if (strlen($this->unitNumber)) {
             return $this->getUnitNumber() . ": " . $this->getName();
         } else {
             return $this->getName();
@@ -177,46 +182,46 @@ class Unit {
 
     }
 
-    public function getShortenedDisplayName(){
+    public function getShortenedDisplayName() {
         $name = $this->getDisplayName();
         return wordwrap($name, 75, '<br>');
     }
 
-    public function setName($name){
+    public function setName($name) {
         $this->name = trim($name);
         return $this;
     }
 
-    public function getCode(){
+    public function getCode() {
         return $this->code;
     }
 
-    public function setCode($code){
+    public function setCode($code) {
         $this->code = trim($code);
         return $this;
     }
 
-    public function getCredits(){
+    public function getCredits() {
         return $this->credits;
     }
 
-    public function setCredits($credits){
+    public function setCredits($credits) {
         $this->credits = $credits;
         return $this;
     }
 
-    public function getDescription(){
+    public function getDescription() {
         return $this->description;
     }
 
-    public function setDescription($desc){
+    public function setDescription($desc) {
         $this->description = trim($desc);
         return $this;
     }
 
-    public function getGradingStructure(){
+    public function getGradingStructure() {
 
-        if ($this->gradingStructure === false){
+        if ($this->gradingStructure === false) {
             $this->gradingStructure = new \GT\UnitAwardStructure($this->getGradingStructureID());
         }
 
@@ -224,30 +229,30 @@ class Unit {
 
     }
 
-    public function getGradingStructureID(){
+    public function getGradingStructureID() {
         return $this->gradingStructureID;
     }
 
-    public function getGradingStructureName(){
+    public function getGradingStructureName() {
         $structure = $this->getGradingStructure();
         return $structure->getName();
     }
 
-    public function setGradingStructureID($id){
+    public function setGradingStructureID($id) {
         $this->gradingStructureID = $id;
         return $this;
     }
 
-    public function getDeleted(){
+    public function getDeleted() {
         return $this->deleted;
     }
 
-    public function setDeleted($val){
+    public function setDeleted($val) {
         $this->deleted = $val;
         return $this;
     }
 
-    public function getFullName(){
+    public function getFullName() {
         return $this->getStructure()->getDisplayName() . " " . $this->getLevel()->getName() . " " . $this->getDisplayName();
     }
 
@@ -256,7 +261,7 @@ class Unit {
      * @param type $id
      * @return \GT\Unit
      */
-    public function getQualStructureID(){
+    public function getQualStructureID() {
         return $this->qualStructureID;
     }
 
@@ -265,7 +270,7 @@ class Unit {
      * @param type $id
      * @return \GT\Unit
      */
-    public function setQualStructureID($id){
+    public function setQualStructureID($id) {
         $this->qualStructureID = $id;
         return $this;
     }
@@ -276,18 +281,18 @@ class Unit {
      * Get the name of the unit to be used in select <options>
      * @return type
      */
-    public function getOptionName(){
+    public function getOptionName() {
 
         $output = "";
         $output .= "({$this->getLevel()->getShortName()})";
 
-        if (strlen($this->code) > 0){
+        if (strlen($this->code) > 0) {
             $output .= " {$this->code}";
         }
 
         $output .= " - ";
 
-        if ($this->unitNumber > 0){
+        if ($this->unitNumber > 0) {
             $output .= $this->unitNumber . ": ";
         }
 
@@ -300,9 +305,9 @@ class Unit {
      * Get the criteria on this unit
      * @return type
      */
-    public function getCriteria(){
+    public function getCriteria() {
 
-        if ($this->criteria === false){
+        if ($this->criteria === false) {
             $this->loadCriteria();
         }
 
@@ -314,45 +319,39 @@ class Unit {
      * Load the unit's criteria from the database
      * @global \GT\type $DB
      */
-    protected function loadCriteria($parentID = null, &$obj = false){
+    protected function loadCriteria($parentID = null, &$obj = false) {
 
         global $DB;
 
         $GTEXE = \GT\Execution::getInstance();
 
-        if ($this->criteria === false){
+        if ($this->criteria === false) {
             $this->criteria = array();
         }
 
         $criteria = $DB->get_records("bcgt_criteria", array("unitid" => $this->id, "parentcritid" => $parentID, "deleted" => 0));
-        if ($criteria)
-        {
+        if ($criteria) {
 
-            foreach($criteria as $criterion)
-            {
+            foreach ($criteria as $criterion) {
 
                 $critObj = \GT\Criterion::load($criterion->id);
-                if ($critObj && $critObj->isValid())
-                {
+                if ($critObj && $critObj->isValid()) {
 
                     // Set the qualID if we have it
-                    if (isset($this->qualID)){
+                    if (isset($this->qualID)) {
                         $critObj->setQualID($this->qualID);
                     }
 
                     // Set the qual structure id if we have it
-                    if (isset($this->qualStructureID)){
+                    if (isset($this->qualStructureID)) {
                         $critObj->setQualStructureID($this->qualStructureID);
                     }
 
                     // Check for children
                     $this->loadCriteria($critObj->getID(), $critObj);
-                    if ($obj)
-                    {
+                    if ($obj) {
                         $obj->addChild($critObj);
-                    }
-                    else
-                    {
+                    } else {
                         $this->criteria[$criterion->id] = $critObj;
                     }
 
@@ -362,16 +361,12 @@ class Unit {
 
         }
 
-
         // Order them
-        if (is_null($parentID) && !$obj)
-        {
-            if (!isset($GTEXE->CRIT_NO_SORT) || !$GTEXE->CRIT_NO_SORT){
+        if (is_null($parentID) && !$obj) {
+            if (!isset($GTEXE->CRIT_NO_SORT) || !$GTEXE->CRIT_NO_SORT) {
                 $this->criteria = $this->sortCriteria(false, false);
             }
         }
-
-
 
     }
 
@@ -382,20 +377,15 @@ class Unit {
      * @param type $array
      * @return type
      */
-    public function loadCriteriaIntoFlatArray($criteria = false, $forceLoadAll = false, &$array = false )
-    {
+    public function loadCriteriaIntoFlatArray($criteria = false, $forceLoadAll = false, &$array = false ) {
 
-        if ($criteria && $array)
-        {
+        if ($criteria && $array) {
 
-            if (is_null($criteria->getSubCritType()) || $forceLoadAll)
-            {
+            if (is_null($criteria->getSubCritType()) || $forceLoadAll) {
                 $key = ($criteria->isValid()) ? $criteria->getID() : -$criteria->getDynamicNumber();
                 $array[$key] = $criteria;
-                if ($criteria->getChildren())
-                {
-                    foreach($criteria->getChildren() as $sub)
-                    {
+                if ($criteria->getChildren()) {
+                    foreach ($criteria->getChildren() as $sub) {
                         $this->loadCriteriaIntoFlatArray($sub, $forceLoadAll, $array);
                     }
                 }
@@ -406,26 +396,19 @@ class Unit {
         $return = array();
 
         // If we haven't done anything with it yet
-        if ($this->criteria === false)
-        {
+        if ($this->criteria === false) {
             $this->loadCriteria();
         }
 
+        if ($this->criteria) {
 
-        if ($this->criteria)
-        {
+            foreach ($this->criteria as $criterion) {
 
-            foreach($this->criteria as $criterion)
-            {
-
-                if (is_null($criterion->getSubCritType()) || $forceLoadAll)
-                {
+                if (is_null($criterion->getSubCritType()) || $forceLoadAll) {
                     $key = ($criterion->isValid()) ? $criterion->getID() : -$criterion->getDynamicNumber();
                     $return[$key] = $criterion;
-                    if ($criterion->getChildren())
-                    {
-                        foreach($criterion->getChildren() as $sub)
-                        {
+                    if ($criterion->getChildren()) {
+                        foreach ($criterion->getChildren() as $sub) {
                             $this->loadCriteriaIntoFlatArray($sub, $forceLoadAll, $return);
                         }
                     }
@@ -445,17 +428,17 @@ class Unit {
      * @param type $criteria
      * @return int
      */
-    public function countCriteriaByLetter($letter, $criteria = false){
+    public function countCriteriaByLetter($letter, $criteria = false) {
 
         $count = 0;
 
-        if (!$criteria){
+        if (!$criteria) {
             $criteria = $this->loadCriteriaIntoFlatArray();
         }
 
-        if ($criteria){
-            foreach($criteria as $crit){
-                if (strpos($crit->getName(), $letter) === 0){
+        if ($criteria) {
+            foreach ($criteria as $crit) {
+                if (strpos($crit->getName(), $letter) === 0) {
                     $count++;
                 }
             }
@@ -469,15 +452,15 @@ class Unit {
      * Given an array of values from the unit form, load them into actual criterion objects
      * @param type $criteria
      */
-    public function setCriteriaPostData($criteria){
+    public function setCriteriaPostData($criteria) {
 
         $this->criteria = array();
 
         // In case we have put a child criteria before its parent in the form, order by parents, so that
         // we can more easily add children to parent objects
-        if ($criteria){
-            uasort($criteria, function($a, $b){
-                if ($a['parent'] == $b['parent']){
+        if ($criteria) {
+            uasort($criteria, function($a, $b) {
+                if ($a['parent'] == $b['parent']) {
                     return strnatcasecmp($a['name'], $b['name']);
                 } else {
                     return ($a['parent'] > $b['parent']);
@@ -485,15 +468,15 @@ class Unit {
             });
         }
 
-        if ($criteria){
+        if ($criteria) {
 
-            foreach($criteria as $num => $criterion){
+            foreach ($criteria as $num => $criterion) {
 
                 $critObj = \GT\Criterion::load(false, $criterion['type']);
 
-                if ($critObj){
+                if ($critObj) {
 
-                    if (isset($criterion['id'])){
+                    if (isset($criterion['id'])) {
                         $critObj->setID($criterion['id']);
                     }
 
@@ -503,7 +486,7 @@ class Unit {
                     $critObj->setDescription($criterion['details']);
                     $critObj->setDynamicNumber($num);
 
-                    if (ctype_digit($criterion['parent']) && $criterion['parent'] > 0){
+                    if (ctype_digit($criterion['parent']) && $criterion['parent'] > 0) {
                         $critObj->setParentNumber((int)$criterion['parent']);
                     }
 
@@ -512,8 +495,8 @@ class Unit {
                     $critObj->setAttribute("gradingtype", $criterion['gradingtype']);
 
                     // Additional options
-                    if (isset($criterion['options']) && $criterion['options']){
-                        foreach($criterion['options'] as $opt => $val){
+                    if (isset($criterion['options']) && $criterion['options']) {
+                        foreach ($criterion['options'] as $opt => $val) {
                             $critObj->setAttribute($opt, $val);
                         }
                     }
@@ -522,7 +505,7 @@ class Unit {
                     $critObj->loadExtraPostData($criterion);
 
                     // If it has a parent, add as child to that object
-                    if (ctype_digit($criterion['parent']) && $criterion['parent'] > 0){
+                    if (ctype_digit($criterion['parent']) && $criterion['parent'] > 0) {
                         $parent = $this->findCriterionByDynamicNumber($criterion['parent']);
                         $parent->addChild($critObj, true);
                     } else {
@@ -542,7 +525,7 @@ class Unit {
      * Get any errors
      * @return type
      */
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
@@ -550,7 +533,7 @@ class Unit {
      * Get the array of FormElement objects
      * @return type
      */
-    public function getCustomFormElements(){
+    public function getCustomFormElements() {
         return $this->customFormElements;
     }
 
@@ -559,7 +542,7 @@ class Unit {
      * @param type $name
      * @return type
      */
-    public function getCustomFormElementValue($name){
+    public function getCustomFormElementValue($name) {
 
         $element = $this->getCustomFormElementByName($name);
         return ($element) ? $element->getValue() : false;
@@ -571,13 +554,13 @@ class Unit {
      * @param type $name
      * @return boolean
      */
-    public function getCustomFormElementByName($name){
+    public function getCustomFormElementByName($name) {
 
-        if ($this->customFormElements){
+        if ($this->customFormElements) {
 
-            foreach($this->customFormElements as $element){
+            foreach ($this->customFormElements as $element) {
 
-                if ($element->getName() == $name){
+                if ($element->getName() == $name) {
                     return $element;
                 }
 
@@ -594,19 +577,16 @@ class Unit {
     /**
      * Load the custom form elements into the qualification, with any values as well
      */
-    public function loadCustomFormElements(){
+    public function loadCustomFormElements() {
 
         // Get the possible elements for the qualification form
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         $elements = $structure->getCustomFormElements('unit');
 
         // Get the saved
-        if ($this->isValid())
-        {
-            if ($elements)
-            {
-                foreach($elements as $element)
-                {
+        if ($this->isValid()) {
+            if ($elements) {
+                foreach ($elements as $element) {
                     $value = $this->getAttribute("custom_{$element->getID()}");
                     $element->setValue($value);
                 }
@@ -622,27 +602,22 @@ class Unit {
      * @param type $array
      * @return \GT\Qualification
      */
-    public function setCustomElementValues($array){
+    public function setCustomElementValues($array) {
 
         // Reset saved values on all elements
-        if ($this->customFormElements)
-        {
-            foreach($this->customFormElements as $element)
-            {
+        if ($this->customFormElements) {
+            foreach ($this->customFormElements as $element) {
                 $element->setValue(null);
             }
         }
 
         // Now load in the ones we have submitted
-        if ($array)
-        {
+        if ($array) {
 
-            foreach($array as $name => $value)
-            {
+            foreach ($array as $name => $value) {
 
                 $element = $this->getCustomFormElementByName($name);
-                if ($element)
-                {
+                if ($element) {
                     $element->setValue($value);
                 }
 
@@ -660,55 +635,42 @@ class Unit {
      * @param type $criteria
      * @return boolean
      */
-    protected function findCriterionByDynamicNumber($num, &$criteria = false){
+    protected function findCriterionByDynamicNumber($num, &$criteria = false) {
 
-        if ($criteria)
-        {
+        if ($criteria) {
 
-            foreach($criteria as $criterion)
-            {
+            foreach ($criteria as $criterion) {
 
                 // If this is the one, return it
-                if ($criterion->getDynamicNumber() == $num)
-                {
+                if ($criterion->getDynamicNumber() == $num) {
                     return $criterion;
                 }
 
                 // If it has children
-                if ($criterion->getChildren())
-                {
+                if ($criterion->getChildren()) {
                     $children = $criterion->getChildren();
                     $result = $this->findCriterionByDynamicNumber($num, $children);
-                    if ($result)
-                    {
+                    if ($result) {
                         return $result;
                     }
                 }
 
             }
 
-        }
+        } else if ($this->criteria) {
 
-
-        elseif ($this->criteria)
-        {
-
-            foreach($this->criteria as $criterion)
-            {
+            foreach ($this->criteria as $criterion) {
 
                 // If this is the one, return it
-                if ($criterion->getDynamicNumber() == $num)
-                {
+                if ($criterion->getDynamicNumber() == $num) {
                     return $criterion;
                 }
 
                 // If it has children
-                if ($criterion->getChildren())
-                {
+                if ($criterion->getChildren()) {
                     $children = $criterion->getChildren();
                     $result = $this->findCriterionByDynamicNumber($num, $children);
-                    if ($result)
-                    {
+                    if ($result) {
                         return $result;
                     }
                 }
@@ -726,7 +688,7 @@ class Unit {
      * @param int $critID
      * @return boolean
      */
-    public function getCriterion($critID){
+    public function getCriterion($critID) {
 
         $flatArray = $this->loadCriteriaIntoFlatArray(false, true);
         return ($flatArray && array_key_exists($critID, $flatArray)) ? $flatArray[$critID] : false;
@@ -738,15 +700,12 @@ class Unit {
      * @param type $name
      * @return boolean
      */
-    public function getCriterionByName($name, $forceLoadAll = true){
+    public function getCriterionByName($name, $forceLoadAll = true) {
 
         $flatArray = $this->loadCriteriaIntoFlatArray(false, true);
-        if ($flatArray)
-        {
-            foreach($flatArray as $crit)
-            {
-                if ($crit->getName() == $name)
-                {
+        if ($flatArray) {
+            foreach ($flatArray as $crit) {
+                if ($crit->getName() == $name) {
                     return $crit;
                 }
             }
@@ -760,9 +719,9 @@ class Unit {
      * Get the possible awards for this unit grading structure
      * @return type
      */
-    public function getPossibleAwards(){
+    public function getPossibleAwards() {
 
-        if (!$this->possibleAwards){
+        if (!$this->possibleAwards) {
             $this->loadPossibleAwards();
         }
 
@@ -773,18 +732,15 @@ class Unit {
     /**
      * Load the possible awards for this unit grading structure
      */
-    protected function loadPossibleAwards(){
+    protected function loadPossibleAwards() {
 
         $this->possibleAwards = array();
 
         $structure = new \GT\UnitAwardStructure($this->gradingStructureID);
-        if ($structure->isValid())
-        {
+        if ($structure->isValid()) {
             $awards = $structure->getAwards();
-            if ($awards)
-            {
-                foreach($awards as $award)
-                {
+            if ($awards) {
+                foreach ($awards as $award) {
                     $this->possibleAwards[$award->getID()] = $award;
                 }
             }
@@ -797,20 +753,20 @@ class Unit {
      * Gets a distinct list of all the possible criteria values for this unit to put into the key
      * @return array
      */
-    public function getAllPossibleValues(){
+    public function getAllPossibleValues() {
 
         $values = array();
 
         $criteria = $this->loadCriteriaIntoFlatArray();
 
-        if ($criteria){
+        if ($criteria) {
 
-            foreach($criteria as $criterion){
+            foreach ($criteria as $criterion) {
 
                 $possibleValues = $criterion->getPossibleValues();
-                if ($possibleValues){
+                if ($possibleValues) {
 
-                    foreach($possibleValues as $value){
+                    foreach ($possibleValues as $value) {
 
                         $values[$value->getShortName().':'.$value->getName()] = $value;
 
@@ -834,20 +790,17 @@ class Unit {
      * @global \GT\type $DB
      * @return \GT\Qualification
      */
-    public function getQualifications(){
+    public function getQualifications() {
 
         global $DB;
 
         $return = array();
 
         $results = $DB->get_records("bcgt_qual_units", array("unitid" => $this->id));
-        if ($results)
-        {
-            foreach($results as $result)
-            {
+        if ($results) {
+            foreach ($results as $result) {
                 $obj = new \GT\Qualification($result->qualid);
-                if ($obj->isValid() && !$obj->isDeleted())
-                {
+                if ($obj->isValid() && !$obj->isDeleted()) {
                     $return[] = $obj;
                 }
             }
@@ -868,7 +821,7 @@ class Unit {
      * @param type $userID
      * @return type
      */
-    public function getAttribute($attribute, $userID = null, $qualID = null){
+    public function getAttribute($attribute, $userID = null, $qualID = null) {
 
         global $DB;
 
@@ -882,7 +835,7 @@ class Unit {
      * @global \GT\type $DB
      * @return type
      */
-    public function getUnitAttributes(){
+    public function getUnitAttributes() {
 
         global $DB;
 
@@ -898,21 +851,19 @@ class Unit {
      * @param type $value
      * @param type $userID
      */
-    public function updateAttribute($attribute, $value, $userID = null, $qualID = null){
+    public function updateAttribute($attribute, $value, $userID = null, $qualID = null) {
 
         global $DB;
 
         // If value is null, table doesn't support null values, so just delete it
-        if (is_null($value))
-        {
+        if (is_null($value)) {
             return $this->deleteAttribute($attribute, $userID, $qualID);
         }
 
         $check = $DB->get_record("bcgt_unit_attributes", array("unitid" => $this->id, "userid" => $userID, "qualid" => $qualID, "attribute" => $attribute));
 
-
         // ------------ Logging Info
-        if (!is_null($userID)){
+        if (!is_null($userID)) {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
             $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
@@ -922,15 +873,11 @@ class Unit {
         }
         // ------------ Logging Info
 
-
-        if ($check)
-        {
+        if ($check) {
             $check->value = $value;
             $check->lastupdate = time();
             $result = $DB->update_record("bcgt_unit_attributes", $check);
-        }
-        else
-        {
+        } else {
             $ins = new \stdClass();
             $ins->unitid = $this->id;
             $ins->userid = $userID;
@@ -942,7 +889,7 @@ class Unit {
         }
 
         // If it was a user attribute, log it
-        if (!is_null($userID)){
+        if (!is_null($userID)) {
 
             // ----------- Log the action
             $Log->afterjson = array(
@@ -972,7 +919,7 @@ class Unit {
      * @param type $qualID
      * @return type
      */
-    public function deleteAttribute($attribute, $userID = null, $qualID = null){
+    public function deleteAttribute($attribute, $userID = null, $qualID = null) {
 
         global $DB;
 
@@ -987,7 +934,7 @@ class Unit {
 
         $result = $DB->delete_records("bcgt_unit_attributes", array("unitid" => $this->id, "userid" => $userID, "qualid" => $qualID, "attribute" => $attribute));
 
-        if (!is_null($userID)){
+        if (!is_null($userID)) {
 
             // ----------- Log the action
             $Log->attributes = array(
@@ -1003,7 +950,6 @@ class Unit {
             $Log->save();
             // ----------- Log the action
 
-
         }
 
         return $result;
@@ -1017,8 +963,7 @@ class Unit {
      * @param type $typeID
      * @return type
      */
-    public function hasAnyCriteriaOfType($typeID)
-    {
+    public function hasAnyCriteriaOfType($typeID) {
 
         global $DB;
 
@@ -1032,8 +977,7 @@ class Unit {
      * @param type $qualID
      * @return boolean
      */
-    public function hasActivityLinks($qualID = false)
-    {
+    public function hasActivityLinks($qualID = false) {
 
         $records = $this->getActivityLinks($qualID);
         return ($records && count($records) > 0);
@@ -1045,26 +989,25 @@ class Unit {
      * @global \GT\type $DB
      * @return type
      */
-    public function getActivityLinks($qualID = false){
+    public function getActivityLinks($qualID = false) {
 
         global $DB;
 
         // If we do this from UserUnit, will already have a qualID loaded in
-        if ($this->qualID){
+        if ($this->qualID) {
             $qualID = $this->qualID;
         }
 
-        if (!$qualID) return false;
+        if (!$qualID) {
+            return false;
+        }
 
         $return = array();
         $records = $DB->get_records("bcgt_activity_refs", array("qualid" => $qualID, "unitid" => $this->id, "deleted" => 0));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = \GT\ModuleLink::getModuleLinkFromCourseModule($record->cmid);
-                if ($obj)
-                {
+                if ($obj) {
                     $obj->criteria = $obj->getCriteriaOnModule($qualID, $this, false);
                     $return[$record->cmid] = $obj;
                 }
@@ -1080,11 +1023,10 @@ class Unit {
      * @param type $activities
      * @return type
      */
-    public function getCriteriaNotLinkedToActivities($activities = false)
-    {
+    public function getCriteriaNotLinkedToActivities($activities = false) {
 
         // Get the activities if they aren't passed through
-        if (!$activities){
+        if (!$activities) {
             $activities = $this->getActivityLinks();
         }
 
@@ -1092,14 +1034,10 @@ class Unit {
         $unitCriteria = array();
 
         // Get an array of the criteria IDs linked to these activities
-        if ($activities)
-        {
-            foreach($activities as $activity)
-            {
-                if ($activity->criteria)
-                {
-                    foreach($activity->criteria as $crit)
-                    {
+        if ($activities) {
+            foreach ($activities as $activity) {
+                if ($activity->criteria) {
+                    foreach ($activity->criteria as $crit) {
                         $linkedCriteria[] = $crit->getID();
                     }
                 }
@@ -1108,13 +1046,10 @@ class Unit {
 
         // Get an array of the criteria IDs on the unit
         $criteriaNames = $this->getHeaderCriteriaNamesFlat();
-        if ($criteriaNames)
-        {
-            foreach($criteriaNames as $crit)
-            {
+        if ($criteriaNames) {
+            foreach ($criteriaNames as $crit) {
                 $criterion = $this->getCriterionByName($crit);
-                if ($criterion)
-                {
+                if ($criterion) {
                     $unitCriteria[] = $criterion->getID();
                 }
             }
@@ -1122,10 +1057,8 @@ class Unit {
 
         $results = array_diff( $unitCriteria, $linkedCriteria );
         $return = array();
-        if ($results)
-        {
-            foreach($results as $critID)
-            {
+        if ($results) {
+            foreach ($results as $critID) {
                 $return[$critID] = $this->getCriterion($critID);
             }
         }
@@ -1139,31 +1072,29 @@ class Unit {
      * @global \GT\type $DB
      * @return type
      */
-    public function hasNoErrors(){
+    public function hasNoErrors() {
 
         global $DB;
 
         $Structure = new \GT\QualificationStructure( $this->structureID );
 
         // Check if level is set
-        if (strlen($this->levelID) == 0 || $this->levelID <= 0 || is_null($this->levelID)){
+        if (strlen($this->levelID) == 0 || $this->levelID <= 0 || is_null($this->levelID)) {
             $this->errors[] = get_string('errors:unit:level', 'block_gradetracker');
-        }
-
-        // Check we can have this structure & level
-        // It's an elseif because if level isn't set then this obviously won't be correct
-        elseif (!\GT\QualificationBuild::exists($this->structureID, $this->levelID)){
+        } else if (!\GT\QualificationBuild::exists($this->structureID, $this->levelID)) {
+            // Check we can have this structure & level
+            // It's an elseif because if level isn't set then this obviously won't be correct
             $this->errors[] = get_string('errors:unit:build', 'block_gradetracker');
         }
 
         // Check name
-        if (strlen($this->name) == 0){
+        if (strlen($this->name) == 0) {
             $this->errors[] = get_string('errors:unit:name', 'block_gradetracker');
         }
 
         // Check for duplicate build, name, number and code combination combination
         $check = $DB->get_records("bcgt_units", array("name" => $this->name, "unitnumber" => $this->unitNumber, "code" => $this->code, "structureid" => $this->structureID, "levelid" => $this->levelID, "deleted" => 0));
-        if (isset($check[$this->id])){
+        if (isset($check[$this->id])) {
             unset($check[$this->id]);
         }
 
@@ -1172,27 +1103,27 @@ class Unit {
             $check = reset($check);
         }
 
-        if ($check && $check->id <> $this->id){
+        if ($check && $check->id <> $this->id) {
             $this->errors[] = get_string('errors:unit:name:duplicate', 'block_gradetracker');
         }
 
         // Check for grading structure
         $gradingStructure = new \GT\UnitAwardStructure($this->gradingStructureID);
-        if (!$gradingStructure->isValid() || !$gradingStructure->isEnabled() || $gradingStructure->getQualStructureID() <> $Structure->getID()){
+        if (!$gradingStructure->isValid() || !$gradingStructure->isEnabled() || $gradingStructure->getQualStructureID() <> $Structure->getID()) {
             $this->errors[] = get_string('errors:unit:grading', 'block_gradetracker');
         }
 
         // Check custom elements
         $elements = $Structure->getCustomFormElements('unit');
-        if ($elements){
+        if ($elements) {
 
-            foreach($elements as $element){
+            foreach ($elements as $element) {
 
                 // Is it required?
-                if ($element->hasValidation("REQUIRED")){
+                if ($element->hasValidation("REQUIRED")) {
 
                     $value = $this->getCustomFormElementValue($element->getName());
-                    if (strlen($value) == 0 || $value === false){
+                    if (strlen($value) == 0 || $value === false) {
                         $this->errors[] = sprintf( get_string('errors:unit:custom', 'block_gradetracker'), $element->getName() );
                     }
 
@@ -1205,19 +1136,19 @@ class Unit {
         $critieraNames = array();
 
         // Check criteria
-        if ($this->criteria){
+        if ($this->criteria) {
 
-            foreach($this->criteria as $criterion){
+            foreach ($this->criteria as $criterion) {
 
-                if (!array_key_exists($criterion->getName(), $critieraNames)){
+                if (!array_key_exists($criterion->getName(), $critieraNames)) {
                     $critieraNames[$criterion->getName()] = 0;
                 }
 
                 $critieraNames[$criterion->getName()]++;
 
-                if (!$criterion->hasNoErrors()){
+                if (!$criterion->hasNoErrors()) {
 
-                    foreach($criterion->getErrors() as $error){
+                    foreach ($criterion->getErrors() as $error) {
 
                         $this->errors[] = $error;
 
@@ -1230,8 +1161,8 @@ class Unit {
         }
 
         // Make sure we have no duplicate criteria names at top level
-        foreach($critieraNames as $name => $cnt){
-            if ($cnt > 1){
+        foreach ($critieraNames as $name => $cnt) {
+            if ($cnt > 1) {
                 $this->errors[] = sprintf( get_string('errors:crit:duplicatenames', 'block_gradetracker'), $name );
             }
         }
@@ -1241,7 +1172,7 @@ class Unit {
     }
 
     /**Delete unit sets the deleted attribute to 1*/
-    public function delete(){
+    public function delete() {
 
         global $DB;
 
@@ -1254,7 +1185,7 @@ class Unit {
     }
 
     /**Restore unit sets the deleted attribute to 0*/
-    public function restore(){
+    public function restore() {
 
         global $DB;
 
@@ -1266,7 +1197,7 @@ class Unit {
         return $DB->update_record("bcgt_units", $obj);
     }
 
-    public function copyUnit(){
+    public function copyUnit() {
 
         global $DB, $CFG;
 
@@ -1281,36 +1212,34 @@ class Unit {
         $newunit->setCredits($this->credits);
         $newunit->setDescription($this->description);
 
-
         // get criteria for unit passed through
         $this->loadCriteria();
-        foreach ($this->criteria as $c){
+        foreach ($this->criteria as $c) {
             $name = $c->getName();
-                $criteriaattributes[$name] = array();
-                    $catts = $DB->get_records('bcgt_criteria_attributes', array('critid' => $c->getID()));
-                        if($catts){
-                            $criteriaattributes[$name] = $catts;
-                        }
+            $criteriaattributes[$name] = array();
+            $catts = $DB->get_records('bcgt_criteria_attributes', array('critid' => $c->getID()));
+            if ($catts) {
+                $criteriaattributes[$name] = $catts;
+            }
             // prepare criteria for new unit
             $c->setID(false);
             $newunit->addCriterion($c);
         }
 
-       $newunit->save();
+        $newunit->save();
 
         // now that we have a new unit with an ID.
         // get and update attributes for copied unit.
         $atts = $this->getUnitAttributes();
-        foreach($atts as $a){
+        foreach ($atts as $a) {
             $newunit->updateAttribute($a->attribute, $a->value);
         }
 
         //get and update criteria attributes for copied unit
-        foreach ($newunit->getCriteria() as $gc)
-        {
+        foreach ($newunit->getCriteria() as $gc) {
             $name = $gc->getName();
             $atts = $criteriaattributes[$name];
-            foreach ($atts as $a){
+            foreach ($atts as $a) {
                 $gc->updateAttribute($a->attribute, $a->value);
             }
         }
@@ -1319,7 +1248,7 @@ class Unit {
         header('location:'.$CFG->wwwroot.'/blocks/gradetracker/config.php?view=units&section=edit&id='.$newunit->getID());
     }
 
-    public function addCriterion($criteria){
+    public function addCriterion($criteria) {
         $this->criteria[] = $criteria;
     }
     /**
@@ -1327,13 +1256,13 @@ class Unit {
      * @global \GT\type $DB
      * @return boolean
      */
-    public function save(){
+    public function save() {
 
         global $DB;
 
         $obj = new \stdClass();
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $obj->id = $this->id;
         }
 
@@ -1347,40 +1276,36 @@ class Unit {
         $obj->gradingstructureid = $this->gradingStructureID;
         $obj->deleted = $this->deleted;
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $result = $DB->update_record("bcgt_units", $obj);
         } else {
             $this->id = $DB->insert_record("bcgt_units", $obj);
             $result = $this->id;
         }
 
-        if (!$result){
+        if (!$result) {
             $this->errors[] = get_string('errors:save', 'block_gradetracker');
             return false;
         }
 
-
         // Criteria
         $this->saveCriteria();
-
 
         // Order them properly again
         $Sorter = new \GT\Sorter();
         $Sorter->sortCriteria($this->criteria);
 
-
         // Delete any we removed
         $this->deleteRemovedCriteria();
-
 
         // Custom Form Elements
         // Clear any set previously
         $DB->delete_records("bcgt_unit_attributes", array("unitid" => $this->id, "userid" => null));
 
         // Save new ones
-        if ($this->customFormElements){
+        if ($this->customFormElements) {
 
-            foreach($this->customFormElements as $element){
+            foreach ($this->customFormElements as $element) {
 
                 $this->updateAttribute("custom_{$element->getID()}", $element->getValue());
 
@@ -1388,9 +1313,7 @@ class Unit {
 
         }
 
-
         // Unit Quals
-
 
         return true;
 
@@ -1401,49 +1324,38 @@ class Unit {
      * @param type $criteria
      * @param type $parent
      */
-    protected function saveCriteria($criteria = false, $parent = false)
-    {
+    protected function saveCriteria($criteria = false, $parent = false) {
 
-        if ($criteria && $parent)
-        {
+        if ($criteria && $parent) {
 
-            foreach($criteria as $criterion)
-            {
+            foreach ($criteria as $criterion) {
 
                 $criterion->setUnitID($this->id);
                 $criterion->setParentID($parent->getID());
                 $criterion->save();
 
                 // Does it have children?
-                if ($criterion->getChildren())
-                {
+                if ($criterion->getChildren()) {
                     $children = $criterion->getChildren();
                     $this->saveCriteria($children, $criterion);
                 }
 
             }
 
-        }
-
-
-        elseif ($this->criteria)
-        {
-            foreach($this->criteria as $criterion)
-            {
+        } else if ($this->criteria) {
+            foreach ($this->criteria as $criterion) {
 
                 $criterion->setUnitID($this->id);
                 $criterion->save();
 
                 // Does it have children?
-                if ($criterion->getChildren())
-                {
+                if ($criterion->getChildren()) {
                     $children = $criterion->getChildren();
                     $this->saveCriteria($children, $criterion);
                 }
 
                 // Does it have any point links?
-                if (isset($criterion->pointLinks))
-                {
+                if (isset($criterion->pointLinks)) {
                     $criterion->savePointLinks();
                 }
 
@@ -1456,7 +1368,7 @@ class Unit {
      * Delete any criteria we removed from the Unit creation form
      * @global \GT\type $DB
      */
-    private function deleteRemovedCriteria(){
+    private function deleteRemovedCriteria() {
 
         global $DB;
 
@@ -1465,10 +1377,8 @@ class Unit {
 
         // Get the ones in the database
         $old = $DB->get_records("bcgt_criteria", array("unitid" => $this->id, "deleted" => 0));
-        if ($old)
-        {
-            foreach($old as $o)
-            {
+        if ($old) {
+            foreach ($old as $o) {
                 $oldIDs[] = $o->id;
             }
         }
@@ -1476,20 +1386,16 @@ class Unit {
         // Get the ones loaded into the object
         $flatArray = $this->loadCriteriaIntoFlatArray(false, true);
 
-        if ($flatArray)
-        {
-            foreach($flatArray as $flat)
-            {
+        if ($flatArray) {
+            foreach ($flatArray as $flat) {
                 $currentIDs[] = $flat->getID();
             }
         }
 
         // Get the ones that don't exist in both arrays
         $removeIDs = array_diff($oldIDs, $currentIDs);
-        if ($removeIDs)
-        {
-            foreach($removeIDs as $removeID)
-            {
+        if ($removeIDs) {
+            foreach ($removeIDs as $removeID) {
                 $obj = new \stdClass();
                 $obj->id = $removeID;
                 $obj->deleted = 1;
@@ -1504,7 +1410,7 @@ class Unit {
      * @param type $view
      * @param type $activities
      */
-    public function getHeaderCriteriaNamesFlat($view = false, $activities = false){
+    public function getHeaderCriteriaNamesFlat($view = false, $activities = false) {
 
         // Get the names
         $criteria = $this->getHeaderCriteriaNames();
@@ -1512,18 +1418,13 @@ class Unit {
         // Get a flat array of criteria names, which may contain multiple copies if activity grid and if criteiron
         // is on more than 1 activity
         $criteriaArray = array();
-        if ($view == 'activities')
-        {
+        if ($view == 'activities') {
 
             // Criteria linked to activities
-            if ($activities)
-            {
-                foreach($activities as $activity)
-                {
-                    if ($activity->criteria)
-                    {
-                        foreach($activity->criteria as $crit)
-                        {
+            if ($activities) {
+                foreach ($activities as $activity) {
+                    if ($activity->criteria) {
+                        foreach ($activity->criteria as $crit) {
                             $criteriaArray[] = $crit->getName();
                         }
                     }
@@ -1532,27 +1433,19 @@ class Unit {
 
             // Then non-linked ones
             $nonLinkedCriteria = ($view == 'activities') ? $this->getCriteriaNotLinkedToActivities( $activities ) : false;
-            if ($nonLinkedCriteria)
-            {
-                foreach($nonLinkedCriteria as $crit)
-                {
+            if ($nonLinkedCriteria) {
+                foreach ($nonLinkedCriteria as $crit) {
                     $criteriaArray[] = $crit->getName();
                 }
             }
 
-        }
-        else
-        {
+        } else {
 
-            if ($criteria)
-            {
-                foreach($criteria as $crit)
-                {
+            if ($criteria) {
+                foreach ($criteria as $crit) {
                     $criteriaArray[] = $crit['name'];
-                    if ($crit['sub'])
-                    {
-                        foreach($crit['sub'] as $sub)
-                        {
+                    if ($crit['sub']) {
+                        foreach ($crit['sub'] as $sub) {
                             $criteriaArray[] = $sub;
                         }
                     }
@@ -1570,39 +1463,37 @@ class Unit {
      * types and their sub levels
      * @return type
      */
-    public function getHeaderCriteriaNames(){
+    public function getHeaderCriteriaNames() {
 
         $names = array();
 
         $criteria = $this->getCriteria();
 
-        if ($criteria){
+        if ($criteria) {
 
-            foreach($criteria as $criterion){
+            foreach ($criteria as $criterion) {
 
                 // If this isn't a;ready in the array, add it
-                if (!array_key_exists($criterion->getName(), $names)){
+                if (!array_key_exists($criterion->getName(), $names)) {
                     $names[$criterion->getName()] = array("name" => $criterion->getName(), "sub" => array());
                 }
 
                 // If this has child levels, we might want some of them in the header as well
                 if ($criterion->countChildLevels() > 0) {
 
-                    switch( get_class($criterion) )
-                    {
+                    switch ( get_class($criterion) ) {
 
                         // Standard criterion
                         case 'GT\Criteria\StandardCriterion':
 
                              // If only 1 level of sub criteria, add them in
                             // Though if this top level criterion has the setting "force popup" don't show the sub criteria in the grid table
-                            if ($criterion->getAttribute('forcepopup') != 1)
-                            {
+                            if ($criterion->getAttribute('forcepopup') != 1) {
 
                                 // If only 1 level of sub criteria, add them in
-                                foreach($criterion->getChildren() as $child){
+                                foreach ($criterion->getChildren() as $child) {
 
-                                    if (!in_array($child->getName(), $names[$criterion->getName()]['sub'])){
+                                    if (!in_array($child->getName(), $names[$criterion->getName()]['sub'])) {
                                         $names[$criterion->getName()]['sub'][] = $child->getName();
                                     }
 
@@ -1612,12 +1503,10 @@ class Unit {
 
                         break;
 
-
                         // Numeric criterion - Only top level go in the header
                         case 'GT\Criteria\NumericCriterion':
 
                         break;
-
 
                         // Ranged criterion - Only top level go in the header
                         case 'GT\Criteria\RangedCriterion':
@@ -1632,7 +1521,6 @@ class Unit {
 
         }
 
-
         // Sort them
         $names = $this->sortCriteria($names);
         return $names;
@@ -1643,7 +1531,7 @@ class Unit {
      * Get the content to display in the info popup for the unit
      * @return string
      */
-    public function getPopUpInfo(){
+    public function getPopUpInfo() {
 
         $output = "";
 
@@ -1656,115 +1544,94 @@ class Unit {
         $output .= "<table class='gt_unit_popup_criteria_table'>";
             $output .= "<tr><th>".get_string('name', 'block_gradetracker')."</th><th>".get_string('description', 'block_gradetracker')."</th></tr>";
 
-            if ($this->getCriteria())
-            {
-                foreach($this->getCriteria() as $criterion)
-                {
+        if ($this->getCriteria()) {
+            foreach ($this->getCriteria() as $criterion) {
 
-                    $output .= "<tr><td>{$criterion->getName()}</td><td>{$criterion->getDescription()}</td></tr>";
+                $output .= "<tr><td>{$criterion->getName()}</td><td>{$criterion->getDescription()}</td></tr>";
 
-                    // Check if the criterion has any sub criteria that are of type Range
-                    if ($criterion->hasChildrenOfType("Range"))
-                    {
+                // Check if the criterion has any sub criteria that are of type Range
+                if ($criterion->hasChildrenOfType("Range")) {
 
-                        // Get ranged
-                        $ranged = $criterion->getChildOfSubCritType("Range");
-                        $subCriteria = $criterion->getChildOfSubCritType("Criterion");
+                    // Get ranged
+                    $ranged = $criterion->getChildOfSubCritType("Range");
+                    $subCriteria = $criterion->getChildOfSubCritType("Criterion");
 
-                        // Numeric Criterion will have Ranged sub criteria and Criterion sub criteria on the main parent
-                        if ($ranged && $subCriteria)
-                        {
+                    // Numeric Criterion will have Ranged sub criteria and Criterion sub criteria on the main parent
+                    if ($ranged && $subCriteria) {
 
-                            $output .= "<tr>";
-                                $output .= "<td colspan='2'>";
+                        $output .= "<tr>";
+                            $output .= "<td colspan='2'>";
 
-                                    $output .= "<table class='gt_unit_info_range_table'>";
+                                $output .= "<table class='gt_unit_info_range_table'>";
+
+                                    $output .= "<tr>";
+                                        $output .= "<th></th>";
+                                        foreach ($ranged as $range) {
+                                            $output .= "<th>{$range->getName()}</th>";
+                                        }
+                                    $output .= "</tr>";
+
+                                    // Numeric criterion will have sub criteria of type Criterion on the main parent
+                                    foreach ($subCriteria as $subCriterion) {
 
                                         $output .= "<tr>";
-                                            $output .= "<th></th>";
-                                            foreach($ranged as $range)
-                                            {
-                                                $output .= "<th>{$range->getName()}</th>";
+                                        $output .= "<th>{$subCriterion->getName()}</th>";
+                                        foreach ($ranged as $range) {
+                                            $maxPoints = $criterion->getAttribute("maxpoints_{$subCriterion->getID()}_{$range->getID()}");
+                                            $output .= "<td>";
+                                            if ($maxPoints > 0) {
+                                                for ($i = 1; $i <= $maxPoints; $i++) {
+                                                    $output .= '&nbsp;&nbsp;&nbsp;'.$i.'&nbsp;&nbsp;&nbsp;';
+                                                }
+                                            } else {
+                                                $output .= '&nbsp;&nbsp;&nbsp;' . $maxPoints;
                                             }
+                                            $output .= "</td>";
+                                        }
                                         $output .= "</tr>";
 
-                                        // Numeric criterion will have sub criteria of type Criterion on the main parent
-                                        foreach($subCriteria as $subCriterion)
-                                        {
+                                    }
 
-                                            $output .= "<tr>";
-                                                $output .= "<th>{$subCriterion->getName()}</th>";
-                                                foreach($ranged as $range)
-                                                {
-                                                    $maxPoints = $criterion->getAttribute("maxpoints_{$subCriterion->getID()}_{$range->getID()}");
-                                                    $output .= "<td>";
-                                                        if ($maxPoints > 0)
-                                                        {
-                                                            for($i = 1; $i <= $maxPoints; $i++)
-                                                            {
-                                                                $output .= '&nbsp;&nbsp;&nbsp;'.$i.'&nbsp;&nbsp;&nbsp;';
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            $output .= '&nbsp;&nbsp;&nbsp;' . $maxPoints;
-                                                        }
-                                                    $output .= "</td>";
-                                                }
-                                            $output .= "</tr>";
+                                $output .= "</table>";
 
-                                        }
+                            $output .= "</td>";
+                        $output .= "</tr>";
 
-                                    $output .= "</table>";
-
-                                $output .= "</td>";
-                            $output .= "</tr>";
-
-                        }
-
+                    } else if ($ranged) {
                         // Ranged Criterion have the Ranged sub criteria, then the Criterion sub criteria are on each Range
-                        elseif ($ranged)
-                        {
-                            foreach($ranged as $range)
-                            {
-                                $output .= "<tr>";
-                                    $output .= "<td style='padding-left:10px';>{$range->getName()}</td>";
-                                    $output .= "<td style='padding-left:10px';>{$range->getDescription()}</td>";
-                                $output .= "</tr>";
-                           }
-
+                        foreach ($ranged as $range) {
+                            $output .= "<tr>";
+                                $output .= "<td style='padding-left:10px';>{$range->getName()}</td>";
+                                $output .= "<td style='padding-left:10px';>{$range->getDescription()}</td>";
+                            $output .= "</tr>";
                         }
 
                     }
-                    else
-                    {
 
-                        // Sub Criteria level 1
-                        if ($criterion->getChildren())
-                        {
-                            foreach($criterion->getChildren() as $child)
-                            {
+                } else {
 
-                                $output .= "<tr><td style='padding-left:10px';>{$child->getName()}</td><td style='padding-left:10px';>{$child->getDescription()}</td></tr>";
+                    // Sub Criteria level 1
+                    if ($criterion->getChildren()) {
+                        foreach ($criterion->getChildren() as $child) {
 
-                                // Sub Criteria level 2
-                                if ($child->getChildren())
-                                {
-                                    foreach($child->getChildren() as $subChild)
-                                    {
+                            $output .= "<tr><td style='padding-left:10px';>{$child->getName()}</td><td style='padding-left:10px';>{$child->getDescription()}</td></tr>";
 
-                                        $output .= "<tr><td style='padding-left:20px';>{$subChild->getName()}</td><td style='padding-left:20px';>{$subChild->getDescription()}</td></tr>";
+                            // Sub Criteria level 2
+                            if ($child->getChildren()) {
+                                foreach ($child->getChildren() as $subChild) {
 
-                                    }
+                                    $output .= "<tr><td style='padding-left:20px';>{$subChild->getName()}</td><td style='padding-left:20px';>{$subChild->getDescription()}</td></tr>";
+
                                 }
-
                             }
-                        }
 
+                        }
                     }
 
                 }
+
             }
+        }
 
         $output .= "</table>";
 
@@ -1780,14 +1647,14 @@ class Unit {
      * @param type $criteria
      * @return type
      */
-    public function sortCriteria($criteria = false, $all = false, $forceObjs = false){
+    public function sortCriteria($criteria = false, $all = false, $forceObjs = false) {
 
         // If we are passing them through, they will be from the header, so just an array of names, not objects
-        if ($criteria && !$forceObjs){
+        if ($criteria && !$forceObjs) {
             $objs = false;
-        } elseif ($criteria && $forceObjs){
+        } else if ($criteria && $forceObjs) {
             $objs = true;
-        } elseif (!$criteria) {
+        } else if (!$criteria) {
             $criteria = ($all) ? $this->loadCriteriaIntoFlatArray() : $this->getCriteria();
             $objs = true;
         }
@@ -1795,7 +1662,7 @@ class Unit {
         $Sorter = new \GT\Sorter();
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         $customOrder = $structure->getCustomOrder('criteria');
-        if ($customOrder){
+        if ($customOrder) {
             $Sorter->sortCriteriaCustom($criteria, $customOrder, $objs, true);
         } else {
             $Sorter->sortCriteria($criteria, $objs, true);
@@ -1809,8 +1676,7 @@ class Unit {
      * Export a unit structure to XML and download file.
      * @return void
      */
-    public function export()
-    {
+    public function export() {
 
         $XML = $this->exportXML();
 
@@ -1829,8 +1695,7 @@ class Unit {
      * Export a unit and its criteria to XML
      * @return \SimpleXMLElement
      */
-    protected function exportXML()
-    {
+    protected function exportXML() {
 
         $doc = new \SimpleXMLElement('<xml/>');
 
@@ -1870,7 +1735,7 @@ class Unit {
 
                         // If it's a Conversion Chart attribute, the award ID will mean nothing to us, so we need to
                         // put in a reference to the award itself.
-                        if (strpos($attribute, 'conversion_chart') === 0){
+                        if (strpos($attribute, 'conversion_chart') === 0) {
 
                             $awardID = str_replace('conversion_chart_', '', $attribute);
                             $award = new \GT\CriteriaAward($awardID);
@@ -1913,7 +1778,7 @@ class Unit {
         $requiredNodes = array('qualificationStructure', 'level', 'number', 'name', 'uniqueCode', 'description', 'credits', 'gradingStructure', 'criteria');
 
         // Check file exists
-        if (!file_exists($file)){
+        if (!file_exists($file)) {
             $result['errors'][] = get_string('errors:import:file', 'block_gradetracker') . ' - (' . $file . ')';
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
@@ -1925,27 +1790,27 @@ class Unit {
         finfo_close($fInfo);
 
         // Has to be XML file or a zip file, otherwise error and return
-        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml'){
+        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml') {
             $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml, text/xml, text/plain or application/zip', $mime);
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
 
         // If it's a zip file, we need to unzip it and run on each of the XML files inside
-        if ($mime == 'application/zip'){
-            return self::importXMLZip($file) ;
+        if ($mime == 'application/zip') {
+            return self::importXMLZip($file);
         }
 
         // Open file
         $doc = \simplexml_load_file($file);
-        if (!$doc){
+        if (!$doc) {
             $result['errors'][] = get_string('errors:import:xml:load', 'block_gradetracker') . ' - (' . $file . ')';
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
 
         // Make sure it is wrapped in Unit tag
-        if (!isset($doc->Unit)){
+        if (!isset($doc->Unit)) {
             $result['errors'][] = get_string('errors:import:xml:missingnodes', 'block_gradetracker') . ' - Unit';
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
@@ -1963,8 +1828,8 @@ class Unit {
         }
 
         // If there are missing nodes, error.
-        if ($missingNodes){
-            foreach($missingNodes as $node){
+        if ($missingNodes) {
+            foreach ($missingNodes as $node) {
                 $result['errors'][] = get_string('errors:import:xml:missingnodes', 'block_gradetracker') . ' - ' . $node;
                 $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
                 return $result;
@@ -1973,14 +1838,14 @@ class Unit {
 
         // Get each node into a variable.
         $nodes = array();
-        foreach($requiredNodes as $node) {
+        foreach ($requiredNodes as $node) {
             // Decode htmlspecialchars as if there was an & in the QualStructure name, it becomes &amp; in the XML and needs converting back.
             $nodes[$node] = htmlspecialchars_decode((string)$xml->{$node});
         }
 
         // Check Qual structure exists
         $QualStructure = \GT\QualificationStructure::findByName($nodes['qualificationStructure']);
-        if (!$QualStructure){
+        if (!$QualStructure) {
             $result['errors'][] = get_string('errors:qualbuild:type', 'block_gradetracker') . ' - ' . $nodes['qualificationStructure'];
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
@@ -2083,7 +1948,7 @@ class Unit {
                         $attName = $attNode->getName();
 
                         // Conversion chart needs the award name attribute converted to an id.
-                        if (strpos($attName, 'conversion_chart') === 0){
+                        if (strpos($attName, 'conversion_chart') === 0) {
 
                             $award = $critGradingStructure->getAwardByName($attNode['award']);
                             if (!$award) {
@@ -2136,7 +2001,7 @@ class Unit {
         // Also adjust any attributes which need adjusting with real ID values.
         if ($newUnit->getCriteria()) {
 
-            foreach($newUnit->getCriteria() as $newCrit) {
+            foreach ($newUnit->getCriteria() as $newCrit) {
 
                 // Is this dynamic number in the parent array?
                 if (array_key_exists($newCrit->getDynamicNumber(), $parentArray)) {
@@ -2152,7 +2017,7 @@ class Unit {
                 // Check attributes.
                 foreach ($newCrit->getAttributes() as $newCritAttName => $newCritAttValue) {
 
-                    if (strpos($newCritAttName, 'maxpoints_') === 0){
+                    if (strpos($newCritAttName, 'maxpoints_') === 0) {
 
                         // Get the ids from the attribute as it is at the moment.
                         preg_match_all('/\d+/', $newCritAttName, $matches);
@@ -2211,15 +2076,13 @@ class Unit {
         $tmpFileName = 'import-unit-' . time() . '-' . $USER->id . '.zip';
         $extracted = $fp->extract_to_pathname($file, \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName);
 
-        if ($extracted)
-        {
-            foreach($extracted as $extractedFile => $bool)
-            {
+        if ($extracted) {
+            foreach ($extracted as $extractedFile => $bool) {
 
                 $result['output'] .= sprintf( get_string('import:datasheet:process:file', 'block_gradetracker'), $extractedFile ) . '<br>';
 
                 $load = \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName . '/' . $extractedFile;
-                $import = \GT\Unit::importXML($load);
+                $import = self::importXML($load);
 
                 // Append to result
                 $result['result'] = $result['result'] && $import['result'];
@@ -2227,9 +2090,7 @@ class Unit {
                 $result['output'] .= $import['output'];
 
             }
-        }
-        else
-        {
+        } else {
             $result['result'] = false;
             $result['errors'][] = get_string('errors:import:zipfile', 'block_gradetracker');
         }
@@ -2244,8 +2105,7 @@ class Unit {
      * @param type $params
      * @return \GT\Unit
      */
-    public static function search($params)
-    {
+    public static function search($params) {
 
         global $DB;
 
@@ -2259,37 +2119,37 @@ class Unit {
         $sqlParams[] = (isset($params['deleted'])) ? $params['deleted'] : 0;
 
         // Are we searching for units of a specific qual structure id?
-        if (isset($params['structureID']) && $params['structureID'] > 0){
+        if (isset($params['structureID']) && $params['structureID'] > 0) {
             $sql .= "AND structureid = ? ";
             $sqlParams[] = $params['structureID'];
         }
 
         // Are we searching for a particular level of unit?
-        if (isset($params['levelID']) && $params['levelID'] > 0){
+        if (isset($params['levelID']) && $params['levelID'] > 0) {
             $sql .= "AND levelid = ? ";
             $sqlParams[] = $params['levelID'];
         }
 
         // Are we searching for a particular unit number?
-        if (isset($params['unitNumber']) && !\gt_is_empty($params['unitNumber'])){
+        if (isset($params['unitNumber']) && !\gt_is_empty($params['unitNumber'])) {
             $sql .= "AND unitNumber LIKE ? ";
             $sqlParams[] = '%'.trim($params['unitNumber']).'%';
         }
 
-        if (isset($params['nameORcode']) && !\gt_is_empty($params['nameORcode'])){
+        if (isset($params['nameORcode']) && !\gt_is_empty($params['nameORcode'])) {
             $sql .= "AND (name LIKE ? OR unitNumber LIKE ? OR code LIKE ?) ";
             $sqlParams[] = '%'.trim($params['nameORcode']).'%';
             $sqlParams[] = '%'.trim($params['nameORcode']).'%';
             $sqlParams[] = '%'.trim($params['nameORcode']).'%';
         } else {
 
-            if (isset($params['name']) && !\gt_is_empty($params['name'])){
+            if (isset($params['name']) && !\gt_is_empty($params['name'])) {
                 $sql .= "AND (name LIKE ? OR unitNumber LIKE ?) ";
                 $sqlParams[] = '%'.trim($params['name']).'%';
                 $sqlParams[] = '%'.trim($params['name']).'%';
             }
 
-            if (isset($params['code']) && !\gt_is_empty($params['code'])){
+            if (isset($params['code']) && !\gt_is_empty($params['code'])) {
                 $sql .= "AND (code LIKE ?) ";
                 $sqlParams[] = '%'.trim($params['code']).'%';
                 $sqlParams[] = '%'.trim($params['code']).'%';
@@ -2298,19 +2158,16 @@ class Unit {
         }
 
         $results = $DB->get_records_sql($sql, $sqlParams);
-        if ($results)
-        {
-            foreach($results as $result)
-            {
+        if ($results) {
+            foreach ($results as $result) {
                 $unit = new \GT\Unit($result->id);
-                if ($unit->isValid())
-                {
+                if ($unit->isValid()) {
                     $return[] = $unit;
                 }
             }
         }
 
-        if (!isset($params['sort']) || $params['sort'] == true){
+        if (!isset($params['sort']) || $params['sort'] == true) {
             $Sorter = new \GT\Sorter();
             $Sorter->sortUnitsByLevel($return);
         }
@@ -2323,7 +2180,7 @@ class Unit {
      * Get the structure's display name
      * @return \GT\QualificationStructure
      */
-    public function getStructureName(){
+    public function getStructureName() {
 
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getDisplayName() : false;
@@ -2334,7 +2191,7 @@ class Unit {
      * Get the structure's real name
      * @return \GT\QualificationStructure
      */
-    public function getStructureRealName(){
+    public function getStructureRealName() {
 
         $structure = new \GT\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getName() : false;
@@ -2345,7 +2202,7 @@ class Unit {
      * Get the level name
      * @return type
      */
-    public function getLevelName(){
+    public function getLevelName() {
 
         $level = new \GT\Level ($this->levelID);
         return ($level) ? $level->getName() : false;
@@ -2357,7 +2214,7 @@ class Unit {
      * @param type $id
      * @return type
      */
-    public static function name($id){
+    public static function name($id) {
 
         $unit = new \GT\Unit($id);
         return $unit->getDisplayName();
@@ -2370,7 +2227,7 @@ class Unit {
      * @global \GT\type $DB
      * @return type
      */
-    public static function countUnits(){
+    public static function countUnits() {
 
         global $DB;
 
@@ -2383,7 +2240,7 @@ class Unit {
      * Get all units, sorted by number
      * @return type
      */
-    public static function getAllUnits($sortInSearch = true){
+    public static function getAllUnits($sortInSearch = true) {
 
         $units = self::search( array('sort' => $sortInSearch) );
         $Sorter = new \GT\Sorter();
@@ -2392,6 +2249,5 @@ class Unit {
         return $units;
 
     }
-
 
 }
