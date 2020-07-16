@@ -78,6 +78,7 @@ $string['errors:filloutfields'] = 'Required fields have not been filled in';
 $string['errors:filloutfield'] = 'Required field has not been filled in';
 $string['errors:configerror'] = 'Configuration Error';
 $string['errors:max_input_vars'] = 'Cannot display form as number of inputs exceeds max_input_vars setting in PHP.ini. Please speak to your server administrator to increase this setting.';
+$string['errors:invalidqualstructure'] = 'Invalid Qualification Structure';
 
 $string['errors:calcgrade:noavggcse'] = 'No Avg GCSE';
 $string['errors:calcgrade:nograde'] = 'No Award';

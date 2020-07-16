@@ -24,6 +24,7 @@
  */
 require_once('../../../config.php');
 require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
+require_once($CFG->dirroot . '/local/df_hub/lib.php');
 
 // Have they timed out?
 if ($USER->id <= 0) {
@@ -34,7 +35,7 @@ $PAGE->set_context( context_system::instance() );
 require_login();
 
 $action = optional_param('action', false, PARAM_TEXT);
-$params = optional_param_array('params', false, PARAM_TEXT);
+$params = df_optional_param_array_recursive('params', false, PARAM_TEXT);
 
 $GT = new \GT\GradeTracker();
 $TPL = new \GT\Template();
