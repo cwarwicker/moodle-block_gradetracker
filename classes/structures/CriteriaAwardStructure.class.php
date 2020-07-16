@@ -1,29 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * CriteriaAwardStructure
- *
  * Class for dealing with Criteria Grading Structures
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class CriteriaAwardStructure {
 
@@ -42,12 +43,10 @@ class CriteriaAwardStructure {
 
         global $DB;
 
-        if ($id)
-        {
+        if ($id) {
 
             $record = $DB->get_record("bcgt_crit_award_structures", array("id" => $id));
-            if ($record)
-            {
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->qualStructureID = $record->qualstructureid;
@@ -70,26 +69,26 @@ class CriteriaAwardStructure {
      * Is it a valid record from the DB?
      * @return type
      */
-    public function isValid(){
+    public function isValid() {
 
         $valid = true;
 
-        if ($this->id === false){
+        if ($this->id === false) {
             $valid = false;
         }
 
-        if ($this->isDeleted()){
+        if ($this->isDeleted()) {
             $valid = false;
         }
 
-        if (!is_null($this->qualStructureID)){
+        if (!is_null($this->qualStructureID)) {
             $qualStructure = new \GT\QualificationStructure($this->qualStructureID);
-            if (!$qualStructure->isValid() || $qualStructure->isDeleted()){
+            if (!$qualStructure->isValid() || $qualStructure->isDeleted()) {
                 $valid = false;
             }
-        } elseif (!is_null($this->qualBuildID)){
+        } else if (!is_null($this->qualBuildID)) {
             $qualBuild = new \GT\QualificationBuild($this->qualBuildID);
-            if (!$qualBuild->isValid() || $qualBuild->isDeleted()){
+            if (!$qualBuild->isValid() || $qualBuild->isDeleted()) {
                 $valid = false;
             }
         }
@@ -102,7 +101,7 @@ class CriteriaAwardStructure {
      * Is it enabled?
      * @return type
      */
-    public function isEnabled(){
+    public function isEnabled() {
         return ($this->enabled == 1);
     }
 
@@ -110,7 +109,7 @@ class CriteriaAwardStructure {
      * Is it deleted?
      * @return type
      */
-    public function isDeleted(){
+    public function isDeleted() {
         return ($this->deleted == 1);
     }
 
@@ -118,7 +117,7 @@ class CriteriaAwardStructure {
      * is this structure used for assessments?
      * @return type
      */
-    public function isUsedInAssessments(){
+    public function isUsedInAssessments() {
         return ($this->assessments == 1);
     }
 
@@ -127,83 +126,81 @@ class CriteriaAwardStructure {
      * Is it: valid, enabled and not deleted?
      * @return type
      */
-    public function isUsable(){
+    public function isUsable() {
         return ($this->isValid() && $this->isEnabled() && !$this->isDeleted());
     }
 
 
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
-    public function setID($id){
+    public function setID($id) {
         $this->id = $id;
         return $this;
     }
 
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
 
-    public function setName($name){
+    public function setName($name) {
         $this->name = trim($name);
         return $this;
     }
 
-    public function getQualStructureID(){
+    public function getQualStructureID() {
         return $this->qualStructureID;
     }
 
-    public function setQualStructureID($id){
+    public function setQualStructureID($id) {
         $this->qualStructureID = $id;
         return $this;
     }
 
-    public function getQualBuildID(){
+    public function getQualBuildID() {
         return $this->qualBuildID;
     }
 
-    public function setQualBuildID($id){
+    public function setQualBuildID($id) {
         $this->qualBuildID = $id;
         return $this;
     }
 
-    public function getEnabled(){
+    public function getEnabled() {
         return $this->enabled;
     }
 
-    public function setEnabled($val){
+    public function setEnabled($val) {
         $this->enabled = $val;
         return $this;
     }
 
-    public function getIsUsedForAssessments(){
+    public function getIsUsedForAssessments() {
         return $this->assessments;
     }
 
-    public function setIsUsedForAssessments($val){
+    public function setIsUsedForAssessments($val) {
         $this->assessments = $val;
         return $this;
     }
 
-    public function getDeleted(){
+    public function getDeleted() {
         return $this->deleted;
     }
 
-    public function setDeleted($val){
+    public function setDeleted($val) {
         $this->deleted = $val;
         return $this;
     }
 
-    public function loadAwards(){
+    public function loadAwards() {
 
         global $DB;
 
         $records = $DB->get_records("bcgt_criteria_awards", array("gradingstructureid" => $this->id), "id");
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $this->awards[$record->id] = new \GT\CriteriaAward($record->id);
             }
         }
@@ -215,7 +212,7 @@ class CriteriaAwardStructure {
      * @param type $id
      * @return type
      */
-    public function getAward($id){
+    public function getAward($id) {
         return (array_key_exists($id, $this->awards)) ? $this->awards[$id] : false;
     }
 
@@ -223,14 +220,14 @@ class CriteriaAwardStructure {
      * Get the awards for this grading structure, ordered by points
      * @return type
      */
-    public function getAwards($metOnly = false, $sortOrder = 'asc'){
+    public function getAwards($metOnly = false, $sortOrder = 'asc') {
 
         $Sorter = new \GT\Sorter();
         $Sorter->sortCriteriaValues($this->awards, $sortOrder);
 
         // Do we only want the ones that are "MET"?
-        if ($metOnly){
-            return array_filter($this->awards, function($a){
+        if ($metOnly) {
+            return array_filter($this->awards, function($a) {
                 return ($a->isMet());
             });
         } else {
@@ -244,13 +241,13 @@ class CriteriaAwardStructure {
      * @param type $name
      * @return boolean
      */
-    public function getAwardByName($name){
+    public function getAwardByName($name) {
 
-        if ($this->awards){
+        if ($this->awards) {
 
-            foreach($this->awards as $award){
+            foreach ($this->awards as $award) {
 
-                if (strcasecmp($award->getName(), $name) == 0){
+                if (strcasecmp($award->getName(), $name) == 0) {
                     return $award;
                 }
 
@@ -268,7 +265,7 @@ class CriteriaAwardStructure {
      * @param type $name
      * @return type
      */
-    public function getAwardByNameDB($name){
+    public function getAwardByNameDB($name) {
 
         global $DB;
 
@@ -282,13 +279,13 @@ class CriteriaAwardStructure {
      * @param type $name
      * @return type
      */
-    public function getAwardByShortName($name){
+    public function getAwardByShortName($name) {
 
-        if ($this->awards){
+        if ($this->awards) {
 
-            foreach($this->awards as $award){
+            foreach ($this->awards as $award) {
 
-                if (strcasecmp($award->getShortName(), $name) == 0){
+                if (strcasecmp($award->getShortName(), $name) == 0) {
                     return $award;
                 }
 
@@ -304,13 +301,13 @@ class CriteriaAwardStructure {
      * Add an award to the structure
      * @param \GT\CriteriaAward $award
      */
-    public function addAward(\GT\CriteriaAward $award){
+    public function addAward(\GT\CriteriaAward $award) {
 
         // If it already exists, don't append another one, update the existing object
-        if ($award->isValid()){
-            if ($this->awards){
-                foreach($this->awards as $key => $awrd){
-                    if ($awrd->getID() == $award->getID()){
+        if ($award->isValid()) {
+            if ($this->awards) {
+                foreach ($this->awards as $key => $awrd) {
+                    if ($awrd->getID() == $award->getID()) {
                         $this->awards[$key] = $award;
                         return;
                     }
@@ -322,7 +319,7 @@ class CriteriaAwardStructure {
         $this->awards[] = $award;
     }
 
-    public function setAwards(array $awards){
+    public function setAwards(array $awards) {
         $this->awards = $awards;
     }
 
@@ -330,13 +327,13 @@ class CriteriaAwardStructure {
      * Get the maximum number of points of this award structure
      * @return type
      */
-    public function getMaxPoints(){
+    public function getMaxPoints() {
 
         $max = 0;
         $awards = $this->getAwards(true);
-        if ($awards){
-            foreach($awards as $award){
-                if ($award->getPoints() > $max){
+        if ($awards) {
+            foreach ($awards as $award) {
+                if ($award->getPoints() > $max) {
                     $max = $award->getPoints();
                 }
             }
@@ -347,16 +344,16 @@ class CriteriaAwardStructure {
     }
 
      /**
-     * Get the maximum number of points of this award structure
-     * @return type
-     */
-    public function getMinPoints(){
+      * Get the maximum number of points of this award structure
+      * @return type
+      */
+    public function getMinPoints() {
 
         $min = 0;
         $awards = $this->getAwards(true);
-        if ($awards){
-            foreach($awards as $award){
-                if ($award->getPoints() < $min || $min == 0){
+        if ($awards) {
+            foreach ($awards as $award) {
+                if ($award->getPoints() < $min || $min == 0) {
                     $min = $award->getPoints();
                 }
             }
@@ -366,12 +363,11 @@ class CriteriaAwardStructure {
 
     }
 
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
-    //todo
-    public function countCriteria(){
+    public function countCriteria() {
 
         global $DB;
         return $DB->count_records("bcgt_criteria", array("gradingstructureid" => $this->id, "deleted" => 0));
@@ -469,34 +465,28 @@ class CriteriaAwardStructure {
      * @param type $steps
      * @return array
      */
-    public function adjustPointsByFraction($fraction, $possibleAwardArray, $direction = false){
+    public function adjustPointsByFraction($fraction, $possibleAwardArray, $direction = false) {
 
         $return = array();
         $awards = $this->getAwards(true);
 
         $i = 1;
 
-        foreach($awards as $award)
-        {
+        foreach ($awards as $award) {
 
             $points = '-';
 
-            if ($direction == 'down')
-            {
+            if ($direction == 'down') {
 
                 // STEP - ((STEP - 1) * FRACTION)
                 $points = $i - ( ($i - 1) * $fraction );
 
-            }
-            elseif ($direction == 'up')
-            {
+            } else if ($direction == 'up') {
 
                 // ( (STEP - 1) * FRACTION ) + 1
                 $points = ( ($i - 1) * $fraction ) + 1;
 
-            }
-            elseif (count($awards) == count($possibleAwardArray))
-            {
+            } else if (count($awards) == count($possibleAwardArray)) {
 
                 $key = $i - 1;
                 $points = $possibleAwardArray[$key]->getPoints();
@@ -511,7 +501,6 @@ class CriteriaAwardStructure {
 
         return $return;
 
-
     }
 
     /**
@@ -519,15 +508,11 @@ class CriteriaAwardStructure {
      * @param type $specialVal
      * @return boolean
      */
-    public function findAwardBySpecialValue($specialVal)
-    {
+    public function findAwardBySpecialValue($specialVal) {
 
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
-                if ($award->getSpecialVal() == $specialVal)
-                {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
+                if ($award->getSpecialVal() == $specialVal) {
                     return $award;
                 }
             }
@@ -542,46 +527,41 @@ class CriteriaAwardStructure {
      * @global \GT\type $DB
      * @return type
      */
-    public function hasNoErrors(){
+    public function hasNoErrors() {
 
         global $DB;
 
         // Name
-        if (strlen($this->name) == 0){
+        if (strlen($this->name) == 0) {
             $this->errors[] = get_string('errors:gradestructures:name', 'block_gradetracker');
         }
 
         $params = array("name" => $this->name, "deleted" => 0);
-        if (!is_null($this->qualStructureID)){
+        if (!is_null($this->qualStructureID)) {
             $params['qualstructureid'] = $this->qualStructureID;
-        } elseif (!is_null($this->qualBuildID)){
+        } else if (!is_null($this->qualBuildID)) {
             $params['buildid'] = $this->qualBuildID;
         }
 
         $check = $DB->get_record("bcgt_crit_award_structures", $params);
-        if ($check && $check->id <> $this->id)
-        {
+        if ($check && $check->id <> $this->id) {
             $this->errors[] = get_string('errors:gradestructures:name:duplicate', 'block_gradetracker') . ' - ' . $this->name;
         }
 
         // Qual Structure or Qual Build
-        if ($this->qualStructureID <= 0 && ($this->qualBuildID <= 0 || is_null($this->qualBuildID))){
+        if ($this->qualStructureID <= 0 && ($this->qualBuildID <= 0 || is_null($this->qualBuildID))) {
             $this->errors[] = get_string('errors:gradestructures:qualstructureorbuild', 'block_gradetracker') . ' - ' . $this->name;
         }
 
         // Awards
-        if (!$this->awards){
+        if (!$this->awards) {
             $this->errors[] = get_string('errors:gradestructures:awards', 'block_gradetracker') . ' - ' . $this->name;
         }
 
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
-                if (!$award->hasNoErrors())
-                {
-                    foreach($award->getErrors() as $err)
-                    {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
+                if (!$award->hasNoErrors()) {
+                    foreach ($award->getErrors() as $err) {
                         $this->errors[] = $err;
                     }
                 }
@@ -598,13 +578,13 @@ class CriteriaAwardStructure {
      * @global type $DB
      * @return boolean
      */
-    public function save($deleteRemoved = true){
+    public function save($deleteRemoved = true) {
 
         global $DB;
 
         $obj = new \stdClass();
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $obj->id = $this->id;
         }
 
@@ -614,24 +594,21 @@ class CriteriaAwardStructure {
         $obj->enabled = $this->enabled;
         $obj->assessments = $this->assessments;
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $result = $DB->update_record("bcgt_crit_award_structures", $obj);
         } else {
             $this->id = $DB->insert_record("bcgt_crit_award_structures", $obj);
             $result = $this->id;
         }
 
-        if (!$result){
+        if (!$result) {
             $this->errors[] = get_string('errors:save', 'block_gradetracker');
             return false;
         }
 
-
         // Now the awards
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
 
                 $award->setGradingStructureID($this->id);
                 $award->save();
@@ -639,10 +616,8 @@ class CriteriaAwardStructure {
             }
         }
 
-
         // Remove old awards
-        if ($deleteRemoved)
-        {
+        if ($deleteRemoved) {
             $this->deleteRemovedAwards();
         }
 
@@ -651,11 +626,11 @@ class CriteriaAwardStructure {
     }
 
      /**
-     * Delete the grading structure
-     * @global \GT\type $DB
-     * @return boolean
-     */
-    public function delete(){
+      * Delete the grading structure
+      * @global \GT\type $DB
+      * @return boolean
+      */
+    public function delete() {
 
         global $DB;
 
@@ -679,10 +654,10 @@ class CriteriaAwardStructure {
 
 
      /**
-     * Delete any awards that were on the grading structure before but not submitted this time
-     * @global \GT\type $DB
-     */
-    public function deleteRemovedAwards(){
+      * Delete any awards that were on the grading structure before but not submitted this time
+      * @global \GT\type $DB
+      */
+    public function deleteRemovedAwards() {
 
         global $DB;
 
@@ -691,29 +666,23 @@ class CriteriaAwardStructure {
 
         // Old ones
         $old = $DB->get_records("bcgt_criteria_awards", array("gradingstructureid" => $this->id));
-        if ($old)
-        {
-            foreach($old as $o)
-            {
+        if ($old) {
+            foreach ($old as $o) {
                 $oldIDs[] = $o->id;
             }
         }
 
         // Current ones
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
                 $currentIDs[] = $award->getID();
             }
         }
 
         // Remove
         $removeIDs = array_diff($oldIDs, $currentIDs);
-        if ($removeIDs)
-        {
-            foreach($removeIDs as $removeID)
-            {
+        if ($removeIDs) {
+            foreach ($removeIDs as $removeID) {
                 $DB->delete_records("bcgt_criteria_awards", array("id" => $removeID));
             }
         }
@@ -724,7 +693,7 @@ class CriteriaAwardStructure {
      * Enable or Disable the grading structure, based on whichever it currently is
      * @global \GT\type $DB
      */
-    public function toggleEnabled(){
+    public function toggleEnabled() {
 
         global $DB;
 
@@ -733,29 +702,16 @@ class CriteriaAwardStructure {
         $obj->enabled = !$this->enabled;
         $DB->update_record("bcgt_crit_award_structures", $obj);
 
-        // If this is a Build grading structure, disable all the others first
-        // Removed this, as now GCSE have different grading structures for different assessments
-//        if ($this->qualBuildID > 0)
-//        {
-//
-//            $DB->execute("UPDATE {bcgt_crit_award_structures}
-//                          SET enabled = 0
-//                          WHERE buildid = ?
-//                          AND id <> ?
-//                          AND deleted = 0", array($this->qualBuildID, $this->id));
-//
-//        }
-
     }
 
 
     /**
      * Load the submitted post data into the object
      */
-    public function loadPostData(){
+    public function loadPostData() {
 
         // ID - if we're editing existing one
-        if (isset($_POST['grading_id'])){
+        if (isset($_POST['grading_id'])) {
             $this->setID($_POST['grading_id']);
         }
 
@@ -765,7 +721,7 @@ class CriteriaAwardStructure {
 
         // If Build ID use that, otherwise use QualStructureID
         $buildID = optional_param('build', false, PARAM_INT);
-        if ($buildID){
+        if ($buildID) {
             $this->setQualBuildID($buildID);
             $this->setIsUsedForAssessments(1);
         } else {
@@ -773,11 +729,9 @@ class CriteriaAwardStructure {
         }
 
         $gradeIDs = (isset($_POST['grade_ids'])) ? $_POST['grade_ids'] : false;
-        if ($gradeIDs)
-        {
+        if ($gradeIDs) {
 
-            foreach($gradeIDs as $key => $id)
-            {
+            foreach ($gradeIDs as $key => $id) {
 
                 $award = new \GT\CriteriaAward($id);
                 $award->setName($_POST['grade_names'][$key]);
@@ -790,13 +744,10 @@ class CriteriaAwardStructure {
                 $award->setImageFile( \gt_get_multidimensional_file($_FILES['grade_files'], $key) );
 
                 // If we have a tmp icon set load that back in
-                if ( isset($_POST['grade_icon_names'][$key]) && strpos($_POST['grade_icon_names'][$key], "tmp//") === 0 ){
+                if ( isset($_POST['grade_icon_names'][$key]) && strpos($_POST['grade_icon_names'][$key], "tmp//") === 0 ) {
                     $award->iconTmp = str_replace("tmp//", "", $_POST['grade_icon_names'][$key]);
-                }
-
-                // If are editing something which already has a valid image saved
-                elseif (isset($_POST['grade_icon_names'][$key]) && strlen($_POST['grade_icon_names'][$key]) > 0)
-                {
+                } else if (isset($_POST['grade_icon_names'][$key]) && strlen($_POST['grade_icon_names'][$key]) > 0) {
+                    // If are editing something which already has a valid image saved
                     $award->setImage($_POST['grade_icon_names'][$key]);
                 }
 
@@ -805,7 +756,6 @@ class CriteriaAwardStructure {
             }
 
         }
-
 
     }
 

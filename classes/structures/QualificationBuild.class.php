@@ -1,29 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * QualificationBuild
+ * The class for Qualification Builds - The combination of levels, types, sub types
  *
- * The class for QUalification Builds - The combination of levels, types, sub types
- *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class QualificationBuild {
 
@@ -43,12 +44,10 @@ class QualificationBuild {
 
         $GTEXE = \GT\Execution::getInstance();
 
-        if ($id)
-        {
+        if ($id) {
 
             $record = $DB->get_record("bcgt_qual_builds", array("id" => $id));
-            if ($record)
-            {
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->structureID = $record->structureid;
@@ -57,7 +56,7 @@ class QualificationBuild {
                 $this->deleted = $record->deleted;
 
                 // Load awards
-                if (!isset($GTEXE->QUAL_BUILD_MIN_LOAD) || !$GTEXE->QUAL_BUILD_MIN_LOAD){
+                if (!isset($GTEXE->QUAL_BUILD_MIN_LOAD) || !$GTEXE->QUAL_BUILD_MIN_LOAD) {
                     $this->loadAwards();
                 }
 
@@ -71,7 +70,7 @@ class QualificationBuild {
      * Is it a valid record from the database
      * @return type
      */
-    public function isValid(){
+    public function isValid() {
         return ($this->id !== false);
     }
 
@@ -79,7 +78,7 @@ class QualificationBuild {
      * Is this build deleted?
      * @return type
      */
-    public function isDeleted(){
+    public function isDeleted() {
         return ($this->deleted === 1);
     }
 
@@ -87,7 +86,7 @@ class QualificationBuild {
      * Get the id of the qual build
      * @return type
      */
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
@@ -95,7 +94,7 @@ class QualificationBuild {
      * Set the id of the qual build
      * @param type $id
      */
-    public function setID($id){
+    public function setID($id) {
         $this->id = $id;
     }
 
@@ -103,7 +102,7 @@ class QualificationBuild {
      * Get the structure id of the build
      * @return type
      */
-    public function getStructureID(){
+    public function getStructureID() {
         return $this->structureID;
     }
 
@@ -111,7 +110,7 @@ class QualificationBuild {
      * Set the structure id of the build
      * @param type $id
      */
-    public function setStructureID($id){
+    public function setStructureID($id) {
         $this->structureID = $id;
     }
 
@@ -119,7 +118,7 @@ class QualificationBuild {
      * Get the display name of the structure used
      * @return type
      */
-    public function getStructureName(){
+    public function getStructureName() {
 
         $structure = new \GT\QualificationStructure($this->structureID);
         return ($structure->isValid()) ? $structure->getDisplayName() : false;
@@ -130,7 +129,7 @@ class QualificationBuild {
      * Get the real name of the structure
      * @return type
      */
-    public function getStructureRealName(){
+    public function getStructureRealName() {
 
         $structure = new \GT\QualificationStructure($this->structureID);
         return ($structure->isValid()) ? $structure->getName() : false;
@@ -141,7 +140,7 @@ class QualificationBuild {
      * Get the level id of the build
      * @return type
      */
-    public function getLevelID(){
+    public function getLevelID() {
         return $this->levelID;
     }
 
@@ -149,7 +148,7 @@ class QualificationBuild {
      * Set the level id of the build
      * @param type $id
      */
-    public function setLevelID($id){
+    public function setLevelID($id) {
         $this->levelID = $id;
     }
 
@@ -157,7 +156,7 @@ class QualificationBuild {
      * Get the name of the level used
      * @return type
      */
-    public function getLevelName(){
+    public function getLevelName() {
 
         $level = new \GT\Level($this->levelID);
         return ($level->isValid()) ? $level->getName() : false;
@@ -168,7 +167,7 @@ class QualificationBuild {
      * Get the level object
      * @return \GT\Level
      */
-    public function getLevel(){
+    public function getLevel() {
         $level = new \GT\Level($this->levelID);
         return ($level->isValid()) ? $level : false;
     }
@@ -177,7 +176,7 @@ class QualificationBuild {
      * Get the subtype id of the build
      * @return type
      */
-    public function getSubTypeID(){
+    public function getSubTypeID() {
         return $this->subTypeID;
     }
 
@@ -185,7 +184,7 @@ class QualificationBuild {
      * Set the subtype id of the build
      * @param type $id
      */
-    public function setSubTypeID($id){
+    public function setSubTypeID($id) {
         $this->subTypeID = $id;
     }
 
@@ -193,7 +192,7 @@ class QualificationBuild {
      * Get the name of the sub type used
      * @return type
      */
-    public function getSubTypeName(){
+    public function getSubTypeName() {
 
         $subType = new \GT\SubType($this->subTypeID);
         return ($subType) ? $subType->getName() : false;
@@ -204,7 +203,7 @@ class QualificationBuild {
      * Get the subtype object
      * @return \GT\Level
      */
-    public function getSubType(){
+    public function getSubType() {
         $subType = new \GT\SubType($this->subTypeID);
         return ($subType->isValid()) ? $subType : false;
     }
@@ -213,11 +212,11 @@ class QualificationBuild {
      * Get the combined name of the structure, level and subtype
      * @return type
      */
-    public function getName(){
+    public function getName() {
         return $this->getNameWithSeparator(" ");
     }
 
-    public function getNameWithSeparator($sep = '//'){
+    public function getNameWithSeparator($sep = '//') {
         return $this->getStructureName() . $sep . $this->getLevelName() . $sep . $this->getSubTypeName();
     }
 
@@ -225,7 +224,7 @@ class QualificationBuild {
      * Set the deleted flag to 0 or 1
      * @param type $val
      */
-    public function setDeleted($val){
+    public function setDeleted($val) {
         $this->deleted = (int)$val;
     }
 
@@ -233,7 +232,7 @@ class QualificationBuild {
      * Get any errors
      * @return type
      */
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
@@ -241,12 +240,12 @@ class QualificationBuild {
      * Get the default rule set for this qualification build
      * @return \GT\RuleSet
      */
-    public function getDefaultRuleSet(){
+    public function getDefaultRuleSet() {
 
         $ruleSetID = $this->getAttribute("build_default_ruleset");
-        if ($ruleSetID){
+        if ($ruleSetID) {
             $ruleSet = new \GT\RuleSet($ruleSetID);
-            if ($ruleSet->isValid() && $ruleSet->isEnabled() && $ruleSet->getQualStructureID() == $this->structureID){
+            if ($ruleSet->isValid() && $ruleSet->isEnabled() && $ruleSet->getQualStructureID() == $this->structureID) {
                 return $ruleSet;
             }
         }
@@ -256,7 +255,7 @@ class QualificationBuild {
 
     }
 
-    public function getDefaultRuleSetID(){
+    public function getDefaultRuleSetID() {
         $ruleSet = $this->getDefaultRuleSet();
         return ($ruleSet) ? $ruleSet->getID() : false;
     }
@@ -265,14 +264,14 @@ class QualificationBuild {
      * Get any loaded awards
      * @return type
      */
-    public function getAwards($order = false){
+    public function getAwards($order = false) {
 
-        if (!$this->awards){
+        if (!$this->awards) {
             $this->loadAwards();
         }
 
         // Do we want to specifically sort them?
-        if ($order){
+        if ($order) {
 
             $Sorter = new \GT\Sorter();
             $Sorter->sortQualAwards($this->awards, $order);
@@ -289,7 +288,7 @@ class QualificationBuild {
      * @param type $setting
      * @return type
      */
-    public function getAttribute($attribute){
+    public function getAttribute($attribute) {
 
         global $DB;
 
@@ -304,18 +303,15 @@ class QualificationBuild {
      * @param type $setting
      * @param type $value
      */
-    public function updateAttribute($attribute, $value){
+    public function updateAttribute($attribute, $value) {
 
         global $DB;
 
         $check = $DB->get_record("bcgt_qual_build_attributes", array("buildid" => $this->id, "attribute" => $attribute));
-        if ($check)
-        {
+        if ($check) {
             $check->value = $value;
             $DB->update_record("bcgt_qual_build_attributes", $check);
-        }
-        else
-        {
+        } else {
             $ins = new \stdClass();
             $ins->buildid = $this->id;
             $ins->attribute = $attribute;
@@ -323,14 +319,13 @@ class QualificationBuild {
             $DB->insert_record("bcgt_qual_build_attributes", $ins);
         }
 
-
     }
 
     /**
      * Get the default number of credits expected for this build
      * @return type
      */
-    public function getDefaultCredits(){
+    public function getDefaultCredits() {
         $credits = $this->getAttribute('build_default_credits');
         return ($credits && $credits > 0) ? (int)$credits : false;
     }
@@ -339,7 +334,7 @@ class QualificationBuild {
      * Get the points per credit for qual award calculations
      * @return type
      */
-    public function getPointsPerCredit(){
+    public function getPointsPerCredit() {
         $points = $this->getAttribute('build_default_points_per_credit');
         return ($points && $points > 0) ? (int)$points : false;
     }
@@ -350,7 +345,7 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @return \GT\QualificationAward
      */
-    public function loadAwards(){
+    public function loadAwards() {
 
         global $DB;
 
@@ -358,11 +353,9 @@ class QualificationBuild {
 
         $records = $DB->get_records("bcgt_qual_build_awards", array("buildid" => $this->id), "rank ASC", "id");
 
-        if ($records)
-        {
+        if ($records) {
 
-            foreach($records as $record)
-            {
+            foreach ($records as $record) {
                 $this->awards[$record->id] = new \GT\QualificationAward($record->id);
             }
 
@@ -375,27 +368,21 @@ class QualificationBuild {
      * @param type $points
      * @return boolean
      */
-    public function getAwardByPoints($points, $exact = false){
+    public function getAwardByPoints($points, $exact = false) {
 
-        if (!$this->awards){
+        if (!$this->awards) {
             $this->loadAwards();
         }
 
-        if ($this->awards)
-        {
+        if ($this->awards) {
 
-            foreach($this->awards as $award)
-            {
+            foreach ($this->awards as $award) {
 
                 // If exact, the rank must meet this value exactly
-                if ($exact && $award->getRank() == $points)
-                {
+                if ($exact && $award->getRank() == $points) {
                     return $award;
-                }
-
-                // If the points are between the 2 ranges, return that award
-                elseif (!$exact && $points >= $award->getPointsLower() && $points <= $award->getPointsUpper())
-                {
+                } else if (!$exact && $points >= $award->getPointsLower() && $points <= $award->getPointsUpper()) {
+                    // If the points are between the 2 ranges, return that award
                     return $award;
                 }
 
@@ -412,24 +399,23 @@ class QualificationBuild {
      * @param type $score
      * @return boolean
      */
-    public function getAwardByAvgGCSEScore($score){
+    public function getAwardByAvgGCSEScore($score) {
 
-        if (!$this->awards){
+        if (!$this->awards) {
             $this->loadAwards();
         }
 
-        if ($this->awards)
-        {
+        if ($this->awards) {
 
-            foreach($this->awards as $award)
-            {
+            foreach ($this->awards as $award) {
 
                 // If lower & upper are both 0, skip it
-                if ($award->getQOELower() == 0 && $award->getQOEUpper() == 0) continue;
+                if ($award->getQOELower() == 0 && $award->getQOEUpper() == 0) {
+                    continue;
+                }
 
                 // If the score falls between its lower & upper ranges, return it
-                if ($score >= $award->getQOELower() && $score <= $award->getQOEUpper())
-                {
+                if ($score >= $award->getQOELower() && $score <= $award->getQOEUpper()) {
                     return $award;
                 }
 
@@ -447,14 +433,14 @@ class QualificationBuild {
      * @param int $points
      * @return boolean
      */
-    public function getAwardByUCASPoints($points, $direction){
+    public function getAwardByUCASPoints($points, $direction) {
 
         global $DB;
 
         $record = false;
 
         // Get the next award above or equal to these points
-        if ($direction == 'UP'){
+        if ($direction == 'UP') {
 
             $record = $DB->get_record_sql("SELECT a.id
                                             FROM {bcgt_qual_build_awards} a
@@ -468,30 +454,29 @@ class QualificationBuild {
 
             // If there are none, then look for the first one less than this
             // E.g. A2 top UCAS score is 140, if weighted score is 146, it won't find anything, but we want top
-            if (!$record)
-            {
+            if (!$record) {
                 $record = $DB->get_record_sql("SELECT a.id
-                                            FROM {bcgt_qual_build_awards} a
-                                            WHERE a.buildid = ? AND a.ucas IN
-                                            (
-                                                SELECT MAX(ucas)
-                                                FROM {bcgt_qual_build_awards}
-                                                where buildid = ?
-                                                and ucas <= ?
-                                            )", array($this->id, $this->id, $points));
+                                                    FROM {bcgt_qual_build_awards} a
+                                                    WHERE a.buildid = ? AND a.ucas IN
+                                                    (
+                                                        SELECT MAX(ucas)
+                                                        FROM {bcgt_qual_build_awards}
+                                                        where buildid = ?
+                                                        and ucas <= ?
+                                                    )", array($this->id, $this->id, $points));
             }
 
-        } elseif ($direction == 'DOWN'){
+        } else if ($direction == 'DOWN') {
 
             $record = $DB->get_record_sql("SELECT a.id
-                                            FROM {bcgt_qual_build_awards} a
-                                            WHERE a.buildid = ? AND a.ucas IN
-                                            (
-                                                SELECT MAX(ucas)
-                                                FROM {bcgt_qual_build_awards}
-                                                where buildid = ?
-                                                and ucas <= ?
-                                            )", array($this->id, $this->id, $points));
+                                                FROM {bcgt_qual_build_awards} a
+                                                WHERE a.buildid = ? AND a.ucas IN
+                                                (
+                                                    SELECT MAX(ucas)
+                                                    FROM {bcgt_qual_build_awards}
+                                                    where buildid = ?
+                                                    and ucas <= ?
+                                                )", array($this->id, $this->id, $points));
 
         }
 
@@ -505,21 +490,18 @@ class QualificationBuild {
      * @param type $name
      * @return boolean
      */
-    public function getAwardByName($name){
+    public function getAwardByName($name) {
 
-        if (!$this->awards){
+        if (!$this->awards) {
             $this->loadAwards();
         }
 
-        if ($this->awards)
-        {
+        if ($this->awards) {
 
-            foreach($this->awards as $award)
-            {
+            foreach ($this->awards as $award) {
 
                 // If the points are between the 2 ranges, return that award
-                if ($award->getName() == $name)
-                {
+                if ($award->getName() == $name) {
                     return $award;
                 }
 
@@ -536,13 +518,13 @@ class QualificationBuild {
      * Get the maximum number of points of this award structure
      * @return type
      */
-    public function getMaxRank(){
+    public function getMaxRank() {
 
         $max = 0;
         $awards = $this->getAwards();
-        if ($awards){
-            foreach($awards as $award){
-                if ($award->getRank() > $max){
+        if ($awards) {
+            foreach ($awards as $award) {
+                if ($award->getRank() > $max) {
                     $max = $award->getRank();
                 }
             }
@@ -553,16 +535,16 @@ class QualificationBuild {
     }
 
      /**
-     * Get the maximum number of points of this award structure
-     * @return type
-     */
-    public function getMinRank(){
+      * Get the maximum number of points of this award structure
+      * @return type
+      */
+    public function getMinRank() {
 
         $min = false;
         $awards = $this->getAwards();
-        if ($awards){
-            foreach($awards as $award){
-                if ($award->getRank() < $min || ($min === false)){
+        if ($awards) {
+            foreach ($awards as $award) {
+                if ($award->getRank() < $min || ($min === false)) {
                     $min = $award->getRank();
                 }
             }
@@ -578,7 +560,7 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @return type
      */
-    public function countQualifications(){
+    public function countQualifications() {
 
         global $DB;
         return $DB->count_records("bcgt_qualifications", array("buildid" => $this->id, "deleted" => 0));
@@ -590,7 +572,7 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @return type
      */
-    public function getQualifications(){
+    public function getQualifications() {
 
         global $DB;
 
@@ -598,11 +580,9 @@ class QualificationBuild {
 
         $records = $DB->get_records("bcgt_qualifications", array("buildid" => $this->id, "deleted" => 0));
 
-        if ($records)
-        {
+        if ($records) {
 
-            foreach($records as $record)
-            {
+            foreach ($records as $record) {
                 $return[] = new \GT\Qualification($record->id);
             }
 
@@ -616,8 +596,7 @@ class QualificationBuild {
      * Check if this qual build is using qual weightings
      * @return type
      */
-    public function hasQualWeightings()
-    {
+    public function hasQualWeightings() {
         global $DB;
         return ( \GT\Setting::getSetting('qual_weighting_percentiles') > 0 && $DB->get_record_sql("SELECT id FROM {bcgt_settings} WHERE setting LIKE ?", array('build_coefficient_'.$this->id.'_%'), IGNORE_MULTIPLE) );
     }
@@ -627,35 +606,31 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @return type
      */
-    public function hasNoErrors(){
+    public function hasNoErrors() {
 
         global $DB;
 
         // Check type exists
         $check = $DB->get_record("bcgt_qual_structures", array("id" => $this->structureID, "deleted" => 0));
-        if (!$check)
-        {
+        if (!$check) {
             $this->errors[] = get_string('errors:qualbuild:type', 'block_gradetracker');
         }
 
         // Check level exists
         $check = $DB->get_record("bcgt_qual_levels", array("id" => $this->levelID));
-        if (!$check)
-        {
+        if (!$check) {
             $this->errors[] = get_string('errors:qualbuild:level', 'block_gradetracker');
         }
 
         // Check subtype exists
         $check = $DB->get_record("bcgt_qual_subtypes", array("id" => $this->subTypeID));
-        if (!$check)
-        {
+        if (!$check) {
             $this->errors[] = get_string('errors:qualbuild:subtype', 'block_gradetracker');
         }
 
         // Check this combination doesn't already exist
         $check = $DB->get_record("bcgt_qual_builds", array("structureid" => $this->structureID, "levelid" => $this->levelID, "subtypeid" => $this->subTypeID, "deleted" => 0));
-        if ($check && $check->id <> $this->id)
-        {
+        if ($check && $check->id <> $this->id) {
             $this->errors[] = get_string('errors:qualbuild:duplicate', 'block_gradetracker');
         }
 
@@ -664,13 +639,13 @@ class QualificationBuild {
     }
 
 
-    public function save(){
+    public function save() {
 
         global $DB, $MSGS;
 
         $obj = new \stdClass();
 
-        if ($this->id){
+        if ($this->id) {
             $obj->id = $this->id;
         }
 
@@ -680,32 +655,25 @@ class QualificationBuild {
         $obj->deleted = $this->deleted;
 
         // Update existing
-        if ($this->id){
+        if ($this->id) {
             $result = $DB->update_record("bcgt_qual_builds", $obj);
-        }
-
-        // Insert new
-        else {
+        } else {
             $this->id = $DB->insert_record("bcgt_qual_builds", $obj);
             $result = $this->id;
         }
 
         // If we failed somehow, stop
-        if (!$result) return false;
+        if (!$result) {
+            return false;
+        }
 
         // Awards
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
-                if ($award->hasNoErrors())
-                {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
+                if ($award->hasNoErrors()) {
                     $award->save();
-                }
-                else
-                {
-                    foreach($award->getErrors() as $err)
-                    {
+                } else {
+                    foreach ($award->getErrors() as $err) {
                         $MSGS['errors'][] = $err;
                     }
                 }
@@ -717,12 +685,10 @@ class QualificationBuild {
 
         return true;
 
-
     }
 
 
-    public function delete()
-    {
+    public function delete() {
 
         global $DB;
 
@@ -732,8 +698,6 @@ class QualificationBuild {
 
         // Update this to deleted
         $DB->update_record("bcgt_qual_builds", $obj);
-
-        //
 
         // Then delete any qualifications using this build
 
@@ -747,10 +711,10 @@ class QualificationBuild {
     }
 
      /**
-     * Delete any awards that were on the build before but not submitted this time
-     * @global \GT\type $DB
-     */
-    private function deleteRemovedAwards(){
+      * Delete any awards that were on the build before but not submitted this time
+      * @global \GT\type $DB
+      */
+    private function deleteRemovedAwards() {
 
         global $DB;
 
@@ -759,29 +723,23 @@ class QualificationBuild {
 
         // Old ones
         $old = $DB->get_records("bcgt_qual_build_awards", array("buildid" => $this->id));
-        if ($old)
-        {
-            foreach($old as $o)
-            {
+        if ($old) {
+            foreach ($old as $o) {
                 $oldIDs[] = $o->id;
             }
         }
 
         // Current ones
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
                 $currentIDs[] = $award->getID();
             }
         }
 
         // Remove
         $removeIDs = array_diff($oldIDs, $currentIDs);
-        if ($removeIDs)
-        {
-            foreach($removeIDs as $removeID)
-            {
+        if ($removeIDs) {
+            foreach ($removeIDs as $removeID) {
                 $DB->delete_records("bcgt_qual_build_awards", array("id" => $removeID));
             }
         }
@@ -793,39 +751,31 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @param type $defaults
      */
-    public function saveDefaults($customDefaults, $buildDefaults){
+    public function saveDefaults($customDefaults, $buildDefaults) {
 
         global $DB;
 
         $DB->delete_records_select("bcgt_qual_build_attributes", "buildid = ? AND (attribute LIKE 'default_%' OR attribute LIKE 'build_default_%') ", array($this->id));
 
         $structure = new \GT\QualificationStructure($this->getStructureID());
-        if ($structure->isValid())
-        {
+        if ($structure->isValid()) {
 
             // Custom fields
-            if ($structure->getCustomFormElements())
-            {
+            if ($structure->getCustomFormElements()) {
 
                 $unitBuild = \GT\UnitBuild::load($this->getStructureID(), $this->getLevelID());
 
-                foreach($structure->getCustomFormElements() as $element)
-                {
+                foreach ($structure->getCustomFormElements() as $element) {
 
                     // Qualification form
-                    if ($element->getForm() == "qualification")
-                    {
+                    if ($element->getForm() == "qualification") {
 
-                        if (array_key_exists($element->getName(), $customDefaults))
-                        {
+                        if (array_key_exists($element->getName(), $customDefaults)) {
                             $this->updateAttribute("default_{$element->getID()}", $customDefaults[$element->getName()]);
                         }
 
-                    }
-                    elseif ($element->getForm() == "unit" || $element->getForm() == "criterion")
-                    {
-                        if (array_key_exists($element->getName(), $customDefaults))
-                        {
+                    } else if ($element->getForm() == "unit" || $element->getForm() == "criterion") {
+                        if (array_key_exists($element->getName(), $customDefaults)) {
                             $unitBuild->updateAttribute("default_{$element->getID()}", $customDefaults[$element->getName()]);
                         }
                     }
@@ -835,10 +785,8 @@ class QualificationBuild {
             }
 
             // Build fields
-            if ($buildDefaults)
-            {
-                foreach($buildDefaults as $att => $val)
-                {
+            if ($buildDefaults) {
+                foreach ($buildDefaults as $att => $val) {
                     $this->updateAttribute("build_default_{$att}", $val);
                 }
             }
@@ -852,23 +800,18 @@ class QualificationBuild {
      * @param type $elementID
      * @return type
      */
-    public function getDefaultValue($elementID, $form){
+    public function getDefaultValue($elementID, $form) {
 
-       // Qualification form, just get the default for this build
-        if ($form == 'qualification'){
+        // Qualification form, just get the default for this build
+        if ($form == 'qualification') {
             return $this->getAttribute("default_{$elementID}");
-        }
-
-        elseif ($form == 'build'){
+        } else if ($form == 'build') {
             return $this->getAttribute("build_default_{$elementID}");
-        }
-
-        // Unit form, these defaults are stored against the type and level, as the unit could be on multiple builds
-        // So get these in a different way
-        elseif ($form == 'unit' || $form == 'criterion'){
+        } else if ($form == 'unit' || $form == 'criterion') {
+            // Unit form, these defaults are stored against the type and level, as the unit could be on multiple builds
+            // So get these in a different way
             return \GT\UnitBuild::load($this->getStructureID(), $this->getLevelID())->getAttribute("default_{$elementID}");
         }
-
 
     }
 
@@ -877,16 +820,14 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @return type
      */
-    public function getAllDefaultValues(){
+    public function getAllDefaultValues() {
 
         global $DB;
 
         $return = array();
         $records = $DB->get_records_select("bcgt_qual_build_attributes", "buildid = ? AND attribute LIKE 'default_%'", array($this->id));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $id = str_replace("default_", "", $record->attribute);
                 $return[$id] = $record->value;
             }
@@ -900,9 +841,9 @@ class QualificationBuild {
      * We have just submitted the new/edit form and we want to take all of that POST data and load it into
      * a Qual Build object so that it can be saved
      */
-    public function loadPostData(){
+    public function loadPostData() {
 
-        if (isset($_POST['build_id'])){
+        if (isset($_POST['build_id'])) {
             $this->setID($_POST['build_id']);
         }
 
@@ -916,7 +857,7 @@ class QualificationBuild {
     /**
      *
      */
-    public function loadAwardPostData(){
+    public function loadAwardPostData() {
 
         // CLear loaded awards
         $this->awards = array();
@@ -930,17 +871,25 @@ class QualificationBuild {
         $awardQOEUpper = $_POST['build_award_qoe_upper'];
         $awardUCAS = $_POST['build_award_ucas'];
 
-        if ($awardIDs)
-        {
+        if ($awardIDs) {
 
-            foreach($awardIDs as $key => $id)
-            {
+            foreach ($awardIDs as $key => $id) {
 
-                if ($awardPointsLower[$key] == '') $awardPointsLower[$key] = null;
-                if ($awardPointsUpper[$key] == '') $awardPointsUpper[$key] = null;
-                if ($awardQOELower[$key] == '') $awardQOELower[$key] = null;
-                if ($awardQOEUpper[$key] == '') $awardQOEUpper[$key] = null;
-                if ($awardUCAS[$key] == '') $awardUCAS[$key] = null;
+                if ($awardPointsLower[$key] == '') {
+                    $awardPointsLower[$key] = null;
+                }
+                if ($awardPointsUpper[$key] == '') {
+                    $awardPointsUpper[$key] = null;
+                }
+                if ($awardQOELower[$key] == '') {
+                    $awardQOELower[$key] = null;
+                }
+                if ($awardQOEUpper[$key] == '') {
+                    $awardQOEUpper[$key] = null;
+                }
+                if ($awardUCAS[$key] == '') {
+                    $awardUCAS[$key] = null;
+                }
 
                 $award = new \GT\QualificationAward($id);
                 $award->setBuildID( $this->id );
@@ -952,12 +901,9 @@ class QualificationBuild {
                 $award->setQOEUpper( $awardQOEUpper[$key] );
                 $award->setUcas( $awardUCAS[$key] );
 
-                if ($award->isValid())
-                {
+                if ($award->isValid()) {
                     $this->awards[$id] = $award;
-                }
-                else
-                {
+                } else {
                     $this->awards[] = $award;
                 }
 
@@ -967,15 +913,13 @@ class QualificationBuild {
 
     }
 
-
-
     /**
      * Export a Qualification Build to an XML document, so it can be imported on another Moodle instance
      * @global type $CFG
      * @global \GT\type $DB
      * @return \SimpleXMLElement
      */
-    public function exportXML(){
+    public function exportXML() {
 
         $QualStructure = new \GT\QualificationStructure($this->structureID);
 
@@ -989,10 +933,8 @@ class QualificationBuild {
         // Qual Awards
         $awardsXML = $xml->addChild('awards');
         $awards = $this->getAwards();
-        if ($awards)
-        {
-            foreach($awards as $award)
-            {
+        if ($awards) {
+            foreach ($awards as $award) {
                 $awardXML = $awardsXML->addChild('award', \gt_html($award->getName()));
                 $awardXML->addAttribute('rank', $award->getRank());
                 $awardXML->addAttribute('pointsLower', $award->getPointsLower());
@@ -1003,24 +945,19 @@ class QualificationBuild {
             }
         }
 
-
         // Criteria grading structures (assessments)
         $allCriteriaGradingStructures = $this->getCriteriaGradingStructures();
         $criteriaGradingXML = $xml->addChild('assessments');
-        if ($allCriteriaGradingStructures)
-        {
-            foreach($allCriteriaGradingStructures as $structure)
-            {
+        if ($allCriteriaGradingStructures) {
+            foreach ($allCriteriaGradingStructures as $structure) {
 
                 $criteriaStructureXML = $criteriaGradingXML->addChild('structure');
                 $criteriaStructureXML->addAttribute('name', \gt_html($structure->getName()));
 
                 $criteriaStructureAwardsXML = $criteriaStructureXML->addChild('awards');
                 $criteriaStructureAwards = $structure->getAwards();
-                if ($criteriaStructureAwards)
-                {
-                    foreach($criteriaStructureAwards as $award)
-                    {
+                if ($criteriaStructureAwards) {
+                    foreach ($criteriaStructureAwards as $award) {
                         $criteriaStructureAwardXML = $criteriaStructureAwardsXML->addChild('award');
                         $criteriaStructureAwardXML->addAttribute('name', \gt_html($award->getName()));
                         $criteriaStructureAwardXML->addAttribute('shortName', \gt_html($award->getShortName()));
@@ -1035,47 +972,35 @@ class QualificationBuild {
             }
         }
 
-
         // Build Unit Points
         $unitStructureAwardPointsXML = $xml->addChild('unitGradingPoints');
 
         // Find Unit grading structures on the QualStructure
         $unitGradingStructures = $QualStructure->getUnitGradingStructures();
-        if ($unitGradingStructures)
-        {
-            foreach($unitGradingStructures as $unitGradingStructure)
-            {
+        if ($unitGradingStructures) {
+            foreach ($unitGradingStructures as $unitGradingStructure) {
                 $unitPoints = $unitGradingStructure->getAllUnitPoints();
-                if ($unitPoints)
-                {
-                    foreach($unitPoints as $unitPoint)
-                    {
-
+                if ($unitPoints) {
+                    foreach ($unitPoints as $unitPoint) {
                         $award = new \GT\UnitAward($unitPoint->awardid);
-                        if ($award->isValid())
-                        {
-                            if ($unitPoint->qualbuildid == $this->id)
-                            {
+                        if ($award->isValid()) {
+                            if ($unitPoint->qualbuildid == $this->id) {
                                 $pointsXML = $unitStructureAwardPointsXML->addChild('record');
                                 $pointsXML->addAttribute('gradingStructure', $unitGradingStructure->getName());
                                 $pointsXML->addAttribute('award', $award->getName());
                                 $pointsXML->addAttribute('points', $unitPoint->points);
                             }
                         }
-
                     }
                 }
             }
         }
 
-
         // Weighting coefficients
         $weightingXML = $xml->addChild('weightings');
         $percentiles = \GT\Setting::getSetting('qual_weighting_percentiles');
-        if ($percentiles)
-        {
-            for ($col = 1; $col <= $percentiles; $col++)
-            {
+        if ($percentiles) {
+            for ($col = 1; $col <= $percentiles; $col++) {
                 $val = \GT\Setting::getSetting('build_coefficient_'.$this->getID().'_'.$col);
                 $percentileXML = $weightingXML->addChild('percentile', $val);
                 $percentileXML->addAttribute('number', $col);
@@ -1096,13 +1021,10 @@ class QualificationBuild {
         $defaultsXML->addChild('default', $this->getPointsPerCredit())->addAttribute('name', 'build_default_points_per_credit');
         $defaultsXML->addChild('default', $ruleSetName)->addAttribute('name', 'build_default_ruleset_name');
 
-
         $structure = new \GT\QualificationStructure($this->structureID);
         $customFields = $structure->getCustomFormElements();
-        if ($customFields)
-        {
-            foreach($customFields as $customField)
-            {
+        if ($customFields) {
+            foreach ($customFields as $customField) {
                 $defaultsXML->addChild('default', $this->getDefaultValue($customField->getID(), $customField->getForm()))->addAttribute('name', $customField->getName());
             }
         }
@@ -1118,15 +1040,12 @@ class QualificationBuild {
 
     }
 
-    private function getAssessmentGradingStructureByName($name, $buildOnly = false, $enabledOnly = true){
+    private function getAssessmentGradingStructureByName($name, $buildOnly = false, $enabledOnly = true) {
 
         $gradingStructures = $this->getAssessmentGradingStructures($buildOnly, $enabledOnly);
-        if ($gradingStructures)
-        {
-            foreach($gradingStructures as $gradingStructure)
-            {
-                if ($gradingStructure->getName() == $name)
-                {
+        if ($gradingStructures) {
+            foreach ($gradingStructures as $gradingStructure) {
+                if ($gradingStructure->getName() == $name) {
                     return $gradingStructure;
                 }
             }
@@ -1141,7 +1060,7 @@ class QualificationBuild {
      * @global \GT\type $DB
      * @return boolean
      */
-    public function getAssessmentGradingStructures($buildOnly = false, $enabledOnly = true){
+    public function getAssessmentGradingStructures($buildOnly = false, $enabledOnly = true) {
 
         global $DB;
 
@@ -1149,30 +1068,24 @@ class QualificationBuild {
 
         // First check for any assessment grading structures assigned to this Qualification Build
         $params = array("buildid" => $this->id, "assessments" => 1, "deleted" => 0);
-        if ($enabledOnly){
+        if ($enabledOnly) {
             $params['enabled'] = 1;
         }
 
         $records = $DB->get_records("bcgt_crit_award_structures", $params, "name ASC");
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\CriteriaAwardStructure($record->id);
                 $return[] = $obj;
             }
 
             return $return;
 
-        }
+        } else if (!$buildOnly) {
 
-        // Otherwise check for ones on the Qualification Structure itself
-        elseif (!$buildOnly)
-        {
-
+            // Otherwise check for ones on the Qualification Structure itself
             $QualStructure = new \GT\QualificationStructure( $this->structureID );
-            if ($QualStructure && $QualStructure->isValid())
-            {
+            if ($QualStructure && $QualStructure->isValid()) {
                 return $QualStructure->getAssessmentGradingStructures();
             }
 
@@ -1182,21 +1095,16 @@ class QualificationBuild {
 
     }
 
-
-
-
     /**
      * Get a specific Grading Structure from Unit or Criteria Grading Structure array
      * @param type $id
      * @param type $structures
      * @return boolean
      */
-    public function getSingleStructure($id, $structures)
-    {
+    public function getSingleStructure($id, $structures) {
 
-        foreach($structures as $single)
-        {
-            if ($single->getID() == $id){
+        foreach ($structures as $single) {
+            if ($single->getID() == $id) {
                 return $single;
             }
         }
@@ -1205,8 +1113,6 @@ class QualificationBuild {
 
     }
 
-
-
     /**
      * Get an array of the unit grading structures on this qual build
      * @global \GT\type $DB
@@ -1214,31 +1120,27 @@ class QualificationBuild {
      * @param bool Do we want to get the criteria grading structreus on the Qual Structure as well as the Build?
      * @return \GT\UnitAwardStructure
      */
-    public function getCriteriaGradingStructures($enabled = false, $structureAsWell = false){
+    public function getCriteriaGradingStructures($enabled = false, $structureAsWell = false) {
 
         global $DB;
 
         $return = array();
 
         // Only enabled ones
-        if ($enabled){
+        if ($enabled) {
             $records = $DB->get_records("bcgt_crit_award_structures", array("buildid" => $this->id, "enabled" => 1, "deleted" => 0), "id");
         } else {
             $records = $DB->get_records("bcgt_crit_award_structures", array("buildid" => $this->id, "deleted" => 0), "id");
         }
 
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $return[$record->id] = new \GT\CriteriaAwardStructure($record->id);
             }
         }
 
-
         // Do we also want the QualStructure ones?
-        if ($structureAsWell)
-        {
+        if ($structureAsWell) {
             $structure = new \GT\QualificationStructure($this->getStructureID());
             $qualStructureRecords = $structure->getCriteriaGradingStructures($enabled);
             $return = array_merge($return, $qualStructureRecords);
@@ -1248,7 +1150,6 @@ class QualificationBuild {
 
     }
 
-
     /**
      * Check if a grading structure already exists on this Qual Structure with a given name
      * @global \GT\type $DB
@@ -1256,8 +1157,7 @@ class QualificationBuild {
      * @param type $name
      * @return type
      */
-    public function doesGradingStructureExistByName($name)
-    {
+    public function doesGradingStructureExistByName($name) {
 
         global $DB;
 
@@ -1266,8 +1166,6 @@ class QualificationBuild {
 
     }
 
-
-
     /**
      * Import a zip file of XML documents
      * Open all the XML documents and run them through the importXML method
@@ -1275,7 +1173,7 @@ class QualificationBuild {
      * @param type $file
      * @return type
      */
-    public static function importXMLZip($file){
+    public static function importXMLZip($file) {
 
         global $USER;
 
@@ -1289,15 +1187,13 @@ class QualificationBuild {
         $tmpFileName = 'import-qual-build-' . time() . '-' . $USER->id . '.zip';
         $extracted = $fp->extract_to_pathname($file, \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName);
 
-        if ($extracted)
-        {
-            foreach($extracted as $extractedFile => $bool)
-            {
+        if ($extracted) {
+            foreach ($extracted as $extractedFile => $bool) {
 
                 $result['output'] .= sprintf( get_string('import:datasheet:process:file', 'block_gradetracker'), $extractedFile ) . '<br>';
 
                 $load = \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName . '/' . $extractedFile;
-                $import = \GT\QualificationBuild::importXML($load);
+                $import = self::importXML($load);
 
                 // Append to result
                 $result['result'] = $result['result'] && $import['result'];
@@ -1305,9 +1201,7 @@ class QualificationBuild {
                 $result['output'] .= $import['output'];
 
             }
-        }
-        else
-        {
+        } else {
             $result['result'] = false;
             $result['errors'][] = get_string('errors:import:zipfile', 'block_gradetracker');
         }
@@ -1321,7 +1215,7 @@ class QualificationBuild {
      * @param type $file
      * @return string
      */
-    public static function importXML($file, $create = false){
+    public static function importXML($file, $create = false) {
 
         $updateMethod = (isset($_POST['update_method'])) ? $_POST['update_method'] : false;
 
@@ -1330,7 +1224,7 @@ class QualificationBuild {
         $result['errors'] = array();
         $result['output'] = '';
 
-        if ($create == false){
+        if ($create == false) {
             $create = (isset($_POST['create'])) ? true : false;
         }
 
@@ -1338,7 +1232,7 @@ class QualificationBuild {
         $requiredNodes = array('type', 'level', 'subType', 'awards', 'defaults');
 
         // CHeck file exists
-        if (!file_exists($file)){
+        if (!file_exists($file)) {
             $result['errors'][] = get_string('errors:import:file', 'block_gradetracker') . ' - (' . $file . ')';
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
@@ -1350,27 +1244,27 @@ class QualificationBuild {
         finfo_close($fInfo);
 
         // Has to be XML file, otherwise error and return
-        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml'){
+        if ($mime != 'application/xml' && $mime != 'text/plain' && $mime != 'application/zip' && $mime != 'text/xml') {
             $result['errors'][] = sprintf(get_string('errors:import:mimetype', 'block_gradetracker'), 'application/xml, text/xml, text/plain or application/zip', $mime);
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
 
         // If it's a zip file, we need to unzip it and run on each of the XML files inside
-        if ($mime == 'application/zip'){
-           return \GT\QualificationBuild::importXMLZip($file) ;
+        if ($mime == 'application/zip') {
+            return self::importXMLZip($file);
         }
 
         // Open file
         $doc = \simplexml_load_file($file);
-        if (!$doc){
+        if (!$doc) {
             $result['errors'][] = get_string('errors:import:xml:load', 'block_gradetracker') . ' - (' . $file . ')';
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
 
         // Make sure it is wrapped in QualificationStructure tag
-        if (!isset($doc->QualificationBuild)){
+        if (!isset($doc->QualificationBuild)) {
             $result['errors'][] = get_string('errors:import:xml:missingnodes', 'block_gradetracker') . ' - QualificationBuild';
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
@@ -1381,16 +1275,14 @@ class QualificationBuild {
 
         // CHeck for required nodes
         $missingNodes = array();
-        foreach($requiredNodes as $node)
-        {
-            if (!property_exists($xml, $node))
-            {
+        foreach ($requiredNodes as $node) {
+            if (!property_exists($xml, $node)) {
                 $missingNodes[] = $node;
             }
         }
 
-        if ($missingNodes){
-            foreach($missingNodes as $node){
+        if ($missingNodes) {
+            foreach ($missingNodes as $node) {
                 $result['errors'][] = get_string('errors:import:xml:missingnodes', 'block_gradetracker') . ' - ' . $node;
                 $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
                 return $result;
@@ -1403,7 +1295,7 @@ class QualificationBuild {
 
         // Check Type (qual structure) exists
         $QualStructure = \GT\QualificationStructure::findByName($type);
-        if (!$QualStructure){
+        if (!$QualStructure) {
             $result['errors'][] = get_string('errors:qualbuild:type', 'block_gradetracker') . ' - ' . $type;
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
@@ -1411,16 +1303,16 @@ class QualificationBuild {
 
         // Check Level exists
         $Level = \GT\Level::findByName($level);
-        if (!$Level){
+        if (!$Level) {
 
             // Try and create it
-            if ($create){
+            if ($create) {
 
                 $newLevel = new \GT\Level();
                 $newLevel->setName($level);
                 $newLevel->setShortName($level);
                 $newLevel->setOrderNum(0);
-                if ($newLevel->hasNoErrors() && $newLevel->save()){
+                if ($newLevel->hasNoErrors() && $newLevel->save()) {
                     $Level = $newLevel;
                     $result['output'] .= get_string('levelsaved', 'block_gradetracker') . ' - ' . $level . '<br>';
                 } else {
@@ -1439,15 +1331,15 @@ class QualificationBuild {
 
         // Check SubType exists
         $SubType = \GT\SubType::findByName($subType);
-        if (!$SubType){
+        if (!$SubType) {
 
             // Try and create
-            if ($create){
+            if ($create) {
 
                 $newSubType = new \GT\SubType();
                 $newSubType->setName($subType);
                 $newSubType->setShortName($subType);
-                if ($newSubType->hasNoErrors() && $newSubType->save()){
+                if ($newSubType->hasNoErrors() && $newSubType->save()) {
                     $SubType = $newSubType;
                     $result['output'] .= get_string('subtypesaved', 'block_gradetracker') . ' - ' . $subType . '<br>';
                 } else {
@@ -1466,16 +1358,15 @@ class QualificationBuild {
 
         }
 
-
         // Check that this build doesn't already exist, and we haven't chosen to update existing ones
-        $exists = \GT\QualificationBuild::exists($QualStructure->getID(), $Level->getID(), $SubType->getID());
-        if ($exists && $updateMethod != 'overwrite' && $updateMethod != 'merge'){
+        $exists = self::exists($QualStructure->getID(), $Level->getID(), $SubType->getID());
+        if ($exists && $updateMethod != 'overwrite' && $updateMethod != 'merge') {
             $result['errors'][] = get_string('errors:qualbuild:duplicate', 'block_gradetracker') . ' - ' . $type . ', ' . $level . ', ' . $subType;
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
             return $result;
         }
 
-        if ($exists && ($updateMethod == 'overwrite' || $updateMethod == 'merge') ){
+        if ($exists && ($updateMethod == 'overwrite' || $updateMethod == 'merge') ) {
             $newBuild = $exists;
         } else {
             $newBuild = new \GT\QualificationBuild();
@@ -1484,8 +1375,7 @@ class QualificationBuild {
             $newBuild->setSubTypeID($SubType->getID());
         }
 
-
-        if ($newBuild->hasNoErrors() && $newBuild->save()){
+        if ($newBuild->hasNoErrors() && $newBuild->save()) {
 
             $result['result'] = true;
             $result['output'] .= get_string('buildsaved', 'block_gradetracker') . ' - ' . $type . ', ' . $level . ', ' . $subType . '<br>';
@@ -1493,10 +1383,8 @@ class QualificationBuild {
             $awardNamesSubmitted = array();
 
             // Now do the awards and defaults
-            if ($xml->awards)
-            {
-                foreach($xml->awards->children() as $awardNode)
-                {
+            if ($xml->awards) {
+                foreach ($xml->awards->children() as $awardNode) {
 
                     $name = (string)$awardNode;
                     $pointsLower = (string)$awardNode['pointsLower'];
@@ -1505,16 +1393,26 @@ class QualificationBuild {
                     $qoeUpper = (string)$awardNode['qoeUpper'];
                     $ucas = (string)$awardNode['ucas'];
 
-                    if ($pointsLower == '') $pointsLower = null;
-                    if ($pointsUpper == '') $pointsUpper = null;
-                    if ($qoeLower == '') $qoeLower = null;
-                    if ($qoeUpper == '') $qoeUpper = null;
-                    if ($ucas == '') $ucas = null;
+                    if ($pointsLower == '') {
+                        $pointsLower = null;
+                    }
+                    if ($pointsUpper == '') {
+                        $pointsUpper = null;
+                    }
+                    if ($qoeLower == '') {
+                        $qoeLower = null;
+                    }
+                    if ($qoeUpper == '') {
+                        $qoeUpper = null;
+                    }
+                    if ($ucas == '') {
+                        $ucas = null;
+                    }
 
                     // If we are updating an existing build, check for the award by its name
-                    if ($newBuild->isValid()){
+                    if ($newBuild->isValid()) {
                         $award = $newBuild->getAwardByName($name);
-                        if (!$award){
+                        if (!$award) {
                             // If the build exists, but this award doesn't, create new award on it
                             $award = new \GT\QualificationAward();
                         }
@@ -1531,12 +1429,9 @@ class QualificationBuild {
                     $award->setQOELower($qoeLower);
                     $award->setQOEUpper($qoeUpper);
 
-                    if ($award->hasNoErrors() && $award->save())
-                    {
+                    if ($award->hasNoErrors() && $award->save()) {
                         $result['output'] .= get_string('awardsaved', 'block_gradetracker') . ' - ' . (string)$awardNode . '<br>';
-                    }
-                    else
-                    {
+                    } else {
                         $result['result'] = false;
                         $result['output'] .= get_string('errors:qualaward', 'block_gradetracker') . ' - ' . (string)$awardNode . '<br>';
                     }
@@ -1548,13 +1443,10 @@ class QualificationBuild {
 
             // If we are updating an existing one, remove any awards we didn't submit this time
             // Only if we chose to Overwrite though, if we are merging then we keep the old stuff as well
-            if ($exists && $updateMethod == 'overwrite'){
-                if ($newBuild->getAwards())
-                {
-                    foreach($newBuild->getAwards() as $existingAward)
-                    {
-                        if (!in_array($existingAward->getName(), $awardNamesSubmitted))
-                        {
+            if ($exists && $updateMethod == 'overwrite') {
+                if ($newBuild->getAwards()) {
+                    foreach ($newBuild->getAwards() as $existingAward) {
+                        if (!in_array($existingAward->getName(), $awardNamesSubmitted)) {
                             $existingAward->delete();
                             $result['output'] .= get_string('awarddeleted', 'block_gradetracker') . ' - ' . $existingAward->getName() . '<br>';
                         }
@@ -1562,22 +1454,18 @@ class QualificationBuild {
                 }
             }
 
-
-
             // Assessment Grading Structures
-            if ($xml->assessments)
-            {
+            if ($xml->assessments) {
 
-                foreach($xml->assessments->children() as $assessmentStructureNode)
-                {
+                foreach ($xml->assessments->children() as $assessmentStructureNode) {
 
                     $gradingStructureAwardNamesSubmitted = array();
                     $structureName = (string)$assessmentStructureNode['name'];
 
                     // If we are updating, check to see if this already exists
-                    if ( $exists && ($updateMethod == 'overwrite' || $updateMethod == 'merge') ){
+                    if ( $exists && ($updateMethod == 'overwrite' || $updateMethod == 'merge') ) {
                         $criteriaGradingStructure = $newBuild->getAssessmentGradingStructureByName($structureName, false, false);
-                        if (!$criteriaGradingStructure){
+                        if (!$criteriaGradingStructure) {
                             $criteriaGradingStructure = new \GT\CriteriaAwardStructure();
                             $criteriaGradingStructure->setEnabled(0);
                         }
@@ -1592,24 +1480,22 @@ class QualificationBuild {
 
                     // Make sure name doesn't already exist on this build
                     $doesExist = $newBuild->getAssessmentGradingStructureByName($structureName, false, false);
-                    if( $doesExist && $doesExist->getID() <> $criteriaGradingStructure->getID() ){
+                    if ( $doesExist && $doesExist->getID() <> $criteriaGradingStructure->getID() ) {
                         $result['errors'][] = get_string('errors:import:xml:structureexists', 'block_gradetracker') . ' - ' . $structureName;
                         $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
                         return $result;
                     }
 
                     $awardsXML = $assessmentStructureNode->awards;
-                    if ($awardsXML)
-                    {
-                        foreach($awardsXML->children() as $awardNode)
-                        {
+                    if ($awardsXML) {
+                        foreach ($awardsXML->children() as $awardNode) {
 
                             $name = (string)$awardNode['name'];
 
                             // If we are updating an existing grading structure, look for existing award
-                            if ($criteriaGradingStructure->isValid()){
+                            if ($criteriaGradingStructure->isValid()) {
                                 $award = $criteriaGradingStructure->getAwardByName($name);
-                                if (!$award){
+                                if (!$award) {
                                     $award = new \GT\CriteriaAward();
                                 }
                             } else {
@@ -1631,27 +1517,20 @@ class QualificationBuild {
                         }
                     }
 
-
                     // Save the assessment grading structure
-                    if ($criteriaGradingStructure->hasNoErrors() && $criteriaGradingStructure->save())
-                    {
+                    if ($criteriaGradingStructure->hasNoErrors() && $criteriaGradingStructure->save()) {
                         $result['output'] .= get_string('critgradingstructuresaved', 'block_gradetracker') . ' - ' . (string)$criteriaGradingStructure->getName() . '<br>';
-                    }
-                    else
-                    {
+                    } else {
                         $result['result'] = false;
                         $result['output'] .= get_string('errors:gradestructure', 'block_gradetracker') . ' - ' . (string)$criteriaGradingStructure->getName() . '<br>';
                         $result['output'] .= implode(", ", $criteriaGradingStructure->getErrors()) . '<br>';
                     }
 
                     // If we are updating an existing one, remove any awards we didn't submit this time
-                    if ($exists && $updateMethod == 'overwrite'){
-                        if ($criteriaGradingStructure->getAwards())
-                        {
-                            foreach($criteriaGradingStructure->getAwards() as $existingAward)
-                            {
-                                if (!in_array($existingAward->getName(), $gradingStructureAwardNamesSubmitted))
-                                {
+                    if ($exists && $updateMethod == 'overwrite') {
+                        if ($criteriaGradingStructure->getAwards()) {
+                            foreach ($criteriaGradingStructure->getAwards() as $existingAward) {
+                                if (!in_array($existingAward->getName(), $gradingStructureAwardNamesSubmitted)) {
                                     $existingAward->delete();
                                     $result['output'] .= get_string('awarddeleted', 'block_gradetracker') . ' - ' . $existingAward->getName() . '<br>';
                                 }
@@ -1659,28 +1538,22 @@ class QualificationBuild {
                         }
                     }
 
-
                 }
 
             }
-
-
 
             // Unit Grad Structure - Unit Points
             $unitGradingStructuresArray = array();
             $unitPointsArray = array();
 
             $unitPoints = $xml->unitGradingPoints;
-            if ($unitPoints)
-            {
-                foreach($unitPoints->children() as $pointNode)
-                {
+            if ($unitPoints) {
+                foreach ($unitPoints->children() as $pointNode) {
 
                     $unitGradingStructure = $QualStructure->getUnitGradingStructureByName((string)$pointNode['gradingStructure']);
-                    if ($unitGradingStructure)
-                    {
+                    if ($unitGradingStructure) {
 
-                        if (!array_key_exists($unitGradingStructure->getID(), $unitPointsArray)){
+                        if (!array_key_exists($unitGradingStructure->getID(), $unitPointsArray)) {
                             $unitPointsArray[$unitGradingStructure->getID()] = array();
                         }
 
@@ -1688,58 +1561,41 @@ class QualificationBuild {
                         $pnt = (float)$pointNode['points'];
 
                         $award = $unitGradingStructure->getAwardByName($awardName);
-                        if ($award)
-                        {
+                        if ($award) {
 
                             $unitPointsArray[$unitGradingStructure->getID()]['builds'][$newBuild->getID()][$award->getID()] = $pnt;
                             $unitGradingStructuresArray[$unitGradingStructure->getID()] = $unitGradingStructure;
 
                         }
 
-
                     }
 
                 }
             }
 
-
-            if ($unitPointsArray)
-            {
-                foreach($unitPointsArray as $unitGradingStructureID => $array)
-                {
+            if ($unitPointsArray) {
+                foreach ($unitPointsArray as $unitGradingStructureID => $array) {
                     $unitGradingStructure = (isset($unitGradingStructuresArray[$unitGradingStructureID])) ? $unitGradingStructuresArray[$unitGradingStructureID] : false;
-                    if ($unitGradingStructure)
-                    {
+                    if ($unitGradingStructure) {
                         $unitGradingStructure->saveUnitPoints($array);
                     }
                 }
             }
 
-
-
-
             // We don't want to remove Grading Structures not submitted, as some institutions may
             // have made their own grading structures, so leave those, even if we use "overwrite"
 
-
-
-
             // Weighting coefficients
-            if ($xml->weightings)
-            {
+            if ($xml->weightings) {
 
-                foreach($xml->weightings->children() as $percentile)
-                {
+                foreach ($xml->weightings->children() as $percentile) {
 
                     $number = (int)$percentile['number'];
                     $value = (string)$percentile;
                     $setting = \GT\Setting::updateSetting('build_coefficient_'.$newBuild->getID().'_'.$number, $value);
-                    if ($setting)
-                    {
+                    if ($setting) {
                         $result['output'] .= sprintf( get_string('weightingcoefficientsaved', 'block_gradetracker'), $number, $value ) . '<br>';
-                    }
-                    else
-                    {
+                    } else {
                         $result['result'] = false;
                         $result['output'] .= get_string('errors:weightingcoefficient', 'block_gradetracker') . ' - ' . $number . '<br>';
                     }
@@ -1748,26 +1604,22 @@ class QualificationBuild {
 
             }
 
-
-
             // Defaults
-            if ($xml->defaults)
-            {
+            if ($xml->defaults) {
 
                 $customDefaults = array();
                 $buildDefaults = array();
 
-                foreach($xml->defaults->children() as $defaultNode)
-                {
+                foreach ($xml->defaults->children() as $defaultNode) {
 
                     $name = (string)$defaultNode['name'];
                     $value = (string)$defaultNode;
 
                     // For the RuleSet, we have passed a name through in the XML, since IDs can differ, so need to look it up
-                    if ($name == 'build_default_ruleset_name'){
+                    if ($name == 'build_default_ruleset_name') {
 
                         $ruleSet = \GT\RuleSet::getByName($QualStructure->getID(), $value);
-                        if ($ruleSet){
+                        if ($ruleSet) {
                             $name = 'ruleset';
                             $value = $ruleSet->getID();
                             $buildDefaults[$name] = $value;
@@ -1776,14 +1628,11 @@ class QualificationBuild {
                     } else {
 
                         // If name starts with "default_" that is a Qual Build defaults hard-coded into the system
-                        if ( strpos($name, 'build_default_') === 0 )
-                        {
+                        if ( strpos($name, 'build_default_') === 0 ) {
                             $name = str_replace('build_default_', '', $name);
                             $buildDefaults[$name] = $value;
-                        }
-                        // Otherwise it is one of the Qual Structure defaults, as defined in the custom form fields, for this build or some other attribute
-                        else
-                        {
+                        } else {
+                            // Otherwise it is one of the Qual Structure defaults, as defined in the custom form fields, for this build or some other attribute
                             $customDefaults[$name] = $value;
                         }
 
@@ -1807,15 +1656,14 @@ class QualificationBuild {
      * @global type $DB
      * @return type
      */
-    public static function getAllBuilds($structureID = false){
+    public static function getAllBuilds($structureID = false) {
 
         global $DB;
 
         $params = array();
         $structure = "";
 
-        if ($structureID)
-        {
+        if ($structureID) {
             $structure = "AND s.id = ?";
             $params[] = $structureID;
         }
@@ -1830,10 +1678,8 @@ class QualificationBuild {
 
         $return = array();
 
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $return[] = new \GT\QualificationBuild($record->id);
             }
         }
@@ -1850,11 +1696,11 @@ class QualificationBuild {
      * @param int $subTypeID
      * @return type
      */
-    public static function find($structureID, $levelID, $subTypeID = false){
+    public static function find($structureID, $levelID, $subTypeID = false) {
 
         global $DB;
 
-        if ($subTypeID){
+        if ($subTypeID) {
             $check = $DB->get_record("bcgt_qual_builds", array("structureid" => $structureID, "levelid" => $levelID, "subtypeid" => $subTypeID, "deleted" => 0));
             return ($check) ? new \GT\QualificationBuild($check->id) : false;
         } else {
@@ -1872,9 +1718,9 @@ class QualificationBuild {
      * @param int $subTypeID
      * @return type
      */
-    public static function exists($structureID, $levelID, $subTypeID = false){
+    public static function exists($structureID, $levelID, $subTypeID = false) {
 
-        $check = \GT\QualificationBuild::find($structureID, $levelID, $subTypeID);
+        $check = self::find($structureID, $levelID, $subTypeID);
         return $check;
 
     }

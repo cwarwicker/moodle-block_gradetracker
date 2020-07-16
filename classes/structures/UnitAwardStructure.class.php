@@ -1,29 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * UnitAwardStructure
- *
  * Class for dealing with Unit Grading Structures
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class UnitAwardStructure {
 
@@ -41,12 +42,10 @@ class UnitAwardStructure {
 
         global $DB;
 
-        if ($id)
-        {
+        if ($id) {
 
             $record = $DB->get_record("bcgt_unit_award_structures", array("id" => $id));
-            if ($record)
-            {
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->qualStructureID = $record->qualstructureid;
@@ -67,7 +66,7 @@ class UnitAwardStructure {
      * Is it a valid record from the DB?
      * @return type
      */
-    public function isValid(){
+    public function isValid() {
 
         // Check the qual structure hasn't been deleted
         $qualStructure = new \GT\QualificationStructure($this->qualStructureID);
@@ -78,7 +77,7 @@ class UnitAwardStructure {
      * Is it enabled?
      * @return type
      */
-    public function isEnabled(){
+    public function isEnabled() {
         return ($this->enabled == 1);
     }
 
@@ -86,64 +85,62 @@ class UnitAwardStructure {
      * Is it deleted?
      * @return type
      */
-    public function isDeleted(){
+    public function isDeleted() {
         return ($this->deleted == 1);
     }
 
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
-    public function setID($id){
+    public function setID($id) {
         $this->id = $id;
         return $this;
     }
 
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
 
-    public function setName($name){
+    public function setName($name) {
         $this->name = trim($name);
         return $this;
     }
 
-    public function getQualStructureID(){
+    public function getQualStructureID() {
         return $this->qualStructureID;
     }
 
-    public function setQualStructureID($id){
+    public function setQualStructureID($id) {
         $this->qualStructureID = $id;
         return $this;
     }
 
-    public function getEnabled(){
+    public function getEnabled() {
         return $this->enabled;
     }
 
-    public function setEnabled($val){
+    public function setEnabled($val) {
         $this->enabled = $val;
         return $this;
     }
 
-    public function getDeleted(){
+    public function getDeleted() {
         return $this->deleted;
     }
 
-    public function setDeleted($val){
+    public function setDeleted($val) {
         $this->deleted = $val;
         return $this;
     }
 
-    public function loadAwards(){
+    public function loadAwards() {
 
         global $DB;
 
         $records = $DB->get_records("bcgt_unit_awards", array("gradingstructureid" => $this->id), "id");
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $this->awards[$record->id] = new \GT\UnitAward($record->id);
             }
         }
@@ -154,9 +151,9 @@ class UnitAwardStructure {
      * Get the awards for this grading structure, ordered by points
      * @return type
      */
-    public function getAwards(){
+    public function getAwards() {
 
-        usort($this->awards, function($a, $b){
+        usort($this->awards, function($a, $b) {
             return ($a->getPoints() > $b->getPoints());
         });
 
@@ -168,14 +165,11 @@ class UnitAwardStructure {
      * Add an award to the structure
      * @param \GT\UnitAward $award
      */
-    public function addAward(\GT\UnitAward $award){
+    public function addAward(\GT\UnitAward $award) {
 
-        if ($award->isValid())
-        {
+        if ($award->isValid()) {
             $this->awards[$award->getID()] = $award;
-        }
-        else
-        {
+        } else {
             $this->awards[] = $award;
         }
 
@@ -186,13 +180,13 @@ class UnitAwardStructure {
      * @param type $name
      * @return boolean
      */
-    public function getAwardByName($name){
+    public function getAwardByName($name) {
 
-        if ($this->awards){
+        if ($this->awards) {
 
-            foreach($this->awards as $award){
+            foreach ($this->awards as $award) {
 
-                if (strcasecmp($award->getName(), $name) == 0){
+                if (strcasecmp($award->getName(), $name) == 0) {
                     return $award;
                 }
 
@@ -206,14 +200,14 @@ class UnitAwardStructure {
 
 
 
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
     /**
      * Count the number of units with an award defined by this structure
      */
-    public function countUnits(){
+    public function countUnits() {
 
         global $DB;
         return $DB->count_records("bcgt_units", array("gradingstructureid" => $this->id, "deleted" => 0));
@@ -224,13 +218,13 @@ class UnitAwardStructure {
      * Get the maximum number of points of this award structure
      * @return type
      */
-    public function getMaxPoints(){
+    public function getMaxPoints() {
 
         $max = 0;
         $awards = $this->getAwards();
-        if ($awards){
-            foreach($awards as $award){
-                if ($award->getPoints() > $max){
+        if ($awards) {
+            foreach ($awards as $award) {
+                if ($award->getPoints() > $max) {
                     $max = $award->getPoints();
                 }
             }
@@ -241,16 +235,16 @@ class UnitAwardStructure {
     }
 
      /**
-     * Get the maximum number of points of this award structure
-     * @return type
-     */
-    public function getMinPoints(){
+      * Get the maximum number of points of this award structure
+      * @return type
+      */
+    public function getMinPoints() {
 
         $min = false;
         $awards = $this->getAwards();
-        if ($awards){
-            foreach($awards as $award){
-                if ($award->getPoints() < $min || ($min === false)){
+        if ($awards) {
+            foreach ($awards as $award) {
+                if ($award->getPoints() < $min || ($min === false)) {
                     $min = $award->getPoints();
                 }
             }
@@ -264,31 +258,27 @@ class UnitAwardStructure {
      * Check no errors
      * @return type
      */
-    public function hasNoErrors(){
+    public function hasNoErrors() {
 
         // Name
-        if (strlen($this->name) == 0){
+        if (strlen($this->name) == 0) {
             $this->errors[] = get_string('errors:gradestructures:name', 'block_gradetracker');
         }
 
         // Qual Structure
-        if ($this->qualStructureID <= 0){
+        if ($this->qualStructureID <= 0) {
             $this->errors[] = get_string('errors:gradestructures:qualstructure', 'block_gradetracker');
         }
 
         // Awards
-        if (!$this->awards){
+        if (!$this->awards) {
             $this->errors[] = get_string('errors:gradestructures:awards', 'block_gradetracker');
         }
 
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
-                if (!$award->hasNoErrors())
-                {
-                    foreach($award->getErrors() as $err)
-                    {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
+                if (!$award->hasNoErrors()) {
+                    foreach ($award->getErrors() as $err) {
                         $this->errors[] = $err;
                     }
                 }
@@ -304,13 +294,13 @@ class UnitAwardStructure {
      * @global type $DB
      * @return boolean
      */
-    public function save(){
+    public function save() {
 
         global $DB;
 
         $obj = new \stdClass();
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $obj->id = $this->id;
         }
 
@@ -318,24 +308,21 @@ class UnitAwardStructure {
         $obj->name = $this->name;
         $obj->enabled = $this->enabled;
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $result = $DB->update_record("bcgt_unit_award_structures", $obj);
         } else {
             $this->id = $DB->insert_record("bcgt_unit_award_structures", $obj);
             $result = $this->id;
         }
 
-        if (!$result){
+        if (!$result) {
             $this->errors[] = get_string('errors:save', 'block_gradetracker');
             return false;
         }
 
-
         // Now the awards
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
 
                 $award->setGradingStructureID($this->id);
                 $award->save();
@@ -363,35 +350,29 @@ class UnitAwardStructure {
      * @global \GT\type $DB
      * @param type $unitPoints
      */
-    public function saveUnitPoints($unitPoints){
+    public function saveUnitPoints($unitPoints) {
 
         global $DB;
 
-        if ($unitPoints)
-        {
-            foreach($unitPoints as $type => $array)
-            {
-                foreach($array as $relevantID => $points)
-                {
+        if ($unitPoints) {
+            foreach ($unitPoints as $type => $array) {
+                foreach ($array as $relevantID => $points) {
 
                     // Relevant ID must be an ID. Otherwise probably the system doesn't have the Level installed which you want to use.
-                    if (!is_numeric($relevantID)){
+                    if (!is_numeric($relevantID)) {
                         throw new \moodle_exception('Invalid Level in Unit Points. Make sure you install the Levels you need before the Qualification Structure.');
                     }
 
-                    if (is_array($points) && $points)
-                    {
-                        foreach($points as $awardID => $point)
-                        {
-                            if (is_numeric($point))
-                            {
+                    if (is_array($points) && $points) {
+                        foreach ($points as $awardID => $point) {
+                            if (is_numeric($point)) {
                                 $ins = new \stdClass();
                                 $ins->qualstructureid = $this->getQualStructureID();
                                 $ins->unitawardstructureid = $this->id;
-                                if ($type == 'levels'){
+                                if ($type == 'levels') {
                                     $typefield = 'levelid';
                                     $ins->levelid = $relevantID;
-                                } elseif ($type == 'builds'){
+                                } else if ($type == 'builds') {
                                     $typefield = 'qualbuildid';
                                     $ins->qualbuildid = $relevantID;
                                 }
@@ -400,13 +381,10 @@ class UnitAwardStructure {
 
                                 // Check if already exists
                                 $check = $DB->get_record("bcgt_unit_award_points", array("qualstructureid" => $ins->qualstructureid, "unitawardstructureid" => $ins->unitawardstructureid, $typefield => $relevantID, 'awardid' => $ins->awardid));
-                                if ($check)
-                                {
+                                if ($check) {
                                     $check->points = $ins->points;
                                     $DB->update_record("bcgt_unit_award_points", $check);
-                                }
-                                else
-                                {
+                                } else {
                                     $DB->insert_record("bcgt_unit_award_points", $ins);
                                 }
                             }
@@ -422,7 +400,7 @@ class UnitAwardStructure {
      * Wipe them all for this qual structure
      * @global \GT\type $DB
      */
-    private function wipeUnitPoints(){
+    private function wipeUnitPoints() {
 
         global $DB;
         $DB->delete_records("bcgt_unit_award_points", array("qualstructureid" => $this->getQualStructureID(), "unitawardstructureid" => $this->id));
@@ -436,11 +414,11 @@ class UnitAwardStructure {
      * @param type $awardID
      * @return type
      */
-    public function getUnitPoint($levelID, $awardID, $buildID = null){
+    public function getUnitPoint($levelID, $awardID, $buildID = null) {
 
         global $DB;
 
-        if ($buildID){
+        if ($buildID) {
             $record = $DB->get_record("bcgt_unit_award_points", array("qualstructureid" => $this->getQualStructureID(), "unitawardstructureid" => $this->id, "qualbuildid" => $buildID, "awardid" => $awardID));
         } else {
             $record = $DB->get_record("bcgt_unit_award_points", array("qualstructureid" => $this->getQualStructureID(), "unitawardstructureid" => $this->id, "levelid" => $levelID, "awardid" => $awardID));
@@ -454,7 +432,7 @@ class UnitAwardStructure {
      * @global \GT\type $DB
      * @return type
      */
-    public function getAllUnitPoints(){
+    public function getAllUnitPoints() {
 
         global $DB;
         return $DB->get_records("bcgt_unit_award_points", array("qualstructureid" => $this->getQualStructureID(), "unitawardstructureid" => $this->id));
@@ -466,7 +444,7 @@ class UnitAwardStructure {
      * Delete any awards that were on the grading structure before but not submitted this time
      * @global \GT\type $DB
      */
-    public function deleteRemovedAwards(){
+    public function deleteRemovedAwards() {
 
         global $DB;
 
@@ -475,29 +453,23 @@ class UnitAwardStructure {
 
         // Old ones
         $old = $DB->get_records("bcgt_unit_awards", array("gradingstructureid" => $this->id));
-        if ($old)
-        {
-            foreach($old as $o)
-            {
+        if ($old) {
+            foreach ($old as $o) {
                 $oldIDs[] = $o->id;
             }
         }
 
         // Current ones
-        if ($this->awards)
-        {
-            foreach($this->awards as $award)
-            {
+        if ($this->awards) {
+            foreach ($this->awards as $award) {
                 $currentIDs[] = $award->getID();
             }
         }
 
         // Remove
         $removeIDs = array_diff($oldIDs, $currentIDs);
-        if ($removeIDs)
-        {
-            foreach($removeIDs as $removeID)
-            {
+        if ($removeIDs) {
+            foreach ($removeIDs as $removeID) {
                 $DB->delete_records("bcgt_unit_awards", array("id" => $removeID));
             }
         }
@@ -509,7 +481,7 @@ class UnitAwardStructure {
      * @global \GT\type $DB
      * @return boolean
      */
-    public function delete(){
+    public function delete() {
 
         global $DB;
 
@@ -540,34 +512,28 @@ class UnitAwardStructure {
      * @param type $steps
      * @return array
      */
-    public function adjustPointsByFraction($fraction, $possibleAwardArray, $direction = false){
+    public function adjustPointsByFraction($fraction, $possibleAwardArray, $direction = false) {
 
         $return = array();
         $awards = $this->getAwards();
 
         $i = 1;
 
-        foreach($awards as $award)
-        {
+        foreach ($awards as $award) {
 
             $points = '-';
 
-            if ($direction == 'down')
-            {
+            if ($direction == 'down') {
 
                 // STEP - ((STEP - 1) * FRACTION)
                 $points = $i - ( ($i - 1) * $fraction );
 
-            }
-            elseif ($direction == 'up')
-            {
+            } else if ($direction == 'up') {
 
                 // ( (STEP - 1) * FRACTION ) + 1
                 $points = ( ($i - 1) * $fraction ) + 1;
 
-            }
-            elseif (count($awards) == count($possibleAwardArray))
-            {
+            } else if (count($awards) == count($possibleAwardArray)) {
 
                 $key = $i - 1;
                 $points = $possibleAwardArray[$key]->getPoints();
@@ -582,15 +548,14 @@ class UnitAwardStructure {
 
         return $return;
 
-
     }
 
 
-      /**
+    /**
      * Enable or Disable the grading structure, based on whichever it currently is
      * @global \GT\type $DB
      */
-    public function toggleEnabled(){
+    public function toggleEnabled() {
 
         global $DB;
 
@@ -604,9 +569,9 @@ class UnitAwardStructure {
     /**
      * Load data from form into object
      */
-    public function loadPostData(){
+    public function loadPostData() {
 
-        if (isset($_POST['grading_id'])){
+        if (isset($_POST['grading_id'])) {
             $this->setID( $_POST['grading_id'] );
         }
 
@@ -617,10 +582,8 @@ class UnitAwardStructure {
         // Grades
         $gradeIDs = (isset($_POST['grade_ids'])) ? $_POST['grade_ids'] : false;
 
-        if ($gradeIDs)
-        {
-            foreach($gradeIDs as $key => $id)
-            {
+        if ($gradeIDs) {
+            foreach ($gradeIDs as $key => $id) {
 
                 $award = new \GT\UnitAward($id);
                 $award->setGradingStructureID( $this->id );
@@ -630,26 +593,20 @@ class UnitAwardStructure {
                 $award->setPointsLower( $_POST['grade_points_lower'][$key] );
                 $award->setPointsUpper( $_POST['grade_points_upper'][$key] );
 
-                if ($award->isValid())
-                {
+                if ($award->isValid()) {
                     $this->awards[$award->getID()] = $award;
-                }
-                else
-                {
+                } else {
                     $this->awards[] = $award;
                 }
 
             }
         }
 
-
         // Unit points
         $this->unitPoints = array();
-        if (isset($_POST['unit_points']))
-        {
+        if (isset($_POST['unit_points'])) {
             $this->unitPoints = $_POST['unit_points'];
         }
-
 
     }
 
