@@ -1,49 +1,49 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Standard moodle block upgrade script
+ * Upgrade plugin
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-require_once $CFG->dirroot . '/blocks/gradetracker/lib.php';
+defined('MOODLE_INTERNAL') or die();
 
-function xmldb_block_gradetracker_upgrade($oldversion = 0)
-{
+require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
+
+function xmldb_block_gradetracker_upgrade($oldversion = 0) {
 
     global $CFG, $DB;
 
     $dbman = $DB->get_manager();
     $result = true;
 
-
-    if ($oldversion < 2015071300)
-    {
+    if ($oldversion < 2015071300) {
 
         // ======================== Install data ======================== //
 
         // Qualification Structure Features
         $features = \GT\QualificationStructure::_features();
-        if ($features){
-            foreach($features as $feature){
+        if ($features) {
+            foreach ($features as $feature) {
 
                 $check = $DB->get_record("bcgt_qual_structure_features", array("name" => $feature));
-                if (!$check){
+                if (!$check) {
 
                     $obj = new stdClass();
                     $obj->name = $feature;
@@ -54,14 +54,13 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             }
         }
 
-
         // Qualification Structure Levels
         $levels = \GT\QualificationStructure::_levels();
-        if ($levels){
-            foreach($levels as $level => $minMax){
+        if ($levels) {
+            foreach ($levels as $level => $minMax) {
 
                 $check = $DB->get_record("bcgt_qual_structure_levels", array("name" => $level));
-                if ($check){
+                if ($check) {
                     $check->minsublevels = $minMax[0];
                     $check->maxsublevels = $minMax[1];
                     $result = $result && $DB->update_record("bcgt_qual_structure_levels", $check);
@@ -76,12 +75,10 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             }
         }
 
-
     }
 
     // Add new fields onto the user_assessments table
-    if ($oldversion < 2015121700)
-    {
+    if ($oldversion < 2015121700) {
 
         // Define field lastupdate to be added to bcgt_user_assessments.
         $table = new xmldb_table('bcgt_user_assessments');
@@ -122,15 +119,13 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_field($table, $field);
         }
 
-
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016020402, 'gradetracker');
 
     }
 
     // Change geadingstructureid field on criteria table to allow NULL for readonly criteria
-    if ($oldversion < 2016030100)
-    {
+    if ($oldversion < 2016030100) {
 
         $table = new xmldb_table('bcgt_criteria');
 
@@ -138,13 +133,11 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         $key = new xmldb_key('gsid_fk', XMLDB_KEY_FOREIGN, array('gradingstructureid'), 'bcgt_crit_award_structures', array('id'));
         $dbman->drop_key($table, $key);
 
-
         // Changing nullability of field gradingstructureid on table bcgt_criteria to null.
         $field = new xmldb_field('gradingstructureid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'subcrittype');
 
         // Launch change of nullability for field gradingstructureid.
         $dbman->change_field_notnull($table, $field);
-
 
         // Add key again
         $key = new xmldb_key('gsid_fk', XMLDB_KEY_FOREIGN, array('gradingstructureid'), 'bcgt_crit_award_structures', array('id'));
@@ -171,7 +164,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         upgrade_block_savepoint(true, 2016041400, 'gradetracker');
 
     }
-
 
     if ($oldversion < 2016042600) {
 
@@ -230,9 +222,7 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
     }
 
-
-    if ($oldversion < 2016060101)
-    {
+    if ($oldversion < 2016060101) {
 
         // Define field lastupdate to be added to bcgt_unit_attributes.
         $table = new xmldb_table('bcgt_unit_attributes');
@@ -243,8 +233,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_field($table, $field);
         }
 
-
-
         // Define field lastupdate to be added to bcgt_qual_attributes.
         $table = new xmldb_table('bcgt_qual_attributes');
         $field = new xmldb_field('lastupdate', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'value');
@@ -253,8 +241,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
-
 
         // Define field lastupdate to be added to bcgt_criteria_attributes.
         $table = new xmldb_table('bcgt_criteria_attributes');
@@ -265,8 +251,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_field($table, $field);
         }
 
-
-
         // Define field lastupdate to be added to bcgt_assessment_attributes.
         $table = new xmldb_table('bcgt_assessment_attributes');
         $field = new xmldb_field('lastupdate', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'value');
@@ -276,49 +260,37 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_field($table, $field);
         }
 
-
-
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016060101, 'gradetracker');
 
     }
 
-
-    if ($oldversion < 2016071900)
-    {
-
+    if ($oldversion < 2016071900) {
 
         $table = new xmldb_table('bcgt_crit_award_structures');
-
 
         // Drop the qualstructureid key
         $key = new xmldb_key('qsid_fk', XMLDB_KEY_FOREIGN, array('qualstructureid'));
         $dbman->drop_key($table, $key);
 
-
         // Changing nullability of field qualstructureid on table bcgt_crit_award_structures to null.
         $field = new xmldb_field('qualstructureid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id');
         $dbman->change_field_notnull($table, $field);
-
 
         // Put the key back
         $key = new xmldb_key('qsid_fk', XMLDB_KEY_FOREIGN, array('qualstructureid'), 'bcgt_qual_structures', array('id'));
         $dbman->add_key($table, $key);
 
-
         // Define key bid_fk (foreign) to be added to bcgt_crit_award_structures.
         $key = new xmldb_key('bid_fk', XMLDB_KEY_FOREIGN, array('buildid'), 'bcgt_builds', array('id'));
         $dbman->add_key($table, $key);
-
 
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016071900, 'gradetracker');
 
     }
 
-
-    if ($oldversion < 2016072500)
-    {
+    if ($oldversion < 2016072500) {
 
         // Define table bcgt_data_mapping to be created.
         $table = new xmldb_table('bcgt_data_mapping');
@@ -357,10 +329,9 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
     }
 
-    if ($oldversion < 2016080516)
-    {
+    if ($oldversion < 2016080516) {
 
-         // Changing type of field oldid on table bcgt_data_mapping to text.
+        // Changing type of field oldid on table bcgt_data_mapping to text.
         $table = new xmldb_table('bcgt_data_mapping');
 
         // Launch change of type for field oldid.
@@ -409,10 +380,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->create_table($table);
         }
 
-
-
-
-
         // Define table bcgt_log_attributes to be created.
         $table = new xmldb_table('bcgt_log_attributes');
 
@@ -421,7 +388,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         $table->add_field('logid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('attributename', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
         $table->add_field('attributevalue', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-
 
         // Adding keys to table bcgt_log_attributes.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -436,8 +402,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         upgrade_block_savepoint(true, 2016081600, 'gradetracker');
 
     }
-
-
 
     if ($oldversion < 2016081700) {
 
@@ -460,7 +424,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
     }
 
-
     if ($oldversion < 2016081900) {
 
         // Define table bcgt_qual_structure_rule_set to be created.
@@ -480,8 +443,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->create_table($table);
         }
 
-
-
         // Alter rules table to apply rule sets
 
         // FIrst need to wipe the table, as can't add NOT NULL field to existing records without default value
@@ -489,12 +450,9 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
         $table = new xmldb_table('bcgt_qual_structure_rules');
 
-
         // Define key qsid_fk (foreign) to be dropped form bcgt_qual_structure_rules.
         $key = new xmldb_key('qsid_fk', XMLDB_KEY_FOREIGN, array('qualstructureid'), 'bcgt_qual_structures', array('id'));
         $dbman->drop_key($table, $key);
-
-
 
         // Conditionally launch drop field qualstructureid.
         $field = new xmldb_field('qualstructureid');
@@ -502,28 +460,20 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->drop_field($table, $field);
         }
 
-
-
         // Conditionally launch add field setid.
         $field = new xmldb_field('setid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-
-
         // Launch add key sid_fk.
         $key = new xmldb_key('sid_fk', XMLDB_KEY_FOREIGN, array('setid'), 'bcgt_qual_structure_rule_set', array('id'));
         $dbman->add_key($table, $key);
-
-
 
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016081900, 'gradetracker');
 
     }
-
-
 
     if ($oldversion < 2016082300) {
 
@@ -541,7 +491,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
     }
 
-
     if ($oldversion < 2016082600) {
 
         // Define field isdefault to be added to bcgt_qual_structure_rule_set.
@@ -557,7 +506,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         upgrade_block_savepoint(true, 2016082600, 'gradetracker');
     }
 
-
     if ($oldversion < 2016092200) {
 
         // Define index indx (unique) to be added to bcgt_qual_structure_levels.
@@ -572,7 +520,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016092200, 'gradetracker');
     }
-
 
     if ($oldversion < 2016092900) {
 
@@ -607,8 +554,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_index($table, $index);
         }
 
-
-
         // Define index uq_indx (not unique) to be added to bcgt_user_quals.
         $table = new xmldb_table('bcgt_user_quals');
         $index = new xmldb_index('uq_indx', XMLDB_INDEX_NOTUNIQUE, array('userid', 'qualid'));
@@ -625,12 +570,9 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_index($table, $index);
         }
 
-
-
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016092900, 'gradetracker');
     }
-
 
     if ($oldversion < 2016101100) {
 
@@ -647,8 +589,7 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
     }
 
     // Update bcgt_unit_award_points table to allow us to store the points against a qual build
-    if ($oldversion < 2016120100)
-    {
+    if ($oldversion < 2016120100) {
 
         // Define key lid_fk (foreign) to be dropped from bcgt_unit_award_points.
         $table = new xmldb_table('bcgt_unit_award_points');
@@ -657,8 +598,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         // Launch drop key lid_fk.
         $dbman->drop_key($table, $key);
 
-
-
         // Changing nullability of field levelid on table bcgt_unit_award_points to null.
         $table = new xmldb_table('bcgt_unit_award_points');
         $field = new xmldb_field('levelid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'qualstructureid');
@@ -666,18 +605,12 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         // Launch change of nullability for field levelid.
         $dbman->change_field_notnull($table, $field);
 
-
-
-
         // Define key lid_fk (foreign) to be added to bcgt_unit_award_points.
         $table = new xmldb_table('bcgt_unit_award_points');
         $key = new xmldb_key('lid_fk', XMLDB_KEY_FOREIGN, array('levelid'), 'bcgt_qual_levels', array('id'));
 
         // Launch add key lid_fk.
         $dbman->add_key($table, $key);
-
-
-
 
         // Define field qualbuildid to be added to bcgt_unit_award_points.
         $table = new xmldb_table('bcgt_unit_award_points');
@@ -688,8 +621,6 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
             $dbman->add_field($table, $field);
         }
 
-
-
         // Define key bid_fk (foreign) to be added to bcgt_unit_award_points.
         $table = new xmldb_table('bcgt_unit_award_points');
         $key = new xmldb_key('bid_fk', XMLDB_KEY_FOREIGN, array('qualbuildid'), 'bcgt_qual_builds', array('id'));
@@ -697,16 +628,12 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
         // Launch add key bid_fk.
         $dbman->add_key($table, $key);
 
-
-
-
         // Gradetracker savepoint reached.
         upgrade_block_savepoint(true, 2016120100, 'gradetracker');
 
     }
 
-    if ($oldversion < 2016120200)
-    {
+    if ($oldversion < 2016120200) {
 
         // Changing precision of field points on table bcgt_unit_award_points to (4, 1).
         $table = new xmldb_table('bcgt_unit_award_points');
@@ -720,9 +647,7 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
     }
 
-
-    if ($oldversion < 2017011800)
-    {
+    if ($oldversion < 2017011800) {
 
         // Define field description to be added to bcgt_qual_structure_rules.
         $table = new xmldb_table('bcgt_qual_structure_rules');
@@ -738,18 +663,7 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0)
 
     }
 
-    // TODO: Apply all 3.7 database updates
-    // if ($oldversion < XXXXXXXXXX){
-    //
-    //   // Delete Detail Critiera type
-    //   $DB->delete_records('bcgt_qual_structure_levels', array('name' => 'Detail Criteria'));
-    //
-    //   // Change any existing Detail Criteria to Standard
-    //   //
-    //
-    // }
-
-
+    // TODO: Apply all 3.7 database updates, e.g. Detail Criteria removed.
 
     return $result;
 
