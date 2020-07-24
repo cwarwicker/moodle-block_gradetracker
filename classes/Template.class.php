@@ -1,28 +1,30 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * Class for simple HTML templating
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 /**
  *
@@ -62,16 +64,15 @@ class Template {
      * @param type $val
      * @return \GT\Template
      */
-    public function set($var, $val, $final = false)
-    {
+    public function set($var, $val, $final = false) {
 
         // If already set as a final variable, can't do it
-        if (in_array($var, $this->final)){
+        if (in_array($var, $this->final)) {
             return $this;
         }
 
         $this->variables[$var] = $val;
-        if ($final){
+        if ($final) {
             $this->final[] = $var;
         }
 
@@ -84,8 +85,7 @@ class Template {
      * @param type $var
      * @return type
      */
-    public function exists($var)
-    {
+    public function exists($var) {
         return (isset($this->variables[$var]));
     }
 
@@ -93,8 +93,7 @@ class Template {
      * Get the output if we don't want to call display() and instead use it some other way
      * @return type
      */
-    public function getOutput()
-    {
+    public function getOutput() {
         return $this->output;
     }
 
@@ -102,22 +101,21 @@ class Template {
      * Get all variables set in the template
      * @return type
      */
-    public function getVars()
-    {
+    public function getVars() {
         return $this->variables;
     }
 
-    public function clearVars(){
+    public function clearVars() {
         $this->variables = array();
         return $this;
     }
 
-    public function loadStringsForJS(){
+    public function loadStringsForJS() {
 
         global $CFG, $PAGE;
 
         $str = file_get_contents($CFG->dirroot . '/blocks/gradetracker/lang/js_strings.txt');
-        if ($str){
+        if ($str) {
             $keys = array_filter( preg_split("/\\r\\n|\\r|\\n/", $str) );
             $PAGE->requires->strings_for_js( $keys, 'block_gradetracker' );
         }
@@ -130,8 +128,7 @@ class Template {
      * @return type
      * @throws \GT\GTException
      */
-    public function load($template)
-    {
+    public function load($template) {
 
         global $CFG;
 
@@ -140,34 +137,31 @@ class Template {
 
         // Are we using custom templating?
         $GT = new \GT\GradeTracker();
-        if ($GT->getSetting('use_custom_templating') == 1){
+        if ($GT->getSetting('use_custom_templating') == 1) {
 
             // Strip the standard path from it and see if one exists in Moodledata for this
             $stripped = str_replace($CFG->dirroot . '/blocks/gradetracker/tpl/', '', $template);
 
             // If it does, load that instead
-            if (file_exists( $GT::dataroot() . '/tpl/' . $stripped )){
+            if (file_exists( $GT::dataroot() . '/tpl/' . $stripped )) {
                 $template = $GT::dataroot() . '/tpl/' . $stripped;
             }
 
         }
 
         // If the file doesn't exist, throw an exception
-        if (!file_exists($template)){
+        if (!file_exists($template)) {
             throw new \GT\GTException( get_string('template', 'block_gradetracker'), get_string('filenotfound', 'block_gradetracker'), $template, get_string('createfileorchangepath', 'block_gradetracker'));
         }
 
         // Extract any variables into the template
-        if (!empty($this->variables)){
+        if (!empty($this->variables)) {
             extract($this->variables);
         }
 
-        // Had to comment this out for php 7, not sure if it will break anything
-//        $this->set("this", $this);
-
         flush();
         ob_start();
-            include $template;
+        include($template);
         $output = ob_get_clean();
 
         $this->output = $output;
@@ -178,8 +172,7 @@ class Template {
     /**
      * Echo the template file
      */
-    public function display()
-    {
+    public function display() {
         echo $this->output;
     }
 

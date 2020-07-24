@@ -1,43 +1,44 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Form class
- *
  * Class for defining custom form elements for use in things such as custom structure forms
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class FormElement {
 
     private $supportedTypes = array('TEXT', 'NUMBER', 'CHECKBOX', 'TEXTBOX', 'SELECT', 'QUALPICKER');
     private $supportedValidation = array(
-            "REQUIRED",
-            "TEXT_ONLY",
-            "NUMBERS_ONLY",
-            "ALPHANUMERIC_ONLY",
-            "DATE",
-            "EMAIL",
-            "PHONE",
-            "URL"
-        );
+        "REQUIRED",
+        "TEXT_ONLY",
+        "NUMBERS_ONLY",
+        "ALPHANUMERIC_ONLY",
+        "DATE",
+        "EMAIL",
+        "PHONE",
+        "URL"
+    );
     private $supportedForms = array('qualification', 'unit'); // These are the different forms we can add form elements to
 
     private $id = false;
@@ -58,12 +59,10 @@ class FormElement {
 
         global $DB;
 
-        if ($id)
-        {
+        if ($id) {
 
             $record = $DB->get_record("bcgt_form_elements", array("id" => $id));
-            if ($record)
-            {
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->name = $record->name;
@@ -82,7 +81,7 @@ class FormElement {
      * Has an id been set?
      * @return type
      */
-    public function isValid(){
+    public function isValid() {
         return ($this->id !== false);
     }
 
@@ -90,7 +89,7 @@ class FormElement {
      * Get the id of the form element
      * @return type
      */
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
@@ -98,7 +97,7 @@ class FormElement {
      * Set the ID of the form element
      * @param type $id
      */
-    public function setID($id){
+    public function setID($id) {
         $this->id = $id;
     }
 
@@ -106,7 +105,7 @@ class FormElement {
      * Set the name of the element
      * @param type $name
      */
-    public function setName($name){
+    public function setName($name) {
         $this->name = \gt_strip_chars($name);
     }
 
@@ -114,7 +113,7 @@ class FormElement {
      * Get the name
      * @return type
      */
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
 
@@ -122,7 +121,7 @@ class FormElement {
      * Get which form the element is for
      * @return type
      */
-    public function getForm(){
+    public function getForm() {
         return $this->form;
     }
 
@@ -130,7 +129,7 @@ class FormElement {
      * Set which form the element is for
      * @param type $form
      */
-    public function setForm($form){
+    public function setForm($form) {
         $this->form = $form;
     }
 
@@ -138,7 +137,7 @@ class FormElement {
      * Set the type of the element
      * @param type $type
      */
-    public function setType($type){
+    public function setType($type) {
         $this->type = trim($type);
     }
 
@@ -146,7 +145,7 @@ class FormElement {
      * Get the type of the element
      * @return type
      */
-    public function getType(){
+    public function getType() {
         return $this->type;
     }
 
@@ -154,7 +153,7 @@ class FormElement {
      * Get the element options, if element like a select menu
      * @return type
      */
-    public function getOptions(){
+    public function getOptions() {
         return $this->options;
     }
 
@@ -162,7 +161,7 @@ class FormElement {
      * Get the element options as a string
      * @return type
      */
-    public function getOptionsString(){
+    public function getOptionsString() {
         return ($this->options) ? implode(",", $this->options) : "";
     }
 
@@ -170,16 +169,15 @@ class FormElement {
      * Set an array of options for the element
      * @param type $options
      */
-    public function setOptions($options){
+    public function setOptions($options) {
 
         // If we've passed in a string, explode it to array
-        if (is_string($options))
-        {
+        if (is_string($options)) {
             $options = explode(",", $options);
         }
 
         // Trim any extra white space
-        if ($options){
+        if ($options) {
             $options = array_map('trim', $options);
         }
 
@@ -190,8 +188,8 @@ class FormElement {
      * Add an option to the array for the element
      * @param type $option
      */
-    public function addOption($option){
-        if (!in_array($this->options, $option)){
+    public function addOption($option) {
+        if (!in_array($this->options, $option)) {
             $this->options[] = trim($option);
         }
     }
@@ -200,7 +198,7 @@ class FormElement {
      * Get the validation on this element
      * @return type
      */
-    public function getValidation(){
+    public function getValidation() {
         return $this->validation;
     }
 
@@ -208,7 +206,7 @@ class FormElement {
      * Set an array of validation for this element
      * @param type $validation
      */
-    public function setValidation($validation){
+    public function setValidation($validation) {
         $this->validation = $validation;
     }
 
@@ -216,8 +214,8 @@ class FormElement {
      * Add a validation type to the element
      * @param type $validation
      */
-    public function addValidation($validation){
-        if (!in_array($validation, $this->validation)){
+    public function addValidation($validation) {
+        if (!in_array($validation, $this->validation)) {
             $this->validation[] = trim($validation);
         }
     }
@@ -227,7 +225,7 @@ class FormElement {
      * @param type $validation
      * @return type
      */
-    public function hasValidation($validation){
+    public function hasValidation($validation) {
         return (in_array($validation, $this->validation));
     }
 
@@ -235,7 +233,7 @@ class FormElement {
      * Get the value for this element if one has been set
      * @return type
      */
-    public function getValue(){
+    public function getValue() {
         return $this->value;
     }
 
@@ -243,7 +241,7 @@ class FormElement {
      * Set the value for this element
      * @param type $value
      */
-    public function setValue($value){
+    public function setValue($value) {
         $this->value = $value;
     }
 
@@ -251,7 +249,7 @@ class FormElement {
      * Get the supported element types
      * @return type
      */
-    public function getSupportedTypes(){
+    public function getSupportedTypes() {
 
         return $this->supportedTypes;
 
@@ -261,41 +259,41 @@ class FormElement {
      * Get any errors
      * @return type
      */
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
     /**
      * Check to make sure no errors
      */
-    public function hasNoErrors(){
+    public function hasNoErrors() {
 
         // Check element name
-        if (strlen($this->name) == 0){
+        if (strlen($this->name) == 0) {
             $this->errors[] = get_string('errors:formelement:name', 'block_gradetracker');
         }
 
         // Check element form
-        if (!in_array($this->form, $this->supportedForms)){
+        if (!in_array($this->form, $this->supportedForms)) {
             $this->errors[] = sprintf( get_string('errors:formelement:form', 'block_gradetracker'), $this->form );
         }
 
         // Check element type
-        if (!in_array($this->type, $this->supportedTypes)){
+        if (!in_array($this->type, $this->supportedTypes)) {
             $this->errors[] = sprintf( get_string('errors:formelement:type', 'block_gradetracker'), $this->type );
         }
 
         // Check validation
-        if ($this->validation){
-            foreach($this->validation as $validation){
-                if (!in_array($validation, $this->supportedValidation) && !empty($validation)){
+        if ($this->validation) {
+            foreach ($this->validation as $validation) {
+                if (!in_array($validation, $this->supportedValidation) && !empty($validation)) {
                     $this->errors[] = sprintf( get_string('errors:formelement:validation', 'block_gradetracker'), $validation );
                 }
             }
         }
 
         // Check options
-        if ($this->type == 'SELECT' && !$this->options){
+        if ($this->type == 'SELECT' && !$this->options) {
             $this->errors[] = get_string('errors:formelement:missingoptions', 'block_gradetracker');
         }
 
@@ -303,7 +301,7 @@ class FormElement {
 
     }
 
-    public function save(){
+    public function save() {
 
         global $DB;
 
@@ -314,7 +312,7 @@ class FormElement {
         $obj->options = ($this->options) ? implode("\n", $this->options) : null;
         $obj->validation = ($this->validation) ? implode(",", $this->validation) : null;
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $obj->id = $this->id;
             $DB->update_record("bcgt_form_elements", $obj);
         } else {
@@ -328,7 +326,7 @@ class FormElement {
      * @param type $options
      * @return string
      */
-    public function display($options = false){
+    public function display($options = false) {
 
         global $CFG, $OUTPUT;
 
@@ -337,66 +335,61 @@ class FormElement {
         $name = \gt_strip_chars($this->name);
 
         // If we want to use the id as the name instead
-        if (isset($options['use_id_as_name']) && $options['use_id_as_name'] == true){
+        if (isset($options['use_id_as_name']) && $options['use_id_as_name'] == true) {
             $name = $this->id;
         }
 
         // If we want to change the default name of the html element
-        if (isset($options['name']) && !empty($options['name'])){
+        if (isset($options['name']) && !empty($options['name'])) {
             $name = "{$options['name']}[{$name}]";
         }
 
         $name = gt_html($name);
 
-
         // Did we load in another value
-        if (isset($options['value'])){
+        if (isset($options['value'])) {
             $this->value = $options['value'];
         }
 
         // Did we load in a class?
         $class = "";
-        if (isset($options['class'])){
+        if (isset($options['class'])) {
             $class .= $options['class'];
         }
 
-
-        switch ($this->type)
-        {
+        switch ($this->type) {
 
             case 'TEXT':
                 $output .= "<input id='gt_el_{$this->id}' class='{$class}' type='text' name='{$name}' value='{$this->value}' />";
-            break;
+                break;
 
             case 'NUMBER':
                 $output .= "<input id='gt_el_{$this->id}' class='{$class}' type='number' name='{$name}' value='{$this->value}' />";
-            break;
+                break;
 
             case 'TEXTBOX':
                 $output .= "<textarea id='gt_el_{$this->id}' class='{$class}' name='{$name}'>";
-                    $output .= $this->value;
+                $output .= $this->value;
                 $output .= "</textarea>";
-            break;
+                break;
 
             case 'SELECT':
                 $output .= "<select id='gt_el_{$this->id}' class='{$class}' name='{$name}'>";
-                    $output .= "<option value=''></option>";
-                    if ($this->options)
-                    {
-                        foreach($this->options as $opt)
-                        {
-                            $sel = ($this->value == $opt) ? 'selected' : '';
-                            $output .= "<option value='{$opt}' {$sel} >{$opt}</option>";
-                        }
+                $output .= "<option value=''></option>";
+                if ($this->options) {
+                    foreach ($this->options as $opt) {
+                        $sel = ($this->value == $opt) ? 'selected' : '';
+                        $output .= "<option value='{$opt}' {$sel} >{$opt}</option>";
                     }
+                }
                 $output .= "</select>";
-            break;
+                break;
 
             case 'CHECKBOX':
 
                 $chk = ($this->value == 1) ? 'checked' : '';
 
-                if (isset($options['fancy']) && $options['fancy']){
+                if (isset($options['fancy']) && $options['fancy']) {
 
                     $output .= "<div class='gt_fancy_checkbox'>";
                     $output .= "<input id='gt_el_{$this->id}' type='checkbox' class='gt_middle {$class}' name='{$name}' value='1' {$chk} />";
@@ -407,7 +400,7 @@ class FormElement {
                     $output .= "<input id='gt_el_{$this->id}' class='{$class}' type='checkbox' name='{$name}' value='1' {$chk} />";
                 }
 
-            break;
+                break;
 
             case 'QUALPICKER':
 
@@ -418,15 +411,13 @@ class FormElement {
                 // Load the quals into an array and then sort them
                 $qualArray = array();
 
-                if ($this->value && is_array($this->value))
-                {
-                    foreach($this->value as $val)
-                    {
-                        if (is_numeric($val)){
+                if ($this->value && is_array($this->value)) {
+                    foreach ($this->value as $val) {
+                        if (is_numeric($val)) {
                             $val = new \GT\Qualification($val);
                         }
 
-                        if ($val->isValid()){
+                        if ($val->isValid()) {
                             $qualArray[$val->getID()] = $val;
                         }
                     }
@@ -438,187 +429,169 @@ class FormElement {
 
                 $output .= "<div class='gt_qual_picker'>";
 
-                    $output .= "<div class='gt_page_col'>";
+                $output .= "<div class='gt_page_col'>";
 
-                        $output .= "<div class='gt_c'>";
+                $output .= "<div class='gt_c'>";
 
-                            $output .= "<div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt'>".get_string('selectedquals', 'block_gradetracker')."</div>";
+                $output .= "<div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt'>".get_string('selectedquals', 'block_gradetracker')."</div>";
 
-                            $output .= "<div>";
+                $output .= "<div>";
 
-                                $output .= "<br><br>";
+                $output .= "<br><br>";
 
-                                $output .= "<select id='chosen_quals' class='gt_course_select gt_course_select_larger' multiple='multiple'>";
+                $output .= "<select id='chosen_quals' class='gt_course_select gt_course_select_larger' multiple='multiple'>";
 
-                                if ($this->value && is_array($this->value))
-                                {
-                                    foreach($qualArray as $qual)
-                                    {
-                                        $output .= "<option id='chosen_qual_opt_{$qual->getID()}' value='{$qual->getID()}'>{$qual->getDisplayName()}</option>";
-                                    }
-                                }
+                if ($this->value && is_array($this->value)) {
+                    foreach ($qualArray as $qual) {
+                        $output .= "<option id='chosen_qual_opt_{$qual->getID()}' value='{$qual->getID()}'>{$qual->getDisplayName()}</option>";
+                    }
+                }
 
-                                $output .= "</select>";
+                $output .= "</select>";
 
-                                $output .= "<div id='gt_chosen_quals_hidden_ids'>";
-                                    if ($this->value && is_array($this->value))
-                                    {
-                                        foreach($this->value as $val)
-                                        {
-                                            if (is_numeric($val)){
-                                                $val = new \GT\Qualification($val);
-                                            }
+                $output .= "<div id='gt_chosen_quals_hidden_ids'>";
+                if ($this->value && is_array($this->value)) {
+                    foreach ($this->value as $val) {
+                        if (is_numeric($val)) {
+                            $val = new \GT\Qualification($val);
+                        }
 
-                                            if ($val->isValid()){
-                                                $output .= "<input type='hidden' id='hidden_qual_{$val->getID()}' name='quals[]' value='{$val->getID()}' />";
-                                            }
-                                        }
-                                    }
-
-                                $output .= "</div>";
-
-                                $output .= "<br><br>";
-
-                                $output .= "<p>";
-                                    $output .= "<input type='button' class='gt_btn gt_qual_picker_remove' value='".get_string('remove', 'block_gradetracker')."' />";
-                                    $output .= "&nbsp;&nbsp;";
-                                    $output .= "<a href='' id='gt_chosen_quals_edit_qual_btn' type='button' class='gt_btn gt_yellow' disabled target='_blank'>".get_string('edit', 'block_gradetracker')."</a>";
-                                $output .= "</p>";
-
-                            $output .= "</div>";
-
-                        $output .= "</div>";
-
-                    $output .= "</div>";
-
-
-
-
-                    $output .= "<div class='gt_page_col'>";
-
-                        $output .= "<div class='gt_c'>";
-
-                            $output .= "<div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt'>".get_string('qualschoose', 'block_gradetracker')."</div>";
-
-                            $output .= "<div>";
-
-                                $output .= "<br><br>";
-
-                                $output .= "<select id='gt_filter_qual_structure' class='gt_third_width'>";
-                                    $output .= "<option value=''></option>";
-                                    if ($allStructures)
-                                    {
-                                        foreach($allStructures as $structure)
-                                        {
-                                            $output .= "<option value='{$structure->getID()}'>{$structure->getName()}</option>";
-                                        }
-                                    }
-                                $output .= "</select> ";
-
-                                $output .= "<select id='gt_filter_qual_level' class='gt_third_width'>";
-                                    $output .= "<option value=''></option>";
-                                    if ($allLevels)
-                                    {
-                                        foreach($allLevels as $level)
-                                        {
-                                            $output .= "<option value='{$level->getID()}'>{$level->getName()}</option>";
-                                        }
-                                    }
-                                $output .= "</select> ";
-
-                                $output .= "<select id='gt_filter_qual_subtype' class='gt_third_width'>";
-                                    $output .= "<option value=''></option>";
-                                    if ($allSubTypes)
-                                    {
-                                        foreach($allSubTypes as $subType)
-                                        {
-                                            $output .= "<option value='{$subType->getID()}'>{$subType->getName()}</option>";
-                                        }
-                                    }
-                                $output .= "</select>";
-
-                                $output .= "<br><br>";
-
-                                $output .= "<input type='text' id='gt_filter_qual_name' class='gt_80' placeholder='".get_string('name', 'block_gradetracker')."' /> ";
-
-                                $output .= "<a href='#' class='gt_qual_picker_filter'>";
-                                    $output .= "<img src='".gt_image_url('i/search')."' class='gt_middle' alt='search' />";
-                                $output .= "</a>";
-
-                                $output .= "<br>";
-                                $output .= "<img src='".gt_image_url('i/loading_small')."' class='gt_hidden' id='gt_filter_quals_loading' />";
-                                $output .= "<br>";
-
-                                $output .= "<select id='gt_filter_quals' class='gt_qual_select' multiple='multiple'></select>";
-
-                                $output .= "<br><br>";
-
-                                $output .= "<p>";
-                                    $output .= "<input type='button' class='gt_btn gt_qual_picker_add' value='".get_string('add', 'block_gradetracker')."' />";
-                                    $output .= "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=quals&section=new' class='gt_btn' target='_blank'>".get_string('createnew', 'block_gradetracker')."</a>";
-                                $output .= "</p>";
-
-                            $output .= "</div>";
-
-                        $output .= "</div>";
-
-                    $output .= "</div>";
-
-                    $output .= "<br class='gt_cl'><br>";
+                        if ($val->isValid()) {
+                            $output .= "<input type='hidden' id='hidden_qual_{$val->getID()}' name='quals[]' value='{$val->getID()}' />";
+                        }
+                    }
+                }
 
                 $output .= "</div>";
 
-            break;
+                $output .= "<br><br>";
+
+                $output .= "<p>";
+                $output .= "<input type='button' class='gt_btn gt_qual_picker_remove' value='".get_string('remove', 'block_gradetracker')."' />";
+                $output .= "&nbsp;&nbsp;";
+                $output .= "<a href='' id='gt_chosen_quals_edit_qual_btn' type='button' class='gt_btn gt_yellow' disabled target='_blank'>".get_string('edit', 'block_gradetracker')."</a>";
+                $output .= "</p>";
+
+                $output .= "</div>";
+
+                $output .= "</div>";
+
+                $output .= "</div>";
+
+                $output .= "<div class='gt_page_col'>";
+
+                $output .= "<div class='gt_c'>";
+
+                $output .= "<div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt'>".get_string('qualschoose', 'block_gradetracker')."</div>";
+
+                $output .= "<div>";
+
+                $output .= "<br><br>";
+
+                $output .= "<select id='gt_filter_qual_structure' class='gt_third_width'>";
+                $output .= "<option value=''></option>";
+                if ($allStructures) {
+                    foreach ($allStructures as $structure) {
+                        $output .= "<option value='{$structure->getID()}'>{$structure->getName()}</option>";
+                    }
+                }
+                $output .= "</select> ";
+
+                $output .= "<select id='gt_filter_qual_level' class='gt_third_width'>";
+                $output .= "<option value=''></option>";
+                if ($allLevels) {
+                    foreach ($allLevels as $level) {
+                        $output .= "<option value='{$level->getID()}'>{$level->getName()}</option>";
+                    }
+                }
+                $output .= "</select> ";
+
+                $output .= "<select id='gt_filter_qual_subtype' class='gt_third_width'>";
+                $output .= "<option value=''></option>";
+                if ($allSubTypes) {
+                    foreach ($allSubTypes as $subType) {
+                        $output .= "<option value='{$subType->getID()}'>{$subType->getName()}</option>";
+                    }
+                }
+                $output .= "</select>";
+
+                $output .= "<br><br>";
+
+                $output .= "<input type='text' id='gt_filter_qual_name' class='gt_80' placeholder='".get_string('name', 'block_gradetracker')."' /> ";
+
+                $output .= "<a href='#' class='gt_qual_picker_filter'>";
+                $output .= "<img src='".gt_image_url('i/search')."' class='gt_middle' alt='search' />";
+                $output .= "</a>";
+
+                $output .= "<br>";
+                $output .= "<img src='".gt_image_url('i/loading_small')."' class='gt_hidden' id='gt_filter_quals_loading' />";
+                $output .= "<br>";
+
+                $output .= "<select id='gt_filter_quals' class='gt_qual_select' multiple='multiple'></select>";
+
+                $output .= "<br><br>";
+
+                $output .= "<p>";
+                $output .= "<input type='button' class='gt_btn gt_qual_picker_add' value='".get_string('add', 'block_gradetracker')."' />";
+                $output .= "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=quals&section=new' class='gt_btn' target='_blank'>".get_string('createnew', 'block_gradetracker')."</a>";
+                $output .= "</p>";
+
+                $output .= "</div>";
+
+                $output .= "</div>";
+
+                $output .= "</div>";
+
+                $output .= "<br class='gt_cl'><br>";
+
+                $output .= "</div>";
+
+                break;
 
         }
-
-
-
 
         return $output;
 
     }
 
 
-
     /**
      * Create an object of FormElement
      * @param type $params
      */
-    public static function create(\stdClass $params){
+    public static function create(\stdClass $params) {
 
         $obj = new \GT\FormElement();
 
-        if (isset($params->id)){
+        if (isset($params->id)) {
             $obj->setID($params->id);
         } else {
             $obj->setID( \gt_rand_str(10) );
         }
 
-        if (isset($params->name)){
+        if (isset($params->name)) {
             $obj->setName($params->name);
         }
 
-        if (isset($params->form)){
+        if (isset($params->form)) {
             $obj->setForm($params->form);
         }
 
-        if (isset($params->type)){
+        if (isset($params->type)) {
             $obj->setType($params->type);
         }
 
-        if (isset($params->options)){
+        if (isset($params->options)) {
             $obj->setOptions($params->options);
         }
 
-        if (isset($params->validation)){
+        if (isset($params->validation)) {
             $obj->setValidation($params->validation);
         }
 
-        if (isset($params->value)){
+        if (isset($params->value)) {
             $obj->setValue($params->value);
         }
-
 
         return $obj;
 
@@ -632,13 +605,13 @@ class FormElement {
      * @param type $newID
      * @return type
      */
-    public static function updateAttributes($form, $oldID, $newID){
+    public static function updateAttributes($form, $oldID, $newID) {
 
         global $DB;
 
-        if ($form == 'qualification'){
+        if ($form == 'qualification') {
             $table = 'bcgt_qual_attributes';
-        } elseif ($form == 'unit'){
+        } else if ($form == 'unit') {
             $table = 'bcgt_unit_attributes';
         }
 
@@ -646,7 +619,5 @@ class FormElement {
         $DB->execute("UPDATE {bcgt_qual_build_attributes} SET attribute = ? WHERE attribute = ?", array("default_{$newID}", "default_{$oldID}"));
 
     }
-
-
 
 }

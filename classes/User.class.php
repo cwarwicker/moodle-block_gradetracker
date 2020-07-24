@@ -1,29 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * User
- *
  * This class deals with Moodle Users, and any methods relating them to the Grade Tracker
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 class User {
 
@@ -35,19 +36,16 @@ class User {
 
         $user = $DB->get_record("user", array("id" => $id, "deleted" => 0));
 
-        if ($user)
-        {
+        if ($user) {
             $props = (array)$user;
-            foreach($props as $prop => $val)
-            {
+            foreach ($props as $prop => $val) {
                 $this->$prop = $val;
             }
         }
 
-
     }
 
-    public function isValid(){
+    public function isValid() {
         return (isset($this->id) && $this->id > 0 && $this->deleted == 0);
     }
 
@@ -55,7 +53,7 @@ class User {
      * Get the user's full name
      * @return type
      */
-    public function getName(){
+    public function getName() {
         $name = trim(fullname($this));
         return (strlen($name) > 0) ? $name : '?';
     }
@@ -64,7 +62,7 @@ class User {
      * Get the user's name and username
      * @return type
      */
-    public function getDisplayName(){
+    public function getDisplayName() {
         return $this->getName() . " ({$this->username})";
     }
 
@@ -74,14 +72,13 @@ class User {
      * @param type $courseID
      * @param type $size
      */
-    public function getPicture($courseID = null, $size = 30){
+    public function getPicture($courseID = null, $size = 30) {
 
         global $OUTPUT;
 
         $stdClass = new \stdClass();
         $props = get_object_vars($this);
-        foreach($props as $prop => $val)
-        {
+        foreach ($props as $prop => $val) {
             $stdClass->$prop = $val;
         }
 
@@ -94,11 +91,11 @@ class User {
      * @param type $prop
      * @return type
      */
-    public function getProp($prop){
+    public function getProp($prop) {
 
-        if ($prop == 'pic'){
+        if ($prop == 'pic') {
             return $this->getPicture();
-        } elseif ($prop == 'name'){
+        } else if ($prop == 'name') {
             return $this->getName();
         } else {
             return $this->$prop;
@@ -106,11 +103,11 @@ class User {
 
     }
 
-    public function getContextArray(){
+    public function getContextArray() {
         return $this->contextArray;
     }
 
-    public function setContextArray($arr){
+    public function setContextArray($arr) {
         $this->contextArray = $arr;
     }
 
@@ -119,7 +116,7 @@ class User {
      * Or do we have the view_all_quals capability?
      * @param type $qualID
      */
-    public function canAccessQual($qualID, $role){
+    public function canAccessQual($qualID, $role) {
 
         return ($this->isOnQual($qualID, $role) || $this->hasCapability('block/gradetracker:view_all_quals'));
 
@@ -132,7 +129,7 @@ class User {
      * @param type $role
      * @return type
      */
-    public function canEditQual($qualID){
+    public function canEditQual($qualID) {
 
         return (($this->isOnQual($qualID, "STAFF") && $this->hasCapability('block/gradetracker:edit_grids')) || $this->hasCapability('block/gradetracker:edit_all_quals'));
 
@@ -144,7 +141,7 @@ class User {
      * @param type $qualID
      * @param type $unitID
      */
-    public function canEditUnit($qualID, $unitID){
+    public function canEditUnit($qualID, $unitID) {
 
         // We need to either be on the qual as a STAFF and have the edit_grids capability, OR just have the edit_all_quals capability
         return ( ($this->isOnQualUnit($qualID, $unitID, "STAFF") && $this->hasCapability('block/gradetracker:edit_grids')) || $this->hasCapability('block/gradetracker:edit_all_quals'));
@@ -156,7 +153,7 @@ class User {
      * @param type $cap
      * @return type
      */
-    public function hasCapability($cap){
+    public function hasCapability($cap) {
         return \gt_has_capability($cap, false, false, $this);
     }
 
@@ -166,32 +163,34 @@ class User {
      * @param type $userID
      * @param type $qualID
      */
-    public function hasUserCapability($cap, $userID, $qualID = false){
+    public function hasUserCapability($cap, $userID, $qualID = false) {
 
-        if (!$this->isValid()){
+        if (!$this->isValid()) {
             return false;
         }
 
         // First check that the user is valid
         $theUser = new \GT\User($userID);
-        if (!$theUser->isValid()){
+        if (!$theUser->isValid()) {
             return false;
         }
 
         // Then check if we have the capability on any of the user's contexts
         $result = \gt_has_user_capability($cap, $userID);
-        if (!$result) return false;
+        if (!$result) {
+            return false;
+        }
 
         // Is the qualification ID set?
-        if ($qualID){
+        if ($qualID) {
 
             // Are we on the qualification?
-            if (!$this->canAccessQual($qualID, "STAFF")){
+            if (!$this->canAccessQual($qualID, "STAFF")) {
                 return false;
             }
 
             // Is the user on the qual?
-            if (!$theUser->canAccessQual($qualID, "STUDENT")){
+            if (!$theUser->canAccessQual($qualID, "STUDENT")) {
                 return false;
             }
 
@@ -206,9 +205,9 @@ class User {
      * @param type $role
      * @return type
      */
-    public function getQualifications($role){
+    public function getQualifications($role) {
 
-        if (!isset($this->quals[$role])){
+        if (!isset($this->quals[$role])) {
             $this->loadQualifications($role);
         }
 
@@ -221,21 +220,18 @@ class User {
      * @global \GT\type $DB
      * @param type $role
      */
-    private function loadQualifications($role){
+    private function loadQualifications($role) {
 
         global $DB;
 
         $this->quals[$role] = array();
 
         $records = $DB->get_records("bcgt_user_quals", array("userid" => $this->id, "role" => $role));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\Qualification\UserQualification($record->qualid);
                 $structure = $obj->getStructure();
-                if ($obj->isValid() && !$obj->isDeleted() && $structure->isEnabled())
-                {
+                if ($obj->isValid() && !$obj->isDeleted() && $structure->isEnabled()) {
                     $obj->loadStudent($this->id);
                     $this->quals[$role][$obj->getID()] = $obj;
                 }
@@ -245,8 +241,7 @@ class User {
         // Order by type, level, subtype, name
         $Sort = new \GT\Sorter();
 
-        foreach($this->quals as $role => $quals)
-        {
+        foreach ($this->quals as $role => $quals) {
             $Sort->sortQualifications($this->quals[$role]);
         }
 
@@ -261,16 +256,16 @@ class User {
      * @param type $role
      * @return boolean
      */
-    public function isOnCourse($courseID, $role){
+    public function isOnCourse($courseID, $role) {
 
         global $DB, $GT;
 
-        if ($role ==  "STUDENT"){
+        if ($role == "STUDENT") {
 
             $shortnames = $GT->getStudentRoles();
             $in = \gt_create_sql_placeholders($shortnames);
 
-        } elseif ($role == "STAFF"){
+        } else if ($role == "STAFF") {
 
             $shortnames = $GT->getStaffRoles();
             $in = \gt_create_sql_placeholders($shortnames);
@@ -282,7 +277,7 @@ class User {
         }
 
         $course = get_course($courseID);
-        if (!$course){
+        if (!$course) {
             return false;
         }
 
@@ -301,10 +296,9 @@ class User {
         $result = ($check) ? true : false;
 
         // If they are not on the course and we are looking for staff, check to see if they have a category enrolment with any of those roles
-        if (!$result && $role == "STAFF"){
+        if (!$result && $role == "STAFF") {
             $result = $this->isOnCategory($course->category);
         }
-
 
         return $result;
 
@@ -317,7 +311,7 @@ class User {
      * @param type $catID
      * @return boolean
      */
-    private function isOnCategory($catID){
+    private function isOnCategory($catID) {
 
         global $DB, $GT;
 
@@ -325,7 +319,7 @@ class User {
         $in = \gt_create_sql_placeholders($shortnames);
 
         $category = $DB->get_record("course_categories", array("id" => $catID));
-        if (!$category){
+        if (!$category) {
             return false;
         }
 
@@ -341,16 +335,14 @@ class User {
                                       INNER JOIN {role} r ON r.id = ra.roleid
                                       WHERE r.shortname IN ({$in}) AND x.contextlevel = ? AND ra.userid = ? AND cc.id = ?", $params);
 
-
         $result = ($check) ? true : false;
 
         // If not and it has a parent, keep going up
-        if (!$result && $category->parent > 0){
+        if (!$result && $category->parent > 0) {
             return $this->isOnCategory($category->parent);
         }
 
         return $result;
-
 
     }
 
@@ -362,9 +354,9 @@ class User {
      * @param type $role
      * @return type
      */
-    public function getCourses($role){
+    public function getCourses($role) {
 
-        if (!isset($this->courses[$role])){
+        if (!isset($this->courses[$role])) {
             $this->loadCourses($role);
         }
 
@@ -379,11 +371,11 @@ class User {
      * @param type $role
      * @return boolean
      */
-    private function loadCourses($role){
+    private function loadCourses($role) {
 
         global $DB, $GT;
 
-        if (!$GT){
+        if (!$GT) {
             $GT = new \GT\GradeTracker();
         }
 
@@ -391,12 +383,12 @@ class User {
 
         $return = array();
 
-        if ($role ==  "STUDENT"){
+        if ($role == "STUDENT") {
 
             $shortnames = $GT->getStudentRoles();
             $in = \gt_create_sql_placeholders($shortnames);
 
-        } elseif ($role == "STAFF"){
+        } else if ($role == "STAFF") {
 
             $shortnames = $GT->getStaffRoles();
             $in = \gt_create_sql_placeholders($shortnames);
@@ -421,13 +413,13 @@ class User {
                                         AND ra.userid = ?
                                         ORDER BY c.shortname, c.fullname", $params);
 
-        if ($records){
+        if ($records) {
 
-            foreach($records as $record){
+            foreach ($records as $record) {
 
                 $obj = new \GT\Course($record->id);
 
-                if ($obj->isValid()){
+                if ($obj->isValid()) {
 
                     $return[$obj->id] = $obj;
 
@@ -448,11 +440,11 @@ class User {
      * @param type $qualID
      * @return type
      */
-    public function isOnQual($qualID, $role = false){
+    public function isOnQual($qualID, $role = false) {
 
         global $DB;
 
-        if ($role){
+        if ($role) {
             $check = $DB->get_record("bcgt_user_quals", array("userid" => $this->id, "qualid" => $qualID, "role" => $role));
         } else {
             $check = $DB->get_record("bcgt_user_quals", array("userid" => $this->id, "qualid" => $qualID));
@@ -470,7 +462,7 @@ class User {
      * @param type $role
      * @return type
      */
-    public function isOnQualUnit($qualID, $unitID, $role){
+    public function isOnQualUnit($qualID, $unitID, $role) {
 
         global $DB;
 
@@ -492,12 +484,14 @@ class User {
      * @param type $qualID
      * @return boolean
      */
-    public function addToQual($qualID, $role){
+    public function addToQual($qualID, $role) {
 
         global $DB;
 
         $check = $DB->get_record("bcgt_user_quals", array("userid" => $this->id, "qualid" => $qualID, "role" => $role));
-        if ($check) return true;
+        if ($check) {
+            return true;
+        }
 
         $ins = new \stdClass();
         $ins->userid = $this->id;
@@ -513,11 +507,11 @@ class User {
      * @param type $qualID
      * @param type $role
      */
-    public function removeFromQual($qualID, $role = false){
+    public function removeFromQual($qualID, $role = false) {
 
         global $DB;
 
-        if ($role){
+        if ($role) {
             return $DB->delete_records("bcgt_user_quals", array("qualid" => $qualID, "userid" => $this->id, "role" => $role));
         } else {
             return $DB->delete_records("bcgt_user_quals", array("qualid" => $qualID, "userid" => $this->id));
@@ -532,12 +526,14 @@ class User {
      * @param type $unitID
      * @return boolean
      */
-    public function addToQualUnit($qualID, $unitID, $role){
+    public function addToQualUnit($qualID, $unitID, $role) {
 
         global $DB;
 
         $check = $DB->get_record("bcgt_user_qual_units", array("userid" => $this->id, "qualid" => $qualID, "unitid" => $unitID, "role" => $role));
-        if ($check) return true;
+        if ($check) {
+            return true;
+        }
 
         $ins = new \stdClass();
         $ins->userid = $this->id;
@@ -556,11 +552,11 @@ class User {
      * @param type $unitID
      * @param type $role
      */
-    public function removeFromQualUnit($qualID, $unitID, $role = false){
+    public function removeFromQualUnit($qualID, $unitID, $role = false) {
 
         global $DB;
 
-        if ($role){
+        if ($role) {
             return $DB->delete_records("bcgt_user_qual_units", array("qualid" => $qualID, "unitid" => $unitID, "userid" => $this->id, "role" => $role));
         } else {
             return $DB->delete_records("bcgt_user_qual_units", array("qualid" => $qualID, "unitid" => $unitID, "userid" => $this->id));
@@ -576,7 +572,7 @@ class User {
      * @param type $params
      * @return boolean
      */
-    public function getUserGrade($type, $params, $return = false, $returnGradeObject = false, $defaultReturn = false){
+    public function getUserGrade($type, $params, $return = false, $returnGradeObject = false, $defaultReturn = false) {
 
         global $DB;
 
@@ -585,27 +581,24 @@ class User {
         $sql = "SELECT * FROM {bcgt_user_grades}
                 WHERE userid = ? AND type = ? ";
 
-        if (isset($params['courseID'])){
+        if (isset($params['courseID'])) {
             $sql .= "AND courseid = ?";
             $sqlParams[] = $params['courseID'];
         }
 
-        if (isset($params['qualID'])){
+        if (isset($params['qualID'])) {
             $sql .= "AND qualid = ?";
             $sqlParams[] = $params['qualID'];
         }
 
         $record = $DB->get_record_sql($sql, $sqlParams);
-        if ($record)
-        {
+        if ($record) {
 
             // If it's an id of a grade, go get that, otherwise just a text grade
-            if (!is_null($record->qualid) && is_numeric($record->grade))
-            {
+            if (!is_null($record->qualid) && is_numeric($record->grade)) {
                 $award = $DB->get_record("bcgt_qual_build_awards", array("id" => $record->grade));
-                if ($award)
-                {
-                    if ($returnGradeObject){
+                if ($award) {
+                    if ($returnGradeObject) {
                         return new \GT\QualificationAward($award->id);
                     } else {
                         return ($return && isset($award->$return)) ? $award->$return : $award->name;
@@ -627,7 +620,7 @@ class User {
      * @param type $type
      * @return \GT\QualificationAward
      */
-    public function getAllUserAwards($type){
+    public function getAllUserAwards($type) {
 
         global $DB;
 
@@ -639,26 +632,20 @@ class User {
         $records = $DB->get_records_sql($sql, $sqlParams);
         $return = array();
 
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
 
                 // Check that the student is still on this qualificaiton
-                if ($this->isOnQual($record->qualid))
-                {
+                if ($this->isOnQual($record->qualid)) {
 
                     $arr = array();
                     $arr['record'] = $record;
 
-                    if (!is_null($record->qualid) && is_numeric($record->awardid))
-                    {
+                    if (!is_null($record->qualid) && is_numeric($record->awardid)) {
                         $award = $DB->get_record("bcgt_qual_build_awards", array("id" => $record->awardid));
-                        if ($award)
-                        {
+                        if ($award) {
                             $obj = new \GT\QualificationAward($award->id);
-                            if ($obj->isValid())
-                            {
+                            if ($obj->isValid()) {
                                 $arr['grade'] = $obj;
                                 $return[] = $arr;
                             }
@@ -682,7 +669,7 @@ class User {
      * @param type $params
      * @return type
      */
-    public function getAllUserGrades($type, $params = array()){
+    public function getAllUserGrades($type, $params = array()) {
 
         global $DB;
 
@@ -691,12 +678,12 @@ class User {
         $sql = "SELECT * FROM {bcgt_user_grades}
                 WHERE userid = ? AND type = ? ";
 
-        if (isset($params['courseID']) && $params['courseID'] > 0){
+        if (isset($params['courseID']) && $params['courseID'] > 0) {
             $sql .= "AND courseid = ?";
             $sqlParams[] = $params['courseID'];
         }
 
-        if (isset($params['qualID']) && $params['qualID'] > 0){
+        if (isset($params['qualID']) && $params['qualID'] > 0) {
             $sql .= "AND qualid = ?";
             $sqlParams[] = $params['qualID'];
         }
@@ -704,26 +691,20 @@ class User {
         $records = $DB->get_records_sql($sql, $sqlParams);
         $return = array();
 
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
 
                 // Check that the student is still on this qualificaiton
-                if ($this->isOnQual($record->qualid))
-                {
+                if ($this->isOnQual($record->qualid)) {
 
                     $arr = array();
                     $arr['record'] = $record;
 
-                    if (!is_null($record->qualid) && is_numeric($record->grade))
-                    {
+                    if (!is_null($record->qualid) && is_numeric($record->grade)) {
                         $award = $DB->get_record("bcgt_qual_build_awards", array("id" => $record->grade));
-                        if ($award)
-                        {
+                        if ($award) {
                             $obj = new \GT\QualificationAward($award->id);
-                            if ($obj->isValid())
-                            {
+                            if ($obj->isValid()) {
                                 $arr['grade'] = $obj;
                                 $return[] = $arr;
                             }
@@ -746,7 +727,7 @@ class User {
      * @param type $params
      * @return type
      */
-    public function clearUserGrade($type, $params){
+    public function clearUserGrade($type, $params) {
 
         global $DB;
 
@@ -763,7 +744,7 @@ class User {
      * @param type $params
      * @return type
      */
-    public function setUserGrade($type, $grade, $params){
+    public function setUserGrade($type, $grade, $params) {
 
         global $DB, $AUTOUPDATE;
 
@@ -772,18 +753,17 @@ class User {
         $sql = "SELECT * FROM {bcgt_user_grades}
                 WHERE userid = ? AND type = ? ";
 
-        if (isset($params['courseID'])){
+        if (isset($params['courseID'])) {
             $sql .= "AND courseid = ?";
             $sqlParams[] = $params['courseID'];
         }
 
-        if (isset($params['qualID'])){
+        if (isset($params['qualID'])) {
             $sql .= "AND qualid = ?";
             $sqlParams[] = $params['qualID'];
         }
 
         $record = $DB->get_record_sql($sql, $sqlParams);
-
 
         // ------------ Logging Info
         $Log = new \GT\Log();
@@ -795,15 +775,10 @@ class User {
         );
         // ------------ Logging Info
 
-
-
-        if ($record)
-        {
+        if ($record) {
             $record->grade = $grade;
             $result = $DB->update_record("bcgt_user_grades", $record);
-        }
-        else
-        {
+        } else {
 
             $obj = new \stdClass();
             $obj->userid = $this->id;
@@ -815,7 +790,6 @@ class User {
 
         }
 
-
         // ----------- Log the action
         $Log->afterjson = array(
             'type' => $type,
@@ -823,14 +797,13 @@ class User {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => (isset($params['qualID'])) ? $params['qualID'] : null,
-                \GT\Log::GT_LOG_ATT_COURSEID => (isset($params['courseID'])) ? $params['courseID'] : null,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->id
-            );
+            \GT\Log::GT_LOG_ATT_QUALID => (isset($params['qualID'])) ? $params['qualID'] : null,
+            \GT\Log::GT_LOG_ATT_COURSEID => (isset($params['courseID'])) ? $params['courseID'] : null,
+            \GT\Log::GT_LOG_ATT_STUDID => $this->id
+        );
 
         $Log->save();
         // ----------- Log the action
-
 
         return $result;
 
@@ -841,20 +814,17 @@ class User {
      * @global \GT\type $DB
      * @return \GT\QualOnEntry
      */
-    public function getQualsOnEntry(){
+    public function getQualsOnEntry() {
 
         global $DB;
 
         $return = array();
 
         $records = $DB->get_records("bcgt_user_qoe", array("userid" => $this->id), "id");
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\QualOnEntry($record->id);
-                if ($obj->isValid())
-                {
+                if ($obj->isValid()) {
                     $return[] = $obj;
                 }
             }
@@ -868,7 +838,7 @@ class User {
      * Calculate the average GCSE score from the student's quals on entry
      * @return type
      */
-    public function calculateAverageGCSEScore(){
+    public function calculateAverageGCSEScore() {
 
         $qoe = $this->getQualsOnEntry();
 
@@ -878,10 +848,8 @@ class User {
 
         \gt_debug("Calculating Average QoE score for {$this->getName()}");
 
-        if ($qoe)
-        {
-            foreach($qoe as $entry)
-            {
+        if ($qoe) {
+            foreach ($qoe as $entry) {
 
                 $grade = $entry->getGradeObject();
                 $type = $entry->getType();
@@ -927,7 +895,7 @@ class User {
         \gt_debug('Finished going through QoE records');
 
         // Work out average
-        if ($numEntries > 0){
+        if ($numEntries > 0) {
 
             \gt_debug('Calculating avg QoE score: ROUND(totalPoints / numEntries, 2)');
             \gt_debug("ROUND({$totalPoints} / {$numEntries}, 2)");
@@ -947,7 +915,7 @@ class User {
      * @global \GT\type $DB
      * @return type
      */
-    public function getAverageGCSEScore(){
+    public function getAverageGCSEScore() {
 
         global $DB;
         $record = $DB->get_record("bcgt_user_qoe_scores", array("userid" => $this->id));
@@ -961,18 +929,15 @@ class User {
      * @param type $score
      * @return type
      */
-    public function setAverageGCSEScore($score){
+    public function setAverageGCSEScore($score) {
 
         global $DB;
 
         $record = $DB->get_record("bcgt_user_qoe_scores", array("userid" => $this->id));
-        if ($record)
-        {
+        if ($record) {
             $record->score = $score;
             return $DB->update_record("bcgt_user_qoe_scores", $record);
-        }
-        else
-        {
+        } else {
 
             $obj = new \stdClass();
             $obj->userid = $this->id;
@@ -988,43 +953,40 @@ class User {
      * @param type $qualID
      * @return boolean
      */
-    public function calculateTargetGrade($qualID){
+    public function calculateTargetGrade($qualID) {
 
         global $AUTOUPDATE;
 
         $AUTOUPDATE = true;
 
-        if ($this->isOnQual($qualID, "STUDENT")){
+        if ($this->isOnQual($qualID, "STUDENT")) {
 
             $qual = new \GT\Qualification\UserQualification($qualID);
 
             \gt_debug("Calculating target grade for {$this->getName()} on {$qual->getDisplayName()}");
 
             // Does it have targets enabled?
-            if (!$qual->isFeatureEnabledByName('targetgrades')){
+            if (!$qual->isFeatureEnabledByName('targetgrades')) {
                 \gt_debug("targetgrades feature not enabled on qualification");
                 return false;
             }
 
-            // Clear existing
-//            $this->clearUserGrade('target', array('qualid' => $qual->getID()));
-
             $avgGcse = $this->getAverageGCSEScore();
-            if (!$avgGcse || $avgGcse < 1){
+            if (!$avgGcse || $avgGcse < 1) {
                 $this->TargetCalculationError = get_string('errors:calcgrade:noavggcse', 'block_gradetracker');
             }
 
             \gt_debug("Avg GCSE Score: {$avgGcse}");
 
             $targetGrade = $qual->getBuild()->getAwardByAvgGCSEScore($avgGcse);
-            if ($targetGrade){
+            if ($targetGrade) {
                 \gt_debug("Avg GCSE Score resolved to target grade: {$targetGrade->getName()}");
-                if ($this->setUserGrade('target', $targetGrade->getID(), array('qualID' => $qual->getID()))){
+                if ($this->setUserGrade('target', $targetGrade->getID(), array('qualID' => $qual->getID()))) {
                     \gt_debug("Target Grade successfully set to ({$targetGrade->getName()})");
                     return $targetGrade;
                 }
             } else {
-                if (!isset($this->TargetCalculationError)){
+                if (!isset($this->TargetCalculationError)) {
                     $this->TargetCalculationError = get_string('errors:calcgrade:nograde', 'block_gradetracker');
                 }
                 \gt_debug("Could not find a target grade with Avg Score {$avgGcse} between QOE boundaries");
@@ -1046,26 +1008,26 @@ class User {
      * @param type $qualID
      * @return boolean
      */
-    public function calculateWeightedTargetGrade($qualID){
+    public function calculateWeightedTargetGrade($qualID) {
 
         global $AUTOUPDATE;
 
         $AUTOUPDATE = true;
 
-        if ($this->isOnQual($qualID, "STUDENT")){
+        if ($this->isOnQual($qualID, "STUDENT")) {
 
             $qual = new \GT\Qualification\UserQualification($qualID);
 
             \gt_debug("Calculating weighted target grade for {$this->getName()} on {$qual->getDisplayName()}");
 
             // Does it have weighted targets enabled?
-            if (!$qual->isFeatureEnabledByName('weightedtargetgrades')){
+            if (!$qual->isFeatureEnabledByName('weightedtargetgrades')) {
                 \gt_debug("weightedtargetgrades feature not enabled on qualification");
                 return false;
             }
 
             $coefficient = $qual->getWeightingCoefficient();
-            if (!$coefficient){
+            if (!$coefficient) {
                 \gt_debug("Could not get qualification coefficient");
                 return false;
             }
@@ -1075,7 +1037,7 @@ class User {
 
             // Is there a Target Grade? If not, we have nothing to weight
             $targetGrade = $this->getUserGrade('target', array('qualID' => $qualID), false, true);
-            if (!$targetGrade){
+            if (!$targetGrade) {
                 \gt_debug("No Target Grade defined for this user on this qualification, so we have nothing to weight");
                 return false;
             }
@@ -1086,7 +1048,7 @@ class User {
             \gt_debug("Using weighting calculation method: {$method}");
 
             // Calculating by multiplying the avg GCSE score by the qualification coefficient
-            if ($method == 'gcse'){
+            if ($method == 'gcse') {
 
                 $avgGCSE = $this->getAverageGCSEScore();
                 $newGCSE = $avgGCSE * $coefficient;
@@ -1094,26 +1056,24 @@ class User {
                 \gt_debug("Multiplied Avg GCSE ({$avgGCSE}) by coefficient ({$coefficient}) to get new score: {$newGCSE}");
 
                 $weightedGrade = $qual->getBuild()->getAwardByAvgGCSEScore($newGCSE);
-                if ($weightedGrade){
+                if ($weightedGrade) {
                     \gt_debug("New GCSE Score resolved to weighted target grade: {$weightedGrade->getName()}");
-                    if ($this->setUserGrade('weighted_target', $weightedGrade->getID(), array('qualID' => $qual->getID()))){
+                    if ($this->setUserGrade('weighted_target', $weightedGrade->getID(), array('qualID' => $qual->getID()))) {
                         return $weightedGrade;
                     }
-                }  else {
+                } else {
                     \gt_debug("Could not find a target grade with Avg Score {$newGCSE} between QOE boundaries");
                 }
 
-            }
-
-            // Calculating by multiplying the UCAS points of the Target Grade by the qualification coefficient
-            elseif ($method == 'ucas'){
+            } else if ($method == 'ucas') {
+                // Calculating by multiplying the UCAS points of the Target Grade by the qualification coefficient
 
                 // Are we using a Constant to artificially inflate the grade?
                 $constantsEnabled = \GT\Setting::getSetting('weighting_constants_enabled');
 
                 // Are we weighting the grade UP or DOWN?
                 $direction = \GT\Setting::getSetting('weighted_target_direction');
-                if ($direction != 'UP' && $direction != 'DOWN'){
+                if ($direction != 'UP' && $direction != 'DOWN') {
                     \gt_debug("Invalid direction ({$direction}). Should be either UP or DOWN");
                     return false;
                 }
@@ -1133,29 +1093,24 @@ class User {
                 \gt_debug("Target Grade's UCAS Points ({$ucasPoints}) multiplied by the coefficient ({$coefficient}) to get new UCAS points: {$newUCAS}");
 
                 // If we are using constants, apply them now
-                if ($constantsEnabled)
-                {
+                if ($constantsEnabled) {
                     $newUCASWithConstant = $newUCAS + $qualBuildConstant; // New variable name for ease of log
                     \gt_debug("Added the constant ({$qualBuildConstant}) to the UCAS Points ({$newUCAS}) to get a new UCAS points: {$newUCASWithConstant}");
                     $newUCAS = $newUCASWithConstant;
                 }
 
-
                 // Get the new grade by the UCAS points
                 $weightedGrade = $qual->getBuild()->getAwardByUCASPoints($newUCAS, $direction);
-                if ($weightedGrade){
+                if ($weightedGrade) {
                     \gt_debug("New UCAS Points resolved to weighted target grade: {$weightedGrade->getName()}");
-                    if ($this->setUserGrade('weighted_target', $weightedGrade->getID(), array('qualID' => $qual->getID()))){
+                    if ($this->setUserGrade('weighted_target', $weightedGrade->getID(), array('qualID' => $qual->getID()))) {
                         return $weightedGrade;
                     }
                 } else {
                     \gt_debug("Could not find a target grade with UCAS points {$newUCAS}");
                 }
 
-            }
-
-            else
-            {
+            } else {
                 \gt_debug("Invalid default calculation method: {$method}");
                 return false;
             }
@@ -1171,45 +1126,42 @@ class User {
      * @param type $qualID
      * @return boolean
      */
-    public function calculateAspirationalGrade($qualID){
+    public function calculateAspirationalGrade($qualID) {
 
         global $AUTOUPDATE;
 
         $AUTOUPDATE = true;
 
-        if ($this->isOnQual($qualID, "STUDENT")){
+        if ($this->isOnQual($qualID, "STUDENT")) {
 
             $qual = new \GT\Qualification\UserQualification($qualID);
 
             \gt_debug("Calculating aspirational grade for {$this->getName()} on {$qual->getDisplayName()}");
 
             // Does it have targets enabled?
-            if (!$qual->isFeatureEnabledByName('aspirationalgrades')){
+            if (!$qual->isFeatureEnabledByName('aspirationalgrades')) {
                 \gt_debug("aspirationalgrades feature not enabled on qualification");
                 return false;
             }
 
-            // Clear existing
-//            $this->clearUserGrade('aspirational', array('qualid' => $qual->getID()));
-
             // What setting are we using to calculate aspirational?
             $diff = $qual->getSystemSetting('asp_grade_diff');
-            if ($diff){
+            if ($diff) {
 
                 $diff = floatval($diff);
 
                 \gt_debug("Using 'diff' configuration setting: {$diff}");
 
                 $targetGrade = new \GT\QualificationAward( $this->getUserGrade('target', array('qualID' => $qual->getID()), 'id') );
-                if ($targetGrade && $targetGrade->isValid()){
+                if ($targetGrade && $targetGrade->isValid()) {
 
                     \gt_debug("Found Target grade ({$targetGrade->getName()}), incrementing rank by +({$diff})");
 
                     $aspRank = $targetGrade->getRank() + $diff;
                     $aspirationalGrade = $qual->getBuild()->getAwardByPoints($aspRank, true);
-                    if ($aspirationalGrade){
+                    if ($aspirationalGrade) {
                         \gt_debug("Found valid Aspirational Grade with rank ({$aspRank})");
-                        if ($this->setUserGrade('aspirational', $aspirationalGrade->getID(), array('qualID' => $qual->getID()))){
+                        if ($this->setUserGrade('aspirational', $aspirationalGrade->getID(), array('qualID' => $qual->getID()))) {
                             \gt_debug("Aspirational Grade successfully set to ({$aspirationalGrade->getName()})");
                             return $aspirationalGrade;
                         }
@@ -1244,7 +1196,7 @@ class User {
      * @param type $qualID
      * @return type
      */
-    public function getQualAward($qualID){
+    public function getQualAward($qualID) {
 
         $qual = new \GT\Qualification\UserQualification($qualID);
         $qual->loadStudent($this->id);
@@ -1252,7 +1204,7 @@ class User {
 
     }
 
-    public static function byUsername($username){
+    public static function byUsername($username) {
 
         global $DB;
 
@@ -1261,7 +1213,7 @@ class User {
 
     }
 
-    public function getActiveUnitCredits($qualID){
+    public function getActiveUnitCredits($qualID) {
 
         $qual = new \GT\Qualification\UserQualification($qualID);
         $qual->loadStudent($this->id);
@@ -1269,8 +1221,8 @@ class User {
 
         $totalActiveCredits = 0;
 
-        foreach ($units as $unit){
-            if ($this->isOnQualUnit($qualID, $unit->getID(), "STUDENT")){
+        foreach ($units as $unit) {
+            if ($this->isOnQualUnit($qualID, $unit->getID(), "STUDENT")) {
                 $totalActiveCredits += $unit->getCredits();
             }
         }
@@ -1282,11 +1234,11 @@ class User {
      * @param type $quals
      * @return boolean
      */
-    public function onAnyOfTheseQuals($quals, $role = false){
+    public function onAnyOfTheseQuals($quals, $role = false) {
 
-        if ($quals){
-            foreach($quals as $qual){
-                if ($this->isOnQual($qual->getID(), $role)){
+        if ($quals) {
+            foreach ($quals as $qual) {
+                if ($this->isOnQual($qual->getID(), $role)) {
                     return true;
                 }
             }
@@ -1301,7 +1253,7 @@ class User {
      * @global \GT\type $DB
      * @return type
      */
-    public static function countUsers(){
+    public static function countUsers() {
 
         global $DB;
 

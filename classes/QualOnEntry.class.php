@@ -1,6 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Qual on Entry class
+ *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
+ */
 namespace GT;
 
+defined('MOODLE_INTERNAL') or die();
 
 class QualOnEntry {
 
@@ -21,11 +44,9 @@ class QualOnEntry {
 
         global $DB;
 
-        if ($id)
-        {
+        if ($id) {
             $record = $DB->get_record("bcgt_user_qoe", array("id" => $id));
-            if ($record)
-            {
+            if ($record) {
 
                 $this->id = $record->id;
                 $this->userID = $record->userid;
@@ -33,7 +54,7 @@ class QualOnEntry {
                 $this->subjectID = $record->qoesubjectid;
                 $this->year = $record->examyear;
                 $this->grade = $DB->get_record("bcgt_qoe_grades", array("id" => $this->gradeID));
-                if ($this->grade){
+                if ($this->grade) {
                     $this->type = $DB->get_record("bcgt_qoe_types", array("id" => $this->grade->qoeid));
                     $this->subject = $DB->get_record('bcgt_qoe_subjects', array('id' => $this->subjectID));
                 }
@@ -43,33 +64,33 @@ class QualOnEntry {
 
     }
 
-    public function isValid(){
+    public function isValid() {
         return ($this->id !== false);
     }
 
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
-    public function getUserID(){
+    public function getUserID() {
         return $this->userID;
     }
 
-    public function setUserID($id){
+    public function setUserID($id) {
         $this->userID = $id;
         return $this;
     }
 
-    public function getGradeID(){
+    public function getGradeID() {
         return $this->gradeID;
     }
 
-    public function setGradeID($id){
+    public function setGradeID($id) {
         $this->gradeID = $id;
         return $this;
     }
 
-    public function getGradeObject(){
+    public function getGradeObject() {
         return $this->grade;
     }
 
@@ -77,24 +98,24 @@ class QualOnEntry {
         return $this->subject;
     }
 
-    public function getType(){
+    public function getType() {
         return $this->type;
     }
 
-    public function getSubjectID(){
+    public function getSubjectID() {
         return $this->subjectID;
     }
 
-    public function setSubjectID($id){
+    public function setSubjectID($id) {
         $this->subjectID = $id;
         return $this;
     }
 
-    public function getYear(){
+    public function getYear() {
         return $this->year;
     }
 
-    public function setYear($year){
+    public function setYear($year) {
         $this->year = $year;
         return $this;
     }
@@ -104,12 +125,12 @@ class QualOnEntry {
      * @global \GT\type $DB
      * @return type
      */
-    public function save(){
+    public function save() {
 
         global $DB;
 
         $obj = new \stdClass();
-        if ($this->isValid()){
+        if ($this->isValid()) {
             $obj->id = $this->id;
         }
         $obj->userid = $this->userID;
@@ -117,12 +138,11 @@ class QualOnEntry {
         $obj->qoesubjectid = $this->subjectID;
         $obj->examyear = $this->year;
 
-        if ($this->isValid()){
+        if ($this->isValid()) {
             return $DB->update_record("bcgt_user_qoe", $obj);
         } else {
             return $DB->insert_record("bcgt_user_qoe", $obj);
         }
-
 
     }
 
@@ -141,7 +161,7 @@ class QualOnEntry {
      * @param type $subjectID
      * @return type
      */
-    public static function getRecord($userID, $subjectID){
+    public static function getRecord($userID, $subjectID) {
 
         global $DB;
 
@@ -156,25 +176,18 @@ class QualOnEntry {
      * @param type $type
      * @return type
      */
-    public static function convertQualName($name, $type)
-    {
+    public static function convertQualName($name, $type) {
 
         $newName = $name;
 
-        if($name == 'GCSE' || $name == 'GCSEs in Vocational Subjects')
-        {
+        if ($name == 'GCSE' || $name == 'GCSEs in Vocational Subjects') {
             $newName = self::GCSENORMAL;
-            if($type == 'Double' || $type == 'Double Award' || $type == 'GCSE Double Award')
-            {
+            if ($type == 'Double' || $type == 'Double Award' || $type == 'GCSE Double Award') {
                 $newName = self::GCSEDOUBLE;
-            }
-            elseif($type == 'Short' || $type == 'Short Course' || $type == 'GCSE Short Course' || $type == 'Short Course GCSE')
-            {
+            } else if ($type == 'Short' || $type == 'Short Course' || $type == 'GCSE Short Course' || $type == 'Short Course GCSE') {
                 $newName = self::GCSESHORT;
             }
-        }
-        elseif($name == 'Short Course GCSE')
-        {
+        } else if ($name == 'Short Course GCSE') {
             $newName = self::GCSESHORT;
         }
 
@@ -186,7 +199,7 @@ class QualOnEntry {
      * @global \GT\type $DB
      * @return type
      */
-    public static function getAllSubjects(){
+    public static function getAllSubjects() {
 
         global $DB;
         return $DB->get_records("bcgt_qoe_subjects", null, "name ASC");
@@ -199,7 +212,7 @@ class QualOnEntry {
      * @param type $subject
      * @return type
      */
-    public static function getSubject($subject){
+    public static function getSubject($subject) {
 
         global $DB;
         $record = $DB->get_record("bcgt_qoe_subjects", array("name" => $subject));
@@ -208,7 +221,7 @@ class QualOnEntry {
     }
 
 
-    public static function getSubjectName($subjectID){
+    public static function getSubjectName($subjectID) {
 
         global $DB;
         $record = $DB->get_record("bcgt_qoe_subjects", array("id" => $subjectID));
@@ -223,22 +236,19 @@ class QualOnEntry {
      * @param type $name
      * @return type
      */
-    public static function saveSubject($id, $name){
+    public static function saveSubject($id, $name) {
 
         global $DB;
 
         $record = new \stdClass();
 
         $check = $DB->get_record("bcgt_qoe_subjects", array("id" => $id));
-        if ($check)
-        {
+        if ($check) {
             $record->id = $id;
             $record->name = $name;
             return $DB->update_record("bcgt_qoe_subjects", $record);
-        }
-        else
-        {
-            return \GT\QualOnEntry::createSubject($name);
+        } else {
+            return self::createSubject($name);
         }
 
     }
@@ -248,11 +258,11 @@ class QualOnEntry {
      * @global \GT\type $DB
      * @param type $idArray
      */
-    public static function deleteSubjectsNotSaved($idArray){
+    public static function deleteSubjectsNotSaved($idArray) {
 
         global $DB;
 
-        if ($idArray){
+        if ($idArray) {
 
             $ph = gt_create_sql_placeholders($idArray);
             return $DB->delete_records_select("bcgt_qoe_subjects", "id NOT IN ({$ph})", $idArray);
@@ -263,14 +273,14 @@ class QualOnEntry {
 
     }
 
-     /**
+    /**
      * Create a QoE grade record
      * @global \GT\type $DB
      * @param type $qualID
      * @param type $grade
      * @return type
      */
-    public static function createSubject($subject){
+    public static function createSubject($subject) {
 
         global $DB;
 
@@ -280,12 +290,12 @@ class QualOnEntry {
 
     }
 
-     /**
+    /**
      * Get all the QoE types
      * @global \GT\type $DB
      * @return type
      */
-    public static function getAllTypes(){
+    public static function getAllTypes() {
 
         global $DB;
         return $DB->get_records("bcgt_qoe_types", null, "lvl ASC, name ASC");
@@ -301,41 +311,37 @@ class QualOnEntry {
      * @param type $level
      * @return type
      */
-    public static function getQual($name, $level){
+    public static function getQual($name, $level) {
 
         global $DB;
 
-        //$name = self::convertQualName($name, $type);
         $record = $DB->get_record("bcgt_qoe_types", array("name" => $name, "lvl" => $level));
         return ($record) ? $record->id : false;
 
     }
 
-     /**
+    /**
      * Save a type record
      * @global \GT\type $DB
      * @param type $id
      * @param type $name
      * @return type
      */
-    public static function saveType($id, $name, $level, $weight){
+    public static function saveType($id, $name, $level, $weight) {
 
         global $DB;
 
         $record = new \stdClass();
 
         $check = $DB->get_record("bcgt_qoe_types", array("id" => $id));
-        if ($check)
-        {
+        if ($check) {
             $record->id = $id;
             $record->name = $name;
             $record->lvl = $level;
             $record->weighting = $weight;
             return $DB->update_record("bcgt_qoe_types", $record);
-        }
-        else
-        {
-            return \GT\QualOnEntry::createQual($name, $level, $weight);
+        } else {
+            return self::createQual($name, $level, $weight);
         }
 
     }
@@ -349,11 +355,10 @@ class QualOnEntry {
      * @param int $weight
      * @return type
      */
-    public static function createQual($name, $level, $weight = 1){
+    public static function createQual($name, $level, $weight = 1) {
 
         global $DB;
 
-//        $name = self::convertQualName($name, $type);
         $ins = new \stdClass();
         $ins->name = $name;
         $ins->lvl = $level;
@@ -368,11 +373,11 @@ class QualOnEntry {
      * @global \GT\type $DB
      * @param type $idArray
      */
-    public static function deleteTypesNotSaved($idArray){
+    public static function deleteTypesNotSaved($idArray) {
 
         global $DB;
 
-        if ($idArray){
+        if ($idArray) {
 
             $ph = gt_create_sql_placeholders($idArray);
             return $DB->delete_records_select("bcgt_qoe_types", "id NOT IN ({$ph})", $idArray);
@@ -386,12 +391,12 @@ class QualOnEntry {
 
 
 
-     /**
+    /**
      * Get all the QoE grades
      * @global \GT\type $DB
      * @return type
      */
-    public static function getAllGrades(){
+    public static function getAllGrades() {
 
         global $DB;
         return $DB->get_records("bcgt_qoe_grades", null, "qoeid ASC, points DESC, grade ASC");
@@ -406,7 +411,7 @@ class QualOnEntry {
      * @param type $grade
      * @return type
      */
-    public static function getGrade($qualID, $grade){
+    public static function getGrade($qualID, $grade) {
 
         global $DB;
         $record = $DB->get_record("bcgt_qoe_grades", array("qoeid" => $qualID, "grade" => $grade));
@@ -421,25 +426,22 @@ class QualOnEntry {
      * @param type $name
      * @return type
      */
-    public static function saveGrade($id, $type, $name, $points, $weight){
+    public static function saveGrade($id, $type, $name, $points, $weight) {
 
         global $DB;
 
         $record = new \stdClass();
 
         $check = $DB->get_record("bcgt_qoe_grades", array("id" => $id));
-        if ($check)
-        {
+        if ($check) {
             $record->id = $id;
             $record->qoeid = (is_numeric($type)) ? $type : 0;
             $record->grade = $name;
             $record->points = $points;
             $record->weighting = $weight;
             return $DB->update_record("bcgt_qoe_grades", $record);
-        }
-        else
-        {
-            return \GT\QualOnEntry::createGrade($type, $name, $points, $weight);
+        } else {
+            return self::createGrade($type, $name, $points, $weight);
         }
 
     }
@@ -452,7 +454,7 @@ class QualOnEntry {
      * @param type $grade
      * @return type
      */
-    public static function createGrade($qualID, $grade, $points = 0, $weight = 1){
+    public static function createGrade($qualID, $grade, $points = 0, $weight = 1) {
 
         global $DB;
 
@@ -471,11 +473,11 @@ class QualOnEntry {
      * @global \GT\type $DB
      * @param type $idArray
      */
-    public static function deleteGradesNotSaved($idArray){
+    public static function deleteGradesNotSaved($idArray) {
 
         global $DB;
 
-        if ($idArray){
+        if ($idArray) {
 
             $ph = gt_create_sql_placeholders($idArray);
             return $DB->delete_records_select("bcgt_qoe_grades", "id NOT IN ({$ph})", $idArray);
@@ -492,7 +494,7 @@ class QualOnEntry {
      * @param type $userID
      * @return type
      */
-    public static function deleteUsersData($userID){
+    public static function deleteUsersData($userID) {
 
         global $DB;
 
@@ -502,9 +504,5 @@ class QualOnEntry {
         return;
 
     }
-
-
-
-
 
 }

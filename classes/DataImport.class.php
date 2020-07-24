@@ -1,6 +1,29 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Description here
+ *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
+ */
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 /**
  * Description of DataImport
@@ -24,54 +47,53 @@ class DataImport {
 
     }
 
-    public function getQualID(){
+    public function getQualID() {
         return $this->qualID;
     }
 
-    public function setQualID($id){
+    public function setQualID($id) {
         $this->qualID = $id;
         return $this;
     }
 
-    public function getUnitID(){
+    public function getUnitID() {
         return $this->unitID;
     }
 
-    public function setUnitID($id){
+    public function setUnitID($id) {
         $this->unitID = $id;
         return $this;
     }
 
-    public function getStudentID(){
+    public function getStudentID() {
         return $this->studentID;
     }
 
-    public function setStudentID($id){
+    public function setStudentID($id) {
         $this->studentID = $id;
         return $this;
     }
 
-    public function getErrors(){
+    public function getErrors() {
         return $this->errors;
     }
 
-    public function getOutput(){
+    public function getOutput() {
         return $this->output;
     }
 
-    public function runImportQualsOnEntry()
-    {
+    public function runImportQualsOnEntry() {
 
         $options = (isset($_POST['options'])) ? $_POST['options'] : false;
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -82,14 +104,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), 'text/csv or text/plain', $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -98,7 +120,7 @@ class DataImport {
         $headerRow = fgetcsv($fh);
         $headers = \GT\CSV\Template::$headersQOE;
 
-        if ($headerRow !== $headers){
+        if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
@@ -108,8 +130,7 @@ class DataImport {
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
 
@@ -123,7 +144,7 @@ class DataImport {
             $year = $row[5];
 
             // Check fields are not empty
-            if ( empty($username) || empty($subject) ){
+            if ( empty($username) || empty($subject) ) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -134,12 +155,12 @@ class DataImport {
 
             // Check valid user
             $user = \GT\User::byUsername($username);
-            if (!$user || !$user->isValid()){
+            if (!$user || !$user->isValid()) {
 
                 // If we want to insert them
-                if (isset($options['ins_users'])){
+                if (isset($options['ins_users'])) {
 
-                    if ($obj = \create_user_record($username, 'password')){
+                    if ($obj = \create_user_record($username, 'password')) {
                         $user = new \GT\User($obj->id);
                         $this->output .= "[{$i}] " . sprintf( get_string('import:createduser', 'block_gradetracker'), $username, 'password' ) . "<br>";
                     } else {
@@ -159,7 +180,7 @@ class DataImport {
             $userArray[$user->id] = $user;
 
             // Should we wipe their data?
-            if (isset($options['wipe_user_data']) && !in_array($user->id, $wipedUsersArray)){
+            if (isset($options['wipe_user_data']) && !in_array($user->id, $wipedUsersArray)) {
 
                 // Wipe their data
                 \GT\QualOnEntry::deleteUsersData($user->id);
@@ -172,13 +193,11 @@ class DataImport {
 
             }
 
-
-
             // Subject
             $subjectID = \GT\QualOnEntry::getSubject($subject);
-            if (!$subjectID){
+            if (!$subjectID) {
 
-                if (isset($options['ins_subjects'])){
+                if (isset($options['ins_subjects'])) {
                     $subjectID = \GT\QualOnEntry::createSubject($subject);
                     $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:createdsubject', 'block_gradetracker'), $subject ) . "<br>";
                 } else {
@@ -189,12 +208,11 @@ class DataImport {
 
             }
 
-
             // Qual type
             $qualID = \GT\QualOnEntry::getQual($qual, $level);
-            if (!$qualID){
+            if (!$qualID) {
 
-                if (isset($options['ins_quals'])){
+                if (isset($options['ins_quals'])) {
                     $qualID = \GT\QualOnEntry::createQual($qual, $level);
                     $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:createdqual', 'block_gradetracker'), $qual, $level ) . "<br>";
                 } else {
@@ -205,13 +223,11 @@ class DataImport {
 
             }
 
-
-
             // Grade
             $gradeID = \GT\QualOnEntry::getGrade($qualID, $grade);
-            if (!$gradeID){
+            if (!$gradeID) {
 
-                if (isset($options['ins_grades'])){
+                if (isset($options['ins_grades'])) {
                     $gradeID = \GT\QualOnEntry::createGrade($qualID, $grade);
                     $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:createdgrade', 'block_gradetracker'), $grade, $qual, $level) . "<br>";
                 } else {
@@ -222,18 +238,13 @@ class DataImport {
 
             }
 
-
-
             // Now the student's record
             $record = \GT\QualOnEntry::getRecord($user->id, $subjectID);
-            if ($record)
-            {
+            if ($record) {
                 $record->setGradeID($gradeID);
                 $record->setYear($year);
                 $record->save();
-            }
-            else
-            {
+            } else {
                 $record = new \GT\QualOnEntry();
                 $record->setUserID($user->id);
                 $record->setGradeID($gradeID);
@@ -249,26 +260,21 @@ class DataImport {
         $this->output .= "<br>";
 
         // Calculate Avg GCSE Scores
-        if ($userArray)
-        {
-            foreach($userArray as $user)
-            {
+        if ($userArray) {
+            foreach ($userArray as $user) {
 
                 $avg = $user->calculateAverageGCSEScore();
                 $this->output .= sprintf( get_string('import:qoe:calcavggcse', 'block_gradetracker'), $user->getDisplayName(), $avg) . "<br>";
 
                 // Calculate target grades as well?
-                if (isset($options['calc_tg'])){
+                if (isset($options['calc_tg'])) {
 
                     $quals = $user->getQualifications("STUDENT");
-                    if ($quals)
-                    {
-                        foreach($quals as $qual)
-                        {
-                            if ($qual->isFeatureEnabledByName('targetgradesauto'))
-                            {
+                    if ($quals) {
+                        foreach ($quals as $qual) {
+                            if ($qual->isFeatureEnabledByName('targetgradesauto')) {
                                 $award = $user->calculateTargetGrade($qual->getID());
-                                if ($award){
+                                if ($award) {
                                     $this->output .= sprintf( get_string('import:qoe:settg', 'block_gradetracker'), $user->getDisplayName(), $qual->getDisplayName(), $award->getName()) . "<br>";
                                 }
                             }
@@ -277,19 +283,15 @@ class DataImport {
 
                 }
 
-
                 // Weighted target grades
-                if (isset($options['calc_wtg'])){
+                if (isset($options['calc_wtg'])) {
 
                     $quals = $user->getQualifications("STUDENT");
-                    if ($quals)
-                    {
-                        foreach($quals as $qual)
-                        {
+                    if ($quals) {
+                        foreach ($quals as $qual) {
 
                             // Only if this qual structure has this enabled
-                            if ($qual->isFeatureEnabledByName('weightedtargetgrades'))
-                            {
+                            if ($qual->isFeatureEnabledByName('weightedtargetgrades')) {
                                 $weighted = $user->calculateWeightedTargetGrade($qual->getID());
                                 if ($weighted) {
                                     $this->output .= sprintf( get_string('import:qoe:setwtg', 'block_gradetracker'), $user->getDisplayName(), $qual->getDisplayName(), $weighted->getName() ) . "<br>";
@@ -299,22 +301,18 @@ class DataImport {
                     }
                 }
 
-
                 // Aspirational grades
-                if (isset($options['calc_asp'])){
+                if (isset($options['calc_asp'])) {
 
                     $quals = $user->getQualifications("STUDENT");
-                    if ($quals)
-                    {
-                        foreach($quals as $qual)
-                        {
+                    if ($quals) {
+                        foreach ($quals as $qual) {
 
                             // Only if this qual structure has this enabled
-                            if ($qual->isFeatureEnabledByName('aspirationalgrades'))
-                            {
+                            if ($qual->isFeatureEnabledByName('aspirationalgrades')) {
 
                                 $aspirationalGrade = $user->calculateAspirationalGrade($qual->getID());
-                                if ($aspirationalGrade){
+                                if ($aspirationalGrade) {
                                     $this->output .= sprintf( get_string('import:qoe:setasp', 'block_gradetracker'), $user->getDisplayName(), $qual->getDisplayName(), $aspirationalGrade->getName() ) . "<br>";
                                 }
 
@@ -326,7 +324,6 @@ class DataImport {
         }
 
         $this->errCnt = $err;
-
 
         // ------------ Logging Info
         $Log = new \GT\Log();
@@ -341,22 +338,20 @@ class DataImport {
 
         fclose($fh);
 
-
     }
 
-    public function runImportAvgGCSE()
-    {
+    public function runImportAvgGCSE() {
 
         $options = (isset($_POST['options'])) ? $_POST['options'] : false;
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -367,14 +362,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), 'text/csv or text/plain', $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -383,25 +378,22 @@ class DataImport {
         $headerRow = fgetcsv($fh);
         $headers = \GT\CSV\Template::$headersAvgGCSE;
 
-        if ($headerRow !== $headers){
+        if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
 
-
-
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
 
             $row = array_map('trim', $row);
 
             // Check fields are not empty
-            if (\gt_is_empty($row[0]) || \gt_is_empty($row[1])){
+            if (\gt_is_empty($row[0]) || \gt_is_empty($row[1])) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -412,12 +404,12 @@ class DataImport {
 
             // Check valid user
             $user = \GT\User::byUsername($username);
-            if (!$user || !$user->isValid()){
+            if (!$user || !$user->isValid()) {
 
                 // If we want to insert them
-                if (isset($options['ins_users'])){
+                if (isset($options['ins_users'])) {
 
-                    if ($obj = \create_user_record($username, 'password')){
+                    if ($obj = \create_user_record($username, 'password')) {
                         $user = new \GT\User($obj->id);
                         $this->output .= "[{$i}] " . sprintf( get_string('import:createduser', 'block_gradetracker'), $username, 'password' ) . "<br>";
                     } else {
@@ -434,11 +426,8 @@ class DataImport {
 
             }
 
-
-
-
             // Should we wipe their data?
-            if (isset($options['wipe_user_data'])){
+            if (isset($options['wipe_user_data'])) {
 
                 // Wipe their data
                 \GT\QualOnEntry::deleteUsersData($user->id);
@@ -448,11 +437,10 @@ class DataImport {
 
             }
 
-
             // Average GCSE score
-            if ($avgGcse != '' && is_numeric($avgGcse)){
+            if ($avgGcse != '' && is_numeric($avgGcse)) {
 
-                if ($user->setAverageGCSEScore($avgGcse)){
+                if ($user->setAverageGCSEScore($avgGcse)) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:tg:avggcseupdated', 'block_gradetracker'), $username, $avgGcse ) . "<br>";
                 } else {
                     $err++;
@@ -462,22 +450,16 @@ class DataImport {
 
             }
 
-
             // Get user's quals
             $quals = $user->getQualifications("STUDENT");
 
-
             // Target Grades for this user
-            if (isset($options['calc_tg']))
-            {
-                if ($quals)
-                {
-                    foreach($quals as $qual)
-                    {
-                        if ($qual->isFeatureEnabledByName('targetgradesauto'))
-                        {
+            if (isset($options['calc_tg'])) {
+                if ($quals) {
+                    foreach ($quals as $qual) {
+                        if ($qual->isFeatureEnabledByName('targetgradesauto')) {
                             $targetGrade = $user->calculateTargetGrade($qual->getID());
-                            if ($targetGrade){
+                            if ($targetGrade) {
                                 $this->output .= "[{$i}] OK: " . sprintf( get_string('import:qoe:settg', 'block_gradetracker'), $username, $qual->getDisplayName(), $targetGrade->getName() ) . "<br>";
                             } else {
                                 $err++;
@@ -489,23 +471,16 @@ class DataImport {
                 }
             }
 
-
             // Calculate Weighted TG
-            if (isset($options['calc_wtg'])){
+            if (isset($options['calc_wtg'])) {
 
-                if ($quals)
-                {
-                    foreach($quals as $qual)
-                    {
-                        if ($qual->isFeatureEnabledByName('weightedtargetgrades'))
-                        {
+                if ($quals) {
+                    foreach ($quals as $qual) {
+                        if ($qual->isFeatureEnabledByName('weightedtargetgrades')) {
                             $weighted = $user->calculateWeightedTargetGrade($qual->getID());
-                            if ($weighted)
-                            {
+                            if ($weighted) {
                                 $this->output .= "[{$i}] OK: " . sprintf( get_string('import:qoe:setwtg', 'block_gradetracker'), $username, $qual->getDisplayName(), $weighted->getName() ) . "<br>";
-                            }
-                            else
-                            {
+                            } else {
                                 $err++;
                                 $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:tg:wtgupdate', 'block_gradetracker'), $username, $qual->getDisplayName() ) . "<br>";
                                 continue;
@@ -515,18 +490,14 @@ class DataImport {
                 }
             }
 
-
             // Calculate aspirational
-            if (isset($options['calc_asp'])){
+            if (isset($options['calc_asp'])) {
 
-                if ($quals)
-                {
-                    foreach($quals as $qual)
-                    {
-                        if ($qual->isFeatureEnabledByName('aspirationalgrades'))
-                        {
+                if ($quals) {
+                    foreach ($quals as $qual) {
+                        if ($qual->isFeatureEnabledByName('aspirationalgrades')) {
                             $aspirationalGrade = $user->calculateAspirationalGrade($qual->getID());
-                            if ($aspirationalGrade){
+                            if ($aspirationalGrade) {
                                 $this->output .= "[{$i}] OK: " . sprintf( get_string('import:qoe:setasp', 'block_gradetracker'), $username, $qual->getDisplayName(), $aspirationalGrade->getName() ) . "<br>";
                             } else {
                                 $err++;
@@ -542,7 +513,6 @@ class DataImport {
         }
 
         $this->errCnt = $err;
-
 
         // ------------ Logging Info
         $Log = new \GT\Log();
@@ -564,19 +534,18 @@ class DataImport {
      * Import the Target Grades from CSV
      * @return boolean
      */
-    public function runImportTargetGrades()
-    {
+    public function runImportTargetGrades() {
 
         $options = (isset($_POST['options'])) ? $_POST['options'] : false;
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -587,14 +556,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), 'text/csv or text/plain', $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -603,25 +572,22 @@ class DataImport {
         $headerRow = fgetcsv($fh);
         $headers = \GT\CSV\Template::$headersTargetGrades;
 
-        if ($headerRow !== $headers){
+        if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
 
-
-
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
 
             $row = array_map('trim', $row);
 
             // Check fields are not empty
-            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])){
+            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -637,35 +603,31 @@ class DataImport {
 
             // Check valid user
             $user = \GT\User::byUsername($username);
-            if (!$user || !$user->isValid()){
+            if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
                 continue;
             }
 
-
             // Check valid qual
             $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
-            if (!$qual || !$qual->isValid()){
+            if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
                 continue;
             }
 
-
             // Check user is on qual
-            if (!$user->isOnQual($qual->getID(), "STUDENT")){
+            if (!$user->isOnQual($qual->getID(), "STUDENT")) {
                 $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:studnotonqual', 'block_gradetracker'), $username, $qualName ) . "<br>";
                 $err++;
                 continue;
             }
 
-
-
             // Average GCSE score
-            if ($avgGcse != '' && is_numeric($avgGcse)){
+            if ($avgGcse != '' && is_numeric($avgGcse)) {
 
-                if ($user->setAverageGCSEScore($avgGcse)){
+                if ($user->setAverageGCSEScore($avgGcse)) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:tg:avggcseupdated', 'block_gradetracker'), $username, $avgGcse ) . "<br>";
                 } else {
                     $err++;
@@ -675,14 +637,13 @@ class DataImport {
 
             }
 
-
             // Target Grade for this qualification
 
             // Check grade is valid, if it's not empty as this is optional, might just do an avg gcse score
-            if (!empty($grade)){
+            if (!empty($grade)) {
 
                 $award = $qual->getBuild()->getAwardByName($grade);
-                if (!$award || !$award->isValid()){
+                if (!$award || !$award->isValid()) {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:tg:invalidgrade', 'block_gradetracker'), $grade ) . "<br>";
                     $err++;
                     continue;
@@ -690,7 +651,7 @@ class DataImport {
 
                 // At this point everything should be ok. The user is on the qual, the grade is valid.
                 // So let's update the grade
-                if ($user->setUserGrade('target', $award->getID(), array('qualID' => $qual->getID()))){
+                if ($user->setUserGrade('target', $award->getID(), array('qualID' => $qual->getID()))) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:tg:updated', 'block_gradetracker'), $username, $qualName, $grade ) . "<br>";
                 } else {
                     $err++;
@@ -698,12 +659,12 @@ class DataImport {
                     continue;
                 }
 
-            } elseif (isset($options['calc_tg']) && $qual->isFeatureEnabledByName('targetgradesauto')) {
+            } else if (isset($options['calc_tg']) && $qual->isFeatureEnabledByName('targetgradesauto')) {
 
                 // If we didn't specificy a grade but we did choose to calculate target grade
                 // Try and calculate from avg GCSE score
                 $targetGrade = $user->calculateTargetGrade($qual->getID());
-                if ($targetGrade){
+                if ($targetGrade) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:qoe:settg', 'block_gradetracker'), $username, $qualName, $targetGrade->getName() ) . "<br>";
                 } else {
                     $err++;
@@ -713,18 +674,13 @@ class DataImport {
 
             }
 
-
-
             // Calculate Weighted TG
-            if (isset($options['calc_wtg']) && $qual->isFeatureEnabledByName('weightedtargetgrades')){
+            if (isset($options['calc_wtg']) && $qual->isFeatureEnabledByName('weightedtargetgrades')) {
 
                 $weighted = $user->calculateWeightedTargetGrade($qual->getID());
-                if ($weighted)
-                {
+                if ($weighted) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:qoe:setwtg', 'block_gradetracker'), $username, $qualName, $weighted->getName() ) . "<br>";
-                }
-                else
-                {
+                } else {
                     $err++;
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:tg:wtgupdate', 'block_gradetracker'), $username, $qualName ) . "<br>";
                     continue;
@@ -732,13 +688,11 @@ class DataImport {
 
             }
 
-
-
             // Calculate aspirational
-            if (isset($options['calc_asp']) && $qual->isFeatureEnabledByName('aspirationalgrades')){
+            if (isset($options['calc_asp']) && $qual->isFeatureEnabledByName('aspirationalgrades')) {
 
                 $aspirationalGrade = $user->calculateAspirationalGrade($qual->getID());
-                if ($aspirationalGrade){
+                if ($aspirationalGrade) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:qoe:setasp', 'block_gradetracker'), $username, $qualName, $aspirationalGrade->getName() ) . "<br>";
                 } else {
                     $err++;
@@ -749,7 +703,6 @@ class DataImport {
             }
 
         }
-
 
         $this->errCnt = $err;
 
@@ -766,27 +719,24 @@ class DataImport {
 
         fclose($fh);
 
-
-
     }
 
     /**
      * Import the Aspirational Grades from CSV
      * @return boolean
      */
-    public function runImportAspirationalGrades()
-    {
+    public function runImportAspirationalGrades() {
 
         $options = (isset($_POST['options'])) ? $_POST['options'] : false;
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -797,14 +747,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), 'text/csv or text/plain', $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -813,25 +763,22 @@ class DataImport {
         $headerRow = fgetcsv($fh);
         $headers = \GT\CSV\Template::$headersAspirationalGrades;
 
-        if ($headerRow !== $headers){
+        if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
 
-
-
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
 
             $row = array_map('trim', $row);
 
             // Check fields are not empty
-            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])){
+            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -846,33 +793,31 @@ class DataImport {
 
             // Check valid user
             $user = \GT\User::byUsername($username);
-            if (!$user || !$user->isValid()){
+            if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
                 continue;
             }
 
-
             // Check valid qual
             $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
-            if (!$qual || !$qual->isValid()){
+            if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
                 continue;
             }
 
-
             // Check user is on qual
-            if (!$user->isOnQual($qual->getID(), "STUDENT")){
+            if (!$user->isOnQual($qual->getID(), "STUDENT")) {
                 $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:studnotonqual', 'block_gradetracker'), $username, $qualName ) . "<br>";
                 $err++;
                 continue;
             }
 
-            if (!empty($aspGrade)){
+            if (!empty($aspGrade)) {
 
                 $award = $qual->getBuild()->getAwardByName($aspGrade);
-                if (!$award || !$award->isValid()){
+                if (!$award || !$award->isValid()) {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:tg:invalidgrade', 'block_gradetracker'), $aspGrade ) . "<br>";
                     $err++;
                     continue;
@@ -880,7 +825,7 @@ class DataImport {
 
                 // At this point everything should be ok. The user is on the qual, the grade is valid.
                 // So let's update the grade
-                if ($user->setUserGrade('aspirational', $award->getID(), array('qualID' => $qual->getID()))){
+                if ($user->setUserGrade('aspirational', $award->getID(), array('qualID' => $qual->getID()))) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:tg:updated', 'block_gradetracker'), $username, $qualName, $aspGrade ) . "<br>";
                 } else {
                     $err++;
@@ -894,7 +839,7 @@ class DataImport {
 
         $this->errCnt = $err;
 
-         // ------------ Logging Info
+        // ------------ Logging Info
         $Log = new \GT\Log();
         $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES;
@@ -913,17 +858,16 @@ class DataImport {
      * Import the Ceta Grades from CSV
      * @return boolean
      */
-    public function runImportCETAGrades()
-    {
+    public function runImportCETAGrades() {
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -934,14 +878,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), 'text/csv or text/plain', $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -950,7 +894,7 @@ class DataImport {
         $headerRow = fgetcsv($fh);
         $headers = \GT\CSV\Template::$headersCetaGrades;
 
-        if ($headerRow !== $headers){
+        if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
@@ -958,8 +902,7 @@ class DataImport {
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
             $row = array_map('trim', $row);
@@ -979,38 +922,34 @@ class DataImport {
 
             // Check valid user
             $user = \GT\User::byUsername($username);
-            if (!$user || !$user->isValid()){
+            if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
                 continue;
             }
 
             // if the qual info submitted is not empty.
-            if (!empty($qualFamily) && !empty($qualLevel) && !empty($qualSubType) && !empty($qualName) && !empty($username))
-            {
+            if (!empty($qualFamily) && !empty($qualLevel) && !empty($qualSubType) && !empty($qualName) && !empty($username)) {
                 // Check valid qual
                 $qual = \GT\Qualification::retrieve($qualFamily, $qualLevel, $qualSubType, $qualName);
-                if (!$qual || !$qual->isValid()){
+                if (!$qual || !$qual->isValid()) {
                     $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualFamily} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                     $err++;
                     continue;
                 }
 
                 // Check user is on qual
-                if (!$user->isOnQual($qual->getID(), "STUDENT")){
+                if (!$user->isOnQual($qual->getID(), "STUDENT")) {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:studnotonqual', 'block_gradetracker'), $username, $qualName ) . "<br>";
                     $err++;
                     continue;
                 }
 
-                if (!empty($ceta)){
+                if (!empty($ceta)) {
                     $award = $qual->getBuild()->getAwardByName($ceta);
-                    if ($award && $award->isValid())
-                    {
+                    if ($award && $award->isValid()) {
                         $awardID = $award->getID();
-                    }
-                    else
-                    {
+                    } else {
                         $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:tg:invalidgrade', 'block_gradetracker'), $ceta ) . "<br>";
                         $err++;
                         continue;
@@ -1020,26 +959,18 @@ class DataImport {
                 $name = $qual->getShortDisplayName();
                 $params['qualID'] = $qual->getID();
 
-            }
-            elseif (!empty($username) && !empty($course))
-            {
+            } else if (!empty($username) && !empty($course)) {
 
                 $byCourseMethod = $_POST['importoptions'];
-                if ($byCourseMethod == 'importcourseshortname')
-                {
+                if ($byCourseMethod == 'importcourseshortname') {
                     $coursecheck = \GT\Course::retrieve('shortname', $course);
-                }
-                elseif ($byCourseMethod == 'importcourseid')
-                {
+                } else if ($byCourseMethod == 'importcourseid') {
                     $coursecheck = \GT\Course::retrieve('id', $course);
                 }
 
-                if($coursecheck && $coursecheck->isValid())
-                {
+                if ($coursecheck && $coursecheck->isValid()) {
                     $params['courseID'] = $coursecheck->id;
-                }
-                else
-                {
+                } else {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:invalidcourse', 'block_gradetracker'), $course ) . "<br>";
                     $err++;
                     continue;
@@ -1048,10 +979,7 @@ class DataImport {
                 $name = $coursecheck->getName();
                 $awardID = $ceta;
 
-            }
-
-            else
-            {
+            } else {
                 $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:invaliddata', 'block_gradetracker'), $course ) . "<br>";
                 $err++;
                 continue;
@@ -1059,14 +987,10 @@ class DataImport {
 
             // At this point everything should be ok. The user is on the qual, the grade is valid.
             // So let's update the grade
-            if (!is_null($params['qualID']) || !is_null($params['courseID']))
-            {
-                if ($user->setUserGrade('ceta', $awardID, $params))
-                {
+            if (!is_null($params['qualID']) || !is_null($params['courseID'])) {
+                if ($user->setUserGrade('ceta', $awardID, $params)) {
                     $this->output .= "[{$i}] OK: " . sprintf( get_string('import:cg:updated', 'block_gradetracker'), $username, $name, $ceta ) . "<br>";
-                }
-                else
-                {
+                } else {
                     $err++;
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:cg:update', 'block_gradetracker'), $username, $name ) . "<br>";
                     continue;
@@ -1076,7 +1000,7 @@ class DataImport {
 
         $this->errCnt = $err;
 
-         // ------------ Logging Info
+        // ------------ Logging Info
         $Log = new \GT\Log();
         $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES;
@@ -1089,20 +1013,18 @@ class DataImport {
 
         fclose($fh);
 
-
     }
 
-    public function runImportWCoe()
-    {
+    public function runImportWCoe() {
         global $DB;
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -1113,14 +1035,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -1129,7 +1051,7 @@ class DataImport {
         $headerRow = fgetcsv($fh);
         $headers = \GT\CSV\Template::$headersWCoe;
 
-        if ($headerRow !== $headers){
+        if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
@@ -1137,14 +1059,12 @@ class DataImport {
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
             $i++;
             $row = array_map('trim', $row);
 
-
             // Check fields are not empty
-            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5])){
+            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5])) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -1157,10 +1077,9 @@ class DataImport {
             $percentileNumber = $row[4];
             $value = $row[5];
 
-
             // Check valid qual
             $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
-            if (!$qual || !$qual->isValid()){
+            if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
                 continue;
@@ -1173,15 +1092,13 @@ class DataImport {
 
         rewind($fh);
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
             $row = array_map('trim', $row);
 
-
             // Check fields are not empty
-            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5])){
+            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5])) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -1194,10 +1111,9 @@ class DataImport {
             $percentileNumber = $row[4];
             $value = $row[5];
 
-
             // Check valid qual
             $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
-            if (!$qual || !$qual->isValid()){
+            if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
                 continue;
@@ -1226,22 +1142,20 @@ class DataImport {
 
         fclose($fh);
 
-
-
     }
 
-    public function runImportAssessmentGrades($assessmentID){
+    public function runImportAssessmentGrades($assessmentID) {
 
         global $DB;
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
@@ -1252,14 +1166,14 @@ class DataImport {
         finfo_close($fInfo);
 
         // Has to be csv file, otherwise error and return
-        if ($mime != 'text/csv' && $mime != 'text/plain'){
+        if ($mime != 'text/csv' && $mime != 'text/plain') {
             $this->errors[] = sprintf( get_string('errors:import:mimetype', 'block_gradetracker'), $mime );
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -1279,7 +1193,7 @@ class DataImport {
         array_push($headersWithCommentCol, 'Comments');
 
         // Check to see if the header row supplied matches either the default, or the default + the Comments header
-        if ($headerRow !== $headers && $headerRow !== $headersWithCommentCol){
+        if ($headerRow !== $headers && $headerRow !== $headersWithCommentCol) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
@@ -1288,7 +1202,7 @@ class DataImport {
 
         // Check assessment is valid
         $Assessment = new \GT\Assessment($assessmentID);
-        if (!$Assessment->isValid()){
+        if (!$Assessment->isValid()) {
             $this->errors[] = get_string('invalidassessment', 'block_gradetracker');
             return false;
         }
@@ -1296,14 +1210,13 @@ class DataImport {
         $i = 0;
         $err = 0;
 
-        while( ($row = fgetcsv($fh)) !== false )
-        {
+        while ( ($row = fgetcsv($fh)) !== false ) {
 
             $i++;
             $row = array_map('trim', $row);
 
             // Check fields are not empty
-            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5])){
+            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5])) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:emptyfield', 'block_gradetracker') . " - " . implode(', ', $row) . "<br>";
                 $err++;
                 continue;
@@ -1321,7 +1234,7 @@ class DataImport {
 
             // Check valid user
             $user = \GT\User::byUsername($username);
-            if (!$user || !$user->isValid()){
+            if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
                 continue;
@@ -1329,14 +1242,14 @@ class DataImport {
 
             // Check valid qual
             $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
-            if (!$qual || !$qual->isValid()){
+            if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
                 continue;
             }
 
             // Check user is on qual
-            if (!$user->isOnQual($qual->getID(), "STUDENT")){
+            if (!$user->isOnQual($qual->getID(), "STUDENT")) {
                 $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:studnotonqual', 'block_gradetracker'), $username, $qualName ) . "<br>";
                 $err++;
                 continue;
@@ -1344,7 +1257,7 @@ class DataImport {
 
             // Check this qualification is attached to the assessment specified
             $qualAssessment = $qual->getAssessment($Assessment->getID());
-            if (!$qualAssessment){
+            if (!$qualAssessment) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:ass:qualnotonass', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
                 continue;
@@ -1352,10 +1265,10 @@ class DataImport {
 
             // Check grade is valid (if set)
             $gradeObj = new \GT\CriteriaAward();
-            if ($grade){
+            if ($grade) {
                 $GradingStructure = $qualAssessment->getQualificationAssessmentGradingStructure();
                 $gradeObj = ($GradingStructure && $GradingStructure->isValid()) ? $GradingStructure->getAwardByShortName($grade) : false;
-                if (!$gradeObj || !$gradeObj->isValid()){
+                if (!$gradeObj || !$gradeObj->isValid()) {
                     $this->output .= "[{$i}] ERR: " . get_string('errors:import:ass:grade', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName} - ({$grade})<br>";
                     $err++;
                     continue;
@@ -1364,10 +1277,10 @@ class DataImport {
 
             // Check CETA is valid (if set)
             $cetaObj = new \GT\QualificationAward();
-            if ($ceta){
+            if ($ceta) {
                 $QualBuild = $qual->getBuild();
                 $cetaObj = $QualBuild->getAwardByName($ceta);
-                if (!$cetaObj || !$cetaObj->isValid()){
+                if (!$cetaObj || !$cetaObj->isValid()) {
                     $this->output .= "[{$i}] ERR: " . get_string('errors:import:ass:ceta', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName} - ({$ceta})<br>";
                     $err++;
                     continue;
@@ -1380,12 +1293,12 @@ class DataImport {
             $qualAssessment->setUserGrade( $gradeObj );
             $qualAssessment->setUserCeta( $cetaObj );
 
-            if (!is_null($comments)){
+            if (!is_null($comments)) {
                 $qualAssessment->setUserComments( $comments );
             }
 
             // Save the user's assessment
-            if ( $qualAssessment->saveUser() ){
+            if ( $qualAssessment->saveUser() ) {
                 $this->output .= "[{$i}] OK: " . sprintf( get_string('import:assgrades:updated', 'block_gradetracker'), $qualAssessment->getName(), $username, $qual->getShortDisplayName(), $grade, $ceta ) . "<br>";
             } else {
                 $err++;
@@ -1396,7 +1309,6 @@ class DataImport {
         }
 
         $this->errCnt = $err;
-
 
         // ------------ Logging Info
         $Log = new \GT\Log();
@@ -1422,46 +1334,45 @@ class DataImport {
      * @global array $MSGS
      * @return boolean
      */
-    public function checkFileStudentDataSheet()
-    {
+    public function checkFileStudentDataSheet() {
 
         global $CFG, $DB, $MSGS;
 
         $assessmentView = optional_param('ass', false, PARAM_INT);
 
-        if (!$this->getStudentID() || !$this->getQualID()){
+        if (!$this->getStudentID() || !$this->getQualID()) {
             $this->errors[] = get_string('invalidrecord', 'block_gradetracker');
             return false;
         }
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
 
         // Check mime type of file to make sure it is csv
         $fInfo = \finfo_open(FILEINFO_MIME_TYPE);
-            $mime = \finfo_file($fInfo, $this->file['tmp_name']);
+        $mime = \finfo_file($fInfo, $this->file['tmp_name']);
         \finfo_close($fInfo);
 
         $ext = pathinfo($this->file['name'], PATHINFO_EXTENSION);
 
         // On linux PHP says the mime type of an xlsx is application/zip, which is handy...
-        if ( ($mime != 'application/vnd.ms-excel' && $mime != 'application/zip' && $mime != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || $ext != 'xlsx'){
+        if ( ($mime != 'application/vnd.ms-excel' && $mime != 'application/zip' && $mime != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || $ext != 'xlsx') {
             $this->errors[] = 'Invalid file format. Expected: application/vnd.ms-excel or application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (.xlsx) Found: ' . $mime . ' ('.$ext.')';
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
@@ -1472,8 +1383,7 @@ class DataImport {
         $student = new \GT\User($this->getStudentID());
 
         $qualification = new \GT\Qualification\UserQualification($this->getQualID());
-        if (!$qualification->isValid())
-        {
+        if (!$qualification->isValid()) {
             $this->errors[] = get_string('invalidqual', 'block_gradetracker');
             return false;
         }
@@ -1481,14 +1391,14 @@ class DataImport {
         $qualification->loadStudent( $this->getStudentID() );
 
         // Require PHPExcel library
-        require_once $CFG->dirroot . '/lib/phpexcel/PHPExcel.php';
+        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
 
         // Open with PHPExcel reader
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($this->file['tmp_name']);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($this->file['tmp_name']);
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
             return false;
         }
@@ -1496,32 +1406,31 @@ class DataImport {
         // Check it's a valid student datasheet
         $customProperties = $this->getFileCustomProperties($objPHPExcel);
 
-        if ($customProperties['GT-DATASHEET-TYPE'] !== 'STUDENT'){
+        if ($customProperties['GT-DATASHEET-TYPE'] !== 'STUDENT') {
             $this->errors[] = get_string('errors:import:datasheettype', 'block_gradetracker');
             return false;
         }
 
         // Is it an assessment grid?
-        if ($assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] != 1 ){
+        if ($assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] != 1 ) {
             $this->errors[] = get_string('errors:import:datasheettypeass', 'block_gradetracker');
             return false;
         }
 
         // If it not an assessment grid, but we uploaded an assessment spreadsheet?
-        if (!$assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] == 1){
+        if (!$assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] == 1) {
             $this->errors[] = get_string('errors:import:datasheettypeass', 'block_gradetracker');
             return false;
         }
 
         // Save the tmp file to Moodledata so we can still use it when we click confirm
         $saveFile = \gt_save_file($this->file['tmp_name'], 'tmp', $this->getQualID() . '_' . $this->getStudentID() . '_' . $now . '.xlsx');
-        if (!$saveFile){
+        if (!$saveFile) {
             $this->errors[] = get_string('errors:save:file', 'block_gradetracker');
             return false;
         }
 
         $this->tmpFile = $saveFile;
-
 
         // Get stuff from worksheets
         $unix = $objPHPExcel->getProperties()->getCreated();
@@ -1536,40 +1445,34 @@ class DataImport {
 
         $commentWorkSheet = $objPHPExcel->getSheet(1);
 
-
-
         // Key here
         $output .= "<h3>".get_string('key', 'block_gradetracker')."</h3>";
         $output .= "<table class='gt_import_key'>";
-            $output .= "<tr>";
-                $output .= "<td class='updatedsince crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedsince', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedsince crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedsince', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr>";
-                $output .= "<td class='updatedinsheet crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedinsheet', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedinsheet crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedinsheet', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr>";
-                $output .= "<td class='updatedinsheet updatedsince crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedinboth', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedinsheet updatedsince crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedinboth', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
         $output .= "</table>";
 
         $output .= "<br>";
 
-
-
         // Assessment Grid/Spreadsheet
-        if ($assessmentView)
-        {
+        if ($assessmentView) {
 
             // Get all the qualIDs as some assessment grids include other qualifications
             $qualIDArray = array();
-            for ($row = 3; $row <= $lastRow; $row++)
-            {
+            for ($row = 3; $row <= $lastRow; $row++) {
                 $qualIDArray[] = $objWorksheet->getCell("A{$row}")->getCalculatedValue();
             }
 
@@ -1584,436 +1487,392 @@ class DataImport {
                                             AND ua.lastupdate > ?
                                             AND ua.qualid IN ({$placeholders})", $params);
 
-            if ($updates)
-            {
+            if ($updates) {
 
                 $output .= "<div class='gt_import_warning'>";
-                    $output .= "<b>".get_string('warning').":</b><br><br>";
-                    $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
+                $output .= "<b>".get_string('warning').":</b><br><br>";
+                $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
 
-                    foreach($updates as $update)
-                    {
+                foreach ($updates as $update) {
 
-                        $qual = new \GT\Qualification($update->qualid);
-                        $assessment = new \GT\Assessment($update->assessmentid);
-                        $updateBy = new \GT\User($update->lastupdateby);
+                    $qual = new \GT\Qualification($update->qualid);
+                    $assessment = new \GT\Assessment($update->assessmentid);
+                    $updateBy = new \GT\User($update->lastupdateby);
 
-                        // Grade
-                        $grade = new \GT\CriteriaAward($update->grade);
+                    // Grade
+                    $grade = new \GT\CriteriaAward($update->grade);
 
-                        // Ceta
-                        $ceta = new \GT\QualificationAward($update->ceta);
+                    // Ceta
+                    $ceta = new \GT\QualificationAward($update->ceta);
 
-                        $gradeValue = $grade->getShortName();
-                        if ($assessment->getSetting('grading_method') == 'numeric'){
-                            $gradeValue = $update->score;
-                        }
-
-                        // Grade
-                        $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), $qual->getDisplayName() . " " . $assessment->getName(), "GRADE ({$gradeValue}), CETA ({$ceta->getName()})", \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
-
+                    $gradeValue = $grade->getShortName();
+                    if ($assessment->getSetting('grading_method') == 'numeric') {
+                        $gradeValue = $update->score;
                     }
+
+                    // Grade
+                    $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), $qual->getDisplayName() . " " . $assessment->getName(), "GRADE ({$gradeValue}), CETA ({$ceta->getName()})", \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
+
+                }
 
                 $output .= "</div>";
                 $output .= "<br><br>";
 
             }
 
-
-
             $output .= "<h2 class='gt_c'>".$student->getDisplayName()."</h2>";
             $output .= "<br>";
 
-
             $output .= "<div class='gt_import_grid_div'>";
 
-                $output .= "<form action='' method='post' class='gt_c'>";
+            $output .= "<form action='' method='post' class='gt_c'>";
 
-                $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
-                $output .= "<input type='hidden' name='studentID' value='{$this->getStudentID()}' />";
-                $output .= "<input type='hidden' name='now' value='{$now}' />";
-                $output .= "<input type='submit' class='gt_btn gt_green gt_btn_small' name='confirm' value='".get_string('confirm')."' />";
-                $output .= str_repeat("&nbsp;", 8);
-                $output .= "<input type='button' class='gt_btn gt_red gt_btn_small gt_goto' url='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=student&id={$this->getStudentID()}&qualID={$this->getQualID()}' value='".get_string('cancel')."' />";
-                $output .= "<br><br>";
+            $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
+            $output .= "<input type='hidden' name='studentID' value='{$this->getStudentID()}' />";
+            $output .= "<input type='hidden' name='now' value='{$now}' />";
+            $output .= "<input type='submit' class='gt_btn gt_green gt_btn_small' name='confirm' value='".get_string('confirm')."' />";
+            $output .= str_repeat("&nbsp;", 8);
+            $output .= "<input type='button' class='gt_btn gt_red gt_btn_small gt_goto' url='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=student&id={$this->getStudentID()}&qualID={$this->getQualID()}' value='".get_string('cancel')."' />";
+            $output .= "<br><br>";
 
-                $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
+            $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
 
+            // Grades sheet
+            $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
 
+            $output .= "<tr>";
 
-                // Grades sheet
-                $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
+            $output .= "<th><input type='checkbox' class='gt_toggle_check_all' useClass='gt_import_unit_checkbox' checked /></th>";
+            $output .= "<th>".get_string('qualification', 'block_gradetracker')."</th>";
 
-                    $output .= "<tr>";
+            $assessmentsArray = array();
 
-                        $output .= "<th><input type='checkbox' class='gt_toggle_check_all' useClass='gt_import_unit_checkbox' checked /></th>";
-                        $output .= "<th>".get_string('qualification', 'block_gradetracker')."</th>";
+            for ($col = 'C'; $col != $lastCol; $col++) {
 
-                        $assessmentsArray = array();
+                $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
 
-                        for ($col = 'C'; $col != $lastCol; $col++){
+                // If the cell is not empty
+                if ($cellValue != '') {
 
-                            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                    preg_match("/^\[([0-9]+)\]/", $cellValue, $matches);
+                    $id = (isset($matches[1])) ? $matches[1] : false;
 
-                            // If the cell is not empty
-                            if ($cellValue != ''){
-
-                                preg_match("/^\[([0-9]+)\]/", $cellValue, $matches);
-                                $id = (isset($matches[1])) ? $matches[1] : false;
-
-                                // If format of column is valid and we got an ID out of it
-                                if ($id){
-                                    $assessmentsArray[$id] = array('id' => $id, 'name' => $cellValue, 'colspan' => 1, 'startingCell' => $col);
-                                }
-
-                            } elseif ($assessmentsArray) {
-
-                                // Else if it's blank, it must be merged with a previous cell, so increment colspan
-                                end($assessmentsArray);
-                                $key = key($assessmentsArray);
-                                $assessmentsArray[$key]['colspan']++;
-
-                            }
-
-                        }
-
-                        // Now loop through the assessmentArray, since we know the colspans to use
-                        if ($assessmentsArray)
-                        {
-                            foreach($assessmentsArray as $ass)
-                            {
-                                $output .= "<th colspan='{$ass['colspan']}'>{$ass['name']}</th>";
-                            }
-                        }
-
-                    $output .= "</tr>";
-
-                    // Now loop through the second row, which shows the column, e.g. Grade, CETA or a custom field
-                    $output .= "<tr>";
-
-                        $output .= "<th></th>";
-                        $output .= "<th></th>";
-
-                        for ($col = 'C'; $col != $lastCol; $col++){
-
-                            $cellValue = $objWorksheet->getCell($col . "2")->getCalculatedValue();
-                            $output .= "<th>{$cellValue}</th>";
-
-                        }
-
-                    $output .= "</tr>";
-
-
-                    // Loop through qualifications
-                    for ($row = 3; $row <= $lastRow; $row++)
-                    {
-
-                        $studentQualification = false;
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
-
-                        $output .= "<tr class='{$rowClass}'>";
-
-                            for ($col = 'A'; $col != $lastCol; $col++){
-
-                                $cellClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
-
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
-
-                                    $qualID = (int)$cellValue;
-                                    $studentQual = new \GT\Qualification\UserQualification($qualID);
-
-                                    if (!$studentQual->isValid() || !$studentQual->loadStudent($this->getStudentID())){
-                                        $this->errors[] = sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
-                                        break;
-                                    }
-
-                                    continue; // Don't want to print the id out
-
-                                }
-
-                                // Assessment we want to check for changes
-                                elseif ($col != 'A' && $col != 'B'){
-
-                                    // Work out the merged cell that has the assessment ID in, based on
-                                    // which cell we are in now and the colspan of the parent
-                                    $assessment = self::findAssessmentParentColumn($assessmentsArray, $col);
-                                    if (!$assessment){
-                                        $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker' );
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-
-                                    // Get the cell value of the column this is in, so we can see if it's
-                                    // a Grade column, a CETA column or a Custom Field
-                                    $column = $objWorksheet->getCell($col . 2)->getCalculatedValue();
-                                    $column = strtolower($column);
-
-                                    // Student Assessment
-                                    $studentAssessment = $studentQual->getUserAssessment($assessment['id']);
-
-                                    // If can't load it on this qual, must not be attached to this qual
-                                    if (!$studentAssessment){
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-
-                                    // Grade cell
-                                    if ($column == 'grade')
-                                    {
-
-                                        $gradingMethod = $studentAssessment->getSetting('grading_method');
-                                        if ($gradingMethod == 'numeric')
-                                        {
-
-                                            // Check the current score of this assessment
-                                            $currentValue = $studentAssessment->getUserScore();
-
-                                        }
-                                        else
-                                        {
-
-                                            // Check the current grade of this assessment
-                                            $currentGrade = $studentAssessment->getUserGrade();
-                                            $currentValue = ($currentGrade) ? $currentGrade->getShortName() : '';
-                                            $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                        }
-
-                                        // The default name of the CriteriaAward if none is set is N/A,
-                                        // so if the cell is blank, a comparison of blank and "N/A" won't match
-                                        // and it will think something has changed even though it hasn't
-                                        // So change the cell value to N/A in order for the comparison to work
-                                        if ($cellValue == ''){
-                                            $cellValue = get_string('na', 'block_gradetracker');
-                                        }
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $cellValue){
-                                            $cellClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the assessment's last update date is later than when we downloaded the datasheet
-                                        if ($dateAssessmentUpdated > $unix){
-                                            $cellClass .= 'updatedsince ';
-                                        }
-
-                                    }
-
-                                    // CETA cell
-                                    elseif ($column == 'ceta')
-                                    {
-
-                                        // Check the current CETA of this assessment
-                                        $currentCeta = $studentAssessment->getUserCeta();
-                                        $currentValue = ($currentCeta) ? $currentCeta->getName() : '';
-                                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $cellValue){
-                                            $cellClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the assessment's last update date is later than when we downloaded the datasheet
-                                        if ($dateAssessmentUpdated > $unix){
-                                            $cellClass .= 'updatedsince ';
-                                        }
-
-                                        // For display purposes, change blank cell into N/A as it looks better
-                                        if ($cellValue == ''){
-                                            $cellValue = get_string('na', 'block_gradetracker');
-                                        }
-
-                                    }
-
-                                    // Custom Form Field
-                                    elseif (preg_match("/^\[([0-9]+)\]/", $column, $matches))
-                                    {
-
-                                        $fieldID = (isset($matches[1])) ? $matches[1] : false;
-                                        $field = new \GT\FormElement($fieldID);
-
-                                        // Check the current value of this custom field
-                                        $currentCustomField = $studentAssessment->getCustomFieldValue($field, 'v', false);
-                                        $currentValue = ($currentCustomField) ? $currentCustomField : '';
-                                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $cellValue){
-                                            $cellClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the assessment's last update date is later than when we downloaded the datasheet
-                                        if ($dateAssessmentUpdated > $unix){
-                                            $cellClass .= 'updatedsince ';
-                                        }
-
-                                        // For display purposes, change blank cell into N/A as it looks better
-                                        if ($cellValue == ''){
-                                            $cellValue = get_string('na', 'block_gradetracker');
-                                        }
-
-                                    }
-
-                                    // Display the cell
-                                    $output .= "<td class='{$cellClass}'>";
-                                        $output .= $cellValue;
-                                    $output .= "</td>";
-
-
-                                } else {
-                                    // Otherwise for qual name just print it out
-                                    $output .= "<td><input type='checkbox' name='quals[]' value='{$qualID}' class='gt_import_unit_checkbox' checked /></td>";
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
-
-                            }
-
-                        $output .= "</tr>";
-
+                    // If format of column is valid and we got an ID out of it
+                    if ($id) {
+                        $assessmentsArray[$id] = array('id' => $id, 'name' => $cellValue, 'colspan' => 1, 'startingCell' => $col);
                     }
 
+                } else if ($assessmentsArray) {
 
-                // End of grades sheet
-                $output .= "</table>";
+                    // Else if it's blank, it must be merged with a previous cell, so increment colspan
+                    end($assessmentsArray);
+                    $key = key($assessmentsArray);
+                    $assessmentsArray[$key]['colspan']++;
 
+                }
 
+            }
 
+            // Now loop through the assessmentArray, since we know the colspans to use
+            if ($assessmentsArray) {
+                foreach ($assessmentsArray as $ass) {
+                    $output .= "<th colspan='{$ass['colspan']}'>{$ass['name']}</th>";
+                }
+            }
 
+            $output .= "</tr>";
 
-                // Comments sheet
-                $lastCol = $commentWorkSheet->getHighestColumn();
-                $lastCol++;
+            // Now loop through the second row, which shows the column, e.g. Grade, CETA or a custom field
+            $output .= "<tr>";
 
-                $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
+            $output .= "<th></th>";
+            $output .= "<th></th>";
 
-                    $output .= "<tr>";
+            for ($col = 'C'; $col != $lastCol; $col++) {
 
-                        $output .= "<th></th>";
-                        $output .= "<th>".get_string('qualification', 'block_gradetracker')."</th>";
+                $cellValue = $objWorksheet->getCell($col . "2")->getCalculatedValue();
+                $output .= "<th>{$cellValue}</th>";
 
-                        // Now loop through the assessmentArray, since we know the colspans to use
-                        if ($assessmentsArray)
-                        {
-                            foreach($assessmentsArray as $ass)
-                            {
-                                $output .= "<th>{$ass['name']}</th>";
-                            }
+            }
+
+            $output .= "</tr>";
+
+            // Loop through qualifications
+            for ($row = 3; $row <= $lastRow; $row++) {
+
+                $studentQualification = false;
+                $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                $output .= "<tr class='{$rowClass}'>";
+
+                for ($col = 'A'; $col != $lastCol; $col++) {
+
+                    $cellClass = '';
+                    $currentValue = get_string('na', 'block_gradetracker');
+                    $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                    // If first column, get the ID of the unit but don't print it out
+                    if ($col == 'A') {
+
+                        $qualID = (int)$cellValue;
+                        $studentQual = new \GT\Qualification\UserQualification($qualID);
+
+                        if (!$studentQual->isValid() || !$studentQual->loadStudent($this->getStudentID())) {
+                            $this->errors[] = sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
+                            break;
                         }
 
-                    $output .= "</tr>";
+                        continue; // Don't want to print the id out
 
-                    // Loop through qualifications
-                    for ($row = 3; $row <= $lastRow; $row++)
-                    {
+                    } else if ($col != 'A' && $col != 'B') {
+                        // Assessment we want to check for changes
 
-                        $studentQualification = false;
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+                        // Work out the merged cell that has the assessment ID in, based on
+                        // which cell we are in now and the colspan of the parent
+                        $assessment = self::findAssessmentParentColumn($assessmentsArray, $col);
+                        if (!$assessment) {
+                            $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker' );
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
 
-                        $output .= "<tr class='{$rowClass}'>";
+                        // Get the cell value of the column this is in, so we can see if it's
+                        // a Grade column, a CETA column or a Custom Field
+                        $column = $objWorksheet->getCell($col . 2)->getCalculatedValue();
+                        $column = strtolower($column);
 
-                            for ($col = 'A'; $col != $lastCol; $col++){
+                        // Student Assessment
+                        $studentAssessment = $studentQual->getUserAssessment($assessment['id']);
 
-                                $cellClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+                        // If can't load it on this qual, must not be attached to this qual
+                        if (!$studentAssessment) {
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
 
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
+                        // Grade cell
+                        if ($column == 'grade') {
 
-                                    $qualID = (int)$cellValue;
-                                    $studentQual = new \GT\Qualification\UserQualification($qualID);
+                            $gradingMethod = $studentAssessment->getSetting('grading_method');
+                            if ($gradingMethod == 'numeric') {
 
-                                    if (!$studentQual->isValid() || !$studentQual->loadStudent($this->getStudentID())){
-                                        $this->errors[] = sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
-                                        break;
-                                    }
+                                // Check the current score of this assessment
+                                $currentValue = $studentAssessment->getUserScore();
 
-                                    continue; // Don't want to print the id out
+                            } else {
 
-                                }
-
-                                // Assessment we want to check for changes
-                                elseif ($col != 'A' && $col != 'B'){
-
-                                    $parentColumn = $commentWorkSheet->getCell($col . 1)->getCalculatedValue();
-
-                                    // Get the assessment ID from the name
-                                    preg_match("/^\[([0-9]+)\]/", $parentColumn, $matches);
-                                    if (!isset($matches[1])){
-                                        $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker');
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-                                    $assessmentID = $matches[1];
-
-                                    // Get the cell value of the column this is in, so we can see if it's
-                                    // a Grade column, a CETA column or a Custom Field
-                                    $column = $commentWorkSheet->getCell($col . 2)->getCalculatedValue();
-                                    $column = strtolower($column);
-
-                                    // Student Assessment
-                                    $studentAssessment = $studentQual->getUserAssessment($assessmentID);
-
-                                    // If can't load it on this qual, must not be attached to this qual
-                                    if (!$studentAssessment){
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-                                    // Get current comments
-                                    $userComments = $studentAssessment->getUserComments();
-                                    $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                    if (is_null($cellValue)){
-                                        $cellValue = '';
-                                    }
-
-
-                                    // If value in DB and sheet don't match
-                                    if ($userComments != $cellValue){
-                                        $cellClass .= 'updatedinsheet ';
-                                    }
-
-                                    // If the assessment's last update date is later than when we downloaded the datasheet
-                                    if ($dateAssessmentUpdated > $unix){
-                                        $cellClass .= 'updatedsince ';
-                                    }
-
-                                    // Display the cell
-                                    $output .= "<td class='{$cellClass}'>";
-                                        $output .= $cellValue;
-                                    $output .= "</td>";
-
-
-                                } else {
-                                    // Otherwise for qual name just print it out
-                                    $output .= "<td></td>";
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
+                                // Check the current grade of this assessment
+                                $currentGrade = $studentAssessment->getUserGrade();
+                                $currentValue = ($currentGrade) ? $currentGrade->getShortName() : '';
+                                $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
 
                             }
 
-                        $output .= "</tr>";
+                            // The default name of the CriteriaAward if none is set is N/A,
+                            // so if the cell is blank, a comparison of blank and "N/A" won't match
+                            // and it will think something has changed even though it hasn't
+                            // So change the cell value to N/A in order for the comparison to work
+                            if ($cellValue == '') {
+                                $cellValue = get_string('na', 'block_gradetracker');
+                            }
 
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $cellValue) {
+                                $cellClass .= 'updatedinsheet ';
+                            }
+
+                            // If the assessment's last update date is later than when we downloaded the datasheet
+                            if ($dateAssessmentUpdated > $unix) {
+                                $cellClass .= 'updatedsince ';
+                            }
+
+                        } else if ($column == 'ceta') {
+
+                            // Check the current CETA of this assessment
+                            $currentCeta = $studentAssessment->getUserCeta();
+                            $currentValue = ($currentCeta) ? $currentCeta->getName() : '';
+                            $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
+
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $cellValue) {
+                                $cellClass .= 'updatedinsheet ';
+                            }
+
+                            // If the assessment's last update date is later than when we downloaded the datasheet
+                            if ($dateAssessmentUpdated > $unix) {
+                                $cellClass .= 'updatedsince ';
+                            }
+
+                            // For display purposes, change blank cell into N/A as it looks better
+                            if ($cellValue == '') {
+                                $cellValue = get_string('na', 'block_gradetracker');
+                            }
+
+                        } else if (preg_match("/^\[([0-9]+)\]/", $column, $matches)) {
+                            // Custom Form Field
+
+                            $fieldID = (isset($matches[1])) ? $matches[1] : false;
+                            $field = new \GT\FormElement($fieldID);
+
+                            // Check the current value of this custom field
+                            $currentCustomField = $studentAssessment->getCustomFieldValue($field, 'v', false);
+                            $currentValue = ($currentCustomField) ? $currentCustomField : '';
+                            $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
+
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $cellValue) {
+                                $cellClass .= 'updatedinsheet ';
+                            }
+
+                            // If the assessment's last update date is later than when we downloaded the datasheet
+                            if ($dateAssessmentUpdated > $unix) {
+                                $cellClass .= 'updatedsince ';
+                            }
+
+                            // For display purposes, change blank cell into N/A as it looks better
+                            if ($cellValue == '') {
+                                $cellValue = get_string('na', 'block_gradetracker');
+                            }
+
+                        }
+
+                        // Display the cell
+                        $output .= "<td class='{$cellClass}'>";
+                        $output .= $cellValue;
+                        $output .= "</td>";
+
+                    } else {
+                        // Otherwise for qual name just print it out
+                        $output .= "<td><input type='checkbox' name='quals[]' value='{$qualID}' class='gt_import_unit_checkbox' checked /></td>";
+                        $output .= "<td>{$cellValue}</td>";
                     }
 
+                }
 
-                // End of comments sheet
-                $output .= "</table>";
+                $output .= "</tr>";
 
-                $output .= "</form>";
+            }
 
+            // End of grades sheet
+            $output .= "</table>";
 
-        }
-        else
-        {
+            // Comments sheet
+            $lastCol = $commentWorkSheet->getHighestColumn();
+            $lastCol++;
 
+            $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
+
+            $output .= "<tr>";
+
+            $output .= "<th></th>";
+            $output .= "<th>".get_string('qualification', 'block_gradetracker')."</th>";
+
+            // Now loop through the assessmentArray, since we know the colspans to use
+            if ($assessmentsArray) {
+                foreach ($assessmentsArray as $ass) {
+                    $output .= "<th>{$ass['name']}</th>";
+                }
+            }
+
+            $output .= "</tr>";
+
+            // Loop through qualifications
+            for ($row = 3; $row <= $lastRow; $row++) {
+
+                $studentQualification = false;
+                $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                $output .= "<tr class='{$rowClass}'>";
+
+                for ($col = 'A'; $col != $lastCol; $col++) {
+
+                    $cellClass = '';
+                    $currentValue = get_string('na', 'block_gradetracker');
+                    $cellValue = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+
+                    // If first column, get the ID of the unit but don't print it out
+                    if ($col == 'A') {
+
+                        $qualID = (int)$cellValue;
+                        $studentQual = new \GT\Qualification\UserQualification($qualID);
+
+                        if (!$studentQual->isValid() || !$studentQual->loadStudent($this->getStudentID())) {
+                            $this->errors[] = sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
+                            break;
+                        }
+
+                        continue; // Don't want to print the id out
+
+                    } else if ($col != 'A' && $col != 'B') {
+
+                        // Assessment we want to check for changes
+                        $parentColumn = $commentWorkSheet->getCell($col . 1)->getCalculatedValue();
+
+                        // Get the assessment ID from the name
+                        preg_match("/^\[([0-9]+)\]/", $parentColumn, $matches);
+                        if (!isset($matches[1])) {
+                            $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker');
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
+
+                        $assessmentID = $matches[1];
+
+                        // Get the cell value of the column this is in, so we can see if it's
+                        // a Grade column, a CETA column or a Custom Field
+                        $column = $commentWorkSheet->getCell($col . 2)->getCalculatedValue();
+                        $column = strtolower($column);
+
+                        // Student Assessment
+                        $studentAssessment = $studentQual->getUserAssessment($assessmentID);
+
+                        // If can't load it on this qual, must not be attached to this qual
+                        if (!$studentAssessment) {
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
+
+                        // Get current comments
+                        $userComments = $studentAssessment->getUserComments();
+                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
+
+                        if (is_null($cellValue)) {
+                            $cellValue = '';
+                        }
+
+                        // If value in DB and sheet don't match
+                        if ($userComments != $cellValue) {
+                            $cellClass .= 'updatedinsheet ';
+                        }
+
+                        // If the assessment's last update date is later than when we downloaded the datasheet
+                        if ($dateAssessmentUpdated > $unix) {
+                            $cellClass .= 'updatedsince ';
+                        }
+
+                        // Display the cell
+                        $output .= "<td class='{$cellClass}'>";
+                        $output .= $cellValue;
+                        $output .= "</td>";
+
+                    } else {
+                        // Otherwise for qual name just print it out
+                        $output .= "<td></td>";
+                        $output .= "<td>{$cellValue}</td>";
+                    }
+
+                }
+
+                $output .= "</tr>";
+
+            }
+
+            // End of comments sheet
+            $output .= "</table>";
+
+            $output .= "</form>";
+
+        } else {
 
             // See if anything has been updated in the DB since we downloaded the file
             $updates = $DB->get_records_sql("SELECT uc.*, c.unitid
@@ -2030,27 +1889,29 @@ class DataImport {
                                             AND userid = ?
                                             AND lastupdate > ?", array($this->getQualID(), $this->getStudentID(), $unix));
 
-            if ($updates)
-            {
+            if ($updates) {
 
                 $output .= "<div class='gt_import_warning'>";
-                    $output .= "<b>".get_string('warning').":</b><br><br>";
-                    $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
-                    foreach($updates as $update)
-                    {
+                $output .= "<b>".get_string('warning').":</b><br><br>";
+                $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
+                foreach ($updates as $update) {
 
-                        $unit = $qualification->getUnit($update->unitid);
-                        if (!$unit) continue;
-
-                        $criterion = $unit->getCriterion($update->critid);
-                        if (!$criterion) continue;
-
-                        $updateBy = new \GT\User($update->lastupdateby);
-
-                        $value = new \GT\CriteriaAward($update->awardid);
-                        $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$unit->getDisplayName()} ({$criterion->getName()})", $value->getName(), \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
-
+                    $unit = $qualification->getUnit($update->unitid);
+                    if (!$unit) {
+                        continue;
                     }
+
+                    $criterion = $unit->getCriterion($update->critid);
+                    if (!$criterion) {
+                        continue;
+                    }
+
+                    $updateBy = new \GT\User($update->lastupdateby);
+
+                    $value = new \GT\CriteriaAward($update->awardid);
+                    $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$unit->getDisplayName()} ({$criterion->getName()})", $value->getName(), \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
+
+                }
 
                 $output .= "</div>";
                 $output .= "<br><br>";
@@ -2060,307 +1921,263 @@ class DataImport {
             $output .= "<h2 class='gt_c'>".$student->getDisplayName()."</h2>";
             $output .= "<br>";
 
-
             $output .= "<div class='gt_import_grid_div'>";
 
-                $output .= "<form action='' method='post' class='gt_c'>";
+            $output .= "<form action='' method='post' class='gt_c'>";
 
-                $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
-                $output .= "<input type='hidden' name='studentID' value='{$this->getStudentID()}' />";
-                $output .= "<input type='hidden' name='now' value='{$now}' />";
-                $output .= "<input type='submit' class='gt_btn gt_green gt_btn_small' name='confirm' value='".get_string('confirm')."' />";
-                $output .= str_repeat("&nbsp;", 8);
-                $output .= "<input type='button' class='gt_btn gt_red gt_btn_small gt_goto' url='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=student&id={$this->getStudentID()}&qualID={$this->getQualID()}' value='".get_string('cancel')."' />";
-                $output .= "<br><br>";
+            $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
+            $output .= "<input type='hidden' name='studentID' value='{$this->getStudentID()}' />";
+            $output .= "<input type='hidden' name='now' value='{$now}' />";
+            $output .= "<input type='submit' class='gt_btn gt_green gt_btn_small' name='confirm' value='".get_string('confirm')."' />";
+            $output .= str_repeat("&nbsp;", 8);
+            $output .= "<input type='button' class='gt_btn gt_red gt_btn_small gt_goto' url='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=student&id={$this->getStudentID()}&qualID={$this->getQualID()}' value='".get_string('cancel')."' />";
+            $output .= "<br><br>";
 
-                $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
+            $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
 
-                $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
+            $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
 
-                    $output .= "<tr>";
+            $output .= "<tr>";
 
-                        $output .= "<th><input type='checkbox' class='gt_toggle_check_all' useClass='gt_import_unit_checkbox' checked /></th>";
-                        $output .= "<th>".get_string('unit', 'block_gradetracker')."</th>";
+            $output .= "<th><input type='checkbox' class='gt_toggle_check_all' useClass='gt_import_unit_checkbox' checked /></th>";
+            $output .= "<th>".get_string('unit', 'block_gradetracker')."</th>";
 
-                        for ($col = 'C'; $col != $lastCol; $col++){
+            for ($col = 'C'; $col != $lastCol; $col++) {
 
-                            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                            $output .= "<th>{$cellValue}</th>";
+                $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                $output .= "<th>{$cellValue}</th>";
 
+            }
+
+            $output .= "</tr>";
+
+            // Loop through rows to get students
+            for ($row = 2; $row <= $lastRow; $row++) {
+
+                $studentUnit = false;
+
+                // Loop columns
+                $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                $output .= "<tr class='{$rowClass}'>";
+
+                for ($col = 'A'; $col != $lastCol; $col++) {
+
+                    $critClass = '';
+                    $currentValue = get_string('na', 'block_gradetracker');
+                    $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                    // If first column, get the ID of the unit but don't print it out
+                    if ($col == 'A') {
+                        $unitID = (int)$cellValue;
+                        $studentUnit = $qualification->getUnit($unitID);
+                        if (!$studentUnit) {
+                            $this->errors[] = sprintf( get_string('import:datasheet:process:error:unit', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
+                            break;
                         }
-
-                    $output .= "</tr>";
-
-
-                    // Loop through rows to get students
-                    for ($row = 2; $row <= $lastRow; $row++)
-                    {
-
-                        $studentUnit = false;
-
-                        // Loop columns
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
-
-                        $output .= "<tr class='{$rowClass}'>";
-
-                            for ($col = 'A'; $col != $lastCol; $col++){
-
-                                $critClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
-
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
-                                    $unitID = (int)$cellValue;
-                                    $studentUnit = $qualification->getUnit($unitID);
-                                    if (!$studentUnit){
-                                        $this->errors[] = sprintf( get_string('import:datasheet:process:error:unit', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
-                                        break;
-                                    }
-                                    continue; // Don't want to print the id out
-                                }
-
-                                // Criteria we want to check for changes
-                                if ($col != 'A' && $col != 'B'){
-
-
-                                    $value = $cellValue;
-
-                                    $critClass .= 'crit ';
-
-                                    // Get studentCriteria to see if it has been updated since we downloaded the sheet
-                                    $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                                    $studentCriterion = $studentUnit->getCriterionByName($criteriaName);
-
-                                    if ($studentCriterion)
-                                    {
-
-                                        $critDateUpdated = $studentCriterion->getUserLastUpdate();
-                                        $valueObj = $studentCriterion->getUserAward();
-                                        $userComments = $studentCriterion->getUserComments();
-
-                                        if ($valueObj)
-                                        {
-                                            $currentValueID = $valueObj->getID();
-                                            $currentValue = $valueObj->getShortName();
-                                        }
-
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $value){
-                                            $critClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the criteria's last update date is later than when we downloaded the datasheet
-                                        if ($critDateUpdated > $unix)
-                                        {
-                                            $critClass .= 'updatedsince ';
-                                        }
-
-
-                                        $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$cellValue}</small></td>";
-
-                                    }
-                                    else
-                                    {
-
-                                        // Was it an IV column?
-                                        if ($qualification->getStructure() && $qualification->getStructure()->getSetting('iv_column') == 1)
-                                        {
-
-                                            $attribute = false;
-                                            $ivDateString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('date');
-                                            $ivWhoString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('verifier', 'block_gradetracker');
-
-                                            // If it's a Date in the Excel file, it will return a number here
-                                            // Otherwise treat it as text
-                                            // So check if we are in the date column and if value is float
-                                            if ($criteriaName == $ivDateString && is_float($value) && $value > 0)
-                                            {
-                                                $value = \gt_convert_excel_date_unix($value);
-                                                $value = date('d-m-Y', $value);
-                                            }
-
-                                            // Get the name of the attribute
-                                            if ($criteriaName == $ivDateString)
-                                            {
-                                                $attribute = 'IV_date';
-                                            }
-                                            elseif ($criteriaName == $ivWhoString)
-                                            {
-                                                $attribute = 'IV_who';
-                                            }
-
-
-                                            // If valid attribute
-                                            if ($attribute)
-                                            {
-
-                                                $check = $DB->get_record("bcgt_unit_attributes", array("unitid" => $studentUnit->getID(), "userid" => $this->getStudentID(), "attribute" => $attribute));
-
-                                                // If value in DB and sheet don't match
-                                                if ( ($check && $check->value != $value) || (!$check && !is_null($value)) ){
-                                                    $critClass .= 'updatedinsheet ';
-                                                }
-
-                                                // If the attribute's last update date is later than when we downloaded the datasheet
-                                                if ($check && $check->lastupdate > $unix)
-                                                {
-                                                    $critClass .= 'updatedsince ';
-                                                }
-
-                                            }
-
-                                            $output .= "<td class='{$critClass}'>{$value}</td>";
-
-                                        }
-                                        else
-                                        {
-                                            $output .= "<td></td>";
-                                        }
-                                    }
-
-
-                                } else {
-                                    // Otherwise for unit name just print it out
-                                    $output .= "<td><input type='checkbox' name='units[]' value='{$unitID}' class='gt_import_unit_checkbox' checked /></td>";
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
-
-
-                            }
-
-
-                        $output .= "</tr>";
-
+                        continue; // Don't want to print the id out
                     }
 
+                    // Criteria we want to check for changes
+                    if ($col != 'A' && $col != 'B') {
 
-                $output .= "</table>";
+                        $value = $cellValue;
 
+                        $critClass .= 'crit ';
 
+                        // Get studentCriteria to see if it has been updated since we downloaded the sheet
+                        $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                        $studentCriterion = $studentUnit->getCriterionByName($criteriaName);
 
+                        if ($studentCriterion) {
 
-                // Comments table
-                $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
+                            $critDateUpdated = $studentCriterion->getUserLastUpdate();
+                            $valueObj = $studentCriterion->getUserAward();
+                            $userComments = $studentCriterion->getUserComments();
 
-                    $output .= "<tr>";
-
-                        $output .= "<th></th>";
-                        $output .= "<th>".get_string('unit', 'block_gradetracker')."</th>";
-
-                        for ($col = 'C'; $col != $lastCol; $col++){
-
-                            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                            $output .= "<th>{$cellValue}</th>";
-
-                        }
-
-                    $output .= "</tr>";
-
-
-                    // Loop through rows to get students
-                    for ($row = 2; $row <= $lastRow; $row++)
-                    {
-
-                        $studentUnit = false;
-
-                        // Loop columns
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
-
-                        $output .= "<tr class='{$rowClass}'>";
-
-                            for ($col = 'A'; $col != $lastCol; $col++){
-
-                                $critClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
-
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
-                                    $unitID = (int)$cellValue;
-                                    $studentUnit = $qualification->getUnit($unitID);
-                                    if (!$studentUnit){
-                                        $this->errors[] = sprintf( get_string('import:datasheet:process:error:unit', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
-                                        break;
-                                    }
-                                    continue; // Don't want to print the id out
-                                }
-
-                                // Criteria we want to check for changes
-                                if ($col != 'A' && $col != 'B'){
-
-
-                                    $value = $cellValue;
-
-                                    $critClass .= 'crit ';
-
-                                    // Get studentCriteria to see if it has been updated since we downloaded the sheet
-                                    $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                                    $studentCriterion = $studentUnit->getCriterionByName($criteriaName);
-
-                                    if ($studentCriterion)
-                                    {
-
-                                        $critDateUpdated = $studentCriterion->getUserLastUpdate();
-                                        $valueObj = $studentCriterion->getUserAward();
-                                        $userComments = $studentCriterion->getUserComments();
-
-                                        if ($valueObj)
-                                        {
-                                            $currentValueID = $valueObj->getID();
-                                            $currentValue = $valueObj->getShortName();
-                                        }
-
-                                        // Comments
-                                        $comment = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
-
-                                        // If value in DB and sheet don't match
-                                        if ($comment != $userComments){
-                                            $critClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the criteria's last update date is later than when we downloaded the datasheet
-                                        if ($critDateUpdated > $unix)
-                                        {
-                                            $critClass .= 'updatedsince ';
-                                        }
-
-
-                                        $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$comment}</small></td>";
-
-                                    }
-                                    else
-                                    {
-                                        $output .= "<td></td>";
-                                    }
-
-
-                                } else {
-                                    // Otherwise for unit name just print it out
-                                    $output .= "<td></td>";
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
-
-
+                            if ($valueObj) {
+                                $currentValueID = $valueObj->getID();
+                                $currentValue = $valueObj->getShortName();
                             }
 
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $value) {
+                                $critClass .= 'updatedinsheet ';
+                            }
 
-                        $output .= "</tr>";
+                            // If the criteria's last update date is later than when we downloaded the datasheet
+                            if ($critDateUpdated > $unix) {
+                                $critClass .= 'updatedsince ';
+                            }
 
+                            $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$cellValue}</small></td>";
+
+                        } else {
+
+                            // Was it an IV column?
+                            if ($qualification->getStructure() && $qualification->getStructure()->getSetting('iv_column') == 1) {
+
+                                $attribute = false;
+                                $ivDateString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('date');
+                                $ivWhoString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('verifier', 'block_gradetracker');
+
+                                // If it's a Date in the Excel file, it will return a number here
+                                // Otherwise treat it as text
+                                // So check if we are in the date column and if value is float
+                                if ($criteriaName == $ivDateString && is_float($value) && $value > 0) {
+                                    $value = \gt_convert_excel_date_unix($value);
+                                    $value = date('d-m-Y', $value);
+                                }
+
+                                // Get the name of the attribute
+                                if ($criteriaName == $ivDateString) {
+                                    $attribute = 'IV_date';
+                                } else if ($criteriaName == $ivWhoString) {
+                                    $attribute = 'IV_who';
+                                }
+
+                                // If valid attribute
+                                if ($attribute) {
+
+                                    $check = $DB->get_record("bcgt_unit_attributes", array("unitid" => $studentUnit->getID(), "userid" => $this->getStudentID(), "attribute" => $attribute));
+
+                                    // If value in DB and sheet don't match
+                                    if ( ($check && $check->value != $value) || (!$check && !is_null($value)) ) {
+                                        $critClass .= 'updatedinsheet ';
+                                    }
+
+                                    // If the attribute's last update date is later than when we downloaded the datasheet
+                                    if ($check && $check->lastupdate > $unix) {
+                                        $critClass .= 'updatedsince ';
+                                    }
+
+                                }
+
+                                $output .= "<td class='{$critClass}'>{$value}</td>";
+
+                            } else {
+                                $output .= "<td></td>";
+                            }
+                        }
+
+                    } else {
+                        // Otherwise for unit name just print it out
+                        $output .= "<td><input type='checkbox' name='units[]' value='{$unitID}' class='gt_import_unit_checkbox' checked /></td>";
+                        $output .= "<td>{$cellValue}</td>";
                     }
 
+                }
 
-                $output .= "</table>";
+                $output .= "</tr>";
 
-                $output .= "</form>";
+            }
+
+            $output .= "</table>";
+
+            // Comments table
+            $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
+
+            $output .= "<tr>";
+
+            $output .= "<th></th>";
+            $output .= "<th>".get_string('unit', 'block_gradetracker')."</th>";
+
+            for ($col = 'C'; $col != $lastCol; $col++) {
+
+                $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                $output .= "<th>{$cellValue}</th>";
+
+            }
+
+            $output .= "</tr>";
+
+            // Loop through rows to get students
+            for ($row = 2; $row <= $lastRow; $row++) {
+
+                $studentUnit = false;
+
+                // Loop columns
+                $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                $output .= "<tr class='{$rowClass}'>";
+
+                for ($col = 'A'; $col != $lastCol; $col++) {
+
+                    $critClass = '';
+                    $currentValue = get_string('na', 'block_gradetracker');
+                    $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                    // If first column, get the ID of the unit but don't print it out
+                    if ($col == 'A') {
+                        $unitID = (int)$cellValue;
+                        $studentUnit = $qualification->getUnit($unitID);
+                        if (!$studentUnit) {
+                            $this->errors[] = sprintf( get_string('import:datasheet:process:error:unit', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
+                            break;
+                        }
+                        continue; // Don't want to print the id out
+                    }
+
+                    // Criteria we want to check for changes
+                    if ($col != 'A' && $col != 'B') {
+
+                        $value = $cellValue;
+
+                        $critClass .= 'crit ';
+
+                        // Get studentCriteria to see if it has been updated since we downloaded the sheet
+                        $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                        $studentCriterion = $studentUnit->getCriterionByName($criteriaName);
+
+                        if ($studentCriterion) {
+
+                            $critDateUpdated = $studentCriterion->getUserLastUpdate();
+                            $valueObj = $studentCriterion->getUserAward();
+                            $userComments = $studentCriterion->getUserComments();
+
+                            if ($valueObj) {
+                                $currentValueID = $valueObj->getID();
+                                $currentValue = $valueObj->getShortName();
+                            }
+
+                            // Comments
+                            $comment = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+
+                            // If value in DB and sheet don't match
+                            if ($comment != $userComments) {
+                                $critClass .= 'updatedinsheet ';
+                            }
+
+                            // If the criteria's last update date is later than when we downloaded the datasheet
+                            if ($critDateUpdated > $unix) {
+                                $critClass .= 'updatedsince ';
+                            }
+
+                            $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$comment}</small></td>";
+
+                        } else {
+                            $output .= "<td></td>";
+                        }
+
+                    } else {
+                        // Otherwise for unit name just print it out
+                        $output .= "<td></td>";
+                        $output .= "<td>{$cellValue}</td>";
+                    }
+
+                }
+
+                $output .= "</tr>";
+
+            }
+
+            $output .= "</table>";
+
+            $output .= "</form>";
 
             $output .= "</div>";
 
         }
-
-
-
 
         $MSGS['output'] = $output;
 
@@ -2372,16 +2189,12 @@ class DataImport {
      * @param type $col
      * @return boolean
      */
-    public static function findAssessmentParentColumn($assessmentsArray, $col)
-    {
+    public static function findAssessmentParentColumn($assessmentsArray, $col) {
 
         // Look for an assessment with this column as the starting cell
-        if ($assessmentsArray)
-        {
-            foreach($assessmentsArray as $key => $ass)
-            {
-                if ($ass['startingCell'] === $col)
-                {
+        if ($assessmentsArray) {
+            foreach ($assessmentsArray as $key => $ass) {
+                if ($ass['startingCell'] === $col) {
                     return $ass;
                 }
             }
@@ -2391,8 +2204,7 @@ class DataImport {
         $col = \gt_decrement_letter_excel($col);
 
         // If it's not a valid letter any more, just give up
-        if (is_null($col))
-        {
+        if (is_null($col)) {
             return false;
         }
 
@@ -2411,99 +2223,92 @@ class DataImport {
      * @global array $MSGS
      * @return boolean
      */
-    public function checkFileUnitDataSheet()
-    {
+    public function checkFileUnitDataSheet() {
 
         global $CFG, $DB, $MSGS;
 
-        if (!$this->getUnitID() || !$this->getQualID()){
+        if (!$this->getUnitID() || !$this->getQualID()) {
             $this->errors[] = get_string('invalidrecord', 'block_gradetracker');
             return false;
         }
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
 
         // Check mime type of file to make sure it is csv
         $fInfo = \finfo_open(FILEINFO_MIME_TYPE);
-            $mime = \finfo_file($fInfo, $this->file['tmp_name']);
+        $mime = \finfo_file($fInfo, $this->file['tmp_name']);
         \finfo_close($fInfo);
 
         $ext = pathinfo($this->file['name'], PATHINFO_EXTENSION);
 
         // On linux PHP says the mime type of an xlsx is application/zip, which is handy...
-        if ( ($mime != 'application/vnd.ms-excel' && $mime != 'application/zip' && $mime != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || $ext != 'xlsx'){
+        if ( ($mime != 'application/vnd.ms-excel' && $mime != 'application/zip' && $mime != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || $ext != 'xlsx') {
             $this->errors[] = 'Invalid file format. Expected: application/vnd.ms-excel or application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (.xlsx) Found: ' . $mime . ' ('.$ext.')';
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
-
-
 
         // Generate an overview of the spreadsheet so we can see what has changed
         $now = time();
         $output = "";
 
         $qualification = new \GT\Qualification\UserQualification($this->getQualID());
-        if (!$qualification->isValid())
-        {
+        if (!$qualification->isValid()) {
             $this->errors[] = get_string('invalidqual', 'block_gradetracker');
             return false;
         }
 
         $unit = $qualification->getUnit($this->getUnitID());
-        if (!$unit || !$unit->isValid())
-        {
+        if (!$unit || !$unit->isValid()) {
             $this->errors[] = get_string('invalidunit', 'block_gradetracker');
             return false;
         }
 
         // Require PHPExcel library
-        require_once $CFG->dirroot . '/lib/phpexcel/PHPExcel.php';
+        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
 
         // Open with PHPExcel reader
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($this->file['tmp_name']);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($this->file['tmp_name']);
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
             return false;
         }
 
-
         // Check it's a valid student datasheet
         $customProperties = $this->getFileCustomProperties($objPHPExcel);
 
-        if ($customProperties['GT-DATASHEET-TYPE'] !== 'UNIT'){
+        if ($customProperties['GT-DATASHEET-TYPE'] !== 'UNIT') {
             $this->errors[] = get_string('errors:import:datasheettype', 'block_gradetracker');
             return false;
         }
 
         // Save the tmp file to Moodledata so we can still use it when we click confirm
         $saveFile = \gt_save_file($this->file['tmp_name'], 'tmp', 'U_' . $this->getUnitID() . '_' . $this->getQualID() . '_' . $now . '.xlsx');
-        if (!$saveFile){
+        if (!$saveFile) {
             $this->errors[] = get_string('errors:save:file', 'block_gradetracker');
             return false;
         }
 
         $this->tmpFile = $saveFile;
-
 
         // Get stuff from worksheets
         $unix = $objPHPExcel->getProperties()->getCreated();
@@ -2517,7 +2322,6 @@ class DataImport {
 
         $commentWorkSheet = $objPHPExcel->getSheet(1);
 
-
         // See if anything has been updated in the DB since we downloaded the file
         $updates = $DB->get_records_sql("SELECT DISTINCT uc.*
                                         FROM {bcgt_user_criteria} uc
@@ -2525,26 +2329,26 @@ class DataImport {
                                         INNER JOIN {bcgt_user_qual_units} uqu ON uqu.userid = u.id
                                         WHERE uqu.qualid = ? AND uqu.unitid = ? AND lastupdate > ?", array($this->getQualID(), $this->getUnitID(), $unix));
 
-        if ($updates)
-        {
+        if ($updates) {
 
             $output .= "<div class='gt_import_warning'>";
-                $output .= "<b>".get_string('warning').":</b><br><br>";
-                $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
+            $output .= "<b>".get_string('warning').":</b><br><br>";
+            $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
 
-                foreach($updates as $update)
-                {
+            foreach ($updates as $update) {
 
-                    $criterion = $unit->getCriterion($update->critid);
-                    if (!$criterion) continue;
-
-                    $updateBy = new \GT\User($update->lastupdateby);
-                    $student = new \GT\User($update->userid);
-
-                    $value = new \GT\CriteriaAward($update->awardid);
-                    $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$student->getDisplayName()} ({$criterion->getName()})", $value->getName(), $value->getShortName(), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
-
+                $criterion = $unit->getCriterion($update->critid);
+                if (!$criterion) {
+                    continue;
                 }
+
+                $updateBy = new \GT\User($update->lastupdateby);
+                $student = new \GT\User($update->userid);
+
+                $value = new \GT\CriteriaAward($update->awardid);
+                $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$student->getDisplayName()} ({$criterion->getName()})", $value->getName(), $value->getShortName(), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
+
+            }
 
             $output .= "</div>";
             $output .= "<br><br>";
@@ -2554,20 +2358,20 @@ class DataImport {
         // Key
         $output .= "<h3>".get_string('key', 'block_gradetracker')."</h3>";
         $output .= "<table class='gt_import_key'>";
-            $output .= "<tr>";
-                $output .= "<td class='updatedsince crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedsince', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedsince crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedsince', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr>";
-                $output .= "<td class='updatedinsheet crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedinsheet', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedinsheet crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedinsheet', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr>";
-                $output .= "<td class='updatedinsheet updatedsince crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedinboth', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedinsheet updatedsince crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedinboth', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
         $output .= "</table>";
 
@@ -2577,342 +2381,287 @@ class DataImport {
 
         $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
 
-            $output .= "<form action='' method='post' class='gt_c'>";
+        $output .= "<form action='' method='post' class='gt_c'>";
 
-              $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
-              $output .= "<input type='hidden' name='unitID' value='{$this->getUnitID()}' />";
-              $output .= "<input type='hidden' name='now' value='{$now}' />";
-              $output .= "<input type='submit' class='gt_btn gt_green gt_btn_small' name='confirm' value='".get_string('confirm')."' />";
-              $output .= str_repeat("&nbsp;", 8);
-              $output .= "<input type='button' class='gt_btn gt_red gt_btn_small gt_goto' url='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=student&id={$this->getStudentID()}&qualID={$this->getQualID()}' value='".get_string('cancel')."' />";
-              $output .= "<br><br>";
+        $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
+        $output .= "<input type='hidden' name='unitID' value='{$this->getUnitID()}' />";
+        $output .= "<input type='hidden' name='now' value='{$now}' />";
+        $output .= "<input type='submit' class='gt_btn gt_green gt_btn_small' name='confirm' value='".get_string('confirm')."' />";
+        $output .= str_repeat("&nbsp;", 8);
+        $output .= "<input type='button' class='gt_btn gt_red gt_btn_small gt_goto' url='{$CFG->wwwroot}/blocks/gradetracker/grid.php?type=student&id={$this->getStudentID()}&qualID={$this->getQualID()}' value='".get_string('cancel')."' />";
+        $output .= "<br><br>";
 
-                $output .= "<div class='gt_import_grid_div'>";
+        $output .= "<div class='gt_import_grid_div'>";
 
-                // Grades table
-                $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
+        // Grades table
+        $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
 
-                    $output .= "<tr>";
+        $output .= "<tr>";
 
-                        $output .= "<th><input type='checkbox' class='gt_toggle_check_all' useClass='gt_import_stud_checkbox' checked /></th>";
+        $output .= "<th><input type='checkbox' class='gt_toggle_check_all' useClass='gt_import_stud_checkbox' checked /></th>";
 
-                        for ($col = 'B'; $col != $lastCol; $col++){
+        for ($col = 'B'; $col != $lastCol; $col++) {
 
-                            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                            $output .= "<th>{$cellValue}</th>";
+            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+            $output .= "<th>{$cellValue}</th>";
 
+        }
+
+        $output .= "</tr>";
+
+        // Loop through rows to get students
+        for ($row = 2; $row <= $lastRow; $row++) {
+
+            $student = false;
+
+            // Loop columns
+            $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+            $output .= "<tr class='{$rowClass}'>";
+
+            for ($col = 'A'; $col != $lastCol; $col++) {
+
+                $critClass = '';
+                $currentValue = get_string('na', 'block_gradetracker');
+                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                // If first column, get the ID of the unit but don't print it out
+                if ($col == 'A') {
+
+                    $studentID = (int)$cellValue;
+
+                    // If no studentID at all, skip this row
+                    if (!$studentID) {
+                        break;
+                    }
+
+                    // Check to make sure the studentID for this row matches the Grades and Comments sheets
+                    $commentsSheetStudentID = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+                    if ($studentID != $commentsSheetStudentID) {
+                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' :: ' . "[{$row}] ({$studentID}) ({$commentsSheetStudentID})";
+                        break;
+                    }
+
+                    $student = new \GT\User($studentID);
+                    if (!$student->isValid()) {
+                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
+                        break;
+                    }
+
+                    // Make sure student is actually on this qual and unit
+                    if (!$student->isOnQualUnit($qualification->getID(), $unit->getID(), "STUDENT")) {
+                        $this->errors[] = get_string('usernotonunit', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().") - " . $unit->getDisplayName();
+                        break;
+                    }
+
+                    $unit->loadStudent($student);
+                    $output .= "<td><input type='checkbox' name='students[]' value='{$studentID}' class='gt_import_stud_checkbox' checked /></td>";
+                    continue; // Don't want to print the id out
+                } else if ($col == 'B' || $col == 'C' || $col == 'D') {
+                    $output .= "<td>{$cellValue}</td>";
+                } else {
+                    // Criteria we want to check for changes
+                    $value = $cellValue;
+
+                    $critClass .= 'crit ';
+
+                    // Get studentCriteria to see if it has been updated since we downloaded the sheet
+                    $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                    $studentCriterion = $unit->getCriterionByName($criteriaName);
+
+                    if ($studentCriterion) {
+
+                        $critDateUpdated = $studentCriterion->getUserLastUpdate();
+                        $valueObj = $studentCriterion->getUserAward();
+                        if ($valueObj) {
+                            $currentValueID = $valueObj->getID();
+                            $currentValue = $valueObj->getShortName();
                         }
 
-                    $output .= "</tr>";
+                        if ($currentValue != $value) {
+                            $critClass .= 'updatedinsheet ';
+                        }
 
+                        if ($critDateUpdated > $unix) {
+                            $critClass .= 'updatedsince ';
+                        }
 
-                    // Loop through rows to get students
-                    for ($row = 2; $row <= $lastRow; $row++)
-                    {
+                        $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$cellValue}</small></td>";
 
-                        $student = false;
+                    } else {
 
-                        // Loop columns
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+                        // Was it an IV column?
+                        if ($qualification->getStructure() && $qualification->getStructure()->getSetting('iv_column') == 1) {
 
-                        $output .= "<tr class='{$rowClass}'>";
+                            $attribute = false;
+                            $ivDateString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('date');
+                            $ivWhoString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('verifier', 'block_gradetracker');
 
-                            for ($col = 'A'; $col != $lastCol; $col++){
+                            // If it's a Date in the Excel file, it will return a number here
+                            // Otherwise treat it as text
+                            // So check if we are in the date column and if value is float
+                            if ($criteriaName == $ivDateString && is_float($value) && $value > 0) {
+                                $value = \gt_convert_excel_date_unix($value);
+                                $value = date('d-m-Y', $value);
+                            }
 
-                                $critClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+                            // Get the name of the attribute
+                            if ($criteriaName == $ivDateString) {
+                                $attribute = 'IV_date';
+                            } else if ($criteriaName == $ivWhoString) {
+                                $attribute = 'IV_who';
+                            }
 
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
+                            // If valid attribute
+                            if ($attribute) {
 
-                                    $studentID = (int)$cellValue;
+                                $check = $DB->get_record("bcgt_unit_attributes", array("unitid" => $unit->getID(), "userid" => $studentID, "attribute" => $attribute));
 
-                                    // If no studentID at all, skip this row
-                                    if (!$studentID){
-                                        break;
-                                    }
-
-                                    // Check to make sure the studentID for this row matches the Grades and Comments sheets
-                                    $commentsSheetStudentID = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
-                                    if ($studentID != $commentsSheetStudentID)
-                                    {
-                                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' :: ' . "[{$row}] ({$studentID}) ({$commentsSheetStudentID})";
-                                        break;
-                                    }
-
-                                    $student = new \GT\User($studentID);
-                                    if (!$student->isValid()){
-                                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
-                                        break;
-                                    }
-
-                                    // Make sure student is actually on this qual and unit
-                                    if (!$student->isOnQualUnit($qualification->getID(), $unit->getID(), "STUDENT")){
-                                        $this->errors[] = get_string('usernotonunit', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().") - " . $unit->getDisplayName();
-                                        break;
-                                    }
-
-
-                                    $unit->loadStudent($student);
-                                    $output .= "<td><input type='checkbox' name='students[]' value='{$studentID}' class='gt_import_stud_checkbox' checked /></td>";
-                                    continue; // Don't want to print the id out
+                                // If value in DB and sheet don't match
+                                if ( ($check && $check->value != $value) || (!$check && !is_null($value)) ) {
+                                    $critClass .= 'updatedinsheet ';
                                 }
 
-                                elseif ($col == 'B' || $col == 'C' || $col == 'D')
-                                {
-                                    $output .= "<td>{$cellValue}</td>";
+                                // If the attribute's last update date is later than when we downloaded the datasheet
+                                if ($check && $check->lastupdate > $unix) {
+                                    $critClass .= 'updatedsince ';
                                 }
-
-                                // Criteria we want to check for changes
-                                else
-                                {
-
-                                    $value = $cellValue;
-
-                                    $critClass .= 'crit ';
-
-                                    // Get studentCriteria to see if it has been updated since we downloaded the sheet
-                                    $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                                    $studentCriterion = $unit->getCriterionByName($criteriaName);
-
-                                    if ($studentCriterion)
-                                    {
-
-                                        $critDateUpdated = $studentCriterion->getUserLastUpdate();
-                                        $valueObj = $studentCriterion->getUserAward();
-                                        if ($valueObj)
-                                        {
-                                            $currentValueID = $valueObj->getID();
-                                            $currentValue = $valueObj->getShortName();
-                                        }
-
-                                        if ($currentValue != $value){
-                                            $critClass .= 'updatedinsheet ';
-                                        }
-
-                                        if ($critDateUpdated > $unix)
-                                        {
-                                            $critClass .= 'updatedsince ';
-                                        }
-
-                                        $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$cellValue}</small></td>";
-
-                                    }
-                                    else
-                                    {
-
-                                        // Was it an IV column?
-                                        if ($qualification->getStructure() && $qualification->getStructure()->getSetting('iv_column') == 1)
-                                        {
-
-                                            $attribute = false;
-                                            $ivDateString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('date');
-                                            $ivWhoString = get_string('iv', 'block_gradetracker') . ' - ' . get_string('verifier', 'block_gradetracker');
-
-                                            // If it's a Date in the Excel file, it will return a number here
-                                            // Otherwise treat it as text
-                                            // So check if we are in the date column and if value is float
-                                            if ($criteriaName == $ivDateString && is_float($value) && $value > 0)
-                                            {
-                                                $value = \gt_convert_excel_date_unix($value);
-                                                $value = date('d-m-Y', $value);
-                                            }
-
-                                            // Get the name of the attribute
-                                            if ($criteriaName == $ivDateString)
-                                            {
-                                                $attribute = 'IV_date';
-                                            }
-                                            elseif ($criteriaName == $ivWhoString)
-                                            {
-                                                $attribute = 'IV_who';
-                                            }
-
-
-                                            // If valid attribute
-                                            if ($attribute)
-                                            {
-
-                                                $check = $DB->get_record("bcgt_unit_attributes", array("unitid" => $unit->getID(), "userid" => $studentID, "attribute" => $attribute));
-
-                                                // If value in DB and sheet don't match
-                                                if ( ($check && $check->value != $value) || (!$check && !is_null($value)) ){
-                                                    $critClass .= 'updatedinsheet ';
-                                                }
-
-                                                // If the attribute's last update date is later than when we downloaded the datasheet
-                                                if ($check && $check->lastupdate > $unix)
-                                                {
-                                                    $critClass .= 'updatedsince ';
-                                                }
-
-                                            }
-
-                                            $output .= "<td class='{$critClass}'>{$value}</td>";
-
-                                        }
-                                        else
-                                        {
-                                            $output .= "<td></td>";
-                                        }
-                                    }
-
-
-                                }
-
 
                             }
 
+                            $output .= "<td class='{$critClass}'>{$value}</td>";
 
-                        $output .= "</tr>";
-
+                        } else {
+                            $output .= "<td></td>";
+                        }
                     }
 
+                }
 
-                $output .= "</table>";
+            }
 
+            $output .= "</tr>";
 
+        }
 
-                // Comments table
-                $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
+        $output .= "</table>";
 
-                    $output .= "<tr>";
+        // Comments table
+        $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
 
-                        $output .= "<th></th>";
+        $output .= "<tr>";
 
-                        for ($col = 'B'; $col != $lastCol; $col++){
+        $output .= "<th></th>";
 
-                            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                            $output .= "<th>{$cellValue}</th>";
+        for ($col = 'B'; $col != $lastCol; $col++) {
 
+            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+            $output .= "<th>{$cellValue}</th>";
+
+        }
+
+        $output .= "</tr>";
+
+        // Loop through rows to get students
+        for ($row = 2; $row <= $lastRow; $row++) {
+
+            $student = false;
+
+            // Loop columns
+            $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+            $output .= "<tr class='{$rowClass}'>";
+
+            for ($col = 'A'; $col != $lastCol; $col++) {
+
+                $critClass = '';
+                $currentValue = get_string('na', 'block_gradetracker');
+                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                // If first column, get the ID of the unit but don't print it out
+                if ($col == 'A') {
+
+                    $studentID = (int)$cellValue;
+
+                    // If no studentID at all, skip this row
+                    if (!$studentID) {
+                        break;
+                    }
+
+                    // Check to make sure the studentID for this row matches the Grades and Comments sheets
+                    $commentsSheetStudentID = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+                    if ($studentID != $commentsSheetStudentID) {
+                        break;
+                    }
+
+                    $student = new \GT\User($studentID);
+                    if (!$student->isValid()) {
+                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
+                        break;
+                    }
+
+                    $unit->loadStudent($student);
+                    $output .= "<td></td>";
+                    continue; // Don't want to print the id out
+
+                } else if ($col == 'B' || $col == 'C' || $col == 'D') {
+                    $output .= "<td>{$cellValue}</td>";
+                } else {
+                    // Criteria we want to check for changes
+                    $value = $cellValue;
+
+                    $critClass .= 'crit ';
+
+                    // Get studentCriteria to see if it has been updated since we downloaded the sheet
+                    $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                    $studentCriterion = $unit->getCriterionByName($criteriaName);
+
+                    if ($studentCriterion) {
+
+                        $critDateUpdated = $studentCriterion->getUserLastUpdate();
+                        $valueObj = $studentCriterion->getUserAward();
+                        $userComments = $studentCriterion->getUserComments();
+
+                        if ($valueObj) {
+                            $currentValueID = $valueObj->getID();
+                            $currentValue = $valueObj->getShortName();
                         }
 
-                    $output .= "</tr>";
+                        // Comments
+                        $comment = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
 
+                        // If value in DB and sheet don't match
+                        if ($comment != $userComments) {
+                            $critClass .= 'updatedinsheet ';
+                        }
 
-                    // Loop through rows to get students
-                    for ($row = 2; $row <= $lastRow; $row++)
-                    {
+                        // If the criteria's last update date is later than when we downloaded the datasheet
+                        if ($critDateUpdated > $unix) {
+                            $critClass .= 'updatedsince ';
+                        }
 
-                        $student = false;
+                        $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$comment}</small></td>";
 
-                        // Loop columns
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
-
-                        $output .= "<tr class='{$rowClass}'>";
-
-                            for ($col = 'A'; $col != $lastCol; $col++){
-
-                                $critClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
-
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
-
-                                    $studentID = (int)$cellValue;
-
-                                    // If no studentID at all, skip this row
-                                    if (!$studentID){
-                                        break;
-                                    }
-
-                                    // Check to make sure the studentID for this row matches the Grades and Comments sheets
-                                    $commentsSheetStudentID = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
-                                    if ($studentID != $commentsSheetStudentID)
-                                    {
-                                        break;
-                                    }
-
-                                    $student = new \GT\User($studentID);
-                                    if (!$student->isValid()){
-                                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
-                                        break;
-                                    }
-
-                                    $unit->loadStudent($student);
-                                    $output .= "<td></td>";
-                                    continue; // Don't want to print the id out
-
-                                }
-
-                                elseif ($col == 'B' || $col == 'C' || $col == 'D')
-                                {
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
-
-                                // Criteria we want to check for changes
-                                else
-                                {
-
-                                    $value = $cellValue;
-
-                                    $critClass .= 'crit ';
-
-                                    // Get studentCriteria to see if it has been updated since we downloaded the sheet
-                                    $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                                    $studentCriterion = $unit->getCriterionByName($criteriaName);
-
-                                    if ($studentCriterion)
-                                    {
-
-                                        $critDateUpdated = $studentCriterion->getUserLastUpdate();
-                                        $valueObj = $studentCriterion->getUserAward();
-                                        $userComments = $studentCriterion->getUserComments();
-
-                                        if ($valueObj)
-                                        {
-                                            $currentValueID = $valueObj->getID();
-                                            $currentValue = $valueObj->getShortName();
-                                        }
-
-                                        // Comments
-                                        $comment = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
-
-                                        // If value in DB and sheet don't match
-                                        if ($comment != $userComments){
-                                            $critClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the criteria's last update date is later than when we downloaded the datasheet
-                                        if ($critDateUpdated > $unix)
-                                        {
-                                            $critClass .= 'updatedsince ';
-                                        }
-
-
-                                        $output .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$comment}</small></td>";
-
-                                    }
-                                    else
-                                    {
-                                        $output .= "<td></td>";
-                                    }
-
-
-                                }
-
-
-                            }
-
-
-                        $output .= "</tr>";
-
+                    } else {
+                        $output .= "<td></td>";
                     }
 
+                }
 
-                $output .= "</table>";
-                $output .= "<br>";
+            }
 
-            $output .= "</div>";
+            $output .= "</tr>";
+
+        }
+
+        $output .= "</table>";
+        $output .= "<br>";
+
+        $output .= "</div>";
 
         $output .= "</form>";
 
-
         $MSGS['output'] = $output;
-
-
 
     }
 
@@ -2927,73 +2676,68 @@ class DataImport {
      * @global array $MSGS
      * @return boolean
      */
-    public function checkFileClassDataSheet()
-    {
+    public function checkFileClassDataSheet() {
 
         global $CFG, $DB, $MSGS;
 
         $assessmentView = optional_param('ass', false, PARAM_INT);
 
-        if (!$this->getQualID()){
+        if (!$this->getQualID()) {
             $this->errors[] = get_string('invalidrecord', 'block_gradetracker');
             return false;
         }
 
         // Check file exists and no errors from upload
-        if (!$this->file || $this->file['error'] > 0){
+        if (!$this->file || $this->file['error'] > 0) {
             $this->errors[] = get_string('errors:import:file', 'block_gradetracker');
             return false;
         }
 
         // Check tmp uploaded file exists
-        if (!file_exists($this->file['tmp_name'])){
+        if (!file_exists($this->file['tmp_name'])) {
             $this->errors[] = get_string('filenotfound', 'block_gradetracker');
             return false;
         }
 
         // Check mime type of file to make sure it is csv
         $fInfo = \finfo_open(FILEINFO_MIME_TYPE);
-            $mime = \finfo_file($fInfo, $this->file['tmp_name']);
+        $mime = \finfo_file($fInfo, $this->file['tmp_name']);
         \finfo_close($fInfo);
 
         $ext = pathinfo($this->file['name'], PATHINFO_EXTENSION);
 
         // On linux PHP says the mime type of an xlsx is application/zip, which is handy...
-        if ( ($mime != 'application/vnd.ms-excel' && $mime != 'application/zip' && $mime != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || $ext != 'xlsx'){
+        if ( ($mime != 'application/vnd.ms-excel' && $mime != 'application/zip' && $mime != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') || $ext != 'xlsx') {
             $this->errors[] = 'Invalid file format. Expected: application/vnd.ms-excel or application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (.xlsx) Found: ' . $mime . ' ('.$ext.')';
             return false;
         }
 
         // Open file
         $fh = fopen($this->file['tmp_name'], 'r');
-        if (!$fh){
+        if (!$fh) {
             $this->errors[] = get_string('errors:import:open', 'block_gradetracker');
             return false;
         }
-
-
 
         // Generate an overview of the spreadsheet so we can see what has changed
         $output = "";
         $now = time();
 
         $qualification = new \GT\Qualification\UserQualification($this->getQualID());
-        if (!$qualification->isValid())
-        {
+        if (!$qualification->isValid()) {
             $this->errors[] = get_string('invalidqual', 'block_gradetracker');
             return false;
         }
 
-
         // Require PHPExcel library
-        require_once $CFG->dirroot . '/lib/phpexcel/PHPExcel.php';
+        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
 
         // Open with PHPExcel reader
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($this->file['tmp_name']);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($this->file['tmp_name']);
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
             return false;
         }
@@ -3001,33 +2745,31 @@ class DataImport {
         // Check it's a valid student datasheet
         $customProperties = $this->getFileCustomProperties($objPHPExcel);
 
-        if ($customProperties['GT-DATASHEET-TYPE'] !== 'CLASS'){
+        if ($customProperties['GT-DATASHEET-TYPE'] !== 'CLASS') {
             $this->errors[] = get_string('errors:import:datasheettype', 'block_gradetracker');
             return false;
         }
 
         // Is it an assessment grid?
-        if ($assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] != 1 ){
+        if ($assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] != 1 ) {
             $this->errors[] = get_string('errors:import:datasheettypeass', 'block_gradetracker');
             return false;
         }
 
         // If it not an assessment grid, but we uploaded an assessment spreadsheet?
-        if (!$assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] == 1){
+        if (!$assessmentView && $customProperties['GT-DATASHEET-ASSESSMENT-VIEW'] == 1) {
             $this->errors[] = get_string('errors:import:datasheettypeass', 'block_gradetracker');
             return false;
         }
 
-
         // Save the tmp file to Moodledata so we can still use it when we click confirm
         $saveFile = \gt_save_file($this->file['tmp_name'], 'tmp', 'C_' . $this->getQualID() . '_' . $now . '.xlsx');
-        if (!$saveFile){
+        if (!$saveFile) {
             $this->errors[] = get_string('errors:save:file', 'block_gradetracker');
             return false;
         }
 
         $this->tmpFile = $saveFile;
-
 
         // Get stuff from worksheets
         $unix = $objPHPExcel->getProperties()->getCreated();
@@ -3042,24 +2784,23 @@ class DataImport {
 
         $commentWorkSheet = $objPHPExcel->getSheet(1);
 
-
         // Key
         $output .= "<h3>".get_string('key', 'block_gradetracker')."</h3>";
         $output .= "<table class='gt_import_key'>";
-            $output .= "<tr>";
-                $output .= "<td class='updatedsince crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedsince', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedsince crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedsince', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr>";
-                $output .= "<td class='updatedinsheet crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedinsheet', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedinsheet crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedinsheet', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr>";
-                $output .= "<td class='updatedinsheet updatedsince crit'>&nbsp;</td>";
-                $output .= "<td>".get_string('import:datasheet:key:updatedinboth', 'block_gradetracker')."</td>";
-            $output .= "</tr>";
+        $output .= "<tr>";
+        $output .= "<td class='updatedinsheet updatedsince crit'>&nbsp;</td>";
+        $output .= "<td>".get_string('import:datasheet:key:updatedinboth', 'block_gradetracker')."</td>";
+        $output .= "</tr>";
 
         $output .= "</table>";
 
@@ -3077,13 +2818,11 @@ class DataImport {
         $output .= "<br>";
 
         // Assessment Grid
-        if ($assessmentView)
-        {
+        if ($assessmentView) {
 
             // Get all the qualIDs as some assessment grids include other qualifications
             $studentIDArray = array();
-            for ($row = 3; $row <= $lastRow; $row++)
-            {
+            for ($row = 3; $row <= $lastRow; $row++) {
                 $studentIDArray[] = $objWorksheet->getCell("A{$row}")->getCalculatedValue();
             }
 
@@ -3098,35 +2837,33 @@ class DataImport {
                                             AND ua.lastupdate > ?
                                             AND ua.userid IN ({$placeholders})", $params);
 
-            if ($updates)
-            {
+            if ($updates) {
 
                 $output .= "<div class='gt_import_warning'>";
-                    $output .= "<b>".get_string('warning').":</b><br><br>";
-                    $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
+                $output .= "<b>".get_string('warning').":</b><br><br>";
+                $output .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
 
-                    foreach($updates as $update)
-                    {
+                foreach ($updates as $update) {
 
-                        $student = new \GT\User($update->userid);
-                        $assessment = new \GT\Assessment($update->assessmentid);
-                        $updateBy = new \GT\User($update->lastupdateby);
+                    $student = new \GT\User($update->userid);
+                    $assessment = new \GT\Assessment($update->assessmentid);
+                    $updateBy = new \GT\User($update->lastupdateby);
 
-                        // Grade
-                        $grade = new \GT\CriteriaAward($update->grade);
+                    // Grade
+                    $grade = new \GT\CriteriaAward($update->grade);
 
-                        // Ceta
-                        $ceta = new \GT\QualificationAward($update->ceta);
+                    // Ceta
+                    $ceta = new \GT\QualificationAward($update->ceta);
 
-                        $gradeValue = $grade->getShortName();
-                        if ($assessment->getSetting('grading_method') == 'numeric'){
-                            $gradeValue = $update->score;
-                        }
-
-                        // Grade
-                        $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), $student->getDisplayName() . " " . $assessment->getName(), "GRADE ({$gradeValue}), CETA ({$ceta->getName()})", \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
-
+                    $gradeValue = $grade->getShortName();
+                    if ($assessment->getSetting('grading_method') == 'numeric') {
+                        $gradeValue = $update->score;
                     }
+
+                    // Grade
+                    $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), $student->getDisplayName() . " " . $assessment->getName(), "GRADE ({$gradeValue}), CETA ({$ceta->getName()})", \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
+
+                }
 
                 $output .= "</div>";
                 $output .= "<br><br>";
@@ -3138,411 +2875,358 @@ class DataImport {
 
             $output .= "<div class='gt_import_grid_div'>";
 
-                $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
+            $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
 
-                // Grades sheet
-                $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
+            // Grades sheet
+            $output .= "<table id='gt_import_grid_table_grades' class='gt_import_grid_table'>";
 
-                    $output .= "<tr>";
+            $output .= "<tr>";
 
-                        $output .= "<th><input type='checkbox' class='gt_import_unit_checkbox gt_toggle_check_all' useClass='gt_import_unit_checkbox' checked /></th>";
-                        $output .= "<th>".get_string('firstname')."</th>";
-                        $output .= "<th>".get_string('lastname')."</th>";
-                        $output .= "<th>".get_string('username')."</th>";
+            $output .= "<th><input type='checkbox' class='gt_import_unit_checkbox gt_toggle_check_all' useClass='gt_import_unit_checkbox' checked /></th>";
+            $output .= "<th>".get_string('firstname')."</th>";
+            $output .= "<th>".get_string('lastname')."</th>";
+            $output .= "<th>".get_string('username')."</th>";
 
-                        $assessmentsArray = array();
+            $assessmentsArray = array();
 
-                        for ($col = 'E'; $col != $lastCol; $col++){
+            for ($col = 'E'; $col != $lastCol; $col++) {
 
-                            $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
 
-                            // If the cell is not empty
-                            if ($cellValue != ''){
+                // If the cell is not empty
+                if ($cellValue != '') {
 
-                                preg_match("/^\[([0-9]+)\]/", $cellValue, $matches);
-                                $id = (isset($matches[1])) ? $matches[1] : false;
+                    preg_match("/^\[([0-9]+)\]/", $cellValue, $matches);
+                    $id = (isset($matches[1])) ? $matches[1] : false;
 
-                                // If format of column is valid and we got an ID out of it
-                                if ($id){
-                                    $assessmentsArray[$id] = array('id' => $id, 'name' => $cellValue, 'colspan' => 1, 'startingCell' => $col);
-                                }
+                    // If format of column is valid and we got an ID out of it
+                    if ($id) {
+                        $assessmentsArray[$id] = array('id' => $id, 'name' => $cellValue, 'colspan' => 1, 'startingCell' => $col);
+                    }
 
-                            } elseif ($assessmentsArray) {
+                } else if ($assessmentsArray) {
 
-                                // Else if it's blank, it must be merged with a previous cell, so increment colspan
-                                end($assessmentsArray);
-                                $key = key($assessmentsArray);
-                                $assessmentsArray[$key]['colspan']++;
+                    // Else if it's blank, it must be merged with a previous cell, so increment colspan
+                    end($assessmentsArray);
+                    $key = key($assessmentsArray);
+                    $assessmentsArray[$key]['colspan']++;
 
+                }
+
+            }
+
+            // Now loop through the assessmentArray, since we know the colspans to use
+            if ($assessmentsArray) {
+                foreach ($assessmentsArray as $ass) {
+                    $output .= "<th colspan='{$ass['colspan']}'>{$ass['name']}</th>";
+                }
+            }
+
+            $output .= "</tr>";
+
+            // Now loop through the second row, which shows the column, e.g. Grade, CETA or a custom field
+            $output .= "<tr>";
+
+            $output .= "<th></th>";
+            $output .= "<th></th>";
+            $output .= "<th></th>";
+            $output .= "<th></th>";
+
+            for ($col = 'E'; $col != $lastCol; $col++) {
+
+                $cellValue = $objWorksheet->getCell($col . "2")->getCalculatedValue();
+                $output .= "<th>{$cellValue}</th>";
+
+            }
+
+            $output .= "</tr>";
+
+            // Loop through qualifications
+            for ($row = 3; $row <= $lastRow; $row++) {
+
+                $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                $output .= "<tr class='{$rowClass}'>";
+
+                for ($col = 'A'; $col != $lastCol; $col++) {
+
+                    $cellClass = '';
+                    $currentValue = get_string('na', 'block_gradetracker');
+                    $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                    // If first column, get the ID of the unit but don't print it out
+                    if ($col == 'A') {
+
+                        $studentID = (int)$cellValue;
+
+                        // If no studentID at all, skip this row
+                        if (!$studentID) {
+                            break;
+                        }
+
+                        $student = new \GT\User($studentID);
+                        if (!$student->isValid()) {
+                            $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
+                            break;
+                        }
+
+                        if (!$qualification->loadStudent($studentID)) {
+                            $this->errors[] = sprintf( get_string('import:datasheet:process:error:stud', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
+                            break;
+                        }
+
+                        $output .= "<td><input type='checkbox' name='studs[]' value='{$studentID}' class='gt_import_unit_checkbox' checked /></td>";
+
+                    } else if ($col == 'B' || $col == 'C' || $col == 'D') {
+                        $output .= "<td>{$cellValue}</td>";
+                    } else if ($col != 'A' && $col != 'B' && $col != 'C' && $col != 'D') {
+
+                        // Assessment we want to check for changes
+                        // Work out the merged cell that has the assessment ID in, based on
+                        // which cell we are in now and the colspan of the parent
+                        $assessment = self::findAssessmentParentColumn($assessmentsArray, $col);
+                        if (!$assessment) {
+                            $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker' ) . ": {$col}";
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
+
+                        // Get the cell value of the column this is in, so we can see if it's
+                        // a Grade column, a CETA column or a Custom Field
+                        $column = $objWorksheet->getCell($col . 2)->getCalculatedValue();
+                        $column = strtolower($column);
+
+                        // Student Assessment
+                        $studentAssessment = $qualification->getUserAssessment($assessment['id']);
+
+                        // If can't load it on this qual, must not be attached to this qual
+                        if (!$studentAssessment) {
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
+
+                        // Grade cell
+                        if ($column == 'grade') {
+
+                            $gradingMethod = $studentAssessment->getSetting('grading_method');
+                            if ($gradingMethod == 'numeric') {
+
+                                // Check the current score of this assessment
+                                $currentValue = $studentAssessment->getUserScore();
+
+                            } else {
+
+                                // Check the current grade of this assessment
+                                $currentGrade = $studentAssessment->getUserGrade();
+                                $currentValue = ($currentGrade) ? $currentGrade->getShortName() : '';
+
+                            }
+
+                            $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
+
+                            // The default name of the CriteriaAward if none is set is N/A,
+                            // so if the cell is blank, a comparison of blank and "N/A" won't match
+                            // and it will think something has changed even though it hasn't
+                            // So change the cell value to N/A in order for the comparison to work
+                            if ($cellValue == '') {
+                                $cellValue = get_string('na', 'block_gradetracker');
+                            }
+
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $cellValue) {
+                                $cellClass .= 'updatedinsheet ';
+                            }
+
+                            // If the assessment's last update date is later than when we downloaded the datasheet
+                            if ($dateAssessmentUpdated > $unix) {
+                                $cellClass .= 'updatedsince ';
+                            }
+
+                        } else if ($column == 'ceta') {
+
+                            // Check the current CETA of this assessment
+                            $currentCeta = $studentAssessment->getUserCeta();
+                            $currentValue = ($currentCeta) ? $currentCeta->getName() : '';
+                            $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
+
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $cellValue) {
+                                $cellClass .= 'updatedinsheet ';
+                            }
+
+                            // If the assessment's last update date is later than when we downloaded the datasheet
+                            if ($dateAssessmentUpdated > $unix) {
+                                $cellClass .= 'updatedsince ';
+                            }
+
+                            // For display purposes, change blank cell into N/A as it looks better
+                            if ($cellValue == '') {
+                                $cellValue = get_string('na', 'block_gradetracker');
+                            }
+
+                        } else if (preg_match("/^\[([0-9]+)\]/", $column, $matches)) {
+                            // Custom Form Field
+                            $fieldID = (isset($matches[1])) ? $matches[1] : false;
+                            $field = new \GT\FormElement($fieldID);
+
+                            // Check the current value of this custom field
+                            $currentCustomField = $studentAssessment->getCustomFieldValue($field, 'v', false);
+                            $currentValue = ($currentCustomField) ? $currentCustomField : '';
+                            $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
+
+                            // If value in DB and sheet don't match
+                            if ($currentValue != $cellValue) {
+                                $cellClass .= 'updatedinsheet ';
+                            }
+
+                            // If the assessment's last update date is later than when we downloaded the datasheet
+                            if ($dateAssessmentUpdated > $unix) {
+                                $cellClass .= 'updatedsince ';
+                            }
+
+                            // For display purposes, change blank cell into N/A as it looks better
+                            if ($cellValue == '') {
+                                $cellValue = get_string('na', 'block_gradetracker');
                             }
 
                         }
 
-
-                        // Now loop through the assessmentArray, since we know the colspans to use
-                        if ($assessmentsArray)
-                        {
-                            foreach($assessmentsArray as $ass)
-                            {
-                                $output .= "<th colspan='{$ass['colspan']}'>{$ass['name']}</th>";
-                            }
-                        }
-
-                    $output .= "</tr>";
-
-                    // Now loop through the second row, which shows the column, e.g. Grade, CETA or a custom field
-                    $output .= "<tr>";
-
-                        $output .= "<th></th>";
-                        $output .= "<th></th>";
-                        $output .= "<th></th>";
-                        $output .= "<th></th>";
-
-                        for ($col = 'E'; $col != $lastCol; $col++){
-
-                            $cellValue = $objWorksheet->getCell($col . "2")->getCalculatedValue();
-                            $output .= "<th>{$cellValue}</th>";
-
-                        }
-
-                    $output .= "</tr>";
-
-
-                    // Loop through qualifications
-                    for ($row = 3; $row <= $lastRow; $row++)
-                    {
-
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
-
-                        $output .= "<tr class='{$rowClass}'>";
-
-                            for ($col = 'A'; $col != $lastCol; $col++){
-
-                                $cellClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
-
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
-
-                                    $studentID = (int)$cellValue;
-
-                                    // If no studentID at all, skip this row
-                                    if (!$studentID){
-                                        break;
-                                    }
-
-                                    $student = new \GT\User($studentID);
-                                    if (!$student->isValid()){
-                                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
-                                        break;
-                                    }
-
-                                    if (!$qualification->loadStudent($studentID)){
-                                        $this->errors[] = sprintf( get_string('import:datasheet:process:error:stud', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
-                                        break;
-                                    }
-
-                                    $output .= "<td><input type='checkbox' name='studs[]' value='{$studentID}' class='gt_import_unit_checkbox' checked /></td>";
-
-                                }
-
-                                elseif ($col == 'B' || $col == 'C' || $col == 'D')
-                                {
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
-
-                                // Assessment we want to check for changes
-                                elseif ($col != 'A' && $col != 'B' && $col != 'C' && $col != 'D'){
-
-                                    // Work out the merged cell that has the assessment ID in, based on
-                                    // which cell we are in now and the colspan of the parent
-                                    $assessment = self::findAssessmentParentColumn($assessmentsArray, $col);
-                                    if (!$assessment){
-                                        $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker' ) . ": {$col}";
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-
-                                    // Get the cell value of the column this is in, so we can see if it's
-                                    // a Grade column, a CETA column or a Custom Field
-                                    $column = $objWorksheet->getCell($col . 2)->getCalculatedValue();
-                                    $column = strtolower($column);
-
-                                    // Student Assessment
-                                    $studentAssessment = $qualification->getUserAssessment($assessment['id']);
-
-                                    // If can't load it on this qual, must not be attached to this qual
-                                    if (!$studentAssessment){
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-
-                                    // Grade cell
-                                    if ($column == 'grade')
-                                    {
-
-                                        $gradingMethod = $studentAssessment->getSetting('grading_method');
-                                        if ($gradingMethod == 'numeric')
-                                        {
-
-                                            // Check the current score of this assessment
-                                            $currentValue = $studentAssessment->getUserScore();
-
-                                        }
-                                        else
-                                        {
-
-                                            // Check the current grade of this assessment
-                                            $currentGrade = $studentAssessment->getUserGrade();
-                                            $currentValue = ($currentGrade) ? $currentGrade->getShortName() : '';
-
-                                        }
-
-                                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                        // The default name of the CriteriaAward if none is set is N/A,
-                                        // so if the cell is blank, a comparison of blank and "N/A" won't match
-                                        // and it will think something has changed even though it hasn't
-                                        // So change the cell value to N/A in order for the comparison to work
-                                        if ($cellValue == ''){
-                                            $cellValue = get_string('na', 'block_gradetracker');
-                                        }
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $cellValue){
-                                            $cellClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the assessment's last update date is later than when we downloaded the datasheet
-                                        if ($dateAssessmentUpdated > $unix){
-                                            $cellClass .= 'updatedsince ';
-                                        }
-
-                                    }
-
-                                    // CETA cell
-                                    elseif ($column == 'ceta')
-                                    {
-
-                                        // Check the current CETA of this assessment
-                                        $currentCeta = $studentAssessment->getUserCeta();
-                                        $currentValue = ($currentCeta) ? $currentCeta->getName() : '';
-                                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $cellValue){
-                                            $cellClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the assessment's last update date is later than when we downloaded the datasheet
-                                        if ($dateAssessmentUpdated > $unix){
-                                            $cellClass .= 'updatedsince ';
-                                        }
-
-                                        // For display purposes, change blank cell into N/A as it looks better
-                                        if ($cellValue == ''){
-                                            $cellValue = get_string('na', 'block_gradetracker');
-                                        }
-
-                                    }
-
-                                    // Custom Form Field
-                                    elseif (preg_match("/^\[([0-9]+)\]/", $column, $matches))
-                                    {
-
-                                        $fieldID = (isset($matches[1])) ? $matches[1] : false;
-                                        $field = new \GT\FormElement($fieldID);
-
-                                        // Check the current value of this custom field
-                                        $currentCustomField = $studentAssessment->getCustomFieldValue($field, 'v', false);
-                                        $currentValue = ($currentCustomField) ? $currentCustomField : '';
-                                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                        // If value in DB and sheet don't match
-                                        if ($currentValue != $cellValue){
-                                            $cellClass .= 'updatedinsheet ';
-                                        }
-
-                                        // If the assessment's last update date is later than when we downloaded the datasheet
-                                        if ($dateAssessmentUpdated > $unix){
-                                            $cellClass .= 'updatedsince ';
-                                        }
-
-                                        // For display purposes, change blank cell into N/A as it looks better
-                                        if ($cellValue == ''){
-                                            $cellValue = get_string('na', 'block_gradetracker');
-                                        }
-
-                                    }
-
-                                    // Display the cell
-                                    $output .= "<td class='{$cellClass}'>";
-                                        $output .= $cellValue;
-                                    $output .= "</td>";
-
-
-                                }
-
-                            }
-
-                        $output .= "</tr>";
+                        // Display the cell
+                        $output .= "<td class='{$cellClass}'>";
+                        $output .= $cellValue;
+                        $output .= "</td>";
 
                     }
 
+                }
 
-                // End of grades sheet
-                $output .= "</table>";
+                $output .= "</tr>";
 
+            }
 
+            // End of grades sheet
+            $output .= "</table>";
 
+            // Comments sheet
+            $lastCol = $commentWorkSheet->getHighestColumn();
+            $lastCol++;
 
+            $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
 
-                // Comments sheet
-                $lastCol = $commentWorkSheet->getHighestColumn();
-                $lastCol++;
+            $output .= "<tr>";
 
-                $output .= "<table id='gt_import_grid_table_comments' class='gt_import_grid_table' style='display:none;'>";
+            $output .= "<th></th>";
+            $output .= "<th>".get_string('firstname')."</th>";
+            $output .= "<th>".get_string('lastname')."</th>";
+            $output .= "<th>".get_string('username')."</th>";
 
-                    $output .= "<tr>";
+            // Now loop through the assessmentArray, since we know the colspans to use
+            if ($assessmentsArray) {
+                foreach ($assessmentsArray as $ass) {
+                    $output .= "<th>{$ass['name']}</th>";
+                }
+            }
 
-                        $output .= "<th></th>";
-                        $output .= "<th>".get_string('firstname')."</th>";
-                        $output .= "<th>".get_string('lastname')."</th>";
-                        $output .= "<th>".get_string('username')."</th>";
+            $output .= "</tr>";
 
-                        // Now loop through the assessmentArray, since we know the colspans to use
-                        if ($assessmentsArray)
-                        {
-                            foreach($assessmentsArray as $ass)
-                            {
-                                $output .= "<th>{$ass['name']}</th>";
-                            }
+            // Loop through qualifications
+            for ($row = 3; $row <= $lastRow; $row++) {
+
+                $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                $output .= "<tr class='{$rowClass}'>";
+
+                for ($col = 'A'; $col != $lastCol; $col++) {
+
+                    $cellClass = '';
+                    $currentValue = get_string('na', 'block_gradetracker');
+                    $cellValue = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+
+                    // If first column, get the ID of the unit but don't print it out
+                    if ($col == 'A') {
+
+                        $studentID = (int)$cellValue;
+
+                        // If no studentID at all, skip this row
+                        if (!$studentID) {
+                            break;
                         }
 
-                    $output .= "</tr>";
+                        $student = new \GT\User($studentID);
+                        if (!$student->isValid()) {
+                            $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
+                            break;
+                        }
 
+                        if (!$qualification->loadStudent($studentID)) {
+                            $this->errors[] = sprintf( get_string('import:datasheet:process:error:stud', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
+                            break;
+                        }
 
-                    // Loop through qualifications
-                    for ($row = 3; $row <= $lastRow; $row++)
-                    {
+                        $output .= "<td></td>";
 
-                        $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+                    } else if ($col == 'B' || $col == 'C' || $col == 'D') {
+                        $output .= "<td>{$cellValue}</td>";
+                    } else if ($col != 'A' && $col != 'B' && $col != 'C' && $col != 'D') {
+                        // Assessment we want to check for changes
+                        $parentColumn = $commentWorkSheet->getCell($col . 1)->getCalculatedValue();
 
-                        $output .= "<tr class='{$rowClass}'>";
+                        // Get the assessment ID from the name
+                        preg_match("/^\[([0-9]+)\]/", $parentColumn, $matches);
+                        if (!isset($matches[1])) {
+                            $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker');
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
 
-                            for ($col = 'A'; $col != $lastCol; $col++){
+                        $assessmentID = $matches[1];
 
-                                $cellClass = '';
-                                $currentValue = get_string('na', 'block_gradetracker');
-                                $cellValue = $commentWorkSheet->getCell($col . $row)->getCalculatedValue();
+                        // Student Assessment
+                        $studentAssessment = $qualification->getUserAssessment($assessmentID);
 
-                                // If first column, get the ID of the unit but don't print it out
-                                if ($col == 'A'){
+                        // If can't load it on this qual, must not be attached to this qual
+                        if (!$studentAssessment) {
+                            $output .= "<td>-</td>";
+                            continue;
+                        }
 
-                                    $studentID = (int)$cellValue;
+                        // Get current comments
+                        $userComments = $studentAssessment->getUserComments();
+                        $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
 
-                                    // If no studentID at all, skip this row
-                                    if (!$studentID){
-                                        break;
-                                    }
+                        if (is_null($cellValue)) {
+                            $cellValue = '';
+                        }
 
-                                    $student = new \GT\User($studentID);
-                                    if (!$student->isValid()){
-                                        $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
-                                        break;
-                                    }
+                        // If value in DB and sheet don't match
+                        if ($userComments != $cellValue) {
+                            $cellClass .= 'updatedinsheet ';
+                        }
 
-                                    if (!$qualification->loadStudent($studentID)){
-                                        $this->errors[] = sprintf( get_string('import:datasheet:process:error:stud', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
-                                        break;
-                                    }
+                        // If the assessment's last update date is later than when we downloaded the datasheet
+                        if ($dateAssessmentUpdated > $unix) {
+                            $cellClass .= 'updatedsince ';
+                        }
 
-                                    $output .= "<td></td>";
-
-                                }
-
-                                elseif ($col == 'B' || $col == 'C' || $col == 'D')
-                                {
-                                    $output .= "<td>{$cellValue}</td>";
-                                }
-
-                                // Assessment we want to check for changes
-                                elseif ($col != 'A' && $col != 'B' && $col != 'C' && $col != 'D'){
-
-                                    $parentColumn = $commentWorkSheet->getCell($col . 1)->getCalculatedValue();
-
-                                    // Get the assessment ID from the name
-                                    preg_match("/^\[([0-9]+)\]/", $parentColumn, $matches);
-                                    if (!isset($matches[1])){
-                                        $this->errors[] = get_string('import:datasheet:process:error:ass', 'block_gradetracker');
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-                                    $assessmentID = $matches[1];
-
-
-                                    // Student Assessment
-                                    $studentAssessment = $qualification->getUserAssessment($assessmentID);
-
-                                    // If can't load it on this qual, must not be attached to this qual
-                                    if (!$studentAssessment){
-                                        $output .= "<td>-</td>";
-                                        continue;
-                                    }
-
-
-                                    // Get current comments
-                                    $userComments = $studentAssessment->getUserComments();
-                                    $dateAssessmentUpdated = $studentAssessment->getUserLastUpdate();
-
-                                    if (is_null($cellValue)){
-                                        $cellValue = '';
-                                    }
-
-
-                                    // If value in DB and sheet don't match
-                                    if ($userComments != $cellValue){
-                                        $cellClass .= 'updatedinsheet ';
-                                    }
-
-                                    // If the assessment's last update date is later than when we downloaded the datasheet
-                                    if ($dateAssessmentUpdated > $unix){
-                                        $cellClass .= 'updatedsince ';
-                                    }
-
-
-                                    // Display the cell
-                                    $output .= "<td class='{$cellClass}'>";
-                                        $output .= $cellValue;
-                                    $output .= "</td>";
-
-
-                                }
-
-                            }
-
-                        $output .= "</tr>";
+                        // Display the cell
+                        $output .= "<td class='{$cellClass}'>";
+                        $output .= $cellValue;
+                        $output .= "</td>";
 
                     }
 
+                }
 
-                // End of comments sheet
-                $output .= "</table>";
+                $output .= "</tr>";
 
+            }
 
-
+            // End of comments sheet
+            $output .= "</table>";
 
             $output .= "</div>";
 
-
-        }
-        else
-        {
-
+        } else {
 
             // Get stuff from worksheets
             $unix = $objPHPExcel->getProperties()->getCreated();
@@ -3551,26 +3235,24 @@ class DataImport {
             $uOutput = "";
 
             // Loop through the worksheets (each unit has its own worksheet)
-            for($sheetNum = 0; $sheetNum < $cntSheets; $sheetNum++)
-            {
+            for ($sheetNum = 0; $sheetNum < $cntSheets; $sheetNum++) {
 
                 $objPHPExcel->setActiveSheetIndex($sheetNum);
                 $objWorksheet = $objPHPExcel->getActiveSheet();
 
                 $sheetName = $objWorksheet->getTitle();
                 preg_match("/^\((\d+)\)/", $sheetName, $matches);
-                if (!isset($matches[1])){
+                if (!isset($matches[1])) {
                     $this->errors[] = get_string('invalidunit', 'block_gradetracker') . ' - ' . $sheetName;
                     continue;
                 }
 
                 $unitID = $matches[1];
                 $unit = $qualification->getUnit($unitID);
-                if (!$unit){
+                if (!$unit) {
                     $this->errors[] = get_string('invalidunit', 'block_gradetracker') . ' - ' . $sheetName;
                     continue;
                 }
-
 
                 $lastCol = $objWorksheet->getHighestColumn();
                 $lastCol++;
@@ -3594,157 +3276,137 @@ class DataImport {
                                                 INNER JOIN {bcgt_user_qual_units} uqu ON ( uqu.unitid = u.id AND uqu.userid = usr.id AND uqu.qualid = qu.qualid )
                                                 WHERE uqu.qualid = ? AND uqu.unitid = ? AND uc.lastupdate > ?
                                                 ORDER BY usr.lastname, usr.firstname, uc.lastupdate",
-                                                array($this->getQualID(), $unit->getID(), $unix));
+                    array($this->getQualID(), $unit->getID(), $unix));
 
-
-                if ($updates)
-                {
+                if ($updates) {
 
                     $uOutput .= "<div class='gt_import_warning'>";
-                        $uOutput .= "<b>".get_string('warning').":</b><br><br>";
-                        $uOutput .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
+                    $uOutput .= "<b>".get_string('warning').":</b><br><br>";
+                    $uOutput .= "<p>".get_string('importwarning', 'block_gradetracker')."</p>";
 
-                        foreach($updates as $update)
-                        {
+                    foreach ($updates as $update) {
 
-                            $criterion = $unit->getCriterion($update->critid);
-                            if (!$criterion) continue;
-
-                            $stud = new \GT\User($update->userid);
-                            $updateBy = new \GT\User($update->lastupdateby);
-
-                            $value = new \GT\CriteriaAward($update->awardid);
-                            $uOutput .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$stud->getDisplayName()} ({$criterion->getName()})", $value->getName(), \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
-
+                        $criterion = $unit->getCriterion($update->critid);
+                        if (!$criterion) {
+                            continue;
                         }
+
+                        $stud = new \GT\User($update->userid);
+                        $updateBy = new \GT\User($update->lastupdateby);
+
+                        $value = new \GT\CriteriaAward($update->awardid);
+                        $uOutput .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$stud->getDisplayName()} ({$criterion->getName()})", $value->getName(), \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
+
+                    }
 
                     $uOutput .= "</div>";
                     $uOutput .= "<br><br>";
 
                 }
 
-
                 $uOutput .= "<div class='gt_import_grid_div'>";
 
-                    $uOutput .= "<table class='gt_import_grid_table'>";
+                $uOutput .= "<table class='gt_import_grid_table'>";
 
-                        $uOutput .= "<tr>";
+                $uOutput .= "<tr>";
 
-                            $uOutput .= "<th><input type='checkbox' class='gt_import_unit_checkbox gt_toggle_check_all' useClass='gt_import_stud_checkbox_{$unitID}' checked /></th>";
+                $uOutput .= "<th><input type='checkbox' class='gt_import_unit_checkbox gt_toggle_check_all' useClass='gt_import_stud_checkbox_{$unitID}' checked /></th>";
 
-                            for ($col = 'B'; $col != $lastCol; $col++){
+                for ($col = 'B'; $col != $lastCol; $col++) {
 
-                                $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                                $uOutput .= "<th>{$cellValue}</th>";
+                    $cellValue = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                    $uOutput .= "<th>{$cellValue}</th>";
 
+                }
+
+                $uOutput .= "</tr>";
+
+                // Loop through rows to get students
+                for ($row = 2; $row <= $lastRow; $row++) {
+
+                    $student = false;
+
+                    // Loop columns
+                    $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+
+                    $uOutput .= "<tr class='{$rowClass}'>";
+
+                    for ($col = 'A'; $col != $lastCol; $col++) {
+
+                        $critClass = '';
+                        $currentValue = get_string('na', 'block_gradetracker');
+                        $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+
+                        // If first column, get the ID of the unit but don't print it out
+                        if ($col == 'A') {
+
+                            $studentID = (int)$cellValue;
+
+                            // If no studentID at all, skip this row
+                            if (!$studentID) {
+                                break;
                             }
 
-                        $uOutput .= "</tr>";
+                            $student = new \GT\User($studentID);
+                            if (!$student->isValid()) {
+                                $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
+                                break;
+                            }
 
+                            // Make sure student is actually on this qual and unit
+                            if (!$student->isOnQualUnit($qualification->getID(), $unit->getID(), "STUDENT")) {
+                                $this->errors[] = get_string('usernotonunit', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().") - " . $unit->getDisplayName();
+                                break;
+                            }
 
-                        // Loop through rows to get students
-                        for ($row = 2; $row <= $lastRow; $row++)
-                        {
+                            $unit->loadStudent($student);
+                            $uOutput .= "<td><input type='checkbox' name='unit_students[{$unitID}][]' value='{$studentID}' class='gt_import_stud_checkbox_{$unitID}' checked /></td>";
+                            continue; // Don't want to print the id out
 
-                            $student = false;
+                        } else if ($col == 'B' || $col == 'C' || $col == 'D') {
+                            $uOutput .= "<td>{$cellValue}</td>";
+                        } else {
+                            // Criteria we want to check for changes
 
-                            // Loop columns
-                            $rowClass = ( ($row % 2) == 0 ) ? 'even' : 'odd';
+                            $value = $cellValue;
 
-                            $uOutput .= "<tr class='{$rowClass}'>";
+                            $critClass .= 'crit ';
 
-                                for ($col = 'A'; $col != $lastCol; $col++){
+                            // Get studentCriteria to see if it has been updated since we downloaded the sheet
+                            $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
+                            $studentCriterion = $unit->getCriterionByName($criteriaName);
 
-                                    $critClass = '';
-                                    $currentValue = get_string('na', 'block_gradetracker');
-                                    $cellValue = $objWorksheet->getCell($col . $row)->getCalculatedValue();
+                            if ($studentCriterion) {
 
-                                    // If first column, get the ID of the unit but don't print it out
-                                    if ($col == 'A'){
-
-                                        $studentID = (int)$cellValue;
-
-                                        // If no studentID at all, skip this row
-                                        if (!$studentID){
-                                            break;
-                                        }
-
-                                        $student = new \GT\User($studentID);
-                                        if (!$student->isValid()){
-                                            $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
-                                            break;
-                                        }
-
-                                        // Make sure student is actually on this qual and unit
-                                        if (!$student->isOnQualUnit($qualification->getID(), $unit->getID(), "STUDENT")){
-                                            $this->errors[] = get_string('usernotonunit', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().") - " . $unit->getDisplayName();
-                                            break;
-                                        }
-
-
-                                        $unit->loadStudent($student);
-                                        $uOutput .= "<td><input type='checkbox' name='unit_students[{$unitID}][]' value='{$studentID}' class='gt_import_stud_checkbox_{$unitID}' checked /></td>";
-                                        continue; // Don't want to print the id out
-
-                                    }
-
-                                    elseif ($col == 'B' || $col == 'C' || $col == 'D')
-                                    {
-                                        $uOutput .= "<td>{$cellValue}</td>";
-                                    }
-
-                                    // Criteria we want to check for changes
-                                    else
-                                    {
-
-                                        $value = $cellValue;
-
-                                        $critClass .= 'crit ';
-
-                                        // Get studentCriteria to see if it has been updated since we downloaded the sheet
-                                        $criteriaName = $objWorksheet->getCell($col . "1")->getCalculatedValue();
-                                        $studentCriterion = $unit->getCriterionByName($criteriaName);
-
-                                        if ($studentCriterion)
-                                        {
-
-                                            $critDateUpdated = $studentCriterion->getUserLastUpdate();
-                                            $valueObj = $studentCriterion->getUserAward();
-                                            if ($valueObj)
-                                            {
-                                                $currentValue = $valueObj->getShortName();
-                                            }
-
-                                            if ($currentValue != $value){
-                                                $critClass .= 'updatedinsheet ';
-                                            }
-
-                                            if ($critDateUpdated > $unix)
-                                            {
-                                                $critClass .= 'updatedsince ';
-                                            }
-
-                                            $uOutput .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$cellValue}</small></td>";
-
-                                        }
-                                        else
-                                        {
-                                            $uOutput .= "<td></td>";
-                                        }
-
-
-                                    }
-
-
+                                $critDateUpdated = $studentCriterion->getUserLastUpdate();
+                                $valueObj = $studentCriterion->getUserAward();
+                                if ($valueObj) {
+                                    $currentValue = $valueObj->getShortName();
                                 }
 
+                                if ($currentValue != $value) {
+                                    $critClass .= 'updatedinsheet ';
+                                }
 
-                            $uOutput .= "</tr>";
+                                if ($critDateUpdated > $unix) {
+                                    $critClass .= 'updatedsince ';
+                                }
+
+                                $uOutput .= "<td class='{$critClass}' currentValue='{$currentValue}'><small>{$cellValue}</small></td>";
+
+                            } else {
+                                $uOutput .= "<td></td>";
+                            }
 
                         }
 
+                    }
 
-                    $uOutput .= "</table>";
+                    $uOutput .= "</tr>";
+
+                }
+
+                $uOutput .= "</table>";
 
                 $uOutput .= "</div>";
 
@@ -3752,16 +3414,11 @@ class DataImport {
 
             }
 
-
             $output .= $uOutput;
 
         }
 
-
-
-
         $output .= "</form>";
-
 
         $MSGS['output'] = $output;
 
@@ -3772,7 +3429,7 @@ class DataImport {
      * @param type $objPHPExcel
      * @return type
      */
-    protected function getFileCustomProperties($objPHPExcel){
+    protected function getFileCustomProperties($objPHPExcel) {
 
         // Check it's a valid student datasheet
         return array(
@@ -3788,7 +3445,7 @@ class DataImport {
      * e.g. some students have records for "GCSE English Literature" and "GCSE English in Literature"
      * @param type $name
      */
-    protected function stripQoENames(&$name){
+    protected function stripQoENames(&$name) {
 
         $name = preg_replace("/^(.*?)GCSE in /i", "", $name);
         $name = preg_replace("/^(.*?)GCSE /i", "", $name);

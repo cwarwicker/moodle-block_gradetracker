@@ -1,6 +1,29 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Gradetracker Statistics
+ *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
+ */
 namespace GT;
+
+defined('MOODLE_INTERNAL') or die();
 
 interface StatisticsOutput
 {
@@ -9,14 +32,14 @@ interface StatisticsOutput
 
 class StatisticsArrayOutput implements StatisticsOutput
 {
-    public function output(array $data){
+    public function output(array $data) {
         return $data;
     }
 }
 
 class StatisticsSerializedArrayOutput implements StatisticsOutput
 {
-    public function output(array $data){
+    public function output(array $data) {
         return serialize($data);
     }
 }
@@ -24,7 +47,7 @@ class StatisticsSerializedArrayOutput implements StatisticsOutput
 class StatisticsJsonOutput implements StatisticsOutput
 {
 
-    public function output(array $data){
+    public function output(array $data) {
         return json_encode($data);
     }
 }
@@ -32,7 +55,7 @@ class StatisticsJsonOutput implements StatisticsOutput
 class StatisticsDataFileOutput implements StatisticsOutput
 {
 
-    public function output(array $data){
+    public function output(array $data) {
 
         $data = serialize($data);
         $code = hash('sha256', $data);
@@ -40,7 +63,7 @@ class StatisticsDataFileOutput implements StatisticsOutput
         // Save to file
         $file = $code . '.data';
         $path = \gt_save_file_contents($data, $file);
-        if ($path){
+        if ($path) {
             return $code;
         }
 
@@ -58,18 +81,18 @@ class StatisticsBarChartOutput implements StatisticsOutput
 
     private $title, $group, $class, $args = array();
 
-    public function __construct($title, $group, $class, $args = null){
+    public function __construct($title, $group, $class, $args = null) {
         $this->title = get_string($title, 'block_gradetracker');
         $this->group = $group;
         $this->class = $class;
-        if ($args){
-            foreach($args as $arg => $val){
+        if ($args) {
+            foreach ($args as $arg => $val) {
                 $this->args[$arg] = $val;
             }
         }
     }
 
-    public function output(array $data){
+    public function output(array $data) {
 
         global $CFG;
 
@@ -77,53 +100,47 @@ class StatisticsBarChartOutput implements StatisticsOutput
         $this->splitDataIntoGroups($data);
 
         $link = '';
-        if (isset($this->args['output'])){
+        if (isset($this->args['output'])) {
             $link = '&output=' . $this->args['output'];
-        } elseif (isset($this->args['context']) && isset($this->args['field'])){
+        } else if (isset($this->args['context']) && isset($this->args['field'])) {
             $link = '&context=' . $this->args['context'] . '&field=' . $this->args['field'];
         }
 
         $output = "";
         $output .= "<dl class='gt_bar_chart'>";
-            $output .= "<dt class='gt_c'>{$this->title}</dt>";
-            foreach($data as $group => $records)
-            {
+        $output .= "<dt class='gt_c'>{$this->title}</dt>";
+        foreach ($data as $group => $records) {
 
-                $st = new \GT\Statistics();
-                $st->setRecords($records);
-                $str = $st->output( new \GT\StatisticsDataFileOutput() );
+            $st = new \GT\Statistics();
+            $st->setRecords($records);
+            $str = $st->output( new \GT\StatisticsDataFileOutput() );
 
-                $cnt = count($records);
-                $percent = round(($cnt / $total) * 100, 1);
-                $output .= "<dd>";
-                    $output .= "<div class='gt_bar_chart_title'><a href='#' class='gt_popup_url' title='{$this->title}' url='{$CFG->wwwroot}/blocks/gradetracker/data.php?data={$str}{$link}'>".\gt_html($group)."</a></div>";
-                    $output .= "<div class='gt_bar_chart_bar_wrap'><div style='width:{$percent}%;' class='gt_bar_chart_bar gt_bar_chart_{$this->class}'>&nbsp;</div></div>";
-                    $output .= "<span>{$cnt}</span>";
-                $output .= "</dd>";
-            }
+            $cnt = count($records);
+            $percent = round(($cnt / $total) * 100, 1);
+            $output .= "<dd>";
+            $output .= "<div class='gt_bar_chart_title'><a href='#' class='gt_popup_url' title='{$this->title}' url='{$CFG->wwwroot}/blocks/gradetracker/data.php?data={$str}{$link}'>".\gt_html($group)."</a></div>";
+            $output .= "<div class='gt_bar_chart_bar_wrap'><div style='width:{$percent}%;' class='gt_bar_chart_bar gt_bar_chart_{$this->class}'>&nbsp;</div></div>";
+            $output .= "<span>{$cnt}</span>";
+            $output .= "</dd>";
+        }
         $output .= "</dl>";
 
         return $output;
 
-
     }
 
-    private function splitDataIntoGroups(array &$data){
+    private function splitDataIntoGroups(array &$data) {
 
         $field = $this->group;
         $array = array();
 
-        if ($data)
-        {
-            foreach($data as $row)
-            {
-                if (isset($row->$field))
-                {
+        if ($data) {
+            foreach ($data as $row) {
+                if (isset($row->$field)) {
 
                     $group = $row->$field;
 
-                    if (!array_key_exists($group, $array))
-                    {
+                    if (!array_key_exists($group, $array)) {
                         $array[$group] = array();
                     }
 
@@ -151,16 +168,16 @@ class Statistics {
 
     private $records = array();
 
-    public function getRecords(){
+    public function getRecords() {
         return $this->records;
     }
 
-    public function setRecords(array $records){
+    public function setRecords(array $records) {
         $this->records = $records;
     }
 
 
-    public function output(\GT\StatisticsOutput $output, $key = false){
+    public function output(\GT\StatisticsOutput $output, $key = false) {
         return ($key) ? $output->output($this->records[$key]) : $output->output($this->records);
     }
 
@@ -171,11 +188,11 @@ class Statistics {
      * @param type $status
      * @return \GT\Statistics|boolean
      */
-    public static function getQualifications($status){
+    public static function getQualifications($status) {
 
         global $DB;
 
-        if (!in_array($status, array('active', 'inactive'))){
+        if (!in_array($status, array('active', 'inactive'))) {
             return false;
         }
 
@@ -203,11 +220,11 @@ class Statistics {
      * @param type $status
      * @return \GT\Statistics|boolean
      */
-    public static function getQualificationsByCredits($status){
+    public static function getQualificationsByCredits($status) {
 
         global $DB;
 
-        if (!in_array($status, array('correct', 'incorrect'))){
+        if (!in_array($status, array('correct', 'incorrect'))) {
             return false;
         }
 
@@ -244,11 +261,11 @@ class Statistics {
      * @param type $status
      * @return \GT\Statistics|boolean
      */
-    public static function getUnits($status){
+    public static function getUnits($status) {
 
         global $DB;
 
-        if (!in_array($status, array('active', 'inactive'))){
+        if (!in_array($status, array('active', 'inactive'))) {
             return false;
         }
 

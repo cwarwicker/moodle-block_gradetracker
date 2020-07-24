@@ -1,32 +1,33 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * ActivityRef
- *
  * This class deals with the links between Moodle activities, such as assignments, and the GradeTracker
- * 
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
 namespace GT;
 
+defined('MOODLE_INTERNAL') or die();
+
 class Activity {
-    
+
     private $id = false;
     private $cmID;
     private $partID = null;
@@ -34,16 +35,16 @@ class Activity {
     private $unitID;
     private $critID;
     private $deleted;
-    
+
     public function __construct($id = false) {
-        
+
         global $DB;
-        
-        if ($id){
-            
+
+        if ($id) {
+
             $record = $DB->get_record("bcgt_activity_refs", array("id" => $id));
-            if ($record){
-                
+            if ($record) {
+
                 $this->id = $record->id;
                 $this->cmID = $record->cmid;
                 $this->partID = $record->partid;
@@ -51,86 +52,86 @@ class Activity {
                 $this->unitID = $record->unitid;
                 $this->critID = $record->critid;
                 $this->deleted = $record->deleted;
-                
+
             }
-            
+
         }
-        
+
     }
-    
-    public function isValid(){
+
+    public function isValid() {
         return ($this->id !== false && !$this->isDeleted());
     }
-    
-    public function isDeleted(){
+
+    public function isDeleted() {
         return ($this->deleted == 1);
     }
-    
-    public function getID(){
+
+    public function getID() {
         return $this->id;
     }
-    
-    public function getCourseModuleID(){
+
+    public function getCourseModuleID() {
         return $this->cmID;
     }
-    
-    public function setCourseModuleID($id){
+
+    public function setCourseModuleID($id) {
         $this->cmID = $id;
         return $this;
     }
-    
-    public function getPartID(){
+
+    public function getPartID() {
         return $this->partID;
     }
-    
-    public function setPartID($id){
+
+    public function setPartID($id) {
         $this->partID = $id;
         return $this;
     }
-    
-    public function getQualID(){
+
+    public function getQualID() {
         return $this->qualID;
     }
-    
-    public function setQualID($id){
+
+    public function setQualID($id) {
         $this->qualID = $id;
         return $this;
     }
-    
-    public function getUnitID(){
+
+    public function getUnitID() {
         return $this->unitID;
     }
-    
-    public function setUnitID($id){
+
+    public function setUnitID($id) {
         $this->unitID = $id;
         return $this;
     }
-    
-    public function getCritID(){
+
+    public function getCritID() {
         return $this->critID;
     }
-    
-    public function setCritID($id){
+
+    public function setCritID($id) {
         $this->critID = $id;
         return $this;
     }
-    
-    public function getDeleted(){
+
+    public function getDeleted() {
         return $this->deleted;
     }
-    
-    public function setDeleted($val){
+
+    public function setDeleted($val) {
         $this->deleted = $val;
         return $this;
     }
-    
-    public function create(){
-        
+
+    public function create() {
+
         global $DB;
-                
+
         // Only insert if this doesn't already exist
-        if (!$existingRecord = self::checkExists($this->cmID, $this->qualID, $this->unitID, $this->critID, false)){
-        
+        if (!$existingRecord = self::checkExists($this->cmID, $this->qualID, $this->unitID, $this->critID, false)) {
+
             $record = new \stdClass();
             $record->cmid = $this->cmID;
             $record->partid = $this->partID;
@@ -140,35 +141,37 @@ class Activity {
             return $DB->insert_record("bcgt_activity_refs", $record);
 
         } else {
-            
+
             // Update it
             $existingRecord->partid = $this->partID;
             return $DB->update_record("bcgt_activity_refs", $existingRecord);
-            
+
         }
-        
+
     }
-    
+
     /**
      * Remove an activity ref
      * @global \GT\type $DB
      * @return boolean
      */
-    public function remove(){
-        
+    public function remove() {
+
         global $DB;
-        
-        if (!$this->isValid()) return true;
-        
+
+        if (!$this->isValid()) {
+            return true;
+        }
+
         $this->setDeleted(1);
-        
+
         $record = new \stdClass();
         $record->id = $this->id;
         $record->deleted = $this->getDeleted();
         return $DB->update_record("bcgt_activity_refs", $record);
-        
+
     }
-    
+
     /**
      * Check if a given link exists
      * @global type $DB
@@ -178,56 +181,56 @@ class Activity {
      * @param type $critID
      * @return type
      */
-    public static function checkExists($cmID, $qualID, $unitID, $critID, $partID = null){
-        
+    public static function checkExists($cmID, $qualID, $unitID, $critID, $partID = null) {
+
         global $DB;
-        
-        if (!$cmID) return false;
-        
+
+        if (!$cmID) {
+            return false;
+        }
+
         $params = array("cmid" => $cmID, "qualid" => $qualID, "unitid" => $unitID, "critid" => $critID, "deleted" => 0);
-        
+
         // Only search for that if we don't specify it as false
-        if ($partID !== false){
+        if ($partID !== false) {
             $params['partid'] = $partID;
         }
-        
+
         $record = $DB->get_record("bcgt_activity_refs", $params);
         return $record;
-        
+
     }
-    
-    
-    
+
+
+
     /**
      * Get the qual ids linked to a course module
      * @global \GT\type $DB
      * @param type $cmID
      * @return type
      */
-    public static function getQualsLinkedToCourseModule($cmID, $partID = null){
-        
+    public static function getQualsLinkedToCourseModule($cmID, $partID = null) {
+
         global $DB;
-        
-        if (!$cmID) return array();
-        
+
+        if (!$cmID) {
+            return array();
+        }
+
         $return = array();
-        
+
         $records = $DB->get_records("bcgt_activity_refs", array("cmid" => $cmID, "partid" => $partID, "deleted" => 0), null, "DISTINCT qualid");
-        
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+
+        if ($records) {
+            foreach ($records as $record) {
                 $return[] = $record->qualid;
             }
         }
-        
+
         return $return;
-        
+
     }
-    
-    
-    
+
     /**
      * Get the unit ids linked to a course module and qual
      * @global \GT\type $DB
@@ -235,48 +238,41 @@ class Activity {
      * @param type $qualID
      * @return type
      */
-    public static function getUnitsLinkedToCourseModule($cmID, $qualID = false, $objects = false){
-        
+    public static function getUnitsLinkedToCourseModule($cmID, $qualID = false, $objects = false) {
+
         global $DB;
-        
-        if (!$cmID) return array();
-        
+
+        if (!$cmID) {
+            return array();
+        }
+
         $return = array();
-        
-        if ($qualID){
+
+        if ($qualID) {
             $records = $DB->get_records("bcgt_activity_refs", array("cmid" => $cmID, "qualid" => $qualID, "deleted" => 0), null, "DISTINCT unitid");
         } else {
             $records = $DB->get_records("bcgt_activity_refs", array("cmid" => $cmID, "deleted" => 0), null, "DISTINCT unitid");
         }
-        
-        
+
         // Using objects
-        if ($objects)
-        {
+        if ($objects) {
             $qual = new \GT\Qualification($qualID);
         }
-                
-        
-        if ($records)
-        {
-            foreach($records as $record)
-            {
-                if ($objects)
-                {
+
+        if ($records) {
+            foreach ($records as $record) {
+                if ($objects) {
                     $return[$record->unitid] = $qual->getUnit($record->unitid);
-                }
-                else
-                {
+                } else {
                     $return[] = $record->unitid;
                 }
             }
         }
-        
+
         return $return;
-        
+
     }
-    
-    
+
     /**
      * Get the crit ids linked to a course module and qual and unit
      * @global \GT\type $DB
@@ -284,69 +280,69 @@ class Activity {
      * @param type $qualID
      * @return type
      */
-    public static function getCriteriaLinkedToCourseModule($cmID, $partID = null, $qualID = false, $unitID = false, $objects = false){
-        
+    public static function getCriteriaLinkedToCourseModule($cmID, $partID = null, $qualID = false, $unitID = false, $objects = false) {
+
         global $DB;
-        
-        if (!$cmID) return array();
-        
-        if ($objects){
+
+        if (!$cmID) {
+            return array();
+        }
+
+        if ($objects) {
             // if we passed through a \GT\Unit object instead of an ID, put that into the $unit variable
             // then set the $unitID variable to the id of the object
-            if ($unitID instanceof \GT\Unit){
+            if ($unitID instanceof \GT\Unit) {
                 $unit = $unitID;
                 $unitID = $unit->getID();
             } else {
                 $unit = new \GT\Unit($unitID);
             }
         }
-        
+
         $return = array();
-                
-        if ($qualID){
-            if ($unitID){
+
+        if ($qualID) {
+            if ($unitID) {
                 $params = array("cmid" => $cmID, "partid" => $partID, "qualid" => $qualID, "unitid" => $unitID, "deleted" => 0);
             } else {
                 $params = array("cmid" => $cmID, "partid" => $partID, "qualid" => $qualID, "deleted" => 0);
             }
         } else {
-            if ($unitID){
+            if ($unitID) {
                 $params = array("cmid" => $cmID, "partid" => $partID, "unitid" => $unitID, "deleted" => 0);
             } else {
                 $params = array("cmid" => $cmID, "partid" => $partID, "deleted" => 0);
             }
         }
-        
+
         // if we passed through FALSE for the partID, that means we don't want to check the part at all,
         // so the results could have a part and they could not
-        if ($partID === false){
+        if ($partID === false) {
             unset($params['partid']);
         }
-        
+
         $records = $DB->get_records("bcgt_activity_refs", $params, null, "DISTINCT critid");
-        
-        if ($records)
-        {
-            foreach($records as $record)
-            {
-                if ($objects){
+
+        if ($records) {
+            foreach ($records as $record) {
+                if ($objects) {
                     $return[$record->critid] = $unit->getCriterion($record->critid);
                 } else {
                     $return[] = $record->critid;
                 }
             }
         }
-        
+
         // If using objects, sort them
-        if ($objects){
+        if ($objects) {
             $sort = new \GT\Sorter();
             $sort->sortCriteria($return, true);
         }
-                
+
         return $return;
-        
+
     }
-    
+
     /**
      * Get distinct list of course modules attached to qual unit
      * @global \GT\type $DB
@@ -354,125 +350,111 @@ class Activity {
      * @param type $unitID
      * @return type
      */
-    public static function getCourseModulesLinkedToUnit($qualID, $unitID, $critID = false){
-        
+    public static function getCourseModulesLinkedToUnit($qualID, $unitID, $critID = false) {
+
         global $DB;
-        
+
         $return = array();
-        
+
         $params = array("qualid" => $qualID, "unitid" => $unitID, "deleted" => 0);
-        if ($critID !== false){
+        if ($critID !== false) {
             $params['critid'] = $critID;
         }
-        
+
         $records = $DB->get_records("bcgt_activity_refs", $params, null, "DISTINCT cmid");
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $return[] = $record->cmid;
             }
         }
-        
+
         return $return;
-        
+
     }
-    
-    
-    
+
     /**
      * Find all links on a course module
      * @global \GT\type $DB
      * @param type $cmID
      * @return type
      */
-    public static function findLinks($cmID, $partID = null, $qualID = false, $unitID = false){
-        
+    public static function findLinks($cmID, $partID = null, $qualID = false, $unitID = false) {
+
         global $DB;
-        
+
         $return = array();
         $params = array("cmid" => $cmID, "partid" => $partID, "deleted" => 0);
-        
+
         // If partID is TRUE that means it may have a partID but we don't want to limit it to a specific one
         // So we will just take the partID out of the query, so it will get ones with and without
-        if ($partID === true)
-        {
+        if ($partID === true) {
             unset($params['partid']);
         }
-        
+
         // If qualID passed through, look for that as well
-        if ($qualID)
-        {
+        if ($qualID) {
             $params['qualid'] = $qualID;
         }
-        
+
         // If unitID passed through, look for that as well
-        if ($unitID)
-        {
+        if ($unitID) {
             $params['unitid'] = $unitID;
         }
-           
+
         $records = $DB->get_records("bcgt_activity_refs", $params);
-        
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\Activity($record->id);
                 $return[] = $obj;
             }
         }
-        
+
         return $return;
-        
+
     }
-    
+
     /**
      * Find all links on a qual unit
      * @global \GT\type $DB
      * @param type $cmID
      * @return type
      */
-    public static function findLinksByUnit($qualID, $unitID){
-        
+    public static function findLinksByUnit($qualID, $unitID) {
+
         global $DB;
-        
+
         $return = array();
         $records = $DB->get_records("bcgt_activity_refs", array("qualid" => $qualID, "unitid" => $unitID, "deleted" => 0));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $obj = new \GT\Activity($record->id);
                 $return[] = $obj;
             }
         }
-        
+
         return $return;
-        
+
     }
-    
+
     /**
      * Remove any links to this course module that were not submitted this time
      * @param type $cmID
      * @param type $submitted
      */
-    public static function removeNonSubmittedLinks($cmID, $submitted){
-                
-        $existingLinks = \GT\Activity::findLinks($cmID, true);
-        if ($existingLinks)
-        {
-            foreach($existingLinks as $link)
-            {
-                if (!array_key_exists($link->getQualID(), $submitted) || !in_array($link->getCritID(), $submitted[$link->getQualID()]))
-                {
+    public static function removeNonSubmittedLinks($cmID, $submitted) {
+
+        $existingLinks = self::findLinks($cmID, true);
+        if ($existingLinks) {
+            foreach ($existingLinks as $link) {
+                if (!array_key_exists($link->getQualID(), $submitted) || !in_array($link->getCritID(), $submitted[$link->getQualID()])) {
                     $link->remove();
                 }
             }
         }
-        
+
     }
-    
+
     /**
      * Remove any activity links to this qual unit that were not submitted this time
      * Though only ones that are linked to course modules on this course, as otherwise we'll delete stuff
@@ -482,87 +464,83 @@ class Activity {
      * @param type $courseID
      * @param type $submitted
      */
-    public static function removeNonSubmittedLinksOnUnit($qualID, $unitID, $courseID, $submitted){
-        
+    public static function removeNonSubmittedLinksOnUnit($qualID, $unitID, $courseID, $submitted) {
+
         global $DB;
-                        
+
         $records = $DB->get_records("bcgt_activity_refs", array("qualid" => $qualID, "unitid" => $unitID, "deleted" => 0));
-        if ($records)
-        {
-            foreach($records as $record)
-            {
+        if ($records) {
+            foreach ($records as $record) {
                 $link = new \GT\Activity($record->id);
-                if (!in_array($link->getCritID(), $submitted[$link->getCourseModuleID()]))
-                {
+                if (!in_array($link->getCritID(), $submitted[$link->getCourseModuleID()])) {
                     $cm = $DB->get_record("course_modules", array("id" => $link->getCourseModuleID()));
-                    if ($cm && $cm->course == $courseID)
-                    {
+                    if ($cm && $cm->course == $courseID) {
                         $link->remove();
                     }
                 }
             }
         }
-        
+
     }
-    
+
     /**
      * Given a course module id, get the id of the actual activity instance
      * @global \GT\type $DB
      * @param type $cmID
      * @return type
      */
-    public static function getActivityFromCourseModule($cmID){
-        
+    public static function getActivityFromCourseModule($cmID) {
+
         global $DB;
-        
+
         $record = $DB->get_record("course_modules", array("id" => $cmID));
         return $record;
-        
+
     }
-    
+
     /**
      * Given a course module id, get the id of the actual activity instance
      * @global \GT\type $DB
      * @param type $cmID
      * @return type
      */
-    public static function getActivityModuleFromCourseModule($cmID){
-        
+    public static function getActivityModuleFromCourseModule($cmID) {
+
         $record = self::getActivityFromCourseModule($cmID);
         return ($record) ? $record->module : false;
-        
+
     }
-    
+
     /**
      * Given a course module id, get the id of the actual activity instance
      * @global \GT\type $DB
      * @param type $cmID
      * @return type
      */
-    public static function getActivityInstanceFromCourseModule($cmID){
-        
+    public static function getActivityInstanceFromCourseModule($cmID) {
+
         $record = self::getActivityFromCourseModule($cmID);
         return ($record) ? $record->instance : false;
-        
+
     }
-    
+
     /**
      * Get the Course object from a course module ID
      * @global \GT\type $DB
      * @param type $cmID
      * @return boolean|\GT\Course
      */
-    public static function getCourseFromCourseModule($cmID){
-        
+    public static function getCourseFromCourseModule($cmID) {
+
         global $DB;
         $cm = self::getActivityFromCourseModule($cmID);
-        if ($cm){
+        if ($cm) {
             return new \GT\Course($cm->course);
         }
-        
+
         return false;
-        
+
     }
-        
-    
+
+
 }
