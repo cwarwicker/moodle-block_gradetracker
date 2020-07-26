@@ -770,12 +770,12 @@ class QualificationBuild {
                     // Qualification form
                     if ($element->getForm() == "qualification") {
 
-                        if (array_key_exists($element->getName(), $customDefaults)) {
+                        if (is_array($customDefaults) && array_key_exists($element->getName(), $customDefaults)) {
                             $this->updateAttribute("default_{$element->getID()}", $customDefaults[$element->getName()]);
                         }
 
                     } else if ($element->getForm() == "unit" || $element->getForm() == "criterion") {
-                        if (array_key_exists($element->getName(), $customDefaults)) {
+                        if (is_array($customDefaults) && array_key_exists($element->getName(), $customDefaults)) {
                             $unitBuild->updateAttribute("default_{$element->getID()}", $customDefaults[$element->getName()]);
                         }
                     }

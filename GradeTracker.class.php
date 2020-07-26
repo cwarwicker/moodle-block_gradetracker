@@ -1346,12 +1346,13 @@ class GradeTracker {
                     $cmID = optional_param('cmid', false, PARAM_INT);
                     $qID = optional_param('qualid', false, PARAM_INT);
                     $uID = optional_param('unitid', false, PARAM_INT);
+                    $submittedcmID = optional_param('coursemoduleid', false, PARAM_INT);
 
                     // If cmID is valid, that means we clicked on an assignment and we want to add units to it
                     if ($cmID) {
 
-                        if (isset($_POST['coursemoduleid'])) {
-                            $cmID = $_POST['coursemoduleid'];
+                        if ($submittedcmID) {
+                            $cmID = $submittedcmID;
                         }
                         $TPL->set("cmID", $cmID);
 
@@ -1712,8 +1713,7 @@ class GradeTracker {
                     $Log = new \GT\Log();
                     $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
                     $Log->details = constant('\GT\Log::' . $detail);
-                    unset($_POST['submitconfig']);
-                    $Log->afterjson = $_POST;
+                    $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
                     $Log->save();
                     // ------------ Logging Info
 
@@ -1824,16 +1824,32 @@ class GradeTracker {
 
         global $CFG, $MSGS;
 
+        $submission = array(
+            'save_subjects' => optional_param('save_subjects', false, PARAM_TEXT),
+            'save_types' => optional_param('save_types', false, PARAM_TEXT),
+            'save_grades' => optional_param('save_grades', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'ids' => df_optional_param_array_recursive('ids', false, PARAM_INT),
+            'names' => df_optional_param_array_recursive('names', false, PARAM_TEXT),
+            'levels' => df_optional_param_array_recursive('levels', false, PARAM_TEXT),
+            'weightings' => df_optional_param_array_recursive('weightings', false, PARAM_TEXT),
+            'types' => df_optional_param_array_recursive('types', false, PARAM_TEXT),
+            'grades' => df_optional_param_array_recursive('grades', false, PARAM_TEXT),
+            'points' => df_optional_param_array_recursive('points', false, PARAM_TEXT),
+        );
+
         // Subjects
-        if (isset($_POST['save_subjects'])) {
+        if ($submission['save_subjects']) {
 
             $idArray = array();
-            if (isset($_POST['ids'])) {
+            if ($settings['ids']) {
 
-                for ($i = 0; $i < count($_POST['ids']); $i++) {
+                for ($i = 0; $i < count($settings['ids']); $i++) {
 
-                    $id = trim($_POST['ids'][$i]);
-                    $name = trim($_POST['names'][$i]);
+                    $id = trim($settings['ids'][$i]);
+                    $name = trim($settings['names'][$i]);
                     if (empty($name)) {
                         continue;
                     }
@@ -1855,17 +1871,17 @@ class GradeTracker {
             \GT\QualOnEntry::deleteSubjectsNotSaved($idArray);
             $MSGS['success'] = get_string('qoesubjectssaved', 'block_gradetracker');
 
-        } else if (isset($_POST['save_types'])) {
+        } else if ($submission['save_types']) {
 
             $idArray = array();
-            if (isset($_POST['ids'])) {
+            if ($settings['ids']) {
 
-                for ($i = 0; $i < count($_POST['ids']); $i++) {
+                for ($i = 0; $i < count($settings['ids']); $i++) {
 
-                    $id = trim($_POST['ids'][$i]);
-                    $name = trim($_POST['names'][$i]);
-                    $lvl = trim($_POST['levels'][$i]);
-                    $weight = trim($_POST['weightings'][$i]);
+                    $id = trim($settings['ids'][$i]);
+                    $name = trim($settings['names'][$i]);
+                    $lvl = trim($settings['levels'][$i]);
+                    $weight = trim($settings['weightings'][$i]);
                     if (empty($name)) {
                         continue;
                     }
@@ -1892,18 +1908,18 @@ class GradeTracker {
             \GT\QualOnEntry::deleteTypesNotSaved($idArray);
             $MSGS['success'] = get_string('qoetypessaved', 'block_gradetracker');
 
-        } else if (isset($_POST['save_grades'])) {
+        } else if ($submission['save_grades']) {
 
             $idArray = array();
-            if (isset($_POST['ids'])) {
+            if ($settings['ids']) {
 
-                for ($i = 0; $i < count($_POST['ids']); $i++) {
+                for ($i = 0; $i < count($settings['ids']); $i++) {
 
-                    $id = trim($_POST['ids'][$i]);
-                    $type = trim($_POST['types'][$i]);
-                    $name = trim($_POST['grades'][$i]);
-                    $points = trim($_POST['points'][$i]);
-                    $weight = trim($_POST['weightings'][$i]);
+                    $id = trim($settings['ids'][$i]);
+                    $type = trim($settings['types'][$i]);
+                    $name = trim($settings['grades'][$i]);
+                    $points = trim($settings['points'][$i]);
+                    $weight = trim($settings['weightings'][$i]);
                     if (empty($name)) {
                         continue;
                     }
@@ -1937,7 +1953,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE;
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
         }
@@ -1989,6 +2005,11 @@ class GradeTracker {
 
         } else if ($section == 'modules' && $page == 'delete') {
 
+            $submission = array(
+                'confirm_delete_mod_link' => optional_param('confirm_delete_mod_link', false, PARAM_TEXT),
+                'run_away' => optional_param('run_away', false, PARAM_TEXT),
+            );
+
             // Check permissions
             if (!$User->hasCapability('block/gradetracker:delete_course_activity_refs')) {
                 print_error('invalidaccess', 'block_gradetracker');
@@ -1997,9 +2018,9 @@ class GradeTracker {
             $id = optional_param('id', false, PARAM_INT);
             $Module = new \GT\ModuleLink($id);
 
-            if (isset($_POST['run_away'])) {
+            if ($submission['run_away']) {
                 redirect( $CFG->wwwroot . '/blocks/gradetracker/config.php?view=assessments&section=modules' );
-            } else if (isset($_POST['confirm_delete_mod_link'])) {
+            } else if ($submission['confirm_delete_mod_link']) {
 
                 $Module->delete();
                 $MSGS['success'] = get_string('modlinking:deleted', 'block_gradetracker');
@@ -2042,6 +2063,11 @@ class GradeTracker {
 
         } else if ($section == 'manage' && $page == 'delete') {
 
+            $submission = array(
+                'confirm_delete_assessment' => optional_param('confirm_delete_mod_link', false, PARAM_TEXT),
+                'run_away' => optional_param('run_away', false, PARAM_TEXT),
+            );
+
             // Check permissions
             if (!$User->hasCapability('block/gradetracker:delete_assessments')) {
                 print_error('invalidaccess', 'block_gradetracker');
@@ -2050,9 +2076,9 @@ class GradeTracker {
             $id = optional_param('id', false, PARAM_INT);
             $Assessment = new \GT\Assessment($id);
 
-            if (isset($_POST['run_away'])) {
+            if ($submission['run_away']) {
                 redirect( $CFG->wwwroot . '/blocks/gradetracker/config.php?view=assessments&section=manage' );
-            } else if (isset($_POST['confirm_delete_assessment'])) {
+            } else if ($submission['confirm_delete_assessment']) {
 
                 $Assessment->delete();
                 $MSGS['success'] = get_string('assessment:deleted', 'block_gradetracker');
@@ -2072,7 +2098,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is to store all the submitted data in the log.
             $Log->attributes = $attributes;
             $Log->save();
             // ------------ Logging Info
@@ -2141,15 +2167,24 @@ class GradeTracker {
         $GTEXE->min();
         $GTEXE->STUDENT_LOAD_LEVEL = \GT\Execution::STUD_LOAD_LEVEL_UNIT;
 
-        if (isset($_POST['submit_calculate']) && isset($_POST['quals'])) {
+        $submission = array(
+            'submit_calculate' => optional_param('submit_calculate', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'quals' => df_optional_param_array_recursive('quals', false, PARAM_INT),
+            'options' => df_optional_param_array_recursive('options', false, PARAM_TEXT),
+        );
+
+        if ($submission['submit_calculate'] && $settings['quals']) {
 
             $student_counter = [0, 0];
             $output = '';
 
-            if (isset($_POST['options'])) {
+            if ($settings['options']) {
 
-                $tg_options = $_POST['options'];
-                $tg_added_qualID = $_POST['quals'];
+                $tg_options = $settings['options'];
+                $tg_added_qualID = $settings['quals'];
 
                 foreach ($tg_added_qualID as $qualid) {
 
@@ -2311,14 +2346,19 @@ class GradeTracker {
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
 
+            $settings = array(
+                'assID' => optional_param('assID', false, PARAM_INT),
+            );
+
+
             // Check we chose an assessment
-            if (!isset($_POST['assID']) || !$_POST['assID']) {
+            if (!$settings['assID']) {
                 $MSGS['errors'] = get_string('errors:import:ass:id', 'block_gradetracker');
                 return false;
             }
 
             $import = new \GT\DataImport($_FILES['file']);
-            $import->runImportAssessmentGrades($_POST['assID']);
+            $import->runImportAssessmentGrades($settings['assID']);
 
             if ($import->getErrors()) {
                 $MSGS['errors'] = $import->getErrors();
@@ -2370,8 +2410,22 @@ class GradeTracker {
 
         $User = new \GT\User($USER->id);
 
+        $submission = array(
+            'confirm_delete_activity_link' => optional_param('confirm_delete_activity_link', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'coursemoduleid' => optional_param('coursemoduleid', false, PARAM_INT),
+            'qualid' => optional_param('qualid', false, PARAM_INT),
+            'unitid' => optional_param('unitid', false, PARAM_INT),
+            'courseID' => optional_param('courseID', false, PARAM_INT),
+            'coursename' => optional_param('coursename', false, PARAM_TEXT),
+            'coursecats' => optional_param('coursecats', false, PARAM_TEXT),
+            'gt_criteria' => df_optional_param_array_recursive('gt_criteria', false, PARAM_TEXT),
+        );
+
         // Delete activity link
-        if (isset($_POST['confirm_delete_activity_link'])) {
+        if ($submission['confirm_delete_activity_link']) {
 
             $cmID = optional_param('cmid', false, PARAM_INT);
             $qID = optional_param('qualid', false, PARAM_INT);
@@ -2452,15 +2506,15 @@ class GradeTracker {
                     if ($cmID) {
 
                         require_once($CFG->dirroot . '/blocks/gradetracker/hook.php');
-                        \gt_mod_hook_process($_POST['coursemoduleid'], $course);
+                        \gt_mod_hook_process($settings['coursemoduleid'], $course);
                         $MSGS['success'] = get_string('modlinking:saved', 'block_gradetracker');
 
                     } else if ($qID && $uID) {
 
-                        $qualID = $_POST['qualid'];
-                        $unitID = $_POST['unitid'];
-                        $course = new \GT\Course($_POST['courseID']);
-                        $linkedCriteria = (isset($_POST['gt_criteria'])) ? $_POST['gt_criteria'] : false;
+                        $qualID = $settings['qualid'];
+                        $unitID = $settings['unitid'];
+                        $course = new \GT\Course($settings['courseID']);
+                        $linkedCriteria = $settings['gt_criteria'];
                         $criteriaArray = array();
 
                         // If there are criteria we want to link, process them
@@ -2518,8 +2572,8 @@ class GradeTracker {
             }
         } else if ($section == 'search') {
             $courses = \GT\Course::search( array(
-                "name" => $_POST['coursename'],
-                "catID" => $_POST['coursecats']
+                "name" => $settings['coursename'],
+                "catID" => $settings['coursecats']
             ) );
 
             $TPL = new \GT\Template();
@@ -2538,17 +2592,25 @@ class GradeTracker {
             $section = 'new';
         }
 
+        $submission = array(
+            'delete_unit' => optional_param('delete_unit', false, PARAM_TEXT),
+            'copy_unit' => optional_param('copy_unit', false, PARAM_TEXT),
+            'restoreUnit_x' => optional_param('restoreUnit_x', false, PARAM_TEXT),
+            'submit_import_unit' => optional_param('submit_import_unit', false, PARAM_TEXT),
+            'submit_search' => optional_param('submit_search', false, PARAM_TEXT),
+        );
+
         // change deleted field in 1
-        if (isset($_POST['delete_unit']) && gt_has_capability('block/gradetracker:delete_restore_units')) {
+        if ($submission['delete_unit'] && gt_has_capability('block/gradetracker:delete_restore_units')) {
             $unit = new \GT\Unit($id);
             $unit->delete();
             $detail = \GT\Log::GT_LOG_DETAILS_DELETED_UNIT;
             $MSGS['success'] = get_string('unitdeleted', 'block_gradetracker');
-        } else if (isset($_POST['copy_unit'])) {
+        } else if ($submission['copy_unit']) {
             $unit = new \GT\Unit($id);
             $unit->copyUnit();
             $detail = \GT\Log::GT_LOG_DETAILS_DUPLICATED_UNIT;
-        } else if ($section == 'new' && !isset($_POST['restoreUnit'])) {
+        } else if ($section == 'new' && !$submission['restoreUnit_x']) {
 
             $TPL = new \GT\Template();
             $unit = new \GT\Unit\GUI($id);
@@ -2565,7 +2627,7 @@ class GradeTracker {
             $VARS['TPL'] = $TPL;
             $VARS['GUI'] = $unit;
 
-        } else if ($section == 'search' && isset($_POST['submit_search'])) {
+        } else if ($section == 'search' && $submission['submit_search']) {
             $TPL = new \GT\Template();
             $unit = new \GT\Unit\GUI($id);
             $unit->loadTemplate($TPL);
@@ -2579,12 +2641,12 @@ class GradeTracker {
             $VARS['TPL'] = $TPL;
             $VARS['GUI'] = $unit;
 
-        } else if ((isset($_POST['restoreUnit_x']) || isset($_POST['restoreUnit'])) && gt_has_capability('block/gradetracker:delete_restore_units')) {
+        } else if ($submission['restoreUnit_x'] && gt_has_capability('block/gradetracker:delete_restore_units')) {
             $unit = new \GT\Unit($id);
             $unit->restore();
             $detail = \GT\Log::GT_LOG_DETAILS_RESTORED_UNIT;
             $MSGS['success'] = get_string('unitrestored', 'block_gradetracker');
-        } else if (isset($_POST['submit_import_unit'])) {
+        } else if ($submission['submit_import_unit']) {
 
             $result = \GT\Unit::importXML($_FILES['file']['tmp_name']);
             if ($result['result']) {
@@ -2603,7 +2665,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just for storing the submitted data in a log.
             $Log->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $unit->getID());
             $Log->save();
             // ------------ Logging info
@@ -2621,16 +2683,23 @@ class GradeTracker {
             $section = 'new';
         }
 
-        if (isset($_POST['delete_qual']) && gt_has_capability('block/gradetracker:delete_restore_quals')) {
+        $submission = array(
+            'delete_qual' => optional_param('delete_qual', false, PARAM_TEXT),
+            'copy_qual' => optional_param('copy_qual', false, PARAM_TEXT),
+            'restoreQual_x' => optional_param('restoreQual_x', false, PARAM_TEXT),
+            'submit_search' => optional_param('submit_search', false, PARAM_TEXT),
+        );
+
+        if ($submission['delete_qual'] && gt_has_capability('block/gradetracker:delete_restore_quals')) {
             $qual = new \GT\Qualification($id);
             $qual->delete();
             $MSGS['success'] = get_string('qualdeleted', 'block_gradetracker');
             $detail = \GT\Log::GT_LOG_DETAILS_DELETED_QUALIFICATION;
-        } else if ( isset($_POST['copy_qual']) ) {
+        } else if ( $submission['copy_qual'] ) {
             $qual = new \GT\Qualification($id);
             $qual->copyQual();
             $detail = \GT\Log::GT_LOG_DETAILS_DUPLICATED_QUALIFICATION;
-        } else if ($section == 'new' && !isset($_POST['restoreQual'])) {
+        } else if ($section == 'new' && !$submission['restoreQual_x']) {
 
             $TPL = new \GT\Template();
             $qual = new \GT\Qualification\GUI($id);
@@ -2646,7 +2715,7 @@ class GradeTracker {
 
             $VARS['TPL'] = $TPL;
             $VARS['GUI'] = $qual;
-        } else if ($section == 'search' && isset($_POST['submit_search'])) {
+        } else if ($section == 'search' && $submission['submit_search']) {
 
             $TPL = new \GT\Template();
             $qual = new \GT\Qualification\GUI($id);
@@ -2664,7 +2733,7 @@ class GradeTracker {
         }
 
         // Restore deleted qual
-        if ((isset($_POST['restoreQual_x']) || isset($_POST['restoreQual'])) && gt_has_capability('block/gradetracker:delete_restore_quals')) {
+        if ($submission['restoreQual_x'] && gt_has_capability('block/gradetracker:delete_restore_quals')) {
             $qual = new \GT\Qualification($id);
             $qual->restore();
             $detail = \GT\Log::GT_LOG_DETAILS_RESTORED_QUALIFICATION;
@@ -2676,7 +2745,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just for storing the submitted data in a log.
             $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $qual->getID());
             $Log->save();
             // ------------ Logging info
@@ -2709,7 +2778,24 @@ class GradeTracker {
         $QualStructure = new \GT\QualificationStructure($structureID);
         $QualBuild = new \GT\QualificationBuild($buildID);
 
-        if ( ($page == 'new_unit' || $page == 'edit_unit') && isset($_POST['submit_unit_grading_structure'])) {
+        $submission = array(
+            'submit_unit_grading_structure' => optional_param('submit_unit_grading_structure', false, PARAM_TEXT),
+            'submit_crit_grading_structure' => optional_param('submit_crit_grading_structure', false, PARAM_TEXT),
+            'delete_unit_grading_structure' => optional_param('delete_unit_grading_structure', false, PARAM_TEXT),
+            'delete_crit_grading_structure' => optional_param('delete_crit_grading_structure', false, PARAM_TEXT),
+            'enable_unit_grading_structure_x' => optional_param('enable_unit_grading_structure_x', false, PARAM_TEXT),
+            'set_grading_structure_assessments_x' => optional_param('set_grading_structure_assessments_x', false, PARAM_TEXT),
+            'export_unit_x' => optional_param('export_unit_x', false, PARAM_TEXT),
+            'export_criteria_x' => optional_param('export_criteria_x', false, PARAM_TEXT),
+            'import_qual_structure_unit' => optional_param('import_qual_structure_unit', false, PARAM_TEXT),
+            'import_qual_structure_criteria' => optional_param('import_qual_structure_criteria', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'grading_structure_id' => optional_param('grading_structure_id', false, PARAM_INT),
+        );
+
+        if ( ($page == 'new_unit' || $page == 'edit_unit') && $submission['submit_unit_grading_structure']) {
 
             $type = 'unit';
 
@@ -2730,7 +2816,7 @@ class GradeTracker {
 
             $VARS['UnitGradingStructure'] = $UnitGradingStructure;
 
-        } else if ( ($page == 'new_criteria' || $page == 'edit_criteria') && isset($_POST['submit_crit_grading_structure']) ) {
+        } else if ( ($page == 'new_criteria' || $page == 'edit_criteria') && $submission['submit_crit_grading_structure']) {
 
             $type = 'criteria';
             $CriteriaAwardStructure = new \GT\CriteriaAwardStructure();
@@ -2744,10 +2830,10 @@ class GradeTracker {
 
             $VARS['CriteriaAwardStructure'] = $CriteriaAwardStructure;
 
-        } else if (isset($_POST['delete_unit_grading_structure'])) {
+        } else if ($submission['delete_unit_grading_structure']) {
 
             $type = 'unit';
-            $UnitGradingStructure = new \GT\UnitAwardStructure($_POST['grading_structure_id']);
+            $UnitGradingStructure = new \GT\UnitAwardStructure($settings['grading_structure_id']);
             if ($UnitGradingStructure->isValid()) {
 
                 $UnitGradingStructure->delete();
@@ -2755,10 +2841,10 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['delete_crit_grading_structure'])) {
+        } else if ($submission['delete_crit_grading_structure']) {
 
             $type = 'criteria';
-            $CriteriaGradingStructure = new \GT\CriteriaAwardStructure($_POST['grading_structure_id']);
+            $CriteriaGradingStructure = new \GT\CriteriaAwardStructure($settings['grading_structure_id']);
             if ($CriteriaGradingStructure->isValid()) {
 
                 $CriteriaGradingStructure->delete();
@@ -2766,28 +2852,28 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['enable_unit_grading_structure_x'], $_POST['enable_unit_grading_structure_y'])) {
+        } else if ($submission['enable_unit_grading_structure_x']) {
 
             $type = 'unit';
-            $UnitGradingStructure = new \GT\UnitAwardStructure($_POST['grading_structure_id']);
+            $UnitGradingStructure = new \GT\UnitAwardStructure($settings['grading_structure_id']);
             if ($UnitGradingStructure->isValid()) {
                 $UnitGradingStructure->toggleEnabled();
             }
 
-        } else if (isset($_POST['enable_crit_grading_structure_x'], $_POST['enable_crit_grading_structure_y'])) {
+        } else if ($submission['enable_crit_grading_structure_x']) {
 
             $type = 'criteria';
-            $CriteriaGradingStructure = new \GT\CriteriaAwardStructure($_POST['grading_structure_id']);
+            $CriteriaGradingStructure = new \GT\CriteriaAwardStructure($settings['grading_structure_id']);
             if ($CriteriaGradingStructure->isValid()) {
 
                 $CriteriaGradingStructure->toggleEnabled();
 
             }
 
-        } else if (isset($_POST['set_grading_structure_assessments_x'], $_POST['set_grading_structure_assessments_y'])) {
+        } else if ($submission['set_grading_structure_assessments_x']) {
 
             $type = 'criteria';
-            $gradingStructureID = $_POST['grading_structure_id'];
+            $gradingStructureID = $settings['grading_structure_id'];
             $gradingStructure = new \GT\CriteriaAwardStructure($gradingStructureID);
 
             if (!$gradingStructure->isValid()) {
@@ -2810,9 +2896,9 @@ class GradeTracker {
                 $gradingStructure->toggleEnabled();
             }
 
-        } else if (isset($_POST['export_unit_x'], $_POST['export_unit_y'])) {
+        } else if ($submission['export_unit_x']) {
 
-            $id = $_POST['grading_structure_id'];
+            $id = $settings['grading_structure_id'];
             $gradingStructure = $QualStructure->getSingleStructure($id, $QualStructure->getUnitGradingStructures(false));
 
             if ($QualStructure->isValid() && $gradingStructure) {
@@ -2829,9 +2915,9 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['export_criteria_x'], $_POST['export_criteria_y'])) {
+        } else if ($submission['export_criteria_x']) {
 
-            $id = $_POST['grading_structure_id'];
+            $id = $settings['grading_structure_id'];
 
             $Object = ($QualBuild && $QualBuild->isValid()) ? $QualBuild : $QualStructure;
             $gradingStructure = $Object->getSingleStructure($id, $Object->getCriteriaGradingStructures(false));
@@ -2851,7 +2937,7 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['import_qual_structure_unit']) && !empty($_FILES['file'])) {
+        } else if ($submission['import_qual_structure_unit'] && !empty($_FILES['file'])) {
 
             $type = 'unit';
             $result = \GT\QualificationStructure::importUnitXML($_FILES['file']['tmp_name'], $structureID);
@@ -2863,7 +2949,7 @@ class GradeTracker {
 
             $MSGS['import_output'] = $result['output'];
 
-        } else if (isset($_POST['import_qual_structure_criteria']) && !empty($_FILES['file'])) {
+        } else if ($submission['import_qual_structure_criteria'] && !empty($_FILES['file'])) {
 
             $type = 'criteria';
 
@@ -2890,8 +2976,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = constant('\GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_'.strtoupper($type).'_GRADING_STRUCTURE');
-            unset($_POST['submitconfig']);
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just for storing all the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
         }
@@ -2908,6 +2993,21 @@ class GradeTracker {
 
         global $MSGS, $VARS;
 
+        $submission = array(
+            'submit_qual_build_awards' => optional_param('submit_qual_build_awards', false, PARAM_TEXT),
+            'submit_qual_build_defaults' => optional_param('submit_qual_build_defaults', false, PARAM_TEXT),
+            'delete_build' => optional_param('delete_build', false, PARAM_TEXT),
+            'export_build_x' => optional_param('export_build_x', false, PARAM_TEXT),
+            'mass_export_build_x' => optional_param('mass_export_build_x', false, PARAM_TEXT),
+            'import_qual_build' => optional_param('import_qual_build', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'build_id' => optional_param('build_id', false, PARAM_INT),
+            'build' => df_optional_param_array_recursive('build', false, PARAM_TEXT),
+            'custom' => df_optional_param_array_recursive('custom', false, PARAM_TEXT),
+        );
+
         // Are we editing a build?
         if ($page == 'new' || $page == 'edit') {
 
@@ -2923,9 +3023,9 @@ class GradeTracker {
 
             $VARS['qualBuild'] = $QualBuild;
 
-        } else if ($page == 'awards' && isset($_POST['submit_qual_build_awards'])) {
+        } else if ($page == 'awards' && $submission['submit_qual_build_awards']) {
 
-            $id = $_POST['build_id'];
+            $id = $settings['build_id'];
             $build = new \GT\QualificationBuild($id);
             if ($build->isValid()) {
 
@@ -2941,20 +3041,20 @@ class GradeTracker {
 
             }
 
-        } else if ($page == 'defaults' && isset($_POST['submit_qual_build_defaults'])) {
+        } else if ($page == 'defaults' && $submission['submit_qual_build_defaults']) {
 
-            $id = $_POST['build_id'];
+            $id = $settings['build_id'];
             $build = new \GT\QualificationBuild($id);
             if ($build->isValid()) {
 
-                $build->saveDefaults( ((isset($_POST['custom'])) ? $_POST['custom'] : false), ((isset($_POST['build'])) ? $_POST['build'] : false) );
+                $build->saveDefaults( (($settings['custom']) ? $settings['custom'] : false), (($settings['build']) ? $settings['build'] : false) );
                 $MSGS['success'] = get_string('defaultssaved', 'block_gradetracker');
 
             }
 
-        } else if (isset($_POST['delete_build'])) {
+        } else if ($submission['delete_build']) {
 
-            $id = $_POST['build_id'];
+            $id = $settings['build_id'];
             $build = new \GT\QualificationBuild($id);
             if ($build->isValid()) {
 
@@ -2963,9 +3063,9 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['export_build_x'], $_POST['export_build_y'])) {
+        } else if ($submission['export_build_x']) {
 
-            $id = $_POST['build_id'];
+            $id = $settings['build_id'];
             $build = new \GT\QualificationBuild($id);
             if ($build->isValid()) {
 
@@ -2982,7 +3082,7 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['mass_export_build_x'], $_POST['mass_export_build_y'])) {
+        } else if ($submission['mass_export_build_x']) {
 
             // Clear tmp files
             self::gc();
@@ -2992,7 +3092,8 @@ class GradeTracker {
             $builds = \GT\QualificationBuild::getAllBuilds();
             foreach ($builds as $build) {
                 $build = new \GT\QualificationBuild($build->getID());
-                if ($build->isValid() && isset($_POST['build_id_' . $build->getID()])) {
+                $settings['build_id' . $build->getID()] = optional_param('build_id' . $build->getID(), false, PARAM_INT);
+                if ($build->isValid() && $settings['build_id_' . $build->getID()]) {
                     $XML = $build->exportXML();
                 }
             }
@@ -3018,7 +3119,7 @@ class GradeTracker {
             self::gc();
 
             exit;
-        } else if (isset($_POST['import_qual_build'])) {
+        } else if ($submission['import_qual_build']) {
 
             $result = \GT\QualificationBuild::importXML($_FILES['file']['tmp_name']);
             if ($result['result']) {
@@ -3037,8 +3138,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD;
-            unset($_POST['submitconfig']);
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
         }
@@ -3055,6 +3155,14 @@ class GradeTracker {
 
         global $MSGS, $VARS;
 
+        $submission = array(
+            'delete_level' => optional_param('delete_level', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'level_id' => optional_param('level_id', false, PARAM_INT),
+        );
+
         // Are we editing a build?
         if ($page == 'new' || $page == 'edit') {
 
@@ -3070,9 +3178,9 @@ class GradeTracker {
 
             $VARS['Level'] = $Level;
 
-        } else if (isset($_POST['delete_level'])) {
+        } else if ($submission['delete_level']) {
 
-            $id = $_POST['level_id'];
+            $id = $settings['level_id'];
             $level = new \GT\Level($id);
             if ($level->isValid()) {
                 $level->delete();
@@ -3086,8 +3194,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS;
-            unset($_POST['submit']);
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
         }
@@ -3104,6 +3211,14 @@ class GradeTracker {
 
         global $MSGS, $VARS;
 
+        $submission = array(
+            'delete_subtype' => optional_param('delete_subtype', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'subtype_id' => optional_param('subtype_id', false, PARAM_INT),
+        );
+
         // Are we editing a build?
         if ($page == 'new' || $page == 'edit') {
 
@@ -3119,9 +3234,9 @@ class GradeTracker {
 
             $VARS['SubType'] = $SubType;
 
-        } else if (isset($_POST['delete_subtype'])) {
+        } else if ($submission['delete_subtype']) {
 
-            $id = $_POST['subtype_id'];
+            $id = $settings['subtype_id'];
             $SubType = new \GT\SubType($id);
             if ($SubType->isValid()) {
                 $SubType->delete();
@@ -3135,8 +3250,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES;
-            unset($_POST['submit']);
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
         }
@@ -3152,6 +3266,18 @@ class GradeTracker {
     private function saveConfigQualStructures($page) {
 
         global $MSGS, $VARS;
+
+        $submission = array(
+            'enable_structure_x' => optional_param('enable_structure_x', false, PARAM_TEXT),
+            'delete_structure' => optional_param('delete_structure', false, PARAM_TEXT),
+            'copy_structure_x' => optional_param('copy_structure_x', false, PARAM_TEXT),
+            'export_structure_x' => optional_param('export_structure_x', false, PARAM_TEXT),
+            'import_qual_structure' => optional_param('import_qual_structure', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'structure_id' => optional_param('structure_id', false, PARAM_INT),
+        );
 
         // Are we editing a structure?
         if ($page == 'edit' || $page == 'new') {
@@ -3172,17 +3298,17 @@ class GradeTracker {
 
             $VARS['qualStructure'] = $QualStructure;
 
-        } else if (isset($_POST['enable_structure_x'], $_POST['enable_structure_y'])) {
+        } else if ($submission['enable_structure_x']) {
 
-            $structureID = $_POST['structure_id'];
+            $structureID = $settings['structure_id'];
             $QualStructure = new \GT\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
                 $QualStructure->toggleEnabled();
             }
 
-        } else if (isset($_POST['delete_structure'])) {
+        } else if ($submission['delete_structure']) {
 
-            $structureID = $_POST['structure_id'];
+            $structureID = $settings['structure_id'];
             $QualStructure = new \GT\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
 
@@ -3191,17 +3317,17 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['copy_structure_x'], $_POST['copy_structure_y'])) {
+        } else if ($submission['copy_structure_x']) {
 
-            $structureID = $_POST['structure_id'];
+            $structureID = $settings['structure_id'];
             $QualStructure = new \GT\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
                 $QualStructure->duplicate();
             }
 
-        } else if (isset($_POST['export_structure_x'], $_POST['export_structure_y'])) {
+        } else if ($submission['export_structure_x']) {
 
-            $structureID = $_POST['structure_id'];
+            $structureID = $settings['structure_id'];
             $QualStructure = new \GT\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
 
@@ -3218,7 +3344,7 @@ class GradeTracker {
 
             }
 
-        } else if (isset($_POST['import_qual_structure']) && !empty($_FILES['file'])) {
+        } else if ($submission['import_qual_structure'] && !empty($_FILES['file'])) {
             $result = \GT\QualificationStructure::importXML($_FILES['file']['tmp_name']);
             if ($result['result']) {
                 $MSGS['success'] = get_string('structureimported', 'block_gradetracker');
@@ -3235,8 +3361,7 @@ class GradeTracker {
             $Log = new \GT\Log();
             $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE;
-            unset($_POST['submitconfig']);
-            $Log->afterjson = $_POST;
+            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
         }
@@ -3679,10 +3804,15 @@ class GradeTracker {
 
         global $VARS;
 
-        if (isset($_POST['gt_avggcsescore']) && isset($_POST['qualid']) && $_POST['qualid'] > 0) {
+        $settings = array(
+            'gt_avggcsescore' => optional_param('gt_avggcsescore', false, PARAM_TEXT),
+            'qualid' => optional_param('qualid', false, PARAM_INT),
+        );
 
-            $avggcsescore = $_POST['gt_avggcsescore'];
-            $qual_id = $_POST['qualid'];
+        if ($settings['gt_avggcsescore'] && $settings['qualid'] && $settings['qualid'] > 0) {
+
+            $avggcsescore = $settings['gt_avggcsescore'];
+            $qual_id = $settings['qualid'];
             $qual = new \GT\Qualification($qual_id);
             $qual_build = $qual->getBuild();
             $award = $qual_build->getAwardByAvgGCSEScore($avggcsescore);
@@ -3707,16 +3837,28 @@ class GradeTracker {
         $GTEXE->min();
         $GTEXE->UNIT_NO_SORT = false;
 
-        if (isset($_POST['search'])) {
+        $submission = array(
+            'search' => optional_param('search', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'log_details' => optional_param('log_details', false, PARAM_TEXT),
+            'log_user' => optional_param('log_user', false, PARAM_TEXT),
+            'log_date_from' => optional_param('log_date_from', false, PARAM_TEXT),
+            'log_date_to' => optional_param('log_date_to', false, PARAM_TEXT),
+            'log_attribute' => df_optional_param_array_recursive('log_attribute', array(), PARAM_TEXT),
+        );
+
+        if ($submission['search']) {
 
             $params = array();
-            $params['details'] = (isset($_POST['log_details']) && $_POST['log_details'] != '') ? $_POST['log_details'] : false;
-            $params['user'] = (isset($_POST['log_user']) && trim($_POST['log_user']) != '') ? trim($_POST['log_user']) : false;
-            $params['date_from'] = (isset($_POST['log_date_from']) && trim($_POST['log_date_from']) != '') ? trim($_POST['log_date_from']) : false;
-            $params['date_to'] = (isset($_POST['log_date_to']) && trim($_POST['log_date_to']) != '') ? trim($_POST['log_date_to']) : false;
+            $params['details'] = ($settings['log_details'] && $settings['log_details'] != '') ? $settings['log_details'] : false;
+            $params['user'] = ($settings['log_user'] && trim($settings['log_user']) != '') ? trim($settings['log_user']) : false;
+            $params['date_from'] = ($settings['log_date_from'] && trim($settings['log_date_from']) != '') ? trim($settings['log_date_from']) : false;
+            $params['date_to'] = ($settings['log_date_to'] && trim($settings['log_date_to']) != '') ? trim($settings['log_date_to']) : false;
 
             // Attributes
-            foreach ($_POST['log_attribute'] as $key => $val) {
+            foreach ($settings['log_attribute'] as $key => $val) {
                 if (trim($val) != '') {
                     $params['atts'][$key] = trim($val);
                 }
