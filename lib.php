@@ -1,28 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * Set of global functions to be used across the plugin
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
+defined('MOODLE_INTERNAL') or die();
 
-require_once $CFG->dirroot . '/blocks/gradetracker/GradeTracker.class.php';
+require_once($CFG->dirroot . '/blocks/gradetracker/GradeTracker.class.php');
 
 // Find all classes in /classes and include them
 gt_require_classes('classes');
@@ -33,20 +35,19 @@ gt_require_classes('classes');
  * @global type $CFG
  * @param type $dir
  */
-function gt_require_classes($dir){
+function gt_require_classes($dir) {
 
     global $CFG;
 
     // Find sub folders
-    if ($open = opendir($CFG->dirroot . '/blocks/gradetracker/' . $dir))
-    {
-        while ( ($file = readdir($open)) !== false )
-        {
+    if ($open = opendir($CFG->dirroot . '/blocks/gradetracker/' . $dir)) {
+        while ( ($file = readdir($open)) !== false ) {
 
-            if ($file == '.' || $file == '..') continue;
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
 
-            if (strpos($file, '.php') === false)
-            {
+            if (strpos($file, '.php') === false) {
                 gt_require_classes($dir . '/' . $file);
             }
 
@@ -54,8 +55,8 @@ function gt_require_classes($dir){
     }
 
     // Now just load any files in this folder
-    foreach( glob("{$CFG->dirroot}/blocks/gradetracker/{$dir}/*.class.php") as $file ){
-        require_once $file;
+    foreach (glob("{$CFG->dirroot}/blocks/gradetracker/{$dir}/*.class.php") as $file) {
+        require_once($file);
     }
 
 }
@@ -65,11 +66,10 @@ function gt_require_classes($dir){
  * @global type $CFG
  * @param type $value
  */
-function gt_pn($value)
-{
+function gt_pn($value) {
     global $CFG;
     $file = fopen($CFG->dirroot . '/blocks/gradetracker/tmp.txt', 'a');
-    if ($file){
+    if ($file) {
         fwrite($file, print_r($value, true));
         fwrite($file, "\n");
         fclose($file);
@@ -81,23 +81,21 @@ function gt_pn($value)
  * @param type $file
  * @param type $text
  */
-function gt_trace($file, $text)
-{
+function gt_trace($file, $text) {
 
     $file = fopen($file, 'a');
-    if ($file)
-    {
+    if ($file) {
         fwrite($file, "[".date('d-m-Y H:i:s')."] " . $text . "\n");
         fclose($file);
     }
 
 }
 
-function gt_enable_debugging(){
+function gt_enable_debugging() {
     $_SESSION['gt_debug'] = true;
 }
 
-function gt_disable_debugging(){
+function gt_disable_debugging() {
     unset($_SESSION['gt_debug']);
 }
 
@@ -106,7 +104,7 @@ function gt_disable_debugging(){
  * Is GT debugging turned on?
  * @return type
  */
-function gt_is_debugging(){
+function gt_is_debugging() {
     return (isset($_SESSION['gt_debug']));
 }
 
@@ -115,17 +113,19 @@ function gt_is_debugging(){
  * @global type $USER
  * @param type $info
  */
-function gt_debug($info){
+function gt_debug($info) {
 
     global $USER;
 
-    if (!gt_is_debugging()) return false;
+    if (!gt_is_debugging()) {
+        return false;
+    }
 
     // Create directory if it doersn't exist
     \gt_create_data_directory("debug");
 
     $file = fopen( \GT\GradeTracker::dataroot() . "/debug/{$USER->id}.txt" , 'a');
-    if ($file){
+    if ($file) {
         fwrite($file, "[".date('d-m-Y H:i:s')."] " . $info . "\n");
         fclose($file);
     }
@@ -138,9 +138,9 @@ function gt_debug($info){
  * Exit a script, optionally logging a debug message
  * @param type $debug
  */
-function gt_stop($debug){
+function gt_stop($debug) {
 
-    if (strlen($debug) > 0){
+    if (strlen($debug) > 0) {
         \gt_debug($debug);
     }
 
@@ -155,31 +155,26 @@ function gt_stop($debug){
  * @param type $access If null, load the contexts
  * @param type $thisContext If we want to check a specific course context
  */
-function gt_has_capability($cap, $access = false, $thisContext = false, $user = false)
-{
+function gt_has_capability($cap, $access = false, $thisContext = false, $user = false) {
 
     $GT = new \GT\GradeTracker();
 
     // if we want to check a specific course context then use that
-    if ($thisContext)
-    {
+    if ($thisContext) {
         return has_capability($cap, $thisContext);
     }
 
-
     // Otherwise check for capabilities across all our contexts
     // (If we want to check against the contexts of a different user, use gt_has_user_capability())
-    if (!$access){
+    if (!$access) {
 
         // If user is set with contexts already loaded, use those
-        if ($user && $user->getContextArray()){
+        if ($user && $user->getContextArray()) {
             $access = $user->getContextArray();
-        }
-
-        // Otherwise, if we have a user, but the contexts haven't been loaded yet
-        else {
+        } else {
+            // Otherwise, if we have a user, but the contexts haven't been loaded yet
             $access = $GT->getUserContexts();
-            if ($user){
+            if ($user) {
                 $user->setContextArray($access);
             }
         }
@@ -187,12 +182,9 @@ function gt_has_capability($cap, $access = false, $thisContext = false, $user = 
     }
 
     // Now use the access array of contexts
-    if ($access)
-    {
-        foreach($access as $context)
-        {
-            if (has_capability($cap, $context))
-            {
+    if ($access) {
+        foreach ($access as $context) {
+            if (has_capability($cap, $context)) {
                 return true;
             }
         }
@@ -221,10 +213,9 @@ function gt_has_capability($cap, $access = false, $thisContext = false, $user = 
  * @param type $cap
  * @param type $userID
  */
-function gt_has_user_capability($cap, $userID)
-{
+function gt_has_user_capability($cap, $userID) {
     global $GT;
-    if (!isset($GT)){
+    if (!isset($GT)) {
         $GT = new \GT\GradeTracker();
     }
     $contexts = $GT->getUserContexts($userID);
@@ -239,25 +230,20 @@ function gt_has_user_capability($cap, $userID)
  * @param type $title
  * @return string
  */
-function gt_success_alert_box($text)
-{
+function gt_success_alert_box($text) {
 
     $output = "";
     $output .= "<div class='gt_alert_good fade in'>";
 
-        if (is_array($text))
-        {
-            $output .= "<strong>".get_string('success', 'block_gradetracker')."</strong><br>";
-            foreach($text as $t)
-            {
-                $output .= "<span>{$t}</span><br>";
-            }
+    if (is_array($text)) {
+        $output .= "<strong>".get_string('success', 'block_gradetracker')."</strong><br>";
+        foreach ($text as $t) {
+            $output .= "<span>{$t}</span><br>";
         }
-        else
-        {
-            $output .= "<strong>".get_string('success', 'block_gradetracker')."</strong> ";
-            $output .= "<span>{$text}</span>";
-        }
+    } else {
+        $output .= "<strong>".get_string('success', 'block_gradetracker')."</strong> ";
+        $output .= "<span>{$text}</span>";
+    }
 
     $output .= "</div>";
 
@@ -271,36 +257,27 @@ function gt_success_alert_box($text)
  * @param type $title
  * @return string
  */
-function gt_error_alert_box($text)
-{
+function gt_error_alert_box($text) {
 
     $output = "";
     $output .= "<div class='gt_alert_bad fade in'>";
 
-        if (is_array($text))
-        {
+    if (is_array($text)) {
 
-            $output .= "<strong>".get_string('errors', 'block_gradetracker')."</strong><br>";
-            foreach($text as $t)
-            {
-                if (is_array($t))
-                {
-                    foreach($t as $t2)
-                    {
-                        $output .= "<span>{$t2}</span><br>";
-                    }
+        $output .= "<strong>".get_string('errors', 'block_gradetracker')."</strong><br>";
+        foreach ($text as $t) {
+            if (is_array($t)) {
+                foreach ($t as $t2) {
+                    $output .= "<span>{$t2}</span><br>";
                 }
-                else
-                {
-                    $output .= "<span>{$t}</span><br>";
-                }
+            } else {
+                $output .= "<span>{$t}</span><br>";
             }
         }
-        else
-        {
-            $output .= "<strong>".get_string('error', 'block_gradetracker')."</strong> ";
-            $output .= "<span>{$text}</span>";
-        }
+    } else {
+        $output .= "<strong>".get_string('error', 'block_gradetracker')."</strong> ";
+        $output .= "<span>{$text}</span>";
+    }
 
     $output .= "</div>";
 
@@ -315,25 +292,20 @@ function gt_error_alert_box($text)
  * @param type $title
  * @return string
  */
-function gt_info_alert_box($text)
-{
+function gt_info_alert_box($text) {
 
     $output = "";
     $output .= "<div class='gt_alert_info fade in'>";
 
-        if (is_array($text))
-        {
-            $output .= "<strong>".get_string('info', 'block_gradetracker')."</strong><br>";
-            foreach($text as $t)
-            {
-                $output .= "<span>{$t}</span><br>";
-            }
+    if (is_array($text)) {
+        $output .= "<strong>".get_string('info', 'block_gradetracker')."</strong><br>";
+        foreach ($text as $t) {
+            $output .= "<span>{$t}</span><br>";
         }
-        else
-        {
-            $output .= "<strong>".get_string('info', 'block_gradetracker')."</strong> ";
-            $output .= "<span>{$text}</span>";
-        }
+    } else {
+        $output .= "<strong>".get_string('info', 'block_gradetracker')."</strong> ";
+        $output .= "<span>{$text}</span>";
+    }
 
     $output .= "</div>";
 
@@ -349,25 +321,20 @@ function gt_info_alert_box($text)
  * @param type $title
  * @return string
  */
-function gt_warning_alert_box($text)
-{
+function gt_warning_alert_box($text) {
 
     $output = "";
     $output .= "<div class='gt_alert_warning fade in'>";
 
-        if (is_array($text))
-        {
-            $output .= "<strong>".get_string('warning', 'block_gradetracker')."</strong><br>";
-            foreach($text as $t)
-            {
-                $output .= "<span>{$t}</span><br>";
-            }
+    if (is_array($text)) {
+        $output .= "<strong>".get_string('warning', 'block_gradetracker')."</strong><br>";
+        foreach ($text as $t) {
+            $output .= "<span>{$t}</span><br>";
         }
-        else
-        {
-            $output .= "<strong>".get_string('warning', 'block_gradetracker')."</strong> ";
-            $output .= "<span>{$text}</span>";
-        }
+    } else {
+        $output .= "<strong>".get_string('warning', 'block_gradetracker')."</strong> ";
+        $output .= "<span>{$text}</span>";
+    }
 
     $output .= "</div>";
 
@@ -380,8 +347,7 @@ function gt_warning_alert_box($text)
  * @param type $length
  * @return string
  */
-function gt_rand_str($length)
-{
+function gt_rand_str($length) {
 
     $str = "987654321AaBbCcDdEeFfGgHhJjKkMmNnPpQqRrSsTtUuVvWwXxYyZz123456789";
 
@@ -389,8 +355,7 @@ function gt_rand_str($length)
 
     $output = "";
 
-    for($i = 0; $i < $length; $i++)
-    {
+    for ($i = 0; $i < $length; $i++) {
         $output .= $str[mt_rand(0, $count)];
     }
 
@@ -407,17 +372,16 @@ function gt_rand_str($length)
  *      Owner: rwx,
  *      Group: rw,
  *      Public: r
- *  @param type $dir
+ * @param type $dir
  */
-function gt_create_data_directory($dir)
-{
+function gt_create_data_directory($dir) {
 
     global $CFG;
 
     // Check for main plugin directory
-    if (!is_dir( \GT\GradeTracker::dataroot() )){
-        if (is_writeable($CFG->dataroot)){
-            if (!mkdir(\GT\GradeTracker::dataroot(), 0755, true)){
+    if (!is_dir( \GT\GradeTracker::dataroot() )) {
+        if (is_writeable($CFG->dataroot)) {
+            if (!mkdir(\GT\GradeTracker::dataroot(), 0755, true)) {
                 return false;
             }
         } else {
@@ -425,11 +389,10 @@ function gt_create_data_directory($dir)
         }
     }
 
-
     // Now try and make the actual dir we want
-    if (!is_dir( \GT\GradeTracker::dataroot() . '/' . $dir )){
-        if (is_writeable(\GT\GradeTracker::dataroot())){
-            if (!mkdir(\GT\GradeTracker::dataroot() . '/' . $dir, 0755, true)){
+    if (!is_dir( \GT\GradeTracker::dataroot() . '/' . $dir )) {
+        if (is_writeable(\GT\GradeTracker::dataroot())) {
+            if (!mkdir(\GT\GradeTracker::dataroot() . '/' . $dir, 0755, true)) {
                 return false;
             }
         } else {
@@ -439,7 +402,6 @@ function gt_create_data_directory($dir)
 
     // If we got this far must be ok
     return true;
-
 
 }
 
@@ -451,7 +413,7 @@ function gt_create_data_directory($dir)
  * @param type $path
  * @return type
  */
-function gt_create_data_path_code($path){
+function gt_create_data_path_code($path) {
 
     global $DB;
 
@@ -463,7 +425,7 @@ function gt_create_data_path_code($path){
 
     // See if one already exists for this path
     $record = $DB->get_record("bcgt_file_codes", array("path" => $path));
-    if ($record){
+    if ($record) {
         return $record->code;
     }
 
@@ -472,12 +434,10 @@ function gt_create_data_path_code($path){
 
     // Unlikely, but check if code has already been used
     $cnt = $DB->count_records("bcgt_file_codes", array("code" => $code));
-    while ($cnt > 0)
-    {
+    while ($cnt > 0) {
         $code = gt_rand_str(10);
         $cnt = $DB->count_records("bcgt_file_codes", array("code" => $code));
     }
-
 
     $ins = new \stdClass();
     $ins->path = $path;
@@ -494,13 +454,12 @@ function gt_create_data_path_code($path){
  * @param type $path
  * @return boolean
  */
-function gt_get_data_path_code($path)
-{
+function gt_get_data_path_code($path) {
     global $DB;
 
     // See if one already exists for this path
     $record = $DB->get_record("bcgt_file_codes", array("path" => $path));
-    if ($record){
+    if ($record) {
         return $record->code;
     }
 
@@ -513,7 +472,7 @@ function gt_get_data_path_code($path)
  * @param type $data
  * @param type $file
  */
-function gt_save_file_contents($data, $file){
+function gt_save_file_contents($data, $file) {
 
     // Create directory if it doersn't exist
     \gt_create_data_directory("tmp/data");
@@ -521,7 +480,7 @@ function gt_save_file_contents($data, $file){
     $path = \GT\GradeTracker::dataroot() . "/tmp/data/{$file}";
 
     $file = fopen( $path , 'a');
-    if ($file){
+    if ($file) {
         fwrite($file, $data);
         fclose($file);
         return $path;
@@ -538,8 +497,7 @@ function gt_save_file_contents($data, $file){
  * @param type $name
  * @param type $new Is it a new file we've uploaded or an existing one we are just moving?
  */
-function gt_save_file($file, $path, $name, $new = true)
-{
+function gt_save_file($file, $path, $name, $new = true) {
 
     global $CFG;
 
@@ -551,29 +509,26 @@ function gt_save_file($file, $path, $name, $new = true)
     $explode = explode("/", $path);
     $cnt = count($explode);
 
-    if ($explode)
-    {
-        for ($i = 0; $i < $cnt; $i++)
-        {
+    if ($explode) {
+        for ($i = 0; $i < $cnt; $i++) {
 
             $diff = $i - 1;
             $checkPath = "";
 
-            for ($j = 0; $j <= $diff; $j++)
-            {
+            for ($j = 0; $j <= $diff; $j++) {
                 $checkPath .= $explode[$j] . "/";
             }
 
             $checkPath .= $explode[$i];
 
-            if (!\gt_create_data_directory($checkPath)){
+            if (!\gt_create_data_directory($checkPath)) {
                 return false;
             }
 
         }
     }
 
-    if ($new){
+    if ($new) {
         return move_uploaded_file($file, \GT\GradeTracker::dataroot() . '/' . $path . '/' . $name);
     } else {
         return rename($file, \GT\GradeTracker::dataroot() . '/' . $path . '/' . $name);
@@ -585,8 +540,7 @@ function gt_save_file($file, $path, $name, $new = true)
  * Get the mime type of a file
  * @param type $file
  */
-function gt_get_file_mime_type($file)
-{
+function gt_get_file_mime_type($file) {
     $fInfo = finfo_open(FILEINFO_MIME_TYPE);
     $mime = finfo_file($fInfo, $file);
     finfo_close($fInfo);
@@ -598,8 +552,7 @@ function gt_get_file_mime_type($file)
  * @param type $mime
  * @return type
  */
-function gt_mime_type_is_image($mime)
-{
+function gt_mime_type_is_image($mime) {
     return (in_array($mime, array('image/bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/tiff', 'image/pjpeg')));
 }
 
@@ -608,12 +561,11 @@ function gt_mime_type_is_image($mime)
  * @param type $txt
  * @return type
  */
-function gt_html($txt, $nl2br = false)
-{
+function gt_html($txt, $nl2br = false) {
     return ($nl2br) ? nl2br(  htmlspecialchars($txt, ENT_QUOTES) ) : htmlspecialchars($txt, ENT_QUOTES);
 }
 
-function gt_html_undo($txt){
+function gt_html_undo($txt) {
     return html_entity_decode($txt, ENT_QUOTES);
 }
 
@@ -623,8 +575,7 @@ function gt_html_undo($txt){
  * @param type $filename
  * @return type
  */
-function gt_get_file_extension($filename)
-{
+function gt_get_file_extension($filename) {
     $filename = strtolower($filename);
     $exts = explode(".", $filename);
     $n = count($exts) - 1;
@@ -639,12 +590,11 @@ function gt_get_file_extension($filename)
  * @param type $val e.g. 128M
  * @return int e.g. ..
  */
-function gt_get_bytes_from_upload_max_filesize($val)
-{
+function gt_get_bytes_from_upload_max_filesize($val) {
 
     $val = trim($val);
-    $last = strtolower($val[strlen($val)-1]);
-    switch($last) {
+    $last = strtolower($val[strlen($val) - 1]);
+    switch ($last) {
         case 'g':
             $val *= 1024;
         case 'm':
@@ -663,30 +613,29 @@ function gt_get_bytes_from_upload_max_filesize($val)
  * @param type $precision
  * @return type
  */
-function gt_convert_bytes_to_hr($bytes, $precision = 2)
-{
-	$kilobyte = 1024;
-	$megabyte = $kilobyte * 1024;
-	$gigabyte = $megabyte * 1024;
-	$terabyte = $gigabyte * 1024;
+function gt_convert_bytes_to_hr($bytes, $precision = 2) {
+    $kilobyte = 1024;
+    $megabyte = $kilobyte * 1024;
+    $gigabyte = $megabyte * 1024;
+    $terabyte = $gigabyte * 1024;
 
-	if (($bytes >= 0) && ($bytes < $kilobyte)) {
-		return $bytes . ' B';
+    if (($bytes >= 0) && ($bytes < $kilobyte)) {
+        return $bytes . ' B';
 
-	} elseif (($bytes >= $kilobyte) && ($bytes < $megabyte)) {
-		return round($bytes / $kilobyte, $precision) . ' KB';
+    } else if (($bytes >= $kilobyte) && ($bytes < $megabyte)) {
+        return round($bytes / $kilobyte, $precision) . ' KB';
 
-	} elseif (($bytes >= $megabyte) && ($bytes < $gigabyte)) {
-		return round($bytes / $megabyte, $precision) . ' MB';
+    } else if (($bytes >= $megabyte) && ($bytes < $gigabyte)) {
+        return round($bytes / $megabyte, $precision) . ' MB';
 
-	} elseif (($bytes >= $gigabyte) && ($bytes < $terabyte)) {
-		return round($bytes / $gigabyte, $precision) . ' GB';
+    } else if (($bytes >= $gigabyte) && ($bytes < $terabyte)) {
+        return round($bytes / $gigabyte, $precision) . ' GB';
 
-	} elseif ($bytes >= $terabyte) {
-		return round($bytes / $terabyte, $precision) . ' TB';
-	} else {
-		return $bytes . ' B';
-	}
+    } else if ($bytes >= $terabyte) {
+        return round($bytes / $terabyte, $precision) . ' TB';
+    } else {
+        return $bytes . ' B';
+    }
 }
 
 /**
@@ -695,13 +644,11 @@ function gt_convert_bytes_to_hr($bytes, $precision = 2)
  * @param type $num
  * @return type
  */
-function gt_get_multidimensional_file($file, $num)
-{
+function gt_get_multidimensional_file($file, $num) {
 
     $return = array();
 
-    foreach($file as $key => $array)
-    {
+    foreach ($file as $key => $array) {
         $return[$key] = $array[$num];
     }
 
@@ -714,7 +661,7 @@ function gt_get_multidimensional_file($file, $num)
  * @param type $txt
  * @return type
  */
-function gt_strip_chars($txt){
+function gt_strip_chars($txt) {
 
     $txt = preg_replace("/[^a-z0-9\.\- ]/i", "", $txt);
     return trim($txt);
@@ -726,7 +673,7 @@ function gt_strip_chars($txt){
  * @param type $txt
  * @return type
  */
-function gt_strip_chars_non_alpha($txt){
+function gt_strip_chars_non_alpha($txt) {
     $txt = preg_replace("/[^a-z0-9]/i", "", $txt);
     return trim($txt);
 }
@@ -736,16 +683,16 @@ function gt_strip_chars_non_alpha($txt){
  * @param type $str
  * @return type
  */
-function gt_make_db_field_safe($str, &$usedArray){
+function gt_make_db_field_safe($str, &$usedArray) {
 
-    if (array_key_exists($str, $usedArray)){
+    if (array_key_exists($str, $usedArray)) {
         return $usedArray[$str];
     }
 
     $txt = \gt_strip_chars_non_alpha($str);
     $txt = strtolower($txt);
 
-    while (in_array($txt, $usedArray)){
+    while (in_array($txt, $usedArray)) {
         $txt .= '_';
     }
 
@@ -759,7 +706,7 @@ function gt_make_db_field_safe($str, &$usedArray){
  * @param type $txt
  * @return type
  */
-function gt_is_empty($txt){
+function gt_is_empty($txt) {
 
     $txt = (string)$txt;
     $txt = trim($txt);
@@ -772,10 +719,10 @@ function gt_is_empty($txt){
  * @param  [type] $id [description]
  * @return [type]     [description]
  */
-function gt_get_role($id){
+function gt_get_role($id) {
 
-  global $DB;
-  return $DB->get_record("role", array("id" => $id));
+    global $DB;
+    return $DB->get_record("role", array("id" => $id));
 
 }
 
@@ -785,24 +732,28 @@ function gt_get_role($id){
  * @param type $shortname
  * @return type
  */
-function gt_get_role_by_shortname($shortname){
+function gt_get_role_by_shortname($shortname) {
 
     global $DB;
     return $DB->get_record("role", array("shortname" => $shortname));
 
 }
 
-function gt_get_user_role_from_context($instanceID, $level, $userID){
+function gt_get_user_role_from_context($instanceID, $level, $userID) {
 
-  global $DB;
+    global $DB;
 
-  $context = $DB->get_record("context", array("contextlevel" => $level, "instanceid" => $instanceID));
-  if (!$context) return false;
+    $context = $DB->get_record("context", array("contextlevel" => $level, "instanceid" => $instanceID));
+    if (!$context) {
+        return false;
+    }
 
-  $role = $DB->get_record("role_assignments", array("userid" => $userID, "contextid" => $context->id));
-  if (!$role) return false;
+    $role = $DB->get_record("role_assignments", array("userid" => $userID, "contextid" => $context->id));
+    if (!$role) {
+        return false;
+    }
 
-  return $role;
+    return $role;
 
 }
 
@@ -812,7 +763,7 @@ function gt_get_user_role_from_context($instanceID, $level, $userID){
  * @param type $params
  * @return type
  */
-function gt_create_sql_placeholders($params){
+function gt_create_sql_placeholders($params) {
 
     return implode(',', array_fill(0, count($params), '?'));
 
@@ -824,7 +775,7 @@ function gt_create_sql_placeholders($params){
  * @param type $sqlArray
  * @return string
  */
-function gt_convert_to_sql($sqlArray){
+function gt_convert_to_sql($sqlArray) {
 
     // Remove empty elements
     $sqlArray['select'] = array_filter($sqlArray['select']);
@@ -840,8 +791,7 @@ function gt_convert_to_sql($sqlArray){
     $sql .= "FROM " . $sqlArray['from'] . " ";
 
     // Joins
-    foreach($sqlArray['join'] as $join)
-    {
+    foreach ($sqlArray['join'] as $join) {
         $sql .= $join . " ";
     }
 
@@ -849,12 +799,12 @@ function gt_convert_to_sql($sqlArray){
     $sql .= "WHERE " . implode(" AND ", $sqlArray['where']) . " ";
 
     // Group
-    if (isset($sqlArray['group'])){
+    if (isset($sqlArray['group'])) {
         $sql .= "GROUP BY " . $sqlArray['group'] . " ";
     }
 
     // Order
-    if (isset($sqlArray['order'])){
+    if (isset($sqlArray['order'])) {
         $sql .= "ORDER BY " . $sqlArray['order'] . " ";
     }
 
@@ -895,7 +845,9 @@ function gt_get_array_depth(array $array) {
  */
 function gt_flatten_array($array) {
 
-    if (!is_array($array)) return false;
+    if (!is_array($array)) {
+        return false;
+    }
 
     $result = array();
 
@@ -903,10 +855,8 @@ function gt_flatten_array($array) {
 
         if (is_array($value)) {
             // I have changed the array_merge because with an empty $result it overrides first key to 0
-//            $result = array_merge($result, gt_flatten_array($value));
             $result = $result + \gt_flatten_array($value);
-        }
-        else {
+        } else {
             $result[$key] = $value;
         }
 
@@ -922,11 +872,10 @@ function gt_flatten_array($array) {
  * @param type $value
  * @return type
  */
-function gt_strip_slashes($value)
-{
+function gt_strip_slashes($value) {
     $value = is_array($value) ?
-                array_map('gt_strip_slashes', $value) :
-                stripslashes($value);
+        array_map('gt_strip_slashes', $value) :
+        stripslashes($value);
 
     return $value;
 }
@@ -937,22 +886,17 @@ function gt_strip_slashes($value)
  * @param type $needle
  * @return type
  */
-function gt_str_starts($haystack, $needle)
-{
+function gt_str_starts($haystack, $needle) {
 
-    if (is_array($needle))
-    {
+    if (is_array($needle)) {
         $result = false;
-        foreach($needle as $str)
-        {
+        foreach ($needle as $str) {
             $length = strlen($str);
             $strResult = ( strcasecmp(substr($haystack, 0, $length), $str) == 0 );
             $result = ($result || $strResult);
         }
         return $result;
-    }
-    else
-    {
+    } else {
         $length = strlen($needle);
         return ( strcasecmp(substr($haystack, 0, $length), $needle) == 0 );
     }
@@ -965,21 +909,16 @@ function gt_str_starts($haystack, $needle)
  * @param type $needle
  * @return type
  */
-function gt_str_ends($haystack, $needle)
-{
-    if (is_array($needle))
-    {
+function gt_str_ends($haystack, $needle) {
+    if (is_array($needle)) {
         $result = false;
-        foreach($needle as $str)
-        {
-            $strResult = (strcasecmp(substr($haystack, -strlen($str)),$str) == 0);
+        foreach ($needle as $str) {
+            $strResult = (strcasecmp(substr($haystack, -strlen($str)), $str) == 0);
             $result = ($result || $strResult);
         }
         return $result;
-    }
-    else
-    {
-        return (strcasecmp(substr($haystack, -strlen($needle)),$needle) == 0);
+    } else {
+        return (strcasecmp(substr($haystack, -strlen($needle)), $needle) == 0);
     }
 }
 
@@ -989,20 +928,15 @@ function gt_str_ends($haystack, $needle)
  * @param type $needle
  * @return type
  */
-function gt_str_contains($haystack, $needle)
-{
-    if (is_array($needle))
-    {
+function gt_str_contains($haystack, $needle) {
+    if (is_array($needle)) {
         $result = false;
-        foreach($needle as $str)
-        {
+        foreach ($needle as $str) {
             $strResult = (stripos($haystack, $str) !== false);
             $result = ($result || $strResult);
         }
         return $result;
-    }
-    else
-    {
+    } else {
         return (stripos($haystack, $needle) !== false);
     }
 }
@@ -1012,41 +946,40 @@ function gt_str_contains($haystack, $needle)
  * Display the debugging section
  * @global type $USER
  */
-function gt_display_debug_section(){
+function gt_display_debug_section() {
 
     global $CFG, $USER;
 
-    if (is_siteadmin())
-    {
+    if (is_siteadmin()) {
 
         echo "<div id='gt_grid_debug'>";
-            echo "<table>";
-                echo "<tr><th colspan='4'>".get_string('console', 'block_gradetracker')."</th></tr>";
-                echo "<tr>";
-                    echo "<td>";
-                        echo "<a href='#' class='gt_start_debugging' title='".get_string('startdebugging', 'block_gradetracker')."'>";
-                            echo "<img class='".((\gt_is_debugging()) ? 'gt_img_disable' : '')." gt_debug_start' src='{$CFG->wwwroot}/blocks/gradetracker/pix/start.png' alt='".get_string('startdebugging', 'block_gradetracker')."' />";
-                        echo "</a>";
-                    echo "</td>";
-                    echo "<td>";
-                        echo "<a href='#' class='gt_stop_debugging' title='".get_string('stopdebugging', 'block_gradetracker')."'>";
-                            echo "<img class='".((!\gt_is_debugging()) ? 'gt_img_disable' : '')." gt_debug_stop' src='{$CFG->wwwroot}/blocks/gradetracker/pix/end.png' alt='".get_string('stopdebugging', 'block_gradetracker')."' />";
-                        echo "</td>";
-                    echo "</a>";
-                    echo "<td>";
-                        echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/download.php?f=".\gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/debug/'.$USER->id.'.txt' )."&t=".time()."' class='gt_refresh_url_time' target='_blank' title='".get_string('viewlogs', 'block_gradetracker')."'>";
-                            echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_text.png' alt='".get_string('viewlogs', 'block_gradetracker')."' />";
-                        echo "</a>";
-                    echo "</td>";
-                    echo "<td>";
-                        echo "<a href='#' class='gt_clear_debugging'>";
-                            echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_delete.png' alt='".get_string('clearlogs', 'block_gradetracker')."' title='".get_string('clearlogs', 'block_gradetracker')."' />";
-                        echo "</a>";
-                    echo "</td>";
-                echo "</tr>";
-            echo "</table>";
+        echo "<table>";
+        echo "<tr><th colspan='4'>".get_string('console', 'block_gradetracker')."</th></tr>";
+        echo "<tr>";
+        echo "<td>";
+        echo "<a href='#' class='gt_start_debugging' title='".get_string('startdebugging', 'block_gradetracker')."'>";
+        echo "<img class='".((\gt_is_debugging()) ? 'gt_img_disable' : '')." gt_debug_start' src='{$CFG->wwwroot}/blocks/gradetracker/pix/start.png' alt='".get_string('startdebugging', 'block_gradetracker')."' />";
+        echo "</a>";
+        echo "</td>";
+        echo "<td>";
+        echo "<a href='#' class='gt_stop_debugging' title='".get_string('stopdebugging', 'block_gradetracker')."'>";
+        echo "<img class='".((!\gt_is_debugging()) ? 'gt_img_disable' : '')." gt_debug_stop' src='{$CFG->wwwroot}/blocks/gradetracker/pix/end.png' alt='".get_string('stopdebugging', 'block_gradetracker')."' />";
+        echo "</td>";
+        echo "</a>";
+        echo "<td>";
+        echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/download.php?f=".\gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/debug/'.$USER->id.'.txt' )."&t=".time()."' class='gt_refresh_url_time' target='_blank' title='".get_string('viewlogs', 'block_gradetracker')."'>";
+        echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_text.png' alt='".get_string('viewlogs', 'block_gradetracker')."' />";
+        echo "</a>";
+        echo "</td>";
+        echo "<td>";
+        echo "<a href='#' class='gt_clear_debugging'>";
+        echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_delete.png' alt='".get_string('clearlogs', 'block_gradetracker')."' title='".get_string('clearlogs', 'block_gradetracker')."' />";
+        echo "</a>";
+        echo "</td>";
+        echo "</tr>";
+        echo "</table>";
 
-            echo "<input type='hidden' id='gt_debugging_enabled' value='".(\gt_is_debugging() ? 1 : 0)."' />";
+        echo "<input type='hidden' id='gt_debugging_enabled' value='".(\gt_is_debugging() ? 1 : 0)."' />";
 
         echo "</div>";
 
@@ -1058,11 +991,10 @@ function gt_display_debug_section(){
  * Get overriden settings from json file
  * @return boolean
  */
-function gt_get_overriden_settings(){
+function gt_get_overriden_settings() {
 
     $file = \GT\GradeTracker::dataroot() . '/settings.json';
-    if (file_exists($file))
-    {
+    if (file_exists($file)) {
         $content = file_get_contents($file);
         return serialize( json_decode($content) );
     }
@@ -1077,7 +1009,7 @@ function gt_get_overriden_settings(){
  * @param type $length
  * @return type
  */
-function gt_cut_string($string, $length = 100){
+function gt_cut_string($string, $length = 100) {
 
     return (strlen($string) > $length) ? substr($string, 0, ($length - 3) ) . '...' : $string;
 
@@ -1112,9 +1044,9 @@ function gt_array_element_to_bot(&$array, $key) {
  * @param type $path
  * @return type
  */
-function gt_img_to_data($path){
+function gt_img_to_data($path) {
 
-    if (file_exists($path) && !is_dir($path)){
+    if (file_exists($path) && !is_dir($path)) {
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -1129,7 +1061,7 @@ function gt_img_to_data($path){
  * @param type $data
  * @return type
  */
-function gt_get_image_ext_from_base64($data){
+function gt_get_image_ext_from_base64($data) {
 
     preg_match("/data:image\/(.*?);/", $data, $match);
     return (isset($match[1])) ? $match[1] : false;
@@ -1142,7 +1074,7 @@ function gt_get_image_ext_from_base64($data){
  * @param type $path
  * @return boolean
  */
-function gt_save_base64_image($data, $path){
+function gt_save_base64_image($data, $path) {
 
     $pos = strpos($data, ',');
     $start = $pos - strlen($data) + 1;
@@ -1151,7 +1083,7 @@ function gt_save_base64_image($data, $path){
     $data = base64_decode($data);
 
     $source = imagecreatefromstring($data);
-    if ($source){
+    if ($source) {
 
         // Transparency
         imagealphablending($source, false);
@@ -1164,57 +1096,76 @@ function gt_save_base64_image($data, $path){
         return false;
     }
 
-
 }
 
 // Not used anymore i think, uses the observer method
-function gt_auto_enrol($data){
+function gt_auto_enrol($data) {
 
     global $DB;
 
     $GT = new \GT\GradeTracker();
 
-    if ($GT->getSetting('use_auto_enrol_quals') == 1){
+    if ($GT->getSetting('use_auto_enrol_quals') == 1) {
 
         $context = $DB->get_record("context", array("contextlevel" => CONTEXT_COURSE, "instanceid" => $data->courseid));
-        if (!$context) return true;
+        if (!$context) {
+            return true;
+        }
 
         $role = $DB->get_record("role_assignments", array("userid" => $data->userid, "contextid" => $context->id));
-        if (!$role) return true;
+        if (!$role) {
+            return true;
+        }
 
         $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data->courseid));
-        if (!$quals) return true;
+        if (!$quals) {
+            return true;
+        }
 
         $GT_User = new \GT\User($data->userid);
 
-        foreach ($quals as $qual){
+        foreach ($quals as $qual) {
             $user_role = ($role->roleid < 5 ? "STAFF" : "STUDENT");
             $GT_User->addToQual($qual->qualid, $user_role);
         }
 
     }
 
-    if ($GT->getSetting('use_auto_enrol_units') == 1){
+    if ($GT->getSetting('use_auto_enrol_units') == 1) {
 
-        if (!$context) $context = $DB->get_record("context", array("contextlevel" => CONTEXT_COURSE, "instanceid" => $data->courseid));
-        if (!$context) return true;
+        if (!$context) {
+            $context = $DB->get_record("context", array("contextlevel" => CONTEXT_COURSE, "instanceid" => $data->courseid));
+        }
+        if (!$context) {
+            return true;
+        }
 
-        if (!$role) $role = $DB->get_record("role_assignments", array("userid" => $data->userid, "contextid" => $context->id));
-        if (!$role) return true;
+        if (!$role) {
+            $role = $DB->get_record("role_assignments", array("userid" => $data->userid, "contextid" => $context->id));
+        }
+        if (!$role) {
+            return true;
+        }
 
-        if (!$quals) $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data->courseid));;
-        if (!$quals) return true;
+        if (!$quals) {
+            $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data->courseid));
+        };
+        if (!$quals) {
+            return true;
+        }
 
-        if (!$GT_User) $GT_User = new \GT\User($data->userid);
+        if (!$GT_User) {
+            $GT_User = new \GT\User($data->userid);
+        }
 
-        foreach ($quals as $qual){
+        foreach ($quals as $qual) {
 
             $Qual = new \GT\Qualification($qual->qualid);
             $units = $Qual->getUnits();
 
             $user_role = ($role->roleid < 5 ? "STAFF" : "STUDENT");
 
-            foreach ($units as $unit){
+            foreach ($units as $unit) {
                 $GT_User->addToQualUnit($qual->qualid, $unit->getID(), $user_role);
             }
 
@@ -1224,37 +1175,45 @@ function gt_auto_enrol($data){
 }
 
 // Not used anymore i think, uses the observer method
-function gt_auto_unenrol($data){
+function gt_auto_unenrol($data) {
 
     global $DB;
 
     $GT = new \GT\GradeTracker();
 
-    if ($GT->getSetting('use_auto_unenrol_quals') == 1){
+    if ($GT->getSetting('use_auto_unenrol_quals') == 1) {
 
         $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data->courseid));
-        if (!$quals) return true;
+        if (!$quals) {
+            return true;
+        }
 
         $GT_User = new \GT\User($data->userid);
 
-        foreach ($quals as $qual){
+        foreach ($quals as $qual) {
             $GT_User->removeFromQual($qual->qualid);
         }
     }
 
-    if ($GT->getSetting('use_auto_unenrol_units') == 1){
+    if ($GT->getSetting('use_auto_unenrol_units') == 1) {
 
-        if (!$quals) $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data->courseid));;
-        if (!$quals) return true;
+        if (!$quals) {
+            $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data->courseid));
+        };
+        if (!$quals) {
+            return true;
+        }
 
-        if (!$GT_User) $GT_User = new \GT\User($data->userid);
+        if (!$GT_User) {
+            $GT_User = new \GT\User($data->userid);
+        }
 
-        foreach ($quals as $qual){
+        foreach ($quals as $qual) {
 
             $Qual = new \GT\Qualification($qual->qualid);
             $units = $Qual->getUnits();
 
-            foreach ($units as $unit){
+            foreach ($units as $unit) {
                 $GT_User->removeFromQualUnit($qual->qualid, $unit->getID());
             }
 
@@ -1270,52 +1229,51 @@ function gt_auto_unenrol($data){
  * Split into array lengths of 5 would result in:
  *
  * array (size=3)
-  0 =>
-    array (size=5)
-      0 => string 'one' (length=3)
-      1 => string 'two' (length=3)
-      2 => string 'three' (length=5)
-      3 => string 'four' (length=4)
-      4 => string 'five' (length=4)
-  1 =>
-    array (size=5)
-      0 => string 'six' (length=3)
-      1 => string 'seven' (length=5)
-      2 => string 'eight' (length=5)
-      3 => string 'nine' (length=4)
-      4 => string 'ten' (length=3)
-  2 =>
-    array (size=2)
-      0 => string 'eleven' (length=6)
-      1 => string 'twelve' (length=6)
+0 =>
+array (size=5)
+0 => string 'one' (length=3)
+1 => string 'two' (length=3)
+2 => string 'three' (length=5)
+3 => string 'four' (length=4)
+4 => string 'five' (length=4)
+1 =>
+array (size=5)
+0 => string 'six' (length=3)
+1 => string 'seven' (length=5)
+2 => string 'eight' (length=5)
+3 => string 'nine' (length=4)
+4 => string 'ten' (length=3)
+2 =>
+array (size=2)
+0 => string 'eleven' (length=6)
+1 => string 'twelve' (length=6)
  *
  * @param type $array
  * @param type $length
  * @param type $result
  * @return type
  */
-function gt_split_array($array, $length, &$result = false){
+function gt_split_array($array, $length, &$result = false) {
 
-  if (!$result){
-      $result = array();
-  }
+    if (!$result) {
+        $result = array();
+    }
 
-  $thisArray = array();
+    $thisArray = array();
 
-  for ($i = 0; $i < $length; $i++)
-  {
-      if ($array){
-         $thisArray[] = array_shift($array);
-      }
-  }
+    for ($i = 0; $i < $length; $i++) {
+        if ($array) {
+            $thisArray[] = array_shift($array);
+        }
+    }
 
-  $result[] = $thisArray;
+    $result[] = $thisArray;
 
-  if ($array){
-     \gt_split_array($array, $length, $result);
-  }
+    if ($array) {
+        \gt_split_array($array, $length, $result);
+    }
 
-  return $result;
+    return $result;
 
 }
 
@@ -1325,10 +1283,9 @@ function gt_split_array($array, $length, &$result = false){
  * @param type $b
  * @return type
  */
-function gt_gcd($a, $b)
-{
+function gt_gcd($a, $b) {
 
-  return $b ? gt_gcd( $b, ($a % $b) ) : $a;
+    return $b ? gt_gcd( $b, ($a % $b) ) : $a;
 
 }
 
@@ -1338,10 +1295,9 @@ function gt_gcd($a, $b)
  * @param type $b
  * @return type
  */
-function gt_lcm($a, $b)
-{
+function gt_lcm($a, $b) {
 
-  return ($a * $b) / gt_gcd($a, $b);
+    return ($a * $b) / gt_gcd($a, $b);
 
 }
 
@@ -1354,24 +1310,25 @@ function gt_lcm($a, $b)
 function gt_decrement_letter_excel($char, $times = 1) {
 
     // If it's not a string just return null
-    if (!is_string($char)) return null;
+    if (!is_string($char)) {
+        return null;
+    }
 
-    for ($i = 0; $i < $times; $i++)
-    {
+    for ($i = 0; $i < $times; $i++) {
 
         $len = strlen($char);
 
         // last character is A or a
-        if(ord($char[$len - 1]) === 65 || ord($char[$len - 1]) === 97){
+        if (ord($char[$len - 1]) === 65 || ord($char[$len - 1]) === 97) {
 
-              if($len === 1){ // one character left
-                      return null;
-              } else { // 'ABA'--;  => 'AAZ'; recursive call
-                      $char = gt_decrement_letter_excel(substr($char, 0, -1)).'Z';
-              }
+            if ($len === 1) { // one character left
+                return null;
+            } else { // 'ABA'--;  => 'AAZ'; recursive call
+                $char = gt_decrement_letter_excel(substr($char, 0, -1)).'Z';
+            }
 
         } else {
-              $char[$len - 1] = chr(ord($char[$len - 1]) - 1);
+            $char[$len - 1] = chr(ord($char[$len - 1]) - 1);
         }
 
     }
@@ -1385,7 +1342,7 @@ function gt_decrement_letter_excel($char, $times = 1) {
  * @param type $excelDate
  * @return type
  */
-function gt_convert_excel_date_unix($excelDate){
+function gt_convert_excel_date_unix($excelDate) {
     return ($excelDate - 25569) * 86400;
 }
 
@@ -1394,13 +1351,11 @@ function gt_convert_excel_date_unix($excelDate){
  * @param type $backtrace
  * @return string
  */
-function gt_debug_file_line($backtrace)
-{
+function gt_debug_file_line($backtrace) {
 
     $r = array();
 
-    foreach($backtrace as $row)
-    {
+    foreach ($backtrace as $row) {
         $r[] = $row['file'] . ':' . $row['line'];
     }
 
@@ -1415,7 +1370,7 @@ function gt_debug_file_line($backtrace)
  * @param type $userID
  * @return type
  */
-function gt_can_user_access_activity($cmID, $userID){
+function gt_can_user_access_activity($cmID, $userID) {
 
     global $DB;
 
@@ -1444,14 +1399,14 @@ function gt_can_user_access_activity($cmID, $userID){
 }
 
 
-function gt_count_elements_and_sub_elements($array, $field){
+function gt_count_elements_and_sub_elements($array, $field) {
 
     $cnt = 0;
     $cnt += count($array);
 
-    if ($array){
-        foreach($array as $el){
-            if ($el[$field]){
+    if ($array) {
+        foreach ($array as $el) {
+            if ($el[$field]) {
                 $cnt += count($el[$field]);
             }
         }
@@ -1467,10 +1422,10 @@ function gt_count_elements_and_sub_elements($array, $field){
  * @param type $plugin
  * @return type
  */
-function gt_is_plugin_installed($plugin){
+function gt_is_plugin_installed($plugin) {
 
-   global $DB;
-   return $DB->get_record("config_plugins", array("plugin" => $plugin, "name" => "version"));
+    global $DB;
+    return $DB->get_record("config_plugins", array("plugin" => $plugin, "name" => "version"));
 
 }
 
@@ -1480,44 +1435,44 @@ function gt_is_plugin_installed($plugin){
  * Will only work with 1 level, e.g.
  *
  *  Array
-    (
-        [0] => Array
-            (
-                [item] => qual
-                [oldID] => 1
-                [newID] => 100
-            )
+(
+[0] => Array
+(
+[item] => qual
+[oldID] => 1
+[newID] => 100
+)
 
-        [1] => Array
-            (
-                [item] => qual
-                [oldID] => 2
-                [newID] => 200
-            )
+[1] => Array
+(
+[item] => qual
+[oldID] => 2
+[newID] => 200
+)
 
-        [3] => Array
-            (
-                [item] => qual
-                [oldID] => 4
-                [newID] => 400
-            )
+[3] => Array
+(
+[item] => qual
+[oldID] => 4
+[newID] => 400
+)
 
-    )
+)
  *
  * @param type $key
  * @param type $val
  * @param type $array
  * @return type
  */
+function gt_array_find($array, $key, $val = false) {
 
-function gt_array_find($array, $key, $val = false){
-
-    if (is_null($array)) return false;
+    if (is_null($array)) {
+        return false;
+    }
 
     $return = array();
 
-    if (is_array($key))
-    {
+    if (is_array($key)) {
 
         $search = $key; // Rename to make more sense
         $v = reset($search);
@@ -1527,25 +1482,21 @@ function gt_array_find($array, $key, $val = false){
         $find = \gt_array_find($array, $k, $v);
 
         // If any elements left, do it again
-        if ($search){
+        if ($search) {
             return \gt_array_find($find, $search);
         } else {
-            if (count($find) == 1){
+            if (count($find) == 1) {
                 return reset($find);
             } else {
                 return $find;
             }
         }
 
-    }
-    else
-    {
+    } else {
 
-        foreach($array as $el)
-        {
+        foreach ($array as $el) {
 
-            if ($el[$key] == $val)
-            {
+            if ($el[$key] == $val) {
                 $return[] = $el;
             }
 
@@ -1557,14 +1508,13 @@ function gt_array_find($array, $key, $val = false){
 
 }
 
-function gt_split_unit_name_number($name){
+function gt_split_unit_name_number($name) {
 
     $name = trim($name);
     preg_match("/^(Unit)?\s?(\d+)\s?:(.+)/", $name, $matches);
 
     $return = array( "number" => null, "name" => $name );
-    if ($matches)
-    {
+    if ($matches) {
         $return['number'] = (ctype_digit($matches[2])) ? $matches[2] : null;
         $return['name'] = trim($matches[3]);
     }
@@ -1573,7 +1523,7 @@ function gt_split_unit_name_number($name){
 
 }
 
-function gt_get_course($courseID){
+function gt_get_course($courseID) {
 
     global $DB;
     return $DB->get_record("course", array("id" => $courseID));
@@ -1585,7 +1535,7 @@ function gt_get_course($courseID){
  * @param type $ssn
  * @return boolean
  */
-function gt_validate_external_session($ssn, $studentID){
+function gt_validate_external_session($ssn, $studentID) {
 
     global $CFG;
 
@@ -1593,32 +1543,30 @@ function gt_validate_external_session($ssn, $studentID){
     $from = $split[0];
     $ssn = @$split[1];
 
-    switch($from)
-    {
+    switch ($from) {
         case 'portal':
 
-            if (!defined('PARENT_PORTAL')){
+            if (!defined('PARENT_PORTAL')) {
                 define('PARENT_PORTAL', true);
             }
 
             // Check for parent portal lib (old or new)
-            if (file_exists($CFG->dirroot . '/portal/lib.php')){
-                require_once $CFG->dirroot . '/portal/lib.php';
+            if (file_exists($CFG->dirroot . '/portal/lib.php')) {
+                require_once($CFG->dirroot . '/portal/lib.php');
             } else {
-                require_once $CFG->dirroot . '/local/parentportal/lib.php';
+                require_once($CFG->dirroot . '/local/parentportal/lib.php');
             }
 
             $session = ( isset($_SESSION['pp_user']) && isset($_SESSION['pp_ssn']) && $_SESSION['pp_ssn'] == $ssn );
-            if ($session)
-            {
+            if ($session) {
                 return (\PP\Portal::canUserAccessStudent($_SESSION['pp_user']->id, $studentID));
             }
 
-        break;
+            break;
 
         case 'block_elbp':
             return true;
-        break;
+            break;
 
     }
 
@@ -1626,7 +1574,7 @@ function gt_validate_external_session($ssn, $studentID){
 
 }
 
-function gt_get_external_gt_user_id($ssn){
+function gt_get_external_gt_user_id($ssn) {
 
     global $USER;
 
@@ -1634,14 +1582,13 @@ function gt_get_external_gt_user_id($ssn){
     $from = $split[0];
     $ssn = @$split[1];
 
-    switch($from)
-    {
+    switch ($from) {
         case 'block_elbp':
             return $USER->id;
-        break;
+            break;
         default:
             return false;
-        break;
+            break;
     }
 
     return false;
@@ -1649,7 +1596,7 @@ function gt_get_external_gt_user_id($ssn){
 }
 
 
-function gt_ajax_progress($status, $params = false){
+function gt_ajax_progress($status, $params = false) {
 
     @ob_implicit_flush(true);
     @ob_end_flush();
@@ -1658,7 +1605,7 @@ function gt_ajax_progress($status, $params = false){
         'result' => $status
     );
 
-    if ($params){
+    if ($params) {
         $arr = $arr + $params;
     }
 
@@ -1667,10 +1614,10 @@ function gt_ajax_progress($status, $params = false){
 }
 
 
-function gt_ajax_shutdown(){
+function gt_ajax_shutdown() {
 
     $e = error_get_last();
-    if ($e && $e['type'] == E_ERROR){
+    if ($e && $e['type'] == E_ERROR) {
 
         \gt_ajax_progress(false, array(
             'error' => $e['message'] . '<br>' . $e['file'] . ':' . $e['line']
@@ -1682,12 +1629,12 @@ function gt_ajax_shutdown(){
 
 }
 
-function gt_get_field_total_from_objects($array, $field){
+function gt_get_field_total_from_objects($array, $field) {
 
     $total = 0;
-    if ($array){
-        foreach($array as $row){
-            if (isset($row->$field) && is_numeric($row->$field)){
+    if ($array) {
+        foreach ($array as $row) {
+            if (isset($row->$field) && is_numeric($row->$field)) {
                 $total += $row->$field;
             }
         }
@@ -1697,23 +1644,20 @@ function gt_get_field_total_from_objects($array, $field){
 
 }
 
-function gt_add_field_to_objects(&$array, $field, $value){
-    if ($array){
-        foreach($array as $row){
+function gt_add_field_to_objects(&$array, $field, $value) {
+    if ($array) {
+        foreach ($array as $row) {
             $row->$field = $value;
         }
     }
 }
 
-function gt_implode_objects($delim, $objects, $method){
+function gt_implode_objects($delim, $objects, $method) {
 
     $array = array();
-    if ($objects)
-    {
-        foreach($objects as $object)
-        {
-            if (method_exists($object, $method))
-            {
+    if ($objects) {
+        foreach ($objects as $object) {
+            if (method_exists($object, $method)) {
                 $array[] = $object->$method();
             }
         }
@@ -1728,7 +1672,7 @@ function gt_implode_objects($delim, $objects, $method){
  * @param type $str
  * @return type
  */
-function gt_convert_to_utf8($str){
+function gt_convert_to_utf8($str) {
     mb_detect_order('ASCII, UTF-8');
     $enc = mb_detect_encoding($str, mb_detect_order(), true);
     return ($enc != 'UTF-8') ? iconv($enc, 'UTF-8', $str) : $str;
@@ -1742,18 +1686,18 @@ function gt_convert_to_utf8($str){
  */
 function gt_time_ago($timestamp) {
 
-   $strTime = array("second", "minute", "hour", "day", "month", "year");
-   $length = array("60","60","24","30","12","10");
+    $strTime = array("second", "minute", "hour", "day", "month", "year");
+    $length = array("60", "60", "24", "30", "12", "10");
 
-   $currentTime = time();
-   if($currentTime >= $timestamp) {
+    $currentTime = time();
+    if ($currentTime >= $timestamp) {
         $diff = time() - $timestamp;
-        for($i = 0; $diff >= $length[$i] && $i < count($length)-1; $i++) {
+        for ($i = 0; $diff >= $length[$i] && $i < count($length) - 1; $i++) {
             $diff = $diff / $length[$i];
         }
         $diff = round($diff);
         return $diff . " " . $strTime[$i] . "(s) ago ";
-   }
+    }
 
 }
 
@@ -1761,9 +1705,9 @@ function gt_time_ago($timestamp) {
  * Decode each value in an array
  * @param type $array
  */
-function gt_json_decode_array($array){
+function gt_json_decode_array($array) {
 
-    foreach($array as &$el){
+    foreach ($array as &$el) {
         $d = json_decode($el);
         $el = (!is_null($d)) ? $d : $el;
     }
@@ -1779,10 +1723,10 @@ function gt_json_decode_array($array){
  * @param type $value
  * @return boolean
  */
-function gt_find_element_in_array($array, $key, $value){
+function gt_find_element_in_array($array, $key, $value) {
 
-    foreach($array as $el){
-        if ($el[$key] == $value){
+    foreach ($array as $el) {
+        if ($el[$key] == $value) {
             return $el;
         }
     }
@@ -1793,11 +1737,11 @@ function gt_find_element_in_array($array, $key, $value){
 
 
 
-function gt_get_core_jquery(){
+function gt_get_core_jquery() {
 
     global $CFG;
 
-    require $CFG->dirroot . '/lib/jquery/plugins.php';
+    require($CFG->dirroot . '/lib/jquery/plugins.php');
     $jquery = array(
         'jquery' => (isset($plugins['jquery']['files'])) ? $CFG->wwwroot . '/theme/jquery.php/core/' . reset($plugins['jquery']['files']) : false,
         'ui' => (isset($plugins['ui']['files'])) ? $CFG->wwwroot . '/theme/jquery.php/core/' . reset($plugins['ui']['files']) : false
@@ -1807,17 +1751,17 @@ function gt_get_core_jquery(){
 
 }
 
-function gt_get_value_added_class($awardRank, $targetRank){
+function gt_get_value_added_class($awardRank, $targetRank) {
 
     $diff = $awardRank - $targetRank;
 
-    if ($diff >= 3){
+    if ($diff >= 3) {
         return "gt_value_added_higher";
-    } elseif ($diff > 0){
+    } else if ($diff > 0) {
         return "gt_value_added_high";
-    } elseif ($diff <= -3){
+    } else if ($diff <= -3) {
         return "gt_value_added_lower";
-    } elseif ($diff < 0){
+    } else if ($diff < 0) {
         return "gt_value_added_low";
     } else {
         return "gt_value_added_same";
@@ -1833,39 +1777,38 @@ function gt_get_value_added_class($awardRank, $targetRank){
  * @param type $component
  * @return type
  */
-function gt_image_url($imagename, $component = 'moodle'){
+function gt_image_url($imagename, $component = 'moodle') {
 
     global $PAGE;
 
-    if (method_exists($PAGE->theme, 'image_url')){
+    if (method_exists($PAGE->theme, 'image_url')) {
         return $PAGE->theme->image_url($imagename, $component);
     } else {
         return $PAGE->theme->pix_url($imagename, $component);
     }
 
-
 }
 
 
-function gt_print_sql($sql, $params, $print = true){
+function gt_print_sql($sql, $params, $print = true) {
 
-  global $DB;
+    global $DB;
 
-  $output = "";
+    $output = "";
 
-  $data = $DB->fix_sql_params($sql, $params);
+    $data = $DB->fix_sql_params($sql, $params);
 
-  $sql = $data[0];
-  $params = $data[1];
+    $sql = $data[0];
+    $params = $data[1];
 
-  $output = preg_replace_callback('/\?/', function($match) use (&$params){
-    return "'" . array_shift($params) . "'";
-  }, $sql);
+    $output = preg_replace_callback('/\?/', function($match) use (&$params) {
+        return "'" . array_shift($params) . "'";
+    }, $sql);
 
-  if ($print){
-    print_object($output);
-  } else {
-    return $output;
-  }
+    if ($print) {
+        print_object($output);
+    } else {
+        return $output;
+    }
 
 }

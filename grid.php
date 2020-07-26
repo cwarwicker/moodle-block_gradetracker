@@ -1,30 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Grid
- *
  * This displays the actual tracking grids
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-require_once '../../config.php';
-require_once $CFG->dirroot . '/blocks/gradetracker/lib.php';
+require_once('../../config.php');
+require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
 
 // Need to be logged in to view this page
 require_login();
@@ -33,7 +32,7 @@ require_login();
 $id = required_param('id', PARAM_INT);
 $type = required_param('type', PARAM_TEXT);
 $access = optional_param('access', 'v', PARAM_TEXT); // v = View, e = Edit
-$groupID = optional_param('groupID', 0 ,PARAM_INT);
+$groupID = optional_param('groupID', 0 , PARAM_INT);
 $ass = optional_param('ass', 0, PARAM_INT);
 $courseID = optional_param('courseID', false, PARAM_INT);
 $context = context_course::instance(SITEID);
@@ -48,24 +47,23 @@ $User = new \GT\User($USER->id);
 $Log = new \GT\Log();
 $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
 
-switch($type)
-{
+switch ($type) {
 
     case 'student':
 
         // Force access to "view" in case they tried to go to edit but don't have permission
-        if (!\gt_has_capability('block/gradetracker:edit_student_grids')){
+        if (!\gt_has_capability('block/gradetracker:edit_student_grids')) {
             $access = 'v';
         }
 
         $qualID = required_param('qualID', PARAM_INT);
         $Qualification = new \GT\Qualification\UserQualification($qualID);
-        if (!$Qualification->isValid()){
+        if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
         $Student = new \GT\User($id);
-        if (!$Student->isValid()){
+        if (!$Student->isValid()) {
             print_error('invaliduser', 'block_gradetracker');
         }
 
@@ -87,12 +85,12 @@ switch($type)
 
 
 
-    break;
+        break;
 
     case 'unit':
 
         // Force access to "view" in case they tried to go to edit but don't have permission
-        if (!\gt_has_capability('block/gradetracker:edit_unit_grids')){
+        if (!\gt_has_capability('block/gradetracker:edit_unit_grids')) {
             $access = 'v';
         }
 
@@ -100,28 +98,28 @@ switch($type)
         $page = optional_param('page', 1, PARAM_INT);
         $qualID = required_param('qualID', PARAM_INT);
         $Qualification = new \GT\Qualification\UserQualification($qualID);
-        if (!$Qualification->isValid()){
+        if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
         $Unit = $Qualification->getUnit($id);
-        if (!$Unit){
+        if (!$Unit) {
             print_error('norecord', 'block_gradetracker');
         }
 
         // Do we have the permission to view the unit grids?
-        if (!\gt_has_capability('block/gradetracker:view_unit_grids') && !\gt_has_capability('block/gradetracker:view_all_quals')){
+        if (!\gt_has_capability('block/gradetracker:view_unit_grids') && !\gt_has_capability('block/gradetracker:view_all_quals')) {
             print_error('invalidaccess', 'block_gradetracker');
         }
 
         // Are we a staff member on this unit and this qual? Or can we view all things?
-        if (!$User->isOnQualUnit($Qualification->getID(), $Unit->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')){
+        if (!$User->isOnQualUnit($Qualification->getID(), $Unit->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')) {
             print_error('invalidaccess', 'block_gradetracker');
         }
 
         // Is disabled
         $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
-        if (!$QualStructure->isEnabled()){
+        if (!$QualStructure->isEnabled()) {
             print_error('structureisdisabled', 'block_gradetracker');
         }
 
@@ -137,20 +135,20 @@ switch($type)
 
         // Page related variables
         $perPage = $GT->getSetting('unit_grid_paging');
-        if ($perPage > 0){
+        if ($perPage > 0) {
             $cntStudents = count( $Unit->getUsers("STUDENT", false, $courseID, $groupID) );
             $reqPages = ceil( $cntStudents / $perPage );
             $TPL->set("reqPages", $reqPages);
         }
 
-        if ($courseID > 0){
+        if ($courseID > 0) {
 
             $Qualification->loadCourse($courseID);
             $Course = new \GT\Course($courseID);
             $TPL->set("Course", $Course);
 
-            if ($groupID > 0){
-              $TPL->set("Group", $Course->getGroup($groupID));
+            if ($groupID > 0) {
+                $TPL->set("Group", $Course->getGroup($groupID));
             }
 
         }
@@ -172,14 +170,14 @@ switch($type)
         $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $Qualification->getID())
             ->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $Unit->getID());
 
-    break;
+        break;
 
     case 'class':
 
         $assessmentView = false;
 
         // Force access to "view" in case they tried to go to edit but don't have permission
-        if (!\gt_has_capability('block/gradetracker:edit_class_grids')){
+        if (!\gt_has_capability('block/gradetracker:edit_class_grids')) {
             $access = 'v';
         }
 
@@ -187,17 +185,17 @@ switch($type)
         $qualID = required_param('id', PARAM_INT);
 
         $Qualification = new \GT\Qualification\UserQualification($qualID);
-        if (!$Qualification->isValid()){
+        if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
         // Do we have the permission to view the class grids?
-        if (!\gt_has_capability('block/gradetracker:view_class_grids') && !\gt_has_capability('block/gradetracker:view_all_quals')){
+        if (!\gt_has_capability('block/gradetracker:view_class_grids') && !\gt_has_capability('block/gradetracker:view_all_quals')) {
             print_error('invalidaccess', 'block_gradetracker');
         }
 
         // Are we a staff member on this qual? Or can we view all things?
-        if (!$User->isOnQual($Qualification->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')){
+        if (!$User->isOnQual($Qualification->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')) {
             print_error('invalidaccess', 'block_gradetracker');
         }
 
@@ -205,30 +203,30 @@ switch($type)
         $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
-        if (!$QualStructure->isEnabled()){
+        if (!$QualStructure->isEnabled()) {
             print_error('structureisdisabled', 'block_gradetracker');
         }
 
-        if (!$QualStructure->isLevelEnabled("Units") || ($ass == 1 && $Qualification->getAssessments()) ){
+        if (!$QualStructure->isLevelEnabled("Units") || ($ass == 1 && $Qualification->getAssessments()) ) {
             $gridFile = 'assessment_grid';
             $assessmentView = true;
         }
 
         // Check if we are using qual weightings
         $hasWeightings = false;
-        if ($Qualification->getBuild()->hasQualWeightings()){
+        if ($Qualification->getBuild()->hasQualWeightings()) {
             $hasWeightings = true;
             $TPL->set("weightingPercentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
         }
 
-        if ($courseID > 0){
-          
+        if ($courseID > 0) {
+
             $Qualification->loadCourse($courseID);
             $Course = new \GT\Course($courseID);
             $TPL->set("Course", $Course);
 
-            if ($groupID > 0){
-              $TPL->set("Group", $Course->getGroup($groupID));
+            if ($groupID > 0) {
+                $TPL->set("Group", $Course->getGroup($groupID));
             }
 
         }
@@ -240,7 +238,7 @@ switch($type)
 
         // Page related variables
         $perPage = $GT->getSetting('class_grid_paging');
-        if ($perPage > 0){
+        if ($perPage > 0) {
             $cntStudents = count($students);
             $reqPages = ceil( $cntStudents / $perPage );
             $TPL->set("reqPages", $reqPages);
@@ -268,13 +266,13 @@ switch($type)
         $Log->details = \GT\Log::GT_LOG_DETAILS_VIEWED_CLASS_GRID;
         $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $Qualification->getID());
 
-    break;
+        break;
 
     default:
 
         print_error('invalidgridtype', 'block_gradetracker');
 
-    break;
+        break;
 
 }
 
@@ -294,24 +292,24 @@ $GT->loadCSS();
 
 // Init Data
 $data = array(
-  'type' => $type,
-  'qualID' => $qualID,
-  'id' => $id,
-  'courseID' => $courseID,
-  'groupID' => $groupID
+    'type' => $type,
+    'qualID' => $qualID,
+    'id' => $id,
+    'courseID' => $courseID,
+    'groupID' => $groupID
 );
 
 // Call the amd module
 $PAGE->requires->js_call_amd("block_gradetracker/grids", 'init', \GT\Output::initAMD('grid', null, $data));
 
 // Which link can we see in the breadcrumbs?
-if ( gt_has_capability('block/gradetracker:configure') ){
+if ( gt_has_capability('block/gradetracker:configure') ) {
     $link = $CFG->wwwroot . '/blocks/gradetracker/config.php';
 } else {
     $link = $CFG->wwwroot . '/blocks/gradetracker/my.php';
 }
 
-if (isset($Course) && $Course->isValid()){
+if (isset($Course) && $Course->isValid()) {
     $PAGE->navbar->add( $Course->getName(), $CFG->wwwroot . '/course/view.php?id=' . $Course->id );
 }
 $PAGE->navbar->add( $GT->getPluginTitle(), $link);
@@ -329,7 +327,7 @@ $TPL->set("GT", $GT)
 try {
     $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/'.$type.'.html' );
     $TPL->display();
-} catch (\GT\GTException $e){
+} catch (\GT\GTException $e) {
     echo $e->getException();
 }
 

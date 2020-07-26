@@ -1,28 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Export something from the system
+ * Import data into the system
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-require_once '../../config.php';
-require_once 'lib.php';
+require_once('../../config.php');
+require_once('lib.php');
 require_login();
 
 $GT = new \GT\GradeTracker();
@@ -51,8 +52,7 @@ $PAGE->navbar->add( get_string('importdatasheet', 'block_gradetracker'), null);
 $title = get_string('import', 'block_gradetracker');
 $type = required_param('type', PARAM_TEXT);
 
-switch($type)
-{
+switch ($type) {
 
     case 'datasheet':
 
@@ -64,58 +64,54 @@ switch($type)
 
         $qualID = required_param('qualID', PARAM_INT);
         $Qualification = new \GT\Qualification\UserQualification($qualID);
-        if (!$Qualification->isValid()){
+        if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
         $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
-        if (!$QualStructure->isEnabled()){
+        if (!$QualStructure->isEnabled()) {
             print_error('structureisdisabled', 'block_gradetracker');
         }
 
-        switch($grid)
-        {
+        switch ($grid) {
 
             case 'student':
 
                 $studentID = required_param('studentID', PARAM_INT);
                 $Student = new \GT\User($studentID);
-                if (!$Student->isValid()){
+                if (!$Student->isValid()) {
                     print_error('invaliduser', 'block_gradetracker');
                 }
 
                 // Make sure we have the permissions to import datasheets
-                if (!$User->hasUserCapability('block/gradetracker:import_student_grids', $Student->id, $Qualification->getID())){
+                if (!$User->hasUserCapability('block/gradetracker:import_student_grids', $Student->id, $Qualification->getID())) {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
                 // Next check is to see if the logged in user is a STAFF on the qualification, OR they have the view_all_quals capability OR they are the student
-                if (!$User->isOnQual($Qualification->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')){
+                if (!$User->isOnQual($Qualification->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')) {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
                 // Make sure student is actually on qual
-                if (!$Student->isOnQual($qualID, "STUDENT")){
+                if (!$Student->isOnQual($qualID, "STUDENT")) {
                     print_error('invalidrecord', 'block_gradetracker');
                 }
 
                 $PAGE->navbar->add( $Qualification->getDisplayName() . " - " . $Student->getName(), $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=student&qualID='.$Qualification->getID().'&id='.$Student->id, navigation_node::TYPE_CUSTOM);
 
-                if (isset($_POST['confirm']))
-                {
+                if (isset($_POST['confirm'])) {
                     $Qualification->loadStudent($Student);
                     $Qualification->import();
-                }
-                elseif (isset($_POST['submit_sheet']))
-                {
+                } else if (isset($_POST['submit_sheet'])) {
 
                     $DataImport = new \GT\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->setStudentID($studentID);
                     $DataImport->checkFileStudentDataSheet();
-                    if ($DataImport->getErrors()){
+                    if ($DataImport->getErrors()) {
                         $MSGS['errors'] = $DataImport->getErrors();
                     }
 
@@ -127,41 +123,38 @@ switch($type)
                 $TPL->set("MSGS", $MSGS);
                 $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/import.html' );
 
-            break;
+                break;
 
             case 'unit':
 
                 $unitID = required_param('unitID', PARAM_INT);
 
                 $Unit = $Qualification->getUnit($unitID);
-                if (!$Unit || !$Unit->isValid()){
+                if (!$Unit || !$Unit->isValid()) {
                     print_error('norecord', 'block_gradetracker');
                 }
 
                 // Do we have the permission to view the unit grids?
-                if (!\gt_has_capability('block/gradetracker:import_unit_grids') && !\gt_has_capability('block/gradetracker:view_all_quals')){
+                if (!\gt_has_capability('block/gradetracker:import_unit_grids') && !\gt_has_capability('block/gradetracker:view_all_quals')) {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
                 // Are we a staff member on this unit and this qual?
-                if (!$User->isOnQualUnit($Qualification->getID(), $Unit->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')){
+                if (!$User->isOnQualUnit($Qualification->getID(), $Unit->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')) {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
                 $PAGE->navbar->add( $Unit->getDisplayName(), $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=unit&qualID='.$Qualification->getID().'&id='.$Unit->getID(), navigation_node::TYPE_CUSTOM);
 
-                if (isset($_POST['confirm']))
-                {
+                if (isset($_POST['confirm'])) {
                     $Unit->import();
-                }
-                elseif (isset($_POST['submit_sheet']))
-                {
+                } else if (isset($_POST['submit_sheet'])) {
 
                     $DataImport = new \GT\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->setUnitID($unitID);
                     $DataImport->checkFileUnitDataSheet();
-                    if ($DataImport->getErrors()){
+                    if ($DataImport->getErrors()) {
                         $MSGS['errors'] = $DataImport->getErrors();
                     }
 
@@ -173,33 +166,30 @@ switch($type)
                 $TPL->set("MSGS", $MSGS);
                 $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/import.html' );
 
-            break;
+                break;
 
             case 'class':
 
 
                 // Do we have the permission to view the class grids?
-                if (!\gt_has_capability('block/gradetracker:import_class_grids')){
+                if (!\gt_has_capability('block/gradetracker:import_class_grids')) {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
                 // Are we a staff member on this qual? Or can we view all things?
-                if (!$User->isOnQual($Qualification->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')){
+                if (!$User->isOnQual($Qualification->getID(), "STAFF") && !\gt_has_capability('block/gradetracker:view_all_quals')) {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
                 $PAGE->navbar->add( $Qualification->getDisplayName(), $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=class&id='.$Qualification->getID(), navigation_node::TYPE_CUSTOM);
 
-                if (isset($_POST['confirm']))
-                {
+                if (isset($_POST['confirm'])) {
                     $Qualification->importClass();
-                }
-                elseif (isset($_POST['submit_sheet']))
-                {
+                } else if (isset($_POST['submit_sheet'])) {
                     $DataImport = new \GT\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->checkFileClassDataSheet();
-                    if ($DataImport->getErrors()){
+                    if ($DataImport->getErrors()) {
                         $MSGS['errors'] = $DataImport->getErrors();
                     }
                 }
@@ -209,19 +199,19 @@ switch($type)
                 $TPL->set("MSGS", $MSGS);
                 $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/import.html' );
 
-            break;
+                break;
 
             default:
                 print_error( 'errors:invalidparams', 'block_gradetracker' );
-            break;
+                break;
 
         }
 
-    break;
+        break;
 
     default:
         print_error( 'errors:invalidparams', 'block_gradetracker' );
-    break;
+        break;
 
 }
 

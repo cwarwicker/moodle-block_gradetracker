@@ -1,30 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Choose
- *
  * This is where you get lists of students, units, etc... to choose what grid you want to look at
  *
- * @copyright 2015 Bedford College
- * @package Bedford College Grade Tracker
- * @version 1.0
- * @author Conn Warwicker <cwarwicker@bedford.ac.uk> <conn@cmrwarwicker.com> <moodlesupport@bedford.ac.uk>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
+ * @package     block_gradetracker
+ * @version     2.0
+ * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-require_once '../../config.php';
-require_once $CFG->dirroot . '/blocks/gradetracker/lib.php';
+require_once('../../config.php');
+require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
 
 // Need to be logged in to view this page
 require_login();
@@ -32,7 +31,6 @@ require_login();
 // Parameters
 $cID = optional_param('cID', false, PARAM_INT);
 $type = optional_param('type', 'student', PARAM_TEXT);
-
 
 // must be param_text for ctype_digit check
 $searchAllQID = optional_param('searchQualID', false, PARAM_TEXT);
@@ -45,18 +43,18 @@ $myCourseID = isset($_REQUEST['myCourseID']) ? $_REQUEST['myCourseID'] : false;
 $course = false;
 $context = context_course::instance(SITEID);
 
-if ($cID){
+if ($cID) {
     $course = new \GT\Course($cID);
-    if (!$course->isValid()){
+    if (!$course->isValid()) {
         print_error( get_string('invalidcourseid') );
     }
     $context = context_course::instance($course->id);
-} elseif ($myCourseID){
+} else if ($myCourseID) {
     $cID = $myCourseID;
 }
 
 // Check permissions
-if (!gt_has_capability('block/gradetracker:view_'.$type.'_grids')){
+if (!gt_has_capability('block/gradetracker:view_'.$type.'_grids')) {
     print_error( get_string('invalidaccess', 'block_gradetracker') );
 }
 
@@ -70,45 +68,43 @@ $searchQualification = false;
 $searchCourse = false;
 
 // Submitted Filter for All Qualifications
-if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST['submit_filter_all'])){
+if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST['submit_filter_all'])) {
 
     $searchQualification = false;
     $searchCourse = false;
 
     // If searching by all Qualifications
-    if (ctype_digit($searchAllQID) && $searchAllQID > 0){
+    if (ctype_digit($searchAllQID) && $searchAllQID > 0) {
         $searchQualification = new \GT\Qualification($searchAllQID);
-        if (!$searchQualification->isValid()){
+        if (!$searchQualification->isValid()) {
             $searchQualification = false;
         }
     }
 
     // If searching by all Courses
-    if (ctype_digit($searchAllCID) && $searchAllCID > 0){
+    if (ctype_digit($searchAllCID) && $searchAllCID > 0) {
         $searchCourse = new \GT\Course($searchAllCID);
-        if (!$searchCourse->isValid()){
+        if (!$searchCourse->isValid()) {
             $searchCourse = false;
         }
     }
 
-}
-
-elseif (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST['submit_filter_my'])){
+} else if (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST['submit_filter_my'])) {
 
     $searchQualification = false;
 
     // Selecting one of My Quals
-    if (ctype_digit($myQualID) && $myQualID > 0){
+    if (ctype_digit($myQualID) && $myQualID > 0) {
         $searchQualification = new \GT\Qualification($myQualID);
-        if (!$searchQualification->isValid() || !$User->isOnQual($myQualID, "STAFF")){
+        if (!$searchQualification->isValid() || !$User->isOnQual($myQualID, "STAFF")) {
             $searchQualification = false;
         }
     }
 
     // Selecting one of My Courses
-    if (ctype_digit($myCourseID) && $myCourseID > 0){
+    if (ctype_digit($myCourseID) && $myCourseID > 0) {
         $searchCourse = new \GT\Course($myCourseID);
-        if (!$searchCourse->isValid()){
+        if (!$searchCourse->isValid()) {
             $searchCourse = false;
         }
     }
@@ -117,29 +113,26 @@ elseif (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST[
 
 
 
-switch($type)
-{
+switch ($type) {
 
     // Get results for Student grid
     case 'student':
 
         // Get list of students on this qual
-        if ($searchQualification){
+        if ($searchQualification) {
             $results = array();
             $results[0][$searchQualification->getID()] = $searchQualification->getUsers("STUDENT");
-        }
+        } else if ($searchCourse) {
 
-        // Get list of students on this course
-        elseif ($searchCourse){
-
+            // Get list of students on this course
             $results = array();
 
             // Does this course have quals?
-            if ($searchCourse->getCourseQualifications()){
+            if ($searchCourse->getCourseQualifications()) {
 
                 $results = array();
 
-                foreach($searchCourse->getCourseQualifications() as $courseQual){
+                foreach ($searchCourse->getCourseQualifications() as $courseQual) {
 
                     $results[$searchCourse->id][$courseQual->getID()] = $courseQual->getUsers("STUDENT", $searchCourse->id);
 
@@ -148,14 +141,14 @@ switch($type)
             }
 
             // Does this have any children with qualifications?
-            if ($searchCourse->getChildCourses()){
+            if ($searchCourse->getChildCourses()) {
 
-                foreach($searchCourse->getChildCourses() as $child){
+                foreach ($searchCourse->getChildCourses() as $child) {
 
                     // Does this child have any qualifications?
-                    if ($child->getCourseQualifications()){
+                    if ($child->getCourseQualifications()) {
 
-                        foreach($child->getCourseQualifications() as $courseQual){
+                        foreach ($child->getCourseQualifications() as $courseQual) {
 
                             $results[$child->id][$courseQual->getID()] = $courseQual->getUsers("STUDENT", $child->id);
 
@@ -169,26 +162,26 @@ switch($type)
 
         }
 
-    break;
+        break;
 
 
     case 'unit':
 
-        if ($searchQualification){
+        if ($searchQualification) {
 
             $results = array();
             $results[0][$searchQualification->getID()] = $searchQualification->getUnits();
 
-        } elseif ($searchCourse){
+        } else if ($searchCourse) {
 
             $results = array();
 
             // Does this course have quals?
-            if ($searchCourse->getCourseQualifications()){
+            if ($searchCourse->getCourseQualifications()) {
 
                 $results = array();
 
-                foreach($searchCourse->getCourseQualifications() as $courseQual){
+                foreach ($searchCourse->getCourseQualifications() as $courseQual) {
 
                     $results[$searchCourse->id][$courseQual->getID()] = $courseQual->getUnits();
 
@@ -197,14 +190,14 @@ switch($type)
             }
 
             // Does this have any children with qualifications?
-            if ($searchCourse->getChildCourses()){
+            if ($searchCourse->getChildCourses()) {
 
-                foreach($searchCourse->getChildCourses() as $child){
+                foreach ($searchCourse->getChildCourses() as $child) {
 
                     // Does this child have any qualifications?
-                    if ($child->getCourseQualifications()){
+                    if ($child->getCourseQualifications()) {
 
-                        foreach($child->getCourseQualifications() as $courseQual){
+                        foreach ($child->getCourseQualifications() as $courseQual) {
 
                             $results[$child->id][$courseQual->getID()] = $courseQual->getUnits();
 
@@ -218,27 +211,27 @@ switch($type)
 
         }
 
-    break;
+        break;
 
 
 
     case 'class':
 
-        if ($searchQualification){
+        if ($searchQualification) {
 
             $results = array();
             $results[0][$searchQualification->getID()] = $searchQualification;
 
-        } elseif ($searchCourse){
+        } else if ($searchCourse) {
 
             $results = array();
 
             // Does this course have quals?
-            if ($searchCourse->getCourseQualifications()){
+            if ($searchCourse->getCourseQualifications()) {
 
                 $results = array();
 
-                foreach($searchCourse->getCourseQualifications() as $courseQual){
+                foreach ($searchCourse->getCourseQualifications() as $courseQual) {
 
                     $results[$searchCourse->id][$courseQual->getID()] = $courseQual;
 
@@ -247,14 +240,14 @@ switch($type)
             }
 
             // Does this have any children with qualifications?
-            if ($searchCourse->getChildCourses()){
+            if ($searchCourse->getChildCourses()) {
 
-                foreach($searchCourse->getChildCourses() as $child){
+                foreach ($searchCourse->getChildCourses() as $child) {
 
                     // Does this child have any qualifications?
-                    if ($child->getCourseQualifications()){
+                    if ($child->getCourseQualifications()) {
 
-                        foreach($child->getCourseQualifications() as $courseQual){
+                        foreach ($child->getCourseQualifications() as $courseQual) {
 
                             $results[$child->id][$courseQual->getID()] = $courseQual;
 
@@ -269,14 +262,14 @@ switch($type)
         }
 
         // If there is only 1 result, just jump straight to the class grid
-        if ($results && count($results) == 1 && count(reset($results)) == 1){
+        if ($results && count($results) == 1 && count(reset($results)) == 1) {
             $cID = key($results);
             $result = reset($results);
             $result = reset($result);
             redirect($CFG->wwwroot . "/blocks/gradetracker/grid.php?type=class&id={$result->getID()}&courseID={$cID}&access=v");
         }
 
-    break;
+        break;
 
 
 
@@ -301,7 +294,7 @@ $PAGE->set_pagelayout( $GT->getMoodleThemeLayout() );
 $GT->loadJavascript();
 $GT->loadCSS();
 
-if ( $User->hasCapability('block/gradetracker:configure') ){
+if ( $User->hasCapability('block/gradetracker:configure') ) {
     $link = $CFG->wwwroot . '/blocks/gradetracker/config.php';
 } else {
     $link = $CFG->wwwroot . '/blocks/gradetracker/my.php';
@@ -311,8 +304,7 @@ $PAGE->navbar->add( $GT->getPluginTitle(), $link);
 $PAGE->navbar->add( get_string('selectgrid', 'block_gradetracker'), $CFG->wwwroot . '/blocks/gradetracker/choose.php?cID='.$cID, navigation_node::TYPE_CUSTOM);
 
 // If course is set, put that into breadcrumb
-if ($course)
-{
+if ($course) {
     $PAGE->navbar->add( $course->fullname, $CFG->wwwroot . '/course/view.php?id='.$course->id, navigation_node::TYPE_CUSTOM);
 }
 
@@ -328,7 +320,7 @@ $TPL->set("GT", $GT)
     ->set("User", $User)
     ->set("results", $results);
 
-if ($User->hasCapability('block/gradetracker:view_all_quals')){
+if ($User->hasCapability('block/gradetracker:view_all_quals')) {
     $TPL->set("allQuals", \GT\Qualification::getAllQualifications( true ));
     $TPL->set("allCourses", \GT\Course::getAllCoursesWithQuals());
 }
@@ -336,7 +328,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals')){
 try {
     $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/choose.html' );
     $TPL->display();
-} catch (\GT\GTException $e){
+} catch (\GT\GTException $e) {
     echo $e->getException();
 }
 
