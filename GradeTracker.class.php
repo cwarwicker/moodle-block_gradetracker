@@ -30,8 +30,9 @@ if (!defined('BCGT')) {
     define('BCGT', true);
 }
 
-class GradeTracker
-{
+require_once($CFG->dirroot . '/local/df_hub/lib.php');
+
+class GradeTracker {
 
     private $CFG;
     private $DB;
@@ -3249,10 +3250,22 @@ class GradeTracker
 
         global $CFG, $MSGS;
 
-        $settings = $_POST;
+        // All the possible forms which can be sunmitted.
+        $submission = array(
+            'submitconfig' => optional_param('submitconfig', false, PARAM_TEXT),
+            'submit_build_coefficients' => optional_param('submit_build_coefficients', false, PARAM_TEXT),
+            'submit_qual_coefficients' => optional_param('submit_qual_coefficients', false, PARAM_TEXT),
+            'submit_constants' => optional_param('submit_constants', false, PARAM_TEXT),
+        );
+
+        $settings = array();
 
         // Qual Weighting - Constants
-        if ($section == 'qual' && $page == 'constants' && isset($settings['submit_constants'])) {
+        if ($section == 'qual' && $page == 'constants' && $submission['submit_constants']) {
+
+            $settings['weighting_constants_enabled'] = optional_param('weighting_constants_enabled', false, PARAM_TEXT);
+            $settings['constants'] = df_optional_param_array_recursive('constants', false, PARAM_TEXT);
+            $settings['multipliers'] = df_optional_param_array_recursive('multipliers', false, PARAM_TEXT);
 
             // Enable/Disable
             \GT\Setting::updateSetting('weighting_constants_enabled', $settings['weighting_constants_enabled']);
@@ -3281,10 +3294,17 @@ class GradeTracker
             $MSGS['success'] = get_string('settingsupdated', 'block_gradetracker');
             return true;
 
-        } else if ($section == 'qual' && $page == 'coefficients' && (isset($settings['submitconfig']) || isset($settings['submit_build_coefficients']) || isset($settings['submit_qual_coefficients']))) {
+        } else if ($section == 'qual' && $page == 'coefficients' && ($submission['submitconfig'] || $submission['submit_build_coefficients'] || $submission['submit_qual_coefficients'])) {
+
+                $settings['qual_weighting_percentiles'] = optional_param('qual_weighting_percentiles', false, PARAM_TEXT);
+                $settings['default_percentile'] = optional_param('default_percentile', false, PARAM_TEXT);
+                $settings['percentile_colours'] = df_optional_param_array_recursive('percentile_colours', false, PARAM_TEXT);
+                $settings['percentile_percents'] = df_optional_param_array_recursive('percentile_percents', false, PARAM_TEXT);
+                $settings['build_coefficient'] = df_optional_param_array_recursive('build_coefficient', false, PARAM_TEXT);
+                $settings['qual_coefficients'] = df_optional_param_array_recursive('qual_coefficients', false, PARAM_TEXT);
 
             // General config
-            if (isset($settings['submitconfig'])) {
+            if ($submission['submitconfig']) {
 
                 // Number of percentiles to use
                 \GT\Setting::updateSetting('qual_weighting_percentiles', $settings['qual_weighting_percentiles']);
@@ -3311,7 +3331,7 @@ class GradeTracker
                 $MSGS['success'] = get_string('settingsupdated', 'block_gradetracker');
                 return true;
 
-            } else if (isset($settings['submit_build_coefficients'])) {
+            } else if ($submission['submit_build_coefficients']) {
 
                 // Build coefficients
                 if ($settings['build_coefficient']) {
@@ -3327,7 +3347,7 @@ class GradeTracker
                 $MSGS['success'] = get_string('settingsupdated', 'block_gradetracker');
                 return true;
 
-            } else if (isset($settings['submit_qual_coefficients'])) {
+            } else if ($submission['submit_qual_coefficients']) {
 
                 if ($settings['qual_coefficients']) {
                     foreach ($settings['qual_coefficients'] as $qualID => $coefficients) {
@@ -3348,46 +3368,56 @@ class GradeTracker
 
             }
 
-        } else if (isset($settings['submitconfig'])) {
+        } else if ($submission['submitconfig']) {
 
-            // Remove so doesn't get put into lbp_settings
-            unset($settings['submitconfig']);
+            // General plugin settings.
 
             // Checkboxes need int values
             if ($section == 'general') {
 
-                $settings['use_auto_enrol_quals'] = (isset($settings['use_auto_enrol_quals'])) ? '1' : '0';
-                $settings['use_auto_enrol_units'] = (isset($settings['use_auto_enrol_units'])) ? '1' : '0';
-                $settings['use_auto_unenrol_quals'] = (isset($settings['use_auto_unenrol_quals'])) ? '1' : '0';
-                $settings['use_auto_unenrol_units'] = (isset($settings['use_auto_unenrol_units'])) ? '1' : '0';
+                $settings['plugin_title'] = optional_param('plugin_title', false, PARAM_TEXT);
+                $settings['theme_layout'] = optional_param('theme_layout', false, PARAM_TEXT);
+                $settings['student_role_shortnames'] = optional_param('student_role_shortnames', false, PARAM_TEXT);
+                $settings['staff_role_shortnames'] = optional_param('staff_role_shortnames', false, PARAM_TEXT);
+                $settings['course_name_format'] = optional_param('course_name_format', false, PARAM_TEXT);
+                $settings['use_auto_enrol_quals'] = optional_param('use_auto_enrol_quals', 0, PARAM_INT);
+                $settings['use_auto_enrol_units'] = optional_param('use_auto_enrol_units', 0, PARAM_INT);
+                $settings['use_auto_unenrol_quals'] = optional_param('use_auto_unenrol_quals', 0, PARAM_INT);
+                $settings['use_auto_unenrol_units'] = optional_param('use_auto_unenrol_units', 0, PARAM_INT);
+                $settings['custom_css'] = optional_param('custom_css', false, PARAM_TEXT);
+                $settings['keep_logs_for'] = optional_param('keep_logs_for', false, PARAM_INT);
 
-            }
+            } else if ($section == 'criteria') {
 
-            // Grid settings
-            if ($section == 'grid') {
-                $settings['grid_fixed_links'] = (isset($settings['grid_fixed_links'])) ? '1' : '0';
-                $settings['enable_grid_logs'] = (isset($settings['enable_grid_logs'])) ? '1' : '0';
-                $settings['assessment_grid_show_quals_one_page'] = (isset($settings['assessment_grid_show_quals_one_page'])) ? '1' : '0';
-                $settings['student_grid_show_ucas'] = (isset($settings['student_grid_show_ucas'])) ? '1' : '0';
-            }
+                $settings['numeric_criteria_max_points'] = optional_param('numeric_criteria_max_points', false, PARAM_INT);
 
-            // Assesment settings
-            if ($section == 'assessments') {
+            } else if ($section == 'grid') {
 
-                $settings['use_assessments_comments'] = (isset($settings['use_assessments_comments'])) ? '1' : '0';
+                $settings['grid_fixed_links'] = optional_param('grid_fixed_links', 0, PARAM_INT);
+                $settings['enable_grid_logs'] = optional_param('enable_grid_logs', 0, PARAM_INT);
+                $settings['assessment_grid_show_quals_one_page'] = optional_param('assessment_grid_show_quals_one_page', 0, PARAM_INT);
+                $settings['student_grid_show_ucas'] = optional_param('student_grid_show_ucas', 0, PARAM_INT);
+
+            } else if ($section == 'assessments') {
+
+                $settings['use_assessments_comments'] = optional_param('use_assessments_comments', 0, PARAM_INT);
+                $settings['custom_form_fields_names'] = df_optional_param_array_recursive('custom_form_fields_names', false, PARAM_TEXT);
+                $settings['custom_form_fields_ids'] = df_optional_param_array_recursive('custom_form_fields_ids', false, PARAM_TEXT);
+                $settings['custom_form_fields_types'] = df_optional_param_array_recursive('custom_form_fields_types', false, PARAM_TEXT);
+                $settings['custom_form_fields_options'] = df_optional_param_array_recursive('custom_form_fields_options', false, PARAM_TEXT);
 
                 // Form fields
                 $elementIDs = array();
 
-                if (isset($_POST['custom_form_fields_names'])) {
-                    foreach ($_POST['custom_form_fields_names'] as $key => $name) {
+                if (isset($settings['custom_form_fields_names'])) {
+                    foreach ($settings['custom_form_fields_names'] as $key => $name) {
 
                         $params = new \stdClass();
-                        $params->id = (isset($_POST['custom_form_fields_ids'][$key])) ? $_POST['custom_form_fields_ids'][$key] : false;
+                        $params->id = (isset($settings['custom_form_fields_ids'][$key])) ? $settings['custom_form_fields_ids'][$key] : false;
                         $params->name = $name;
                         $params->form = 'assessment_grid';
-                        $params->type = (isset($_POST['custom_form_fields_types'][$key])) ? $_POST['custom_form_fields_types'][$key] : false;
-                        $params->options = (isset($_POST['custom_form_fields_options'][$key]) && !empty($_POST['custom_form_fields_options'][$key])) ? $_POST['custom_form_fields_options'][$key] : false;
+                        $params->type = (isset($settings['custom_form_fields_types'][$key])) ? $settings['custom_form_fields_types'][$key] : false;
+                        $params->options = (isset($settings['custom_form_fields_options'][$key]) && !empty($settings['custom_form_fields_options'][$key])) ? $settings['custom_form_fields_options'][$key] : false;
                         $params->validation = array();
                         $element = \GT\FormElement::create($params);
                         $element->save();
@@ -3396,12 +3426,21 @@ class GradeTracker
                     }
                 }
 
+                unset($settings['custom_form_fields_names']);
+                unset($settings['custom_form_fields_ids']);
+                unset($settings['custom_form_fields_types']);
+                unset($settings['custom_form_fields_options']);
+
                 $settings['assessment_grid_custom_form_elements'] = implode(",", $elementIDs);
 
             }
 
             // Navigation links are in serperate arrays for name and URL
             if ($section == 'grid') {
+
+                $settings['student_grid_nav'] = df_optional_param_array_recursive('student_grid_nav', false, PARAM_TEXT);
+                $settings['unit_grid_nav'] = df_optional_param_array_recursive('unit_grid_nav', false, PARAM_TEXT);
+                $settings['class_grid_nav'] = df_optional_param_array_recursive('class_grid_nav', false, PARAM_TEXT);
 
                 if (isset($settings['student_grid_nav'])) {
 
@@ -3528,10 +3567,13 @@ class GradeTracker
                     $settings['class_grid_navigation'] = '';
                 }
 
-            }
+            } else if ($section == 'reporting') {
 
-            // Reporting section
-            if ($section == 'reporting') {
+                $settings['reporting_categories'] = df_optional_param_array_recursive('reporting_categories', false, PARAM_TEXT);
+                $settings['crit_weight_scores'] = df_optional_param_array_recursive('crit_weight_scores', false, PARAM_TEXT);
+                $settings['pass_prog_method'] = df_optional_param_array_recursive('pass_prog_method', false, PARAM_TEXT);
+                $settings['pass_prog_by_letter'] = df_optional_param_array_recursive('pass_prog_by_letter', false, PARAM_TEXT);
+                $settings['pass_prog_by_grade_structure'] = df_optional_param_array_recursive('pass_prog_by_grade_structure', false, PARAM_TEXT);
 
                 // Criteria Progress report - weighted criteria scores
                 $allStructures = \GT\QualificationStructure::getAllStructures();
@@ -3585,6 +3627,13 @@ class GradeTracker
                 unset($settings['pass_prog_by_letter']);
                 unset($settings['pass_prog_by_grade_structure']);
 
+            } else if ($section == 'user') {
+                $settings['student_columns'] = df_optional_param_array_recursive('student_columns', false, PARAM_TEXT);
+            } else if ($section == 'grade') {
+                $settings['pred_grade_min_units'] = optional_param('pred_grade_min_units', false, PARAM_TEXT);
+                $settings['asp_grade_diff'] = optional_param('asp_grade_diff', false, PARAM_TEXT);
+                $settings['weighted_target_method'] = optional_param('weighted_target_method', false, PARAM_TEXT);
+                $settings['weighted_target_direction'] = optional_param('weighted_target_direction', false, PARAM_TEXT);
             }
 
             // Loop through settings and save them
