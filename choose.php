@@ -34,11 +34,15 @@ $type = optional_param('type', 'student', PARAM_TEXT);
 
 // must be param_text for ctype_digit check
 $searchAllQID = optional_param('searchQualID', false, PARAM_TEXT);
-$searchMyQID = optional_param('searchMyID', false, PARAM_TEXT);
 $searchAllCID = optional_param('searchCourseID', false, PARAM_TEXT);
+$myQualID = optional_param('myQualID', false, PARAM_INT);
+$myCourseID = optional_param('myCourseID', false, PARAM_INT);
 
-$myQualID = isset($_REQUEST['myQualID']) ? $_REQUEST['myQualID'] : false;
-$myCourseID = isset($_REQUEST['myCourseID']) ? $_REQUEST['myCourseID'] : false;
+$submission = array(
+    'submit_filter_my' => optional_param('submit_filter_my', false, PARAM_TEXT),
+    'submit_filter_all' => optional_param('submit_filter_all', false, PARAM_TEXT),
+);
+
 
 $course = false;
 $context = context_course::instance(SITEID);
@@ -68,7 +72,7 @@ $searchQualification = false;
 $searchCourse = false;
 
 // Submitted Filter for All Qualifications
-if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST['submit_filter_all'])) {
+if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['submit_filter_all']) {
 
     $searchQualification = false;
     $searchCourse = false;
@@ -89,7 +93,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && isset($_REQUEST
         }
     }
 
-} else if (isset($_POST['submit_filter_my']) || $myCourseID > 0 || isset($_REQUEST['submit_filter_my'])) {
+} else if ($submission['submit_filter_my'] || $myCourseID > 0) {
 
     $searchQualification = false;
 
