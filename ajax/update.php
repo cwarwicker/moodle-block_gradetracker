@@ -41,7 +41,7 @@ $GT = new \GT\GradeTracker();
 $TPL = new \GT\Template();
 $User = new \GT\User($USER->id);
 
-\gt_debug("Called update.php: " . print_r($_POST, true));
+\gt_debug("Called update.php: " . print_r($_POST, true)); // This usage of $_POST is to store submitted data in a debugging log.
 
 // If action not defined exit.
 if (!$action) {

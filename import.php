@@ -52,6 +52,11 @@ $PAGE->navbar->add( get_string('importdatasheet', 'block_gradetracker'), null);
 $title = get_string('import', 'block_gradetracker');
 $type = required_param('type', PARAM_TEXT);
 
+$submission = array(
+    'confirm' => optional_param('confirm', false, PARAM_TEXT),
+    'submit_sheet' => optional_param('submit_sheet', false, PARAM_TEXT),
+);
+
 switch ($type) {
 
     case 'datasheet':
@@ -102,10 +107,10 @@ switch ($type) {
 
                 $PAGE->navbar->add( $Qualification->getDisplayName() . " - " . $Student->getName(), $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=student&qualID='.$Qualification->getID().'&id='.$Student->id, navigation_node::TYPE_CUSTOM);
 
-                if (isset($_POST['confirm'])) {
+                if ($submission['confirm']) {
                     $Qualification->loadStudent($Student);
                     $Qualification->import();
-                } else if (isset($_POST['submit_sheet'])) {
+                } else if ($submission['submit_sheet']) {
 
                     $DataImport = new \GT\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
@@ -146,9 +151,9 @@ switch ($type) {
 
                 $PAGE->navbar->add( $Unit->getDisplayName(), $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=unit&qualID='.$Qualification->getID().'&id='.$Unit->getID(), navigation_node::TYPE_CUSTOM);
 
-                if (isset($_POST['confirm'])) {
+                if ($submission['confirm']) {
                     $Unit->import();
-                } else if (isset($_POST['submit_sheet'])) {
+                } else if ($submission['submit_sheet']) {
 
                     $DataImport = new \GT\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
@@ -183,9 +188,9 @@ switch ($type) {
 
                 $PAGE->navbar->add( $Qualification->getDisplayName(), $CFG->wwwroot . '/blocks/gradetracker/grid.php?type=class&id='.$Qualification->getID(), navigation_node::TYPE_CUSTOM);
 
-                if (isset($_POST['confirm'])) {
+                if ($submission['confirm']) {
                     $Qualification->importClass();
-                } else if (isset($_POST['submit_sheet'])) {
+                } else if ($submission['submit_sheet']) {
                     $DataImport = new \GT\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->checkFileClassDataSheet();
