@@ -29,19 +29,30 @@ require_once('lib.php');
 
 require_login();
 
-if ( !isset($_GET['data']) ) {
+$settings = array(
+    'data' => optional_param('data', false, PARAM_RAW),
+    'output' => optional_param('output', false, PARAM_TEXT),
+    'context' => optional_param('context', false, PARAM_TEXT),
+    'field' => optional_param('field', false, PARAM_TEXT),
+);
+
+if (!$settings['data']) {
     exit;
 }
 
-$contents = file_get_contents( \GT\GradeTracker::dataroot() . '/tmp/data/' . $_GET['data'] . '.data' );
+// This should be safe, as the file has to end with '.data' which is only used in the data directory, so even if they did ../../someotherfile.txt it won't load it.
+// However, let's sanitise it anyway.
+$settings['data'] = gt_sanitise_path($settings['data']);
+
+$contents = file_get_contents( \GT\GradeTracker::dataroot() . '/tmp/data/' . $settings['data'] . '.data' );
 if ($contents) {
     $data = unserialize($contents);
     if ($data) {
         foreach ($data as $row) {
 
-            if (isset($_GET['output'])) {
+            if ($settings['output']) {
 
-                $output = $_GET['output'];
+                $output = $settings['output'];
 
                 preg_match_all("/%(.*?)%/", $output, $matches);
                 if ($matches) {
@@ -54,19 +65,19 @@ if ($contents) {
 
                 echo $output . "<br>";
 
-            } else if ( isset($_GET['context']) && isset($_GET['field']) && ($field = $_GET['field']) && isset($row->$field) ) {
+            } else if ( $settings['context'] && $settings['field'] && isset($row->{$settings['field']}) ) {
 
-                switch ($_GET['context']) {
+                switch ($settings['context']) {
                     case 'qual':
-                        $obj = new \GT\Qualification($row->$field);
+                        $obj = new \GT\Qualification($row->{$settings['field']});
                         if ($obj->isValid()) {
-                            echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=quals&section=edit&id={$row->$field}' target='_blank'>[{$obj->getID()}] ".$obj->getDisplayName() . "</a><br>";
+                            echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=quals&section=edit&id={$row->{$settings['field']}}' target='_blank'>[{$obj->getID()}] ".$obj->getDisplayName() . "</a><br>";
                         }
                         break;
                     case 'unit':
-                        $obj = new \GT\Unit($row->$field);
+                        $obj = new \GT\Unit($row->{$settings['field']});
                         if ($obj->isValid()) {
-                            echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=units&section=edit&id={$row->$field}' target='_blank'>[{$obj->getID()}] ".$obj->getDisplayName() . "</a><br>";
+                            echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=units&section=edit&id={$row->{$settings['field']}}' target='_blank'>[{$obj->getID()}] ".$obj->getDisplayName() . "</a><br>";
                         }
                         break;
                 }
