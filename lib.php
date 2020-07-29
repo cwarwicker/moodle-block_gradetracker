@@ -477,6 +477,7 @@ function gt_save_file_contents($data, $file) {
     // Create directory if it doersn't exist
     \gt_create_data_directory("tmp/data");
 
+    $file = gt_sanitise_path($file);
     $path = \GT\GradeTracker::dataroot() . "/tmp/data/{$file}";
 
     $file = fopen( $path , 'a');
@@ -502,8 +503,7 @@ function gt_save_file($file, $path, $name, $new = true) {
     global $CFG;
 
     // Remove any double slashes or backslashes
-    $path = preg_replace("/\\\\/", "/", $path);
-    $path = preg_replace("/\/{2,}/", "/", $path);
+    $path = gt_sanitise_path($path);
 
     // Split into array and make sure each directory exists, creating it if it doesn't
     $explode = explode("/", $path);
@@ -534,6 +534,24 @@ function gt_save_file($file, $path, $name, $new = true) {
         return rename($file, \GT\GradeTracker::dataroot() . '/' . $path . '/' . $name);
     }
 
+}
+
+/**
+ * Strip invalid characters such as ../ from file paths, before trying to load/save, to avoid anyone trying to access
+ * a file they shouldn't be able to.
+ * @param $path The file path
+ * @param $separator Seperator character
+ */
+function gt_sanitise_path($path = null, $separator = DIRECTORY_SEPARATOR) {
+    $pathArray = explode($separator, $path);
+    foreach ($pathArray as $key => $value)
+    {
+        if ($value === '.' || $value === '..')
+        {
+            $pathArray[$key] = null;
+        }
+    }
+    return implode($separator, array_map('trim', array_filter($pathArray)));
 }
 
 /**
