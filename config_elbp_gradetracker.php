@@ -49,9 +49,9 @@ $TPL = new \ELBP\Template();
 $MSGS['errors'] = '';
 $MSGS['success'] = '';
 
-// Submitted
+// Submitted - This usage of $_POST is just to check if any forms are submitted.
 if (!empty($_POST)) {
-    $OBJ->saveConfig($_POST);
+    $OBJ->saveConfig();
     $TPL->set("saved", get_string('saved', 'block_elbp'));
 }
 
