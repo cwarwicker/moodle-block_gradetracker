@@ -205,16 +205,23 @@ class SubType {
 
     public function loadPostData() {
 
-        $name = $_POST['subtype_name'];
-        $shortName = $_POST['subtype_shortname'];
+        $settings = array(
+            'subtype_name' => optional_param('subtype_name', false, PARAM_TEXT),
+            'subtype_shortname' => optional_param('subtype_shortname', false, PARAM_TEXT),
+            'subtype_id' => optional_param('subtype_id', false, PARAM_INT),
+            'subtype_deleted' => optional_param('subtype_deleted', false, PARAM_INT),
+        );
+
+        $name = $settings['subtype_name'];
+        $shortName = $settings['subtype_shortname'];
         $deleted = 0;
 
-        if (isset($_POST['subtype_id'])) {
-            $this->setID($_POST['subtype_id']);
+        if ($settings['subtype_id']) {
+            $this->setID($settings['subtype_id']);
         }
 
-        if (isset($_POST['subtype_deleted'])) {
-            $deleted = $_POST['subtype_deleted'];
+        if ($settings['subtype_deleted']) {
+            $deleted = $settings['subtype_deleted'];
         }
 
         $this->setName($name);
