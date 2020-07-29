@@ -84,7 +84,7 @@ class DataImport {
 
     public function runImportQualsOnEntry() {
 
-        $options = (isset($_POST['options'])) ? $_POST['options'] : false;
+        $options = df_optional_param_array_recursive('options', false, PARAM_TEXT);
 
         // Check file exists and no errors from upload
         if (!$this->file || $this->file['error'] > 0) {
@@ -331,7 +331,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_QOE;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->save();
         // ------------ Logging Info
@@ -342,7 +342,7 @@ class DataImport {
 
     public function runImportAvgGCSE() {
 
-        $options = (isset($_POST['options'])) ? $_POST['options'] : false;
+        $options = df_optional_param_array_recursive('options', false, PARAM_TEXT);
 
         // Check file exists and no errors from upload
         if (!$this->file || $this->file['error'] > 0) {
@@ -520,7 +520,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->save();
         // ------------ Logging Info
@@ -536,7 +536,7 @@ class DataImport {
      */
     public function runImportTargetGrades() {
 
-        $options = (isset($_POST['options'])) ? $_POST['options'] : false;
+        $options = df_optional_param_array_recursive('options', false, PARAM_TEXT);
 
         // Check file exists and no errors from upload
         if (!$this->file || $this->file['error'] > 0) {
@@ -712,7 +712,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->save();
         // ------------ Logging Info
@@ -727,7 +727,7 @@ class DataImport {
      */
     public function runImportAspirationalGrades() {
 
-        $options = (isset($_POST['options'])) ? $_POST['options'] : false;
+        $options = df_optional_param_array_recursive('options', false, PARAM_TEXT);
 
         // Check file exists and no errors from upload
         if (!$this->file || $this->file['error'] > 0) {
@@ -845,7 +845,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->save();
         // ------------ Logging Info
@@ -898,6 +898,8 @@ class DataImport {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
             return false;
         }
+
+        $byCourseMethod = optional_param('importoptions', false, PARAM_TEXT);
 
         $i = 0;
         $err = 0;
@@ -961,7 +963,6 @@ class DataImport {
 
             } else if (!empty($username) && !empty($course)) {
 
-                $byCourseMethod = $_POST['importoptions'];
                 if ($byCourseMethod == 'importcourseshortname') {
                     $coursecheck = \GT\Course::retrieve('shortname', $course);
                 } else if ($byCourseMethod == 'importcourseid') {
@@ -1006,7 +1007,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->save();
         // ------------ Logging Info
@@ -1135,7 +1136,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->save();
         // ------------ Logging Info
@@ -1316,7 +1317,7 @@ class DataImport {
         $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST
+            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
         $Log->addAttribute(\GT\Log::GT_LOG_ATT_ASSID, $Assessment->getID());
         $Log->save();
