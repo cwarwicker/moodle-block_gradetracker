@@ -172,7 +172,7 @@ function gt_mod_hook_process($mod, $course) {
 
     $modID = (is_object($mod)) ? $mod->id : $mod;
 
-    $linkedCriteria = (isset($_POST['gt_criteria'])) ? $_POST['gt_criteria'] : false;
+    $linkedCriteria = df_optional_param_array_recursive('gt_criteria', false, PARAM_TEXT);
     $criteriaArray = array();
 
     // If there are criteria we want to link, process them
