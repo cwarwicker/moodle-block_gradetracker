@@ -32,9 +32,8 @@ require_login();
 $cID = optional_param('cID', false, PARAM_INT);
 $type = optional_param('type', 'student', PARAM_TEXT);
 
-// must be param_text for ctype_digit check
-$searchAllQID = optional_param('searchQualID', false, PARAM_TEXT);
-$searchAllCID = optional_param('searchCourseID', false, PARAM_TEXT);
+$searchAllQID = optional_param('searchQualID', false, PARAM_INT);
+$searchAllCID = optional_param('searchCourseID', false, PARAM_INT);
 $myQualID = optional_param('myQualID', false, PARAM_INT);
 $myCourseID = optional_param('myCourseID', false, PARAM_INT);
 
@@ -78,7 +77,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
     $searchCourse = false;
 
     // If searching by all Qualifications
-    if (ctype_digit($searchAllQID) && $searchAllQID > 0) {
+    if ($searchAllQID > 0) {
         $searchQualification = new \GT\Qualification($searchAllQID);
         if (!$searchQualification->isValid()) {
             $searchQualification = false;
@@ -86,7 +85,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
     }
 
     // If searching by all Courses
-    if (ctype_digit($searchAllCID) && $searchAllCID > 0) {
+    if ($searchAllCID > 0) {
         $searchCourse = new \GT\Course($searchAllCID);
         if (!$searchCourse->isValid()) {
             $searchCourse = false;
@@ -98,7 +97,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
     $searchQualification = false;
 
     // Selecting one of My Quals
-    if (ctype_digit($myQualID) && $myQualID > 0) {
+    if ($myQualID > 0) {
         $searchQualification = new \GT\Qualification($myQualID);
         if (!$searchQualification->isValid() || !$User->isOnQual($myQualID, "STAFF")) {
             $searchQualification = false;
@@ -106,7 +105,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
     }
 
     // Selecting one of My Courses
-    if (ctype_digit($myCourseID) && $myCourseID > 0) {
+    if ($myCourseID > 0) {
         $searchCourse = new \GT\Course($myCourseID);
         if (!$searchCourse->isValid()) {
             $searchCourse = false;
