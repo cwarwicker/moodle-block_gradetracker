@@ -843,14 +843,22 @@ class QualificationBuild {
      */
     public function loadPostData() {
 
-        if (isset($_POST['build_id'])) {
-            $this->setID($_POST['build_id']);
+        $settings = array(
+            'build_id' => optional_param('build_id', false, PARAM_INT),
+            'build_structure_id' => optional_param('build_structure_id', false, PARAM_INT),
+            'build_level_id' => optional_param('build_level_id', false, PARAM_INT),
+            'build_subtype_id' => optional_param('build_subtype_id', false, PARAM_INT),
+            'build_deleted' => optional_param('build_deleted', false, PARAM_INT),
+        );
+
+        if ($settings['build_id']) {
+            $this->setID($settings['build_id']);
         }
 
-        $this->setStructureID($_POST['build_structure_id']);
-        $this->setLevelID($_POST['build_level_id']);
-        $this->setSubTypeID($_POST['build_subtype_id']);
-        $this->setDeleted($_POST['build_deleted']);
+        $this->setStructureID($settings['build_structure_id']);
+        $this->setLevelID($settings['build_level_id']);
+        $this->setSubTypeID($settings['build_subtype_id']);
+        $this->setDeleted($settings['build_deleted']);
 
     }
 
@@ -859,17 +867,28 @@ class QualificationBuild {
      */
     public function loadAwardPostData() {
 
+        $settings = array(
+            'build_award_id' => df_optional_param_array_recursive('build_award_id', false, PARAM_INT),
+            'build_award_rank' => df_optional_param_array_recursive('build_award_rank', false, PARAM_TEXT),
+            'build_award_name' => df_optional_param_array_recursive('build_award_name', false, PARAM_TEXT),
+            'build_award_points_lower' => df_optional_param_array_recursive('build_award_points_lower', false, PARAM_TEXT),
+            'build_award_points_upper' => df_optional_param_array_recursive('build_award_points_upper', false, PARAM_TEXT),
+            'build_award_qoe_lower' => df_optional_param_array_recursive('build_award_qoe_lower', false, PARAM_TEXT),
+            'build_award_qoe_upper' => df_optional_param_array_recursive('build_award_qoe_upper', false, PARAM_TEXT),
+            'build_award_ucas' => df_optional_param_array_recursive('build_award_ucas', false, PARAM_TEXT),
+        );
+
         // CLear loaded awards
         $this->awards = array();
 
-        $awardIDs = $_POST['build_award_id'];
-        $awardRank = $_POST['build_award_rank'];
-        $awardName = $_POST['build_award_name'];
-        $awardPointsLower = $_POST['build_award_points_lower'];
-        $awardPointsUpper = $_POST['build_award_points_upper'];
-        $awardQOELower = $_POST['build_award_qoe_lower'];
-        $awardQOEUpper = $_POST['build_award_qoe_upper'];
-        $awardUCAS = $_POST['build_award_ucas'];
+        $awardIDs = $settings['build_award_id'];
+        $awardRank = $settings['build_award_rank'];
+        $awardName = $settings['build_award_name'];
+        $awardPointsLower = $settings['build_award_points_lower'];
+        $awardPointsUpper = $settings['build_award_points_upper'];
+        $awardQOELower = $settings['build_award_qoe_lower'];
+        $awardQOEUpper = $settings['build_award_qoe_upper'];
+        $awardUCAS = $settings['build_award_ucas'];
 
         if ($awardIDs) {
 
@@ -1217,7 +1236,12 @@ class QualificationBuild {
      */
     public static function importXML($file, $create = false) {
 
-        $updateMethod = (isset($_POST['update_method'])) ? $_POST['update_method'] : false;
+        $settings = array(
+            'update_method' => optional_param('update_method', false, PARAM_TEXT),
+            'create' => optional_param('create', false, PARAM_TEXT),
+        );
+
+        $updateMethod = $settings['update_method'];
 
         $result = array();
         $result['result'] = false;
@@ -1225,7 +1249,7 @@ class QualificationBuild {
         $result['output'] = '';
 
         if ($create == false) {
-            $create = (isset($_POST['create'])) ? true : false;
+            $create = (bool)$settings['create'];
         }
 
         // Required XML nodes
