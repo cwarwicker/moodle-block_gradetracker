@@ -231,17 +231,25 @@ class Level {
 
     public function loadPostData() {
 
-        $name = $_POST['level_name'];
-        $shortName = $_POST['level_shortname'];
-        $order = $_POST['level_order'];
+        $settings = array(
+            'level_name' => optional_param('level_name', false, PARAM_TEXT),
+            'level_shortname' => optional_param('level_shortname', false, PARAM_TEXT),
+            'level_order' => optional_param('level_order', false, PARAM_TEXT),
+            'level_id' => optional_param('level_id', false, PARAM_INT),
+            'level_deleted' => optional_param('level_deleted', false, PARAM_INT),
+        );
+
+        $name = $settings['level_name'];
+        $shortName = $settings['level_shortname'];
+        $order = $settings['level_order'];
         $deleted = 0;
 
-        if (isset($_POST['level_id'])) {
-            $this->setID($_POST['level_id']);
+        if ($settings['level_id']) {
+            $this->setID($settings['level_id']);
         }
 
-        if (isset($_POST['level_deleted'])) {
-            $deleted = $_POST['level_deleted'];
+        if ($settings['level_deleted']) {
+            $deleted = $settings['level_deleted'];
         }
 
         $this->setName($name);
