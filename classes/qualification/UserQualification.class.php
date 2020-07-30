@@ -1732,7 +1732,15 @@ class UserQualification extends \GT\Qualification {
 
         global $CFG, $MSGS;
 
-        $assessmentView = optional_param('ass', false, PARAM_INT);
+        $settings = array(
+            'qualID' => optional_param('qualID', false, PARAM_INT),
+            'now' => optional_param('now', false, PARAM_INT),
+            'ass' => optional_param('ass', false, PARAM_INT),
+            'studs' => df_optional_param_array_recursive('studs', false, PARAM_TEXT),
+            'unit_students' => df_optional_param_array_recursive('unit_students', false, PARAM_TEXT),
+        );
+
+        $assessmentView = $settings['ass'];
 
         // ------------ Logging Info
         $Log = new \GT\Log();
@@ -1747,11 +1755,11 @@ class UserQualification extends \GT\Qualification {
 
         if (!$file) {
 
-            if (!isset($_POST['qualID']) || !isset($_POST['now'])) {
+            if (!$settings['qualID'] || !$settings['now']) {
                 print_error('errors:missingparams', 'block_gradetracker');
             }
 
-            $file = \GT\GradeTracker::dataroot() . '/tmp/C_' . $_POST['qualID'] . '_' . $_POST['now'] . '.xlsx';
+            $file = \GT\GradeTracker::dataroot() . '/tmp/C_' . $settings['qualID'] . '_' . $settings['now'] . '.xlsx';
 
         }
 
@@ -1792,7 +1800,7 @@ class UserQualification extends \GT\Qualification {
             $lastRow = $objWorksheet->getHighestRow();
 
             // Checkboxes
-            $studFilter = (isset($_POST['studs'])) ? $_POST['studs'] : array();
+            $studFilter = ($settings['studs']) ? $settings['studs'] : array();
 
             // Get array of assessment IDs from column headers
             $assessmentsArray = array();
@@ -1983,7 +1991,7 @@ class UserQualification extends \GT\Qualification {
         } else {
 
             // Checkboxes
-            $studUnitFilter = (isset($_POST['unit_students'])) ? $_POST['unit_students'] : array();
+            $studUnitFilter = ($settings['unit_students']) ? $settings['unit_students'] : array();
 
             // Loop through the worksheets (each unit has its own worksheet)
             for ($sheetNum = 0; $sheetNum < $cntSheets; $sheetNum++) {
@@ -2165,7 +2173,16 @@ class UserQualification extends \GT\Qualification {
             return false;
         }
 
-        $assessmentView = optional_param('ass', false, PARAM_INT);
+        $settings = array(
+            'qualID' => optional_param('qualID', false, PARAM_INT),
+            'studentID' => optional_param('studentID', false, PARAM_INT),
+            'now' => optional_param('now', false, PARAM_INT),
+            'ass' => optional_param('ass', false, PARAM_INT),
+            'quals' => df_optional_param_array_recursive('quals', false, PARAM_INT),
+            'units' => df_optional_param_array_recursive('units', false, PARAM_INT),
+        );
+
+        $assessmentView = $settings['ass'];
 
         // ------------ Logging Info
         $Log = new \GT\Log();
@@ -2181,11 +2198,11 @@ class UserQualification extends \GT\Qualification {
 
         if (!$file) {
 
-            if (!isset($_POST['qualID']) || !isset($_POST['studentID']) || !isset($_POST['now'])) {
+            if (!$settings['qualID'] || !$settings['studentID'] || !$settings['now']) {
                 print_error('errors:missingparams', 'block_gradetracker');
             }
 
-            $file = \GT\GradeTracker::dataroot() . '/tmp/' . $_POST['qualID'] . '_' . $_POST['studentID'] . '_' . $_POST['now'] . '.xlsx';
+            $file = \GT\GradeTracker::dataroot() . '/tmp/' . $settings['qualID'] . '_' . $settings['studentID'] . '_' . $settings['now'] . '.xlsx';
 
         }
 
@@ -2222,7 +2239,7 @@ class UserQualification extends \GT\Qualification {
         if ($assessmentView) {
 
             // Checkboxes
-            $qualFilter = (isset($_POST['quals'])) ? $_POST['quals'] : array();
+            $qualFilter = ($settings['quals']) ? $settings['quals'] : array();
 
             // Get array of assessment IDs from column headers
             $assessmentsArray = array();
@@ -2413,7 +2430,7 @@ class UserQualification extends \GT\Qualification {
             // Normal grid
 
             // Checkboxes
-            $unitFilter = (isset($_POST['units'])) ? $_POST['units'] : array();
+            $unitFilter = ($settings['units']) ? $settings['units'] : array();
 
             $possibleValues = $this->getAllPossibleValues();
             $possibleValueArray = array();
