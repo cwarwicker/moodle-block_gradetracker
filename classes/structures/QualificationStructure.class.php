@@ -1247,39 +1247,59 @@ class QualificationStructure {
      */
     public function loadPostData() {
 
+        $settings = array(
+            'structure_id' => optional_param('structure_id', false, PARAM_INT),
+            'structure_name' => optional_param('structure_name', false, PARAM_TEXT),
+            'structure_display_name' => optional_param('structure_display_name', false, PARAM_TEXT),
+            'structure_enabled' => optional_param('structure_enabled', false, PARAM_INT),
+            'structure_deleted' => optional_param('structure_deleted', false, PARAM_INT),
+            'levels' => df_optional_param_array_recursive('levels', false, PARAM_INT),
+            'max_sub_crit' => df_optional_param_array_recursive('max_sub_crit', false, PARAM_INT),
+            'features' => df_optional_param_array_recursive('features', false, PARAM_INT),
+            'custom_form_fields_names' => df_optional_param_array_recursive('custom_form_fields_names', false, PARAM_TEXT),
+            'custom_form_fields_ids' => df_optional_param_array_recursive('custom_form_fields_ids', false, PARAM_INT),
+            'custom_form_fields_forms' => df_optional_param_array_recursive('custom_form_fields_forms', false, PARAM_TEXT),
+            'custom_form_fields_types' => df_optional_param_array_recursive('custom_form_fields_types', false, PARAM_TEXT),
+            'custom_form_fields_options' => df_optional_param_array_recursive('custom_form_fields_options', false, PARAM_TEXT),
+            'custom_form_fields_req' => df_optional_param_array_recursive('custom_form_fields_req', false, PARAM_TEXT),
+            'rule_sets' => df_optional_param_array_recursive('rule_sets', false, PARAM_TEXT),
+            'rule_set_default' => optional_param('rule_set_default', false, PARAM_INT),
+            'settings' => df_optional_param_array_recursive('settings', false, PARAM_TEXT),
+        );
+
         // Set the names
-        if (isset($_POST['structure_id'])) {
-            $this->setID($_POST['structure_id']);
+        if ($settings['structure_id']) {
+            $this->setID($settings['structure_id']);
         }
-        $this->setName($_POST['structure_name']);
-        $this->setDisplayName($_POST['structure_display_name']);
-        $this->setEnabled( (isset($_POST['structure_enabled']) && $_POST['structure_enabled'] == 1 ) ? 1 : 0);
-        $this->setDeleted($_POST['structure_deleted']);
+        $this->setName($settings['structure_name']);
+        $this->setDisplayName($settings['structure_display_name']);
+        $this->setEnabled( ($settings['structure_enabled'] && $settings['structure_enabled'] == 1 ) ? 1 : 0);
+        $this->setDeleted($settings['structure_deleted']);
 
         // Set the enabled levels
-        if (isset($_POST['levels'])) {
-            foreach ($_POST['levels'] as $key => $id) {
-                $maxSubCrit = (isset($_POST['max_sub_crit'][$key])) ? (int)$_POST['max_sub_crit'][$key] : 0;
+        if ($settings['levels']) {
+            foreach ($settings['levels'] as $key => $id) {
+                $maxSubCrit = (isset($settings['max_sub_crit'][$key])) ? (int)$settings['max_sub_crit'][$key] : 0;
                 $this->addLevel($id, $maxSubCrit);
             }
         }
 
         // Set the enabled features
-        if (isset($_POST['features'])) {
-            $this->setFeatures($_POST['features']);
+        if ($settings['features']) {
+            $this->setFeatures($settings['features']);
         }
 
         // Set the defined custom form fields
-        if (isset($_POST['custom_form_fields_names'])) {
-            foreach ($_POST['custom_form_fields_names'] as $key => $name) {
+        if ($settings['custom_form_fields_names']) {
+            foreach ($settings['custom_form_fields_names'] as $key => $name) {
 
                 $params = new \stdClass();
-                $params->id = (isset($_POST['custom_form_fields_ids'][$key])) ? $_POST['custom_form_fields_ids'][$key] : false;
+                $params->id = (isset($settings['custom_form_fields_ids'][$key])) ? $settings['custom_form_fields_ids'][$key] : false;
                 $params->name = $name;
-                $params->form = (isset($_POST['custom_form_fields_forms'][$key])) ? $_POST['custom_form_fields_forms'][$key] : false;
-                $params->type = (isset($_POST['custom_form_fields_types'][$key])) ? $_POST['custom_form_fields_types'][$key] : false;
-                $params->options = (isset($_POST['custom_form_fields_options'][$key]) && !empty($_POST['custom_form_fields_options'][$key])) ? $_POST['custom_form_fields_options'][$key] : false;
-                $params->validation = (isset($_POST['custom_form_fields_req'][$key])) ? array("REQUIRED") : array();
+                $params->form = (isset($settings['custom_form_fields_forms'][$key])) ? $settings['custom_form_fields_forms'][$key] : false;
+                $params->type = (isset($settings['custom_form_fields_types'][$key])) ? $settings['custom_form_fields_types'][$key] : false;
+                $params->options = (isset($settings['custom_form_fields_options'][$key]) && !empty($settings['custom_form_fields_options'][$key])) ? $settings['custom_form_fields_options'][$key] : false;
+                $params->validation = (isset($settings['custom_form_fields_req'][$key])) ? array("REQUIRED") : array();
                 $element = \GT\FormElement::create($params);
                 $this->addCustomFormElement($element);
 
@@ -1287,11 +1307,11 @@ class QualificationStructure {
         }
 
         // Set the Rule Sets
-        if (isset($_POST['rule_sets'])) {
+        if ($settings['rule_sets']) {
 
-            $defaultNum = (isset($_POST['rule_set_default'])) ? $_POST['rule_set_default'] : false;
+            $defaultNum = ($settings['rule_set_default']) ? $settings['rule_set_default'] : false;
 
-            foreach ($_POST['rule_sets'] as $setNum => $set) {
+            foreach ($settings['rule_sets'] as $setNum => $set) {
 
                 $id = (isset($set['id'])) ? $set['id'] : false;
                 $name = (isset($set['name'])) ? $set['name'] : false;
@@ -1392,8 +1412,8 @@ class QualificationStructure {
         }
 
         // Other settings
-        if (isset($_POST['settings'])) {
-            foreach ($_POST['settings'] as $name => $value) {
+        if ($settings['settings']) {
+            foreach ($settings['settings'] as $name => $value) {
                 $this->setSetting($name, $value);
             }
         }
@@ -1988,7 +2008,7 @@ class QualificationStructure {
      */
     public static function importXML($file) {
 
-        $updateMethod = (isset($_POST['update_method'])) ? $_POST['update_method'] : false;
+        $updateMethod = optional_param('update_method', false, PARAM_TEXT);
 
         $result = array();
         $result['result'] = false;
