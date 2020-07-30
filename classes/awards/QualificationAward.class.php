@@ -183,6 +183,10 @@ class QualificationAward {
 
         global $DB;
 
+        $submission = array(
+            'update' => optional_param('update', false, PARAM_TEXT),
+        );
+
         // If no build has been specified
         if (is_null($this->buildID)) {
             $this->errors[] = get_string('errors:qualawards:buildid', 'block_gradetracker');
@@ -196,10 +200,10 @@ class QualificationAward {
         // If name already exists
         $check = $DB->get_record("bcgt_qual_build_awards", array("buildid" => $this->buildID, "name" => $this->name));
         if ($check && $check->id <> $this->id) {
-            if (isset($_POST['update']) && $this->id == false) {
+            if ($submission['update'] && $this->id == false) {
                 $this->id = $check->id;
             } else {
-                $this->errors[] = get_string('errors:qualawards:name:duplicate', 'block_gradetracker');
+                $this->errors[] = get_string('errors:qualawards:name:duplicate', 'block_gradetracker', $this->name);
             }
         }
 

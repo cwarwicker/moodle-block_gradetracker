@@ -145,7 +145,7 @@ $string['errors:qualbuild:duplicate'] = 'There is already a Qualification Build 
 $string['errors:qualaward'] = 'Could not save Qualification Award';
 $string['errors:qualawards:buildid'] = 'Invalid Qualification Build';
 $string['errors:qualawards:name'] = 'Award must have a name';
-$string['errors:qualawards:name:duplicate'] = 'An Award on this Qualification Build already exists with that name (%s)';
+$string['errors:qualawards:name:duplicate'] = 'An Award on this Qualification Build already exists with that name ({$a})';
 $string['errors:qualawards:precision'] = '(%d) is larger than the maximum possible value (%d)';
 
 $string['errors:gradestructure'] = 'Could not save Grading Structure';
