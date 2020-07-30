@@ -157,7 +157,8 @@ switch ($type) {
 
             case 'tg':
 
-                $options = (isset($_POST['options'])) ? array_keys($_POST['options']) : array();
+                $options = df_optional_param_array_recursive('options', false, PARAM_TEXT);
+                $options = ($options) ? array_keys($options) : array();
 
                 $export = new \GT\DataExport;
                 $all_users_tg = $export->getUsersTg($options);
@@ -189,15 +190,20 @@ switch ($type) {
 
             case 'ass':
 
+                $settings = array(
+                    'assID' => optional_param('assID', false, PARAM_INT),
+                    'include_names' => optional_param('include_names', false, PARAM_INT),
+                );
+
                 // This needs to have an assessment ID passed through
-                if (!isset($_POST['assID']) || !$_POST['assID']) {
+                if (!$settings['assID']) {
                     print_error('errors:import:ass:id', 'block_gradetracker');
                 }
 
-                $names = (isset($_POST['include_names']));
+                $names = (bool)$settings['include_names'];
 
                 $export = new \GT\DataExport();
-                $data = $export->getUsersAssGrades($_POST['assID']);
+                $data = $export->getUsersAssGrades($settings['assID']);
                 $export->downloadUsersAssGrades($data, $names);
 
                 break;

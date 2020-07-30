@@ -10,9 +10,9 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
+
     <?php if ($exampleFile): ?>
         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
             <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
@@ -20,11 +20,11 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;
 
     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ass&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
-    
+
 </p>
 
 <form action="" method="post" enctype="multipart/form-data">
@@ -63,7 +63,7 @@
 <h2><?= $string['dataexport'] ?></h2>
 
 <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ass" method="post">
-    
+
     <select name='assID'>
         <option value=""><?= $string['pleaseselect'] ?></option>
         <?php if ($assessments): ?>
@@ -72,7 +72,7 @@
             <?php endforeach; ?>
         <?php endif; ?>
     </select><br><br>
-    <input type="checkbox" name="include_names" value="" /> <?= $string['includenamecols'] ?>
+    <input type="checkbox" name="include_names" value="1" /> <?= $string['includenamecols'] ?>
     <br><br>
     <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
 </form>
