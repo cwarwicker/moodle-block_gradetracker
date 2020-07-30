@@ -56,7 +56,7 @@ if (!$action) {
     exit;
 }
 
-\gt_debug("Called get.php: " . print_r($_POST, true));
+\gt_debug("Called get.php: " . print_r($_POST, true)); // This usage of $_POST is just to store the submitted data in a debug log.
 
 // Check which action we're doing.
 switch ($action) {

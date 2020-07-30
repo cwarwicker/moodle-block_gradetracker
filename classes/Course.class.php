@@ -676,13 +676,17 @@ class Course {
 
         global $DB, $MSGS;
 
+        $settings = array(
+            'user_qual_units' => df_optional_param_array_recursive('user_qual_units', false, PARAM_TEXT),
+            'staff_qual_units' => df_optional_param_array_recursive('staff_qual_units', false, PARAM_TEXT),
+        );
+
         // Students
-        $userQualUnits = (isset($_POST['user_qual_units'])) ? $_POST['user_qual_units'] : false;
         $qualUsers = array();
 
         // If we ticked any
-        if ($userQualUnits) {
-            foreach ($userQualUnits as $qualID => $userUnits) {
+        if ($settings['user_qual_units']) {
+            foreach ($settings['user_qual_units'] as $qualID => $userUnits) {
                 if ($userUnits) {
                     foreach ($userUnits as $unitID => $users) {
 
@@ -709,12 +713,11 @@ class Course {
         $this->removeOldUserQualUnits($qualUsers, "STUDENT");
 
         // Staff
-        $userQualUnits = (isset($_POST['staff_qual_units'])) ? $_POST['staff_qual_units'] : false;
         $qualUsers = array();
 
         // If we ticked any
-        if ($userQualUnits) {
-            foreach ($userQualUnits as $qualID => $userUnits) {
+        if ($settings['staff_qual_units']) {
+            foreach ($settings['staff_qual_units'] as $qualID => $userUnits) {
                 if ($userUnits) {
                     foreach ($userUnits as $unitID => $users) {
 
@@ -746,7 +749,7 @@ class Course {
         $Log = new \GT\Log();
         $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS;
-        $Log->afterjson = $_POST;
+        $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
         $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
@@ -825,14 +828,18 @@ class Course {
 
         global $DB, $MSGS;
 
+        $settings = array(
+            'user_quals' => df_optional_param_array_recursive('user_quals', false, PARAM_TEXT),
+            'staff_quals' => df_optional_param_array_recursive('staff_quals', false, PARAM_TEXT),
+        );
+
         // Student Quals
-        $userQuals = (isset($_POST['user_quals'])) ? $_POST['user_quals'] : false;
         $qualUsers = array();
 
         // If we ticked any, loop through them and link them up
-        if ($userQuals) {
+        if ($settings['user_quals']) {
 
-            foreach ($userQuals as $qualID => $users) {
+            foreach ($settings['user_quals'] as $qualID => $users) {
 
                 if ($users) {
 
@@ -856,14 +863,12 @@ class Course {
         $this->removeOldUserQuals($qualUsers, "STUDENT");
 
         // Staff Quals
-        $staffQuals = (isset($_POST['staff_quals'])) ? $_POST['staff_quals'] : false;
-
         $qualUsers = array();
 
         // If we ticked any, loop through them and link them up
-        if ($staffQuals) {
+        if ($settings['staff_quals']) {
 
-            foreach ($staffQuals as $qualID => $users) {
+            foreach ($settings['staff_quals'] as $qualID => $users) {
 
                 if ($users) {
 
@@ -892,7 +897,7 @@ class Course {
         $Log = new \GT\Log();
         $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS;
-        $Log->afterjson = $_POST;
+        $Log->afterjson = $_POST; // This usage of $_POST is just to store submitted data in a log.
         $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
@@ -1046,7 +1051,7 @@ class Course {
 
         global $DB, $MSGS;
 
-        $qualIDs = (isset($_POST['quals'])) ? $_POST['quals'] : array();
+        $qualIDs = df_optional_param_array_recursive('quals', false, PARAM_INT);
 
         // Add new links
         if ($qualIDs) {
@@ -1064,7 +1069,7 @@ class Course {
         $Log = new \GT\Log();
         $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS;
-        $Log->afterjson = $_POST;
+        $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
         $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
