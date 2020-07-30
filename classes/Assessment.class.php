@@ -1555,27 +1555,49 @@ class Assessment {
      */
     public function loadPostData() {
 
-        if (isset($_POST['save_assessment'])) {
+        $submission = array(
+            'save_assessment' => optional_param('save_assessment', false, PARAM_TEXT),
+        );
 
-            if (isset($_POST['assessmentid'])) {
-                $this->setID($_POST['assessmentid']);
+        $settings = array(
+            'assessmentid' => optional_param('assessmentid', false, PARAM_INT),
+            'name' => optional_param('name', false, PARAM_TEXT),
+            'type' => optional_param('type', false, PARAM_TEXT),
+            'type_other' => optional_param('type_other', false, PARAM_TEXT),
+            'description' => optional_param('description', false, PARAM_TEXT),
+            'date' => optional_param('date', false, PARAM_TEXT),
+            'ceta' => optional_param('ceta', false, PARAM_TEXT),
+            'summary' => optional_param('summary', false, PARAM_TEXT),
+            'grading_method' => optional_param('grading_method', false, PARAM_TEXT),
+            'numeric_grading_min' => optional_param('numeric_grading_min', false, PARAM_TEXT),
+            'numeric_grading_max' => optional_param('numeric_grading_max', false, PARAM_TEXT),
+            'structure_grading_structure' => df_optional_param_array_recursive('structure_grading_structure', false, PARAM_INT),
+            'structure_grading_build' => df_optional_param_array_recursive('structure_grading_build', false, PARAM_INT),
+            'custom_form_fields_enabled' => df_optional_param_array_recursive('custom_form_fields_enabled', false, PARAM_INT),
+            'quals' => df_optional_param_array_recursive('quals', false, PARAM_INT),
+        );
+
+        if ($submission['save_assessment']) {
+
+            if ($settings['assessmentid']) {
+                $this->setID($settings['assessmentid']);
             }
 
-            $this->setName($_POST['name']);
-            $this->setType( ( $_POST['type'] == 'other' ) ? $_POST['type_other'] : $_POST['type'] );
-            $this->setDetails($_POST['description']);
-            $this->setDate( strtotime($_POST['date']) );
+            $this->setName($settings['name']);
+            $this->setType( ( $settings['type'] == 'other' ) ? $settings['type_other'] : $settings['type'] );
+            $this->setDetails($settings['description']);
+            $this->setDate( strtotime($settings['date']) );
 
             // Settings
-            $this->useSettings['ceta'] = $_POST['ceta'];
-            $this->useSettings['summary'] = $_POST['summary'];
-            $this->useSettings['grading_method'] = $_POST['grading_method'];
-            $this->useSettings['numeric_grading_min'] = $_POST['numeric_grading_min'];
-            $this->useSettings['numeric_grading_max'] = $_POST['numeric_grading_max'];
+            $this->useSettings['ceta'] = $settings['ceta'];
+            $this->useSettings['summary'] = $settings['summary'];
+            $this->useSettings['grading_method'] = $settings['grading_method'];
+            $this->useSettings['numeric_grading_min'] = $settings['numeric_grading_min'];
+            $this->useSettings['numeric_grading_max'] = $settings['numeric_grading_max'];
 
             // QualStructure grading structure to use with this assessment
-            if (isset($_POST['structure_grading_structure'])) {
-                foreach ($_POST['structure_grading_structure'] as $structureID => $gradingStructureID) {
+            if ($settings['structure_grading_structure']) {
+                foreach ($settings['structure_grading_structure'] as $structureID => $gradingStructureID) {
                     if ((int)$gradingStructureID > 0) {
                         $this->useSettings['grading_structure_qual_structure_' . $structureID] = $gradingStructureID;
                     }
@@ -1583,8 +1605,8 @@ class Assessment {
             }
 
             // QualBuild grading structure to use with this assessment
-            if (isset($_POST['structure_grading_build'])) {
-                foreach ($_POST['structure_grading_build'] as $buildID => $gradingStructureID) {
+            if ($settings['structure_grading_build']) {
+                foreach ($settings['structure_grading_build'] as $buildID => $gradingStructureID) {
                     if ((int)$gradingStructureID > 0) {
                         $this->useSettings['grading_structure_qual_build_' . $buildID] = $gradingStructureID;
                     }
@@ -1592,8 +1614,8 @@ class Assessment {
             }
 
             $customFormFields = array();
-            if (isset($_POST['custom_form_fields_enabled'])) {
-                foreach ($_POST['custom_form_fields_enabled'] as $key => $enabled) {
+            if ($settings['custom_form_fields_enabled']) {
+                foreach ($settings['custom_form_fields_enabled'] as $key => $enabled) {
                     if ($enabled == 1) {
                         $this->useSettings['custom_form_field_enabled_' . $key] = $enabled;
                     }
@@ -1602,8 +1624,8 @@ class Assessment {
 
             $this->qualIDs = array();
 
-            if (isset($_POST['quals'])) {
-                foreach ($_POST['quals'] as $qualID) {
+            if ($settings['quals']) {
+                foreach ($settings['quals'] as $qualID) {
                     $this->setQualID($qualID);
                 }
             }
