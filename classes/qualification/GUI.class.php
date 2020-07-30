@@ -45,14 +45,28 @@ class GUI extends \GT\Qualification {
 
         global $MSGS;
 
+        $submission = array(
+            'save_qualification' => optional_param('save_qualification', false, PARAM_TEXT),
+        );
+
+        $settings = array(
+            'qual_id' => optional_param('qual_id', false, PARAM_INT),
+            'qual_type' => optional_param('qual_type', false, PARAM_INT),
+            'qual_build' => optional_param('qual_build', false, PARAM_INT),
+            'qual_name' => optional_param('qual_name', false, PARAM_TEXT),
+            'custom_elements' => df_optional_param_array_recursive('custom_elements', false, PARAM_TEXT),
+            'qual_units' => df_optional_param_array_recursive('qual_units', false, PARAM_INT),
+            'qual_courses' => df_optional_param_array_recursive('qual_courses', false, PARAM_INT),
+        );
+
         // Take the data from the form and load it into the qualification object
-        $qualID = (isset($_POST['qual_id'])) ? $_POST['qual_id'] : false;
-        $structureID = (isset($_POST['qual_type'])) ? $_POST['qual_type'] : false;
-        $buildID = (isset($_POST['qual_build'])) ? $_POST['qual_build'] : false;
-        $name = (isset($_POST['qual_name'])) ? $_POST['qual_name'] : '';
-        $customElements = (isset($_POST['custom_elements'])) ? $_POST['custom_elements'] : false;
-        $unitIDs = (isset($_POST['qual_units'])) ? $_POST['qual_units'] : false;
-        $courseIDs = (isset($_POST['qual_courses'])) ? $_POST['qual_courses'] : false;
+        $qualID = ($settings['qual_id']) ? $settings['qual_id'] : false;
+        $structureID = ($settings['qual_type']) ? $settings['qual_type'] : false;
+        $buildID = ($settings['qual_build']) ? $settings['qual_build'] : false;
+        $name = ($settings['qual_name']) ? $settings['qual_name'] : '';
+        $customElements = ($settings['custom_elements']) ? $settings['custom_elements'] : false;
+        $unitIDs = ($settings['qual_units']) ? $settings['qual_units'] : false;
+        $courseIDs = ($settings['qual_courses']) ? $settings['qual_courses'] : false;
 
         $this->setStructureID($structureID);
         $this->setID($qualID);
@@ -64,7 +78,7 @@ class GUI extends \GT\Qualification {
         $this->setCustomElementValues($customElements);
 
         // Save the qualification
-        if (isset($_POST['save_qualification'])) {
+        if ($submission['save_qualification']) {
 
             if ($this->hasNoErrors() && $this->save()) {
                 $MSGS['success'] = get_string('qualsaved', 'block_gradetracker');
@@ -143,11 +157,19 @@ class GUI extends \GT\Qualification {
 
         global $MSGS;
 
-        $structureID = (isset($_POST['qual_type'])) ? $_POST['qual_type'] : false;
-        $levelID = (isset($_POST['qual_level'])) ? $_POST['qual_level'] : false;
-        $subTypeID = (isset($_POST['qual_sub_type'])) ? $_POST['qual_sub_type'] : false;
-        $name = (isset($_POST['qual_name'])) ? $_POST['qual_name'] : false;
-        $custom = (isset($_POST['qual_custom_elements'])) ? array_filter($_POST['qual_custom_elements']) : false;
+        $settings = array(
+            'qual_type' => optional_param('qual_type', false, PARAM_INT),
+            'qual_level' => optional_param('qual_level', false, PARAM_INT),
+            'qual_sub_type' => optional_param('qual_sub_type', false, PARAM_INT),
+            'qual_name' => optional_param('qual_name', false, PARAM_TEXT),
+            'qual_custom_elements' => df_optional_param_array_recursive('qual_custom_elements', false, PARAM_TEXT),
+        );
+
+        $structureID = $settings['qual_type'];
+        $levelID = $settings['qual_level'];
+        $subTypeID = $settings['qual_sub_type'];
+        $name = $settings['qual_name'];
+        $custom = ($settings['qual_custom_elements']) ? array_filter($settings['qual_custom_elements']) : false;
 
         $this->searchParams = array();
         $this->searchParams['structureID'] = $structureID;
@@ -162,9 +184,7 @@ class GUI extends \GT\Qualification {
             $this->searchParams['deleted'] = 0;
         }
 
-        $results = self::search($this->searchParams);
-
-        return $results;
+        return self::search($this->searchParams);
 
     }
 
