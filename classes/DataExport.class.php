@@ -368,6 +368,11 @@ class DataExport {
      * @param type $all_users_cg
      */
     public function downloadUsersCg($all_users_cg) {
+
+        $settings = array(
+            'export' => optional_param('export', false, PARAM_TEXT),
+        );
+
         if ($all_users_cg) {
             global $CFG;
             $file = fopen("{$CFG->dataroot}/gt_cg.csv", "w");
@@ -375,8 +380,8 @@ class DataExport {
 
             foreach ($all_users_cg as $cu) {
 
-                if (isset($_POST['export'])) {
-                    $selectedoption = $_POST['export'];
+                if ($settings['export']) {
+                    $selectedoption = $settings['export'];
                     if ($selectedoption == 'shortname') {
                         $courseinfo = $cu->shortname;
                     } else if ($selectedoption == 'idnumber') {
