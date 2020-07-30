@@ -614,6 +614,13 @@ class UserUnit extends \GT\Unit {
 
         global $CFG, $MSGS;
 
+        $settings = array(
+            'qualID' => optional_param('qualID', false, PARAM_INT),
+            'unitID' => optional_param('unitID', false, PARAM_INT),
+            'now' => optional_param('now', false, PARAM_INT),
+            'students' => df_optional_param_array_recursive('students', false, PARAM_INT),
+        );
+
         // ------------ Logging Info
         $Log = new \GT\Log();
         $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
@@ -628,11 +635,11 @@ class UserUnit extends \GT\Unit {
 
         if (!$file) {
 
-            if (!isset($_POST['qualID']) || !isset($_POST['unitID']) || !isset($_POST['now'])) {
+            if (!$settings['qualID'] || !$settings['unitID'] || !$settings['now']) {
                 print_error('errors:missingparams', 'block_gradetracker');
             }
 
-            $file = \GT\GradeTracker::dataroot() . '/tmp/U_' . $_POST['unitID'] . '_' . $_POST['qualID'] . '_' . $_POST['now'] . '.xlsx';
+            $file = \GT\GradeTracker::dataroot() . '/tmp/U_' . $settings['unitID'] . '_' . $settings['qualID'] . '_' . $settings['now'] . '.xlsx';
 
         }
 
@@ -654,7 +661,7 @@ class UserUnit extends \GT\Unit {
         $qual = new \GT\Qualification( $this->qualID );
 
         // Checkboxes
-        $studentFilter = (isset($_POST['students'])) ? $_POST['students'] : array();
+        $studentFilter = $settings['students'];
 
         $output = "";
         $output .= sprintf( get_string('import:datasheet:process:file', 'block_gradetracker'), $file ) . '<br>';
