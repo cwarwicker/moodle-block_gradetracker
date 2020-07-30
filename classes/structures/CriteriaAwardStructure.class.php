@@ -710,45 +710,62 @@ class CriteriaAwardStructure {
      */
     public function loadPostData() {
 
+        $settings = array(
+            'grading_id' => optional_param('grading_id', false, PARAM_INT),
+            'grading_name' => optional_param('grading_name', false, PARAM_TEXT),
+            'grading_enabled' => optional_param('grading_enabled', false, PARAM_INT),
+            'grading_assessments' => optional_param('grading_assessments', false, PARAM_INT),
+            'build' => optional_param('build', false, PARAM_INT),
+            'grading_qual_structure_id' => optional_param('grading_qual_structure_id', false, PARAM_INT),
+            'grade_ids' => df_optional_param_array_recursive('grade_ids', false, PARAM_INT),
+            'grade_names' => df_optional_param_array_recursive('grade_names', false, PARAM_TEXT),
+            'grade_shortnames' => df_optional_param_array_recursive('grade_shortnames', false, PARAM_TEXT),
+            'grade_points' => df_optional_param_array_recursive('grade_points', false, PARAM_TEXT),
+            'grade_points_lower' => df_optional_param_array_recursive('grade_points_lower', false, PARAM_TEXT),
+            'grade_points_upper' => df_optional_param_array_recursive('grade_points_upper', false, PARAM_TEXT),
+            'grade_met' => df_optional_param_array_recursive('grade_met', false, PARAM_INT),
+            'grade_specialvals' => df_optional_param_array_recursive('grade_specialvals', false, PARAM_TEXT),
+            'grade_icon_names' => df_optional_param_array_recursive('grade_ids', false, PARAM_TEXT),
+        );
+
         // ID - if we're editing existing one
-        if (isset($_POST['grading_id'])) {
-            $this->setID($_POST['grading_id']);
+        if ($settings['grading_id']) {
+            $this->setID($settings['grading_id']);
         }
 
-        $this->setName($_POST['grading_name']);
-        $this->setEnabled( (isset($_POST['grading_enabled']) && $_POST['grading_enabled'] == 1 ) ? 1 : 0);
-        $this->setIsUsedForAssessments( (isset($_POST['grading_assessments']) && $_POST['grading_assessments'] == 1 ) ? 1 : 0);
+        $this->setName($settings['grading_name']);
+        $this->setEnabled( ($settings['grading_enabled'] && $settings['grading_enabled'] == 1 ) ? 1 : 0);
+        $this->setIsUsedForAssessments( ($settings['grading_assessments'] && $settings['grading_assessments'] == 1 ) ? 1 : 0);
 
         // If Build ID use that, otherwise use QualStructureID
-        $buildID = optional_param('build', false, PARAM_INT);
-        if ($buildID) {
-            $this->setQualBuildID($buildID);
+        if ($settings['build']) {
+            $this->setQualBuildID($settings['build']);
             $this->setIsUsedForAssessments(1);
         } else {
-            $this->setQualStructureID( $_POST['grading_qual_structure_id'] );
+            $this->setQualStructureID( $settings['grading_qual_structure_id'] );
         }
 
-        $gradeIDs = (isset($_POST['grade_ids'])) ? $_POST['grade_ids'] : false;
+        $gradeIDs = ($settings['grade_ids']) ? $settings['grade_ids'] : false;
         if ($gradeIDs) {
 
             foreach ($gradeIDs as $key => $id) {
 
                 $award = new \GT\CriteriaAward($id);
-                $award->setName($_POST['grade_names'][$key]);
-                $award->setShortName($_POST['grade_shortnames'][$key]);
-                $award->setSpecialVal($_POST['grade_specialvals'][$key]);
-                $award->setPoints($_POST['grade_points'][$key]);
-                $award->setPointsLower($_POST['grade_points_lower'][$key]);
-                $award->setPointsUpper($_POST['grade_points_upper'][$key]);
-                $award->setMet( (isset($_POST['grade_met'][$key])) ? 1 : 0 );
+                $award->setName($settings['grade_names'][$key]);
+                $award->setShortName($settings['grade_shortnames'][$key]);
+                $award->setSpecialVal($settings['grade_specialvals'][$key]);
+                $award->setPoints($settings['grade_points'][$key]);
+                $award->setPointsLower($settings['grade_points_lower'][$key]);
+                $award->setPointsUpper($settings['grade_points_upper'][$key]);
+                $award->setMet( (isset($settings['grade_met'][$key])) ? 1 : 0 );
                 $award->setImageFile( \gt_get_multidimensional_file($_FILES['grade_files'], $key) );
 
                 // If we have a tmp icon set load that back in
-                if ( isset($_POST['grade_icon_names'][$key]) && strpos($_POST['grade_icon_names'][$key], "tmp//") === 0 ) {
-                    $award->iconTmp = str_replace("tmp//", "", $_POST['grade_icon_names'][$key]);
-                } else if (isset($_POST['grade_icon_names'][$key]) && strlen($_POST['grade_icon_names'][$key]) > 0) {
+                if ( isset($settings['grade_icon_names'][$key]) && strpos($settings['grade_icon_names'][$key], "tmp//") === 0 ) {
+                    $award->iconTmp = str_replace("tmp//", "", $settings['grade_icon_names'][$key]);
+                } else if (isset($settings['grade_icon_names'][$key]) && strlen($settings['grade_icon_names'][$key]) > 0) {
                     // If are editing something which already has a valid image saved
-                    $award->setImage($_POST['grade_icon_names'][$key]);
+                    $award->setImage($settings['grade_icon_names'][$key]);
                 }
 
                 $this->addAward($award);

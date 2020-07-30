@@ -571,27 +571,41 @@ class UnitAwardStructure {
      */
     public function loadPostData() {
 
-        if (isset($_POST['grading_id'])) {
-            $this->setID( $_POST['grading_id'] );
+        $settings = array(
+            'grading_id' => optional_param('grading_id', false, PARAM_INT),
+            'grading_name' => optional_param('grading_name', false, PARAM_TEXT),
+            'grading_enabled' => optional_param('grading_enabled', false, PARAM_INT),
+            'grading_qual_structure_id' => optional_param('grading_qual_structure_id', false, PARAM_INT),
+            'grade_ids' => df_optional_param_array_recursive('grade_ids', false, PARAM_INT),
+            'grade_names' => df_optional_param_array_recursive('grade_names', false, PARAM_TEXT),
+            'grade_shortnames' => df_optional_param_array_recursive('grade_shortnames', false, PARAM_TEXT),
+            'grade_points' => df_optional_param_array_recursive('grade_points', false, PARAM_TEXT),
+            'grade_points_lower' => df_optional_param_array_recursive('grade_points_lower', false, PARAM_TEXT),
+            'grade_points_upper' => df_optional_param_array_recursive('grade_points_upper', false, PARAM_TEXT),
+            'unit_points' => df_optional_param_array_recursive('unit_points', false, PARAM_TEXT),
+        );
+
+        if ($settings['grading_id']) {
+            $this->setID( $settings['grading_id'] );
         }
 
-        $this->setName( $_POST['grading_name'] );
-        $this->setEnabled( (isset($_POST['grading_enabled']) && $_POST['grading_enabled'] == 1 ) ? 1 : 0);
-        $this->setQualStructureID( $_POST['grading_qual_structure_id'] );
+        $this->setName( $settings['grading_name'] );
+        $this->setEnabled( ($settings['grading_enabled'] && $settings['grading_enabled'] == 1 ) ? 1 : 0);
+        $this->setQualStructureID( $settings['grading_qual_structure_id'] );
 
         // Grades
-        $gradeIDs = (isset($_POST['grade_ids'])) ? $_POST['grade_ids'] : false;
+        $gradeIDs = $settings['grade_ids'];
 
         if ($gradeIDs) {
             foreach ($gradeIDs as $key => $id) {
 
                 $award = new \GT\UnitAward($id);
                 $award->setGradingStructureID( $this->id );
-                $award->setName( $_POST['grade_names'][$key] );
-                $award->setShortName( $_POST['grade_shortnames'][$key] );
-                $award->setPoints( $_POST['grade_points'][$key] );
-                $award->setPointsLower( $_POST['grade_points_lower'][$key] );
-                $award->setPointsUpper( $_POST['grade_points_upper'][$key] );
+                $award->setName( $settings['grade_names'][$key] );
+                $award->setShortName( $settings['grade_shortnames'][$key] );
+                $award->setPoints( $settings['grade_points'][$key] );
+                $award->setPointsLower( $settings['grade_points_lower'][$key] );
+                $award->setPointsUpper( $settings['grade_points_upper'][$key] );
 
                 if ($award->isValid()) {
                     $this->awards[$award->getID()] = $award;
@@ -604,8 +618,8 @@ class UnitAwardStructure {
 
         // Unit points
         $this->unitPoints = array();
-        if (isset($_POST['unit_points'])) {
-            $this->unitPoints = $_POST['unit_points'];
+        if ($settings['unit_points']) {
+            $this->unitPoints = $settings['unit_points'];
         }
 
     }
