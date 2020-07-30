@@ -686,26 +686,51 @@ class ModuleLink {
      */
     public function loadPostData() {
 
-        if (isset($_POST['submit_mod_link'])) {
+        $submission = array(
+            'submit_mod_link' => optional_param('submit_mod_link', false, PARAM_TEXT),
+        );
 
-            $this->setModID($_POST['modid']);
-            $this->setModTable($_POST['modtable']);
-            $this->setPartTable( (!empty($_POST['parttable'])) ? $_POST['parttable'] : null );
-            $this->setPartModCol( (!empty($_POST['partmodcol'])) ? $_POST['partmodcol'] : null );
-            $this->setModCourseCol($_POST['modcoursecol']);
-            $this->setModStartCol($_POST['modstartcol']);
-            $this->setModDueCol($_POST['modduecol']);
-            $this->setModTitleCol($_POST['modtitlecol']);
-            $this->setPartTitleCol( (!empty($_POST['parttitlecol'])) ? $_POST['parttitlecol'] : null );
-            $this->setSubTable($_POST['submissiontable']);
-            $this->setSubPartCol( (!empty($_POST['submissionpartcol'])) ? $_POST['submissionpartcol'] : null );
-            $this->setSubUserCol($_POST['submissionusercol']);
-            $this->setSubDateCol($_POST['submissiondatecol']);
-            $this->setSubModCol($_POST['submissionmodinstancecol']);
-            $this->setSubStatusCol($_POST['submissionstatuscol']);
-            $this->setSubStatusVal($_POST['submissionstatusval']);
-            $this->setAuto( ( isset($_POST['auto']) ? 1 : 0 ) );
-            $this->setEnabled( ( isset($_POST['enabled']) ? 1 : 0 ) );
+        $settings = array(
+            'modid' => optional_param('modid', false, PARAM_INT),
+            'modtable' => optional_param('modtable', false, PARAM_TEXT),
+            'parttable' => optional_param('parttable', false, PARAM_TEXT),
+            'partmodcol' => optional_param('partmodcol', false, PARAM_TEXT),
+            'modcoursecol' => optional_param('modcoursecol', false, PARAM_TEXT),
+            'modstartcol' => optional_param('modstartcol', false, PARAM_TEXT),
+            'modduecol' => optional_param('modduecol', false, PARAM_TEXT),
+            'modtitlecol' => optional_param('modtitlecol', false, PARAM_TEXT),
+            'parttitlecol' => optional_param('parttitlecol', false, PARAM_TEXT),
+            'submissiontable' => optional_param('submissiontable', false, PARAM_TEXT),
+            'submissionpartcol' => optional_param('submissionpartcol', false, PARAM_TEXT),
+            'submissionusercol' => optional_param('submissionusercol', false, PARAM_TEXT),
+            'submissiondatecol' => optional_param('submissiondatecol', false, PARAM_TEXT),
+            'submissionmodinstancecol' => optional_param('submissionmodinstancecol', false, PARAM_TEXT),
+            'submissionstatuscol' => optional_param('submissionstatuscol', false, PARAM_TEXT),
+            'submissionstatusval' => optional_param('submissionstatusval', false, PARAM_TEXT),
+            'auto' => optional_param('auto', 0, PARAM_INT),
+            'enabled' => optional_param('enabled', 0, PARAM_INT),
+        );
+
+        if ($submission['submit_mod_link']) {
+
+            $this->setModID($settings['modid']);
+            $this->setModTable($settings['modtable']);
+            $this->setPartTable( ($settings['parttable']) ? $settings['parttable'] : null );
+            $this->setPartModCol( ($settings['partmodcol']) ? $settings['partmodcol'] : null );
+            $this->setModCourseCol($settings['modcoursecol']);
+            $this->setModStartCol($settings['modstartcol']);
+            $this->setModDueCol($settings['modduecol']);
+            $this->setModTitleCol($settings['modtitlecol']);
+            $this->setPartTitleCol( ($settings['parttitlecol']) ? $settings['parttitlecol'] : null );
+            $this->setSubTable($settings['submissiontable']);
+            $this->setSubPartCol( ($settings['submissionpartcol']) ? $settings['submissionpartcol'] : null );
+            $this->setSubUserCol($settings['submissionusercol']);
+            $this->setSubDateCol($settings['submissiondatecol']);
+            $this->setSubModCol($settings['submissionmodinstancecol']);
+            $this->setSubStatusCol($settings['submissionstatuscol']);
+            $this->setSubStatusVal($settings['submissionstatusval']);
+            $this->setAuto( ($settings['auto'] ? 1 : 0 ) );
+            $this->setEnabled( ( $settings['enabled'] ? 1 : 0 ) );
 
         }
 
