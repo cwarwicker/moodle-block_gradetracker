@@ -7,9 +7,10 @@
     <p><?= $string['level'] ?> : <?=$copyQual->getLevelName();?></p>
     <div>
         <form action="" method="post">
+            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
             <input type="hidden" name="id" value="<?= $copyQual->getID(); ?>" />
             <input type="submit" class="gt_btn" name="copy_qual" value="<?= $string['yes'] ?>" />
             <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
-        </form>        
+        </form>
     </div>
 </div>

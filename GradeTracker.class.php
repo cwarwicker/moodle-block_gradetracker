@@ -1701,6 +1701,10 @@ class GradeTracker {
 
         global $DB, $CFG, $MSGS, $VARS;
 
+        // All submitted configuration forms are routed through this method. So we can just check for the sesskey here.
+        // Even if the data is supplied via $_GET, this method won't be called unless $_POST is populated with something (See: config.php).
+        require_sesskey();
+
         switch ($view) {
 
             case 'settings':
@@ -2064,7 +2068,7 @@ class GradeTracker {
         } else if ($section == 'manage' && $page == 'delete') {
 
             $submission = array(
-                'confirm_delete_assessment' => optional_param('confirm_delete_mod_link', false, PARAM_TEXT),
+                'confirm_delete_assessment' => optional_param('confirm_delete_assessment', false, PARAM_TEXT),
                 'run_away' => optional_param('run_away', false, PARAM_TEXT),
             );
 
@@ -2784,6 +2788,7 @@ class GradeTracker {
             'delete_unit_grading_structure' => optional_param('delete_unit_grading_structure', false, PARAM_TEXT),
             'delete_crit_grading_structure' => optional_param('delete_crit_grading_structure', false, PARAM_TEXT),
             'enable_unit_grading_structure_x' => optional_param('enable_unit_grading_structure_x', false, PARAM_TEXT),
+            'enable_crit_grading_structure_x' => optional_param('enable_crit_grading_structure_x', false, PARAM_TEXT),
             'set_grading_structure_assessments_x' => optional_param('set_grading_structure_assessments_x', false, PARAM_TEXT),
             'export_unit_x' => optional_param('export_unit_x', false, PARAM_TEXT),
             'export_criteria_x' => optional_param('export_criteria_x', false, PARAM_TEXT),

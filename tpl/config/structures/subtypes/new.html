@@ -4,15 +4,16 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-        
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
     <div class='gt_form_panel'>
-    
+
         <div class='gt_form_panel_heading'>
             <?= $string['newsubtype'] ?>
         </div>
-        
+
         <div class='gt_form_panel_body'>
-        
+
             <?php if ($SubType->isValid()): ?>
                 <input type="hidden" name="subtype_id" value="<?= $SubType->getID() ?>" />
                 <input type="hidden" name="subtype_deleted" value="<?= $SubType->getDeleted() ?>" />
@@ -40,9 +41,9 @@
                 </tr>
 
             </table>
-    
+
         </div>
-        
+
     </div>
-    
+
 </form>

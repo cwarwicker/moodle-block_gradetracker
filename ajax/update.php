@@ -34,6 +34,15 @@ if ($USER->id <= 0) {
 $PAGE->set_context( context_system::instance() );
 require_login();
 
+// Check the session key before doing anything.
+// This is a bit awkward, we we don't want the print_error inside confirm_sesskey() to run, as it'll mess up the AJAX response.
+// And if the param is missing, e.g. false, null, etc... it'll try required_param again which will lead to the print_error.
+// So the default we are going to set is just the string ' ', as that will not be the session key, but isn't empty, so won't trigger a print_error.
+$sesskey = optional_param('sesskey', ' ', PARAM_RAW);
+if (!confirm_sesskey($sesskey)) {
+    exit;
+}
+
 $action = optional_param('action', false, PARAM_TEXT);
 $params = df_optional_param_array_recursive('params', false, PARAM_TEXT);
 

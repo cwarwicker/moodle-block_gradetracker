@@ -4,6 +4,7 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
     <div>
         <small><strong><?= $string['logdetails'] ?></strong></small><br>
@@ -127,7 +128,7 @@
                                 <option value="<?= $ass->getID() ?>" <?= (isset($search['atts']['ASSID']) && $search['atts']['ASSID'] == $ass->getID()) ? 'selected' : '' ?> ><?= \gt_html($ass->getName()) ?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
-                        
+
                     </select>
                 </td>
 

@@ -15,6 +15,7 @@
         <div id='gt_upload_div' style='display:none;'>
             <br>
             <form action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                 <input type="file" name="file" accept="text/xml,application/zip" />
                 <input type="submit" name="import_qual_structure_<?= $type ?>" class="gt_btn_small gt_blue" value="<?= $string['upload'] ?>" />
             </form>
@@ -50,12 +51,14 @@
                         <td><?= $grading->getName() ?></td>
                         <td>
                             <form action="" method="post">
+                                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
                                 <input type="image" class="gt_on_off" name="enable_unit_grading_structure" src="<?= ($grading->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" />
                             </form>
                         </td>
                         <td>
                             <form action="" method="post">
+                                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
                                 <input type="image" name="export_unit" src="<?= gt_image_url('i/export') ?>" />
                             </form>
@@ -80,6 +83,7 @@
                         <td><?= $grading->getName() ?></td>
                         <td>
                             <form action="" method="post">
+                                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
                                 <input type="image" class="gt_on_off" name="enable_crit_grading_structure" src="<?= ($grading->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" />
                             </form>
@@ -88,6 +92,7 @@
                         <?php if (!isset($Build)): ?>
                             <td>
                                 <form action="" method="post">
+                                    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                     <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
                                     <input type="image" class="gt_on_off" name="set_grading_structure_assessments" src="<?= ($grading->isUsedInAssessments()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($grading->isUsedInAssessments()) ? $string['enabled'] : $string['disabled'] ?>" />
                                 </form>
@@ -96,6 +101,7 @@
 
                         <td>
                             <form action="" method="post">
+                                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                 <input type="hidden" name="grading_structure_id" value="<?= $grading->getID() ?>" />
                                 <input type="image" name="export_criteria" src="<?= gt_image_url('i/export') ?>" />
                             </form>

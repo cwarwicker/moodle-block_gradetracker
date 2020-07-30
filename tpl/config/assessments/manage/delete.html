@@ -14,6 +14,7 @@
             <?= sprintf($string['delete:assessment:sure'], $Assessment->countQuals()) ?>
             <br><br>
             <form action="" method="post">
+                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
                 <input type="submit" class="gt_btn" name="confirm_delete_assessment" value="<?= $string['yes'] ?>" />
                 &nbsp;&nbsp;&nbsp;&nbsp;

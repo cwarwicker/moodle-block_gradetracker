@@ -26,6 +26,7 @@ require_once('../../config.php');
 require_once('lib.php');
 require_once("{$CFG->dirroot}/lib/filelib.php");
 require_login();
+require_sesskey();
 
 $type = required_param('type', PARAM_TEXT);
 $subtype = optional_param('subtype', ' ', PARAM_TEXT);

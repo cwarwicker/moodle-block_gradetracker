@@ -8,9 +8,10 @@
     <p><?= $string['qualifications'] ?> : <?=$unit->countQuals();?></p>
     <div>
         <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=search" method="post">
+            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
             <input type="hidden" name="id" value="<?= $unit->getID(); ?>" />
             <input type="submit" class="gt_btn" name="delete_unit" value="<?= $string['yes'] ?>" />
             <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
-        </form>        
+        </form>
     </div>
 </div>

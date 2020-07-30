@@ -4,15 +4,16 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-        
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
     <div class='gt_form_panel'>
-    
+
         <div class='gt_form_panel_heading'>
             <?= $string['newqualbuild'] ?>
         </div>
-        
+
         <div class='gt_form_panel_body'>
-        
+
             <?php if ($Build->isValid()): ?>
                 <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
             <?php endif; ?>
@@ -72,9 +73,9 @@
 
 
             </table>
-    
+
         </div>
-        
+
     </div>
-    
+
 </form>

@@ -177,6 +177,11 @@ class Assessment {
         return $this;
     }
 
+    public function setDeleted($value) {
+        $this->deleted = $value;
+        return $this;
+    }
+
     /**
      * Clear the loaded student
      */
@@ -1542,6 +1547,8 @@ class Assessment {
     public function delete() {
 
         global $DB;
+
+        $this->setDeleted(1);
 
         $record = new \stdClass();
         $record->id = (int)$this->id;

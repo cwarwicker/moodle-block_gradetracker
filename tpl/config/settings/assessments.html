@@ -6,6 +6,8 @@
     <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
     <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
     <h2><?= $string['assessmentsettings'] ?></h2>
     <p><?= $string['assessmentsettings:desc'] ?></p>
 

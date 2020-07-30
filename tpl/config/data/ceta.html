@@ -10,9 +10,9 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
+
     <?php if ($exampleFile): ?>
         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
             <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
@@ -20,15 +20,15 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;
 
     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ceta&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
-    
+
 </p>
 
 <form action="" method="post" enctype="multipart/form-data">
-
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <input type="file" name="file" />
     <br />
     <h3><?= $string['options'] ?></h3>
@@ -60,6 +60,7 @@
 <h2><?= $string['dataexport'] ?></h2>
 <p><?= $string['cetagrades:descExport'] ?></p>
 <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ceta" method="post" enctype="multipart/form-data">
+<input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 <h3><?= $string['options'] ?></h3>
 <input type="radio" name="export" value="shortname" checked/> <?= $string['ceta:exportbycourseshortname'] ?> - <small><?= $string['ceta:exportbycourseshortname:desc'] ?></small><br>
 <input type="radio" name="export" value="idnumber"/> <?= $string['ceta:exportbycourseid'] ?> - <small><?= $string['ceta:exportbycourseid:desc'] ?></small><br>

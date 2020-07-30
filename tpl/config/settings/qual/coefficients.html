@@ -1,22 +1,24 @@
 "<?php if(!defined('BCGT')) exit; ?>
 
 <div class='gt_form_panel'>
-    
+
     <div class='gt_form_panel_heading'><?= $string['weightingcoefficients'] ?></div>
     <div class='gt_form_panel_body'>
-        
+
         <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
         <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
-        
+
         <p><?= $string['weightingcoefficients:desc'] ?></p>
-        
+
         <form action="" method="post">
-            
+
+            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
             <small><strong><?= $string['config:qual:coefficient:percentiles'] ?></strong> - <?= $string['config:qual:coefficient:percentiles:desc'] ?></small>
             <br>
             <input type="number" min="0" step="1" name="qual_weighting_percentiles" value="<?= \gt_html($GT->getSetting('qual_weighting_percentiles')) ?>" />
             <br><br>
-            
+
             <small><strong><?= $string['config:qual:coefficient:percentilecolours'] ?></strong> - <?= $string['config:qual:coefficient:percentilecolours:desc'] ?></small>
             <br>
             <table class='gt_c'>
@@ -34,7 +36,7 @@
                 </tr>
             </table>
             <br><br>
-            
+
             <small><strong><?= $string['config:qual:coefficient:percentilepercents'] ?></strong> - <?= $string['config:qual:coefficient:percentilepercents:desc'] ?></small>
             <br>
             <table class='gt_c'>
@@ -62,22 +64,23 @@
                 </tr>
             </table>
             <br><br>
-            
+
             <input type="submit" class="gt_btn gt_blue" name="submitconfig" value="<?= $string['save'] ?>" />
-            
+
         </form>
-        
+
         <br><br>
-        
+
         <?php if ($GT->getSetting('qual_weighting_percentiles') > 0): ?>
-        
+
             <div class='gt_form_panel'>
 
                 <div class='gt_form_panel_sub_heading'><?= $string['qualbuilds'] ?></div>
                 <div class='gt_form_panel_body'>
 
                     <form action="" method="post">
-                        
+                        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
                         <p class="gt_c">
                             <input class='gt_btn gt_green' type="submit" name="submit_build_coefficients" value="<?= $string['save'] ?>" />
                         </p>
@@ -90,7 +93,7 @@
                                     <th class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?= $col ?></th>
                                 <?php endfor; ?>
                             </tr>
-                            
+
                             <?php if ($builds): ?>
                                 <?php foreach($builds as $build): ?>
                                     <tr>
@@ -111,18 +114,19 @@
                 </div>
 
             </div>
-        
-        
+
+
             <br><br><br>
-        
-        
+
+
             <div class='gt_form_panel'>
 
                 <div class='gt_form_panel_sub_heading'><?= $string['qualifications'] ?></div>
                 <div class='gt_form_panel_body'>
 
                     <form action="" method="post">
-                        
+                        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
                         <p class="gt_c">
                             <input class='gt_btn gt_green'  type="submit" name="submit_qual_coefficients" value="<?= $string['save'] ?>" />
                         </p>
@@ -135,7 +139,7 @@
                                     <th class="gt_percentile" style="background-color:<?= (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?= $col ?></th>
                                 <?php endfor; ?>
                             </tr>
-                            
+
                             <?php if ($qualifications): ?>
                                 <?php foreach($qualifications as $qualification): ?>
                                     <tr>
@@ -148,7 +152,7 @@
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
-                            
+
                         </table>
 
                     </form>
@@ -156,12 +160,12 @@
                 </div>
 
             </div>
-        
+
         <?php else: ?>
             <p><?= $string['nopercentiles'] ?></p>
         <?php endif; ?>
-        
+
     </div>
-    
+
 </div>
 

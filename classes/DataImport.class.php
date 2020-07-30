@@ -1527,7 +1527,7 @@ class DataImport {
             $output .= "<div class='gt_import_grid_div'>";
 
             $output .= "<form action='' method='post' class='gt_c'>";
-
+            $output .= "<input type='hidden' name='sesskey' value='".sesskey()."' />";
             $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
             $output .= "<input type='hidden' name='studentID' value='{$this->getStudentID()}' />";
             $output .= "<input type='hidden' name='now' value='{$now}' />";
@@ -1925,7 +1925,7 @@ class DataImport {
             $output .= "<div class='gt_import_grid_div'>";
 
             $output .= "<form action='' method='post' class='gt_c'>";
-
+            $output .= "<input type='hidden' name='sesskey' value='".sesskey()."' />";
             $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
             $output .= "<input type='hidden' name='studentID' value='{$this->getStudentID()}' />";
             $output .= "<input type='hidden' name='now' value='{$now}' />";
@@ -2383,7 +2383,7 @@ class DataImport {
         $output .= "<p class='gt_c'><a href='#' class='gt_show_hide' show='#gt_import_grid_table_grades' hide='#gt_import_grid_table_comments'>".get_string('grades', 'block_gradetracker')."</a> | <a href='#' class='gt_show_hide' show='#gt_import_grid_table_comments' hide='#gt_import_grid_table_grades'>".get_string('comments', 'block_gradetracker')."</a></p>";
 
         $output .= "<form action='' method='post' class='gt_c'>";
-
+        $output .= "<input type='hidden' name='sesskey' value='".sesskey()."' />";
         $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
         $output .= "<input type='hidden' name='unitID' value='{$this->getUnitID()}' />";
         $output .= "<input type='hidden' name='now' value='{$now}' />";
@@ -2808,7 +2808,7 @@ class DataImport {
         $output .= "<br>";
 
         $output .= "<form action='' method='post' class='gt_c'>";
-
+        $output .= "<input type='hidden' name='sesskey' value='".sesskey()."' />";
         $output .= "<input type='hidden' name='qualID' value='{$this->getQualID()}' />";
         $output .= "<input type='hidden' name='now' value='{$now}' />";
         $output .= "<div class='gt_c'>";

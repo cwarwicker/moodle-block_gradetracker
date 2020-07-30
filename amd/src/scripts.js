@@ -976,6 +976,9 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     //-- Make AJAX request
     GT.ajax = function(url, params, callback, callBefore){
 
+        // Append sesskey to all AJAX parameters.
+        params.sesskey = M.cfg.sesskey;
+
         // Code to run before the ajax request
         if (callBefore){
             callBefore();

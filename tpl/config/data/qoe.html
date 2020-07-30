@@ -11,9 +11,9 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
+
     <?php if ($exampleFile): ?>
         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
             <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
@@ -21,16 +21,16 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;
 
     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=qoe&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
-    
+
 </p>
 <br>
 
 <form action="" method="post" enctype="multipart/form-data">
-
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <h3><?= $string['options'] ?></h3>
     <input type="checkbox" name="options[ins_quals]" /> <?= $string['insertquals'] ?> - <small><?= $string['import:qoe:insertquals:desc'] ?></small><br>
     <input type="checkbox" name="options[ins_subjects]" /> <?= $string['insertsubjects'] ?> - <small><?= $string['import:qoe:insertsubjects:desc'] ?></small><br>
@@ -68,5 +68,6 @@
 <h2><?= $string['dataexport'] ?></h2>
 
 <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=qoe" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
 </form>

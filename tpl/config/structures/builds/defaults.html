@@ -4,9 +4,10 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-    
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
     <div class='gt_form_panel'>
-            
+
         <div class='gt_form_panel_heading'>
             <?= $string['qualdefaults'] ?> - <?= $Build->getName() ?>
         </div>
@@ -17,7 +18,7 @@
                 <input type="submit" name="submit_qual_build_defaults" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
             </p>
-                        
+
             <h3><?= $string['qualbuild'] ?></h3>
 
             <label class="gt_input_label"><?= $string['rules'] ?></label> - <small><?= $string['defaultrules:desc'] ?></small><br>
@@ -30,8 +31,8 @@
                 <?php endif; ?>
             </select>
             <br><br>
-            
-            
+
+
             <label class="gt_input_label"><?= $string['defaultcredits'] ?></label> - <small><?= $string['defaultcredits:desc'] ?></small><br>
             <input type="number" min="0" class="gt_form_control" name="build[credits]" value="<?= $Build->getDefaultCredits() ?>" />
             <br><br>
@@ -39,8 +40,8 @@
             <label class="gt_input_label"><?= $string['pointspercredit'] ?></label> - <small><?= $string['pointspercredit:desc'] ?></small><br>
             <input type="number" min="0" class="gt_form_control" name="build[points_per_credit]" value="<?= $Build->getPointsPerCredit() ?>" />
             <br><br><br>
-                        
-            
+
+
             <?php if ($Structure->getCustomFormElements()): ?>
 
                 <?php foreach($Structure->getCustomFormElements() as $element): ?>
@@ -62,7 +63,7 @@
             <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
 
         </div>
-        
+
     </div>
-    
+
 </form>

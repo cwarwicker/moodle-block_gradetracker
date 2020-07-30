@@ -4,21 +4,22 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class="gt_full_page">
-    
+
     <form action="" method="post" id="gt_course_quals_form">
+        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
         <div class="gt_form_panel">
 
             <div class="gt_form_panel_heading"><?= $string['managemodulelinking'] ?></div>
 
             <div class="gt_form_panel_body">
-                
+
                 <p class="gt_c">
                     <a class="gt_btn" href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=edit"><?= $string['modlinking:new'] ?></a>
                 </p>
 
                 <div style='width:100%;overflow-x:auto;'>
-                    
+
                     <table id="gt_mod_linking" class="gt_config">
 
                         <tr>
@@ -43,9 +44,9 @@
                             <th><?= get_string('edit') ?></th>
                             <th><?= get_string('delete') ?></th>
                         </tr>
-                        
+
                         <?php if ($mods): ?>
-                        
+
                             <?php foreach($mods as $mod): ?>
 
                                 <tr>
@@ -70,20 +71,20 @@
                                     <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=edit&id=<?= $mod->getID() ?>"><img src="<?= gt_image_url('i/edit') ?>" alt="<?= get_string('edit') ?>" /></a></td>
                                     <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=modules&page=delete&id=<?= $mod->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= get_string('delete') ?>" /></a></td>
                                 </tr>
-                            
+
                             <?php endforeach; ?>
-                        
+
                         <?php endif; ?>
 
                     </table>
-                    
+
                 </div>
-                                              
+
             </div>
 
         </div>
-        
-        
+
+
     </form>
-        
+
 </div>

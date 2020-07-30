@@ -4,15 +4,16 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-        
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
     <div class='gt_form_panel'>
-    
+
         <div class='gt_form_panel_heading'>
             <?= $string['newlevel'] ?>
         </div>
-        
+
         <div class='gt_form_panel_body'>
-        
+
             <?php if ($Level->isValid()): ?>
                 <input type="hidden" name="level_id" value="<?= $Level->getID() ?>" />
                 <input type="hidden" name="level_deleted" value="<?= $Level->getDeleted() ?>" />
@@ -47,9 +48,9 @@
                 </tr>
 
             </table>
-    
+
         </div>
-        
+
     </div>
-    
+
 </form>

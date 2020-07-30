@@ -17,6 +17,7 @@
 <p class="c"><?= $string['import:datasheet:'.$grid.':desc'] ?></p>
 
 <form action="" method="post" class="c" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <input id="uploadFile" class="gt_upload_file" placeholder="" disabled="disabled">
       <div class="gt_file_upload gt_btn gt_blue">
           <span><?= $string['choosefile'] ?></span>

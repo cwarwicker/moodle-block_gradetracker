@@ -85,7 +85,7 @@
 
                             <?php if (\gt_has_capability('block/gradetracker:export_student_grids') || $User->id == $Student->id): ?>
                                 <li>
-                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : '' ?>"><?= $string['exportdatasheet'] ?></a>
+                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?><?= (isset($assessmentView) && $assessmentView) ? '&ass=1' : '' ?>&sesskey=<?= sesskey() ?>"><?= $string['exportdatasheet'] ?></a>
                                 </li>
                             <?php endif; ?>
 
@@ -546,7 +546,7 @@
                 <div id="gt_grid_quick_links">
                     <a href="#" class="gt_load_grid" grid="student" access="v" title="<?= $string['redraw'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_refresh.png" class="gt_icon" alt="<?= $string['redraw'] ?>" /></a><br>
                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>" title="<?= $string['printgrid'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/printer.png" class="gt_icon" alt="<?= $string['printgrid'] ?>" /></a><br>
-                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>" title="<?= $string['exportdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_exports.png" class="gt_icon" alt="<?= $string['exportdatasheet'] ?>" /></a><br>
+                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&sesskey=<?= sesskey() ?>" title="<?= $string['exportdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_exports.png" class="gt_icon" alt="<?= $string['exportdatasheet'] ?>" /></a><br>
                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=student&studentID=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>" title="<?= $string['importdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_imports.png" class="gt_icon" alt="<?= $string['importdatasheet'] ?>" /></a>
                 </div>
             <?php endif; ?>

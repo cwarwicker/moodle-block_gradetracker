@@ -4,8 +4,9 @@
 <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class="gt_full_page">
-    
+
     <form action="#results" method="post">
+        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
         <div class="gt_form_panel">
 
@@ -42,8 +43,8 @@
                             </select>
                         </td>
                     </tr>
-                    
-                    
+
+
                     <tr>
                         <td><?= $string['subtype'] ?></td>
                         <td>
@@ -57,7 +58,7 @@
                             </select>
                         </td>
                     </tr>
-                    
+
 
                     <tr>
                         <td><?= $string['name'] ?></td>
@@ -71,13 +72,13 @@
                             <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?= $string['search'] ?>" />
                         </td>
                     </tr>
-                    
+
                 </table>
-                
+
                 <?php if (isset($results)): ?>
-                
+
                     <div class="gt_full_page">
-                        
+
                             <div class="gt_table_list_div">
 
                                 <table id="gt_qual_results" class="gt_config">
@@ -89,11 +90,11 @@
                                         <th><?= $string['name'] ?></th>
                                         <th><?= $string['options'] ?></th>
                                     </tr>
-                                    
+
                                     <?php if ($results): ?>
-                                    
+
                                         <?php foreach($results as $result): ?>
-                                        
+
                                         <tr>
                                             <td><?= $result->getStructureName() ?></td>
                                             <td><?= $result->getLevelName() ?></td>
@@ -109,9 +110,9 @@
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
-                                        
+
                                         <?php endforeach; ?>
-                                    
+
                                     <?php else: ?>
                                         <tr>
                                             <td colspan='5'><?= $string['noresults'] ?></td>
@@ -127,6 +128,7 @@
                                             <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->getName() ?></td>
                                             <td style="background-color:#ffe5e5;color:#808080;">
                                                 <form action="" method="post">
+                                                    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                                     <input name="id" type="hidden" value="<?= $delresult->getID() ?>">
                                                     <?= $string['restore'] ?><input type="image" name="restoreQual" src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_undo.png" style="height:15px;width:15px;" alt="<?= $string['restore'] ?>" />
                                                 </form>
@@ -139,14 +141,14 @@
                                 </table>
 
                             </div>
-                    </div>                    
-                
+                    </div>
+
                 <?php endif; ?>
-                
+
             </div>
 
         </div>
-        
+
     </form>
-        
+
 </div>

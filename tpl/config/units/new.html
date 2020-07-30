@@ -10,6 +10,7 @@
 <div class="gt_full_page">
 
     <form action="" method="post">
+        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
          <div class='gt_form_panel'>
 
@@ -339,6 +340,7 @@
                 <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $Unit->getID() ?>' class='gt_btn gt_red'><?= $string['delete'] ?></a>
             <?php elseif ($Unit->isValid() && $Unit->isDeleted()): ?>
                 <form action='' method='post' class='gt_c'>
+                    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                     <input type='hidden' name='id' value='<?= $Unit->getID() ?>' />
                     <input type='submit' class='gt_btn gt_red' name='restoreUnit' value='<?= $string['restore'] ?>' />
                 </form>
@@ -347,35 +349,3 @@
     <?php endif; ?>
 
 </div>
-
-<?php if ($Structure): ?>
-    <!-- <script>
-
-        var cntCrit = <?= count($Unit->getCriteria()) ?>;
-        <?php if (isset($dNum)): ?>
-        cntCrit = <?= $dNum; ?>;
-        <?php endif; ?>
-
-        var supportedCritTypes = {};
-        <?php foreach(\GT\Criterion::getSupportedTypes() as $type): ?>
-            <?php if ($Structure->isLevelEnabled($type->id)): ?>
-                supportedCritTypes['<?= $type->id ?>'] = '<?= $type->type ?>';
-            <?php endif; ?>
-        <?php endforeach; ?>
-
-        var critGradingStructures = new Array();
-        <?php if($criteriaGradingStructures): ?>
-            <?php foreach($criteriaGradingStructures as $grading): ?>
-                critGradingStructures.push( { id: <?= $grading->getID() ?>, name: '<?= $grading->getName() ?>' } );
-            <?php endforeach; ?>
-        <?php endif; ?>
-
-        var critGradingTypes = new Array();
-        <?php foreach( \GT\CriteriaAward::getSupportedGradingTypes() as $type): ?>
-            critGradingTypes.push('<?= $type ?>');
-        <?php endforeach; ?>
-
-        applyCritNameBlurFocus();
-
-    </script> -->
-<?php endif; ?>

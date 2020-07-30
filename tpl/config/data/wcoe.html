@@ -10,9 +10,9 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
+
     <?php if ($exampleFile): ?>
         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
             <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
@@ -20,14 +20,15 @@
     <?php else: ?>
         [[<?= $string['filenotfound'] ?>]]
     <?php endif; ?>
-    
+
     &nbsp;&nbsp;&nbsp;&nbsp;
 
     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=wcoe&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
-    
+
 </p>
 
 <form action="" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
     <input type="file" name="file" />
     <br><br>
@@ -56,6 +57,7 @@
 <p><?= $string['wcoe:descExport'] ?></p>
 
 <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=wcoe" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
 </form>
 

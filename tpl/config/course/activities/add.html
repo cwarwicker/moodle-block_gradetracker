@@ -1,29 +1,30 @@
 <?php if(!defined('BCGT')) exit; ?>
 
 <div class='gt_form_panel'>
-            
+
     <div class='gt_form_panel_heading'>
         <?= $Course->getName() ?> : <?= $string['breadcrumbs:config:course:activities:add'] ?>
     </div>
 
     <div class='gt_form_panel_body'>
-    
+
         <form action="" method="post">
-            
+            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+
             <input type="hidden" name="courseID" id="gt_cid" value="<?= $Course->id ?>" />
 
             <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
             <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
-            
+
             <p class="gt_c">
                 <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_activity_links" value="<?= $string['save'] ?>">
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
-            </p>            
-            
+            </p>
+
             <?php if ($viewBy == 'cm'): ?>
-                        
+
                 <input type="hidden" name="coursemoduleid" id="gt_cmid" value="<?= $cmID ?>" />
-            
+
                 <table id="gt_activity_links">
 
                     <tr>
@@ -115,11 +116,11 @@
                     <?php endif; ?>
 
                 </table>
-            
+
             <?php elseif ($viewBy == 'unit'): ?>
-            
+
                 <table id="gt_activity_links">
-                    
+
                     <tr>
                         <td><?= $string['qualification'] ?></td>
                         <td>
@@ -133,7 +134,7 @@
                             </select>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td><?= $string['unit'] ?></td>
                         <td>
@@ -145,14 +146,14 @@
                                             <?php foreach($courseQual->getUnits() as $qualUnit): ?>
                                                 <option class="AQU Q_<?= $courseQual->getID() ?> <?= ($courseQual->getID() <> $qual->getID()) ? 'gt_hidden' : ''; ?> " value="<?= $qualUnit->getID() ?>" <?= ($unit->getID() == $qualUnit->getID()) ? 'selected' : ''; ?> ><?= $qualUnit->getDisplayName() ?></option>
                                             <?php endforeach; ?>
-                                        <?php endif; ?>                                    
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                                
+
                             </select>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td><?= $string['activity'] ?></td>
                         <td>
@@ -163,19 +164,19 @@
                                         <option value="<?= $activity->getCourseModID() ?>" <?= (array_key_exists($activity->getCourseModID(), $unitActivities)) ? 'disabled' : ''; ?> ><?= $activity->getRecordName() ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                            </select> 
+                            </select>
                             <span id='gt_mod_hook_loader_activity' class='gt_hidden'><img src="<?= gt_image_url('i/loading_small') ?>" alt='loading' /></span>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td></td>
                         <td id="gt_mod_hook_activities">
-                            
+
                             <?php if ($unitActivities): ?>
                                 <?php foreach($unitActivities as $activity): ?>
                                     <div id="gt_hooked_activity_<?= $activity->getCourseModID() ?>" class='gt_hooked_unit'>
-                                        <img src="<?= $activity->getModIcon() ?>"> <?= $activity->getRecordName() ?> 
+                                        <img src="<?= $activity->getModIcon() ?>"> <?= $activity->getRecordName() ?>
                                         <a href="#" class="gt_mod_hook_delete_activity" cmid="<?= $activity->getCourseModID() ?>">
                                             <img src="<?= gt_image_url('t/delete') ?>">
                                         </a>
@@ -210,22 +211,22 @@
                                     </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>
-                            
+
                         </td>
                     </tr>
-                    
+
                 </table>
-            
+
             <?php endif; ?>
-            
+
             <p class="gt_c">
                 <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_activity_links" value="<?= $string['save'] ?>">
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
-            </p>     
-            
+            </p>
+
         </form>
-        
+
     </div>
-    
-    
+
+
 </div>

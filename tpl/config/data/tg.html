@@ -30,7 +30,7 @@
 <br>
 
 <form action="" method="post" enctype="multipart/form-data">
-
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <h3><?= $string['options'] ?></h3>
     <input type="checkbox" name="options[calc_tg]" /> <?= $string['calculatetargetgrades'] ?> - <small><?= $string['import:tg:targetgrades:desc'] ?></small><br>
     <input type="checkbox" name="options[calc_wtg]" /> <?= $string['calculateweightedtargetgrades'] ?> - <small><?= $string['import:tg:weightedtargetgrades:desc'] ?></small><br>
@@ -64,6 +64,7 @@
 <p><?= $string['targetgrades:descExport'] ?></p>
 
 <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=tg" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
     <input type="checkbox" name="options[course]" /> <?= $string['includecoursecode'] ?><br><br>
     <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
 </form>
@@ -72,6 +73,7 @@
 <hr class="gt_hr">
 <br>
 <form id="tg_calculate_form" action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=tg" method="post" enctype="multipart/form-data">
+<input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 <h2><?= $string['calculatetargetgrades'] ?></h2><br>
 <?= $QualPicker->display(); ?>
 

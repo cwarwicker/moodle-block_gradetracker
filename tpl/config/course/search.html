@@ -3,6 +3,7 @@
 <div class="gt_full_page">
 
     <form id="course_search" method="post">
+        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
         <div class="gt_form_panel">
             <div class="gt_form_panel_heading"><?= $string['config:coursesearch'] ?></div>
@@ -38,10 +39,10 @@
                 </table>
 
                 <?php if (isset($courses)): ?>
-                  <table class="gt_config_plain">
+                  <table class="gt_config">
                       <tr>
                           <th><?= $string['course'] ?></th>
-                          <th><?= $string['edit'] ?></th>
+                          <th><?= $string['load'] ?></th>
                           <th><?= $string['gotocoursepage'] ?></th>
                           <th><?= $string['system:count:quals'] ?></th>
                           <th><?= $string['system:count:staff'] ?></th>

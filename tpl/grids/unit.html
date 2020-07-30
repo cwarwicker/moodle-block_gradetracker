@@ -107,7 +107,7 @@
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=unit&id=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>"><?= $string['printgrid'] ?></a>
                     </li>
                     <li>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>"><?= $string['exportdatasheet'] ?></a>
+                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>&sesskey=<?= sesskey() ?>"><?= $string['exportdatasheet'] ?></a>
                     </li>
                     <li>
                         <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>"><?= $string['importdatasheet'] ?></a>
@@ -280,7 +280,7 @@
             <div id="gt_grid_quick_links">
                 <a href="#" class="gt_load_grid" grid="unit" access="v" title="<?= $string['redraw'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/arrow_refresh.png" class="gt_icon" alt="<?= $string['redraw'] ?>" /></a><br>
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/print.php?type=unit&id=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['printgrid'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/printer.png" class="gt_icon" alt="<?= $string['printgrid'] ?>" /></a><br>
-                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['exportdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_exports.png" class="gt_icon" alt="<?= $string['exportdatasheet'] ?>" /></a><br>
+                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>&sesskey=<?= sesskey() ?>" title="<?= $string['exportdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_exports.png" class="gt_icon" alt="<?= $string['exportdatasheet'] ?>" /></a><br>
                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/import.php?type=datasheet&grid=unit&unitID=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&courseID=<?= $courseID ?>&groupID=<?= $groupID ?>" title="<?= $string['importdatasheet'] ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/excel_imports.png" class="gt_icon" alt="<?= $string['importdatasheet'] ?>" /></a>
             </div>
         <?php endif; ?>

@@ -10,6 +10,7 @@
 <div class="gt_full_page">
 
     <form action="" method="post" id="gt_qual_form">
+        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
         <div class='gt_form_panel'>
 
@@ -283,6 +284,7 @@
                 <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=delete&id=<?= $Qualification->getID() ?>' class='gt_btn gt_red'><?= $string['delete'] ?></a>
             <?php elseif ($Qualification->isValid() && $Qualification->isDeleted()): ?>
                 <form action='' method='post' class='gt_c'>
+                    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                     <input type='hidden' name='id' value='<?= $Qualification->getID() ?>' />
                     <input type='submit' class='gt_btn gt_red' name='restoreQual' value='<?= $string['restore'] ?>' />
                 </form>

@@ -13,6 +13,7 @@
             <?= sprintf($string['delete:modlink:sure'], $Mod->countActivityRefs()) ?>
             <br><br>
             <form action="" method="post">
+                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
                 <input type="submit" class="gt_btn" name="confirm_delete_mod_link" value="<?= $string['yes'] ?>" />
                 &nbsp;&nbsp;&nbsp;&nbsp;

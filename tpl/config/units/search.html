@@ -6,6 +6,7 @@
 <div class="gt_full_page">
 
     <form action="#results" method="post">
+        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
 
         <div class="gt_form_panel">
 
@@ -110,7 +111,7 @@
                                                 &nbsp;&nbsp;
                                                 <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=copy&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/copy') ?>" title="<?= $string['duplicate'] ?>" alt="<?= $string['duplicate'] ?>" /></a>
                                                 &nbsp;&nbsp;
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/download') ?>" title="<?= $string['export'] ?>" alt="<?= $string['export'] ?>" /></a>
+                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?= $result->getID() ?>&sesskey=<?= sesskey() ?>"><img src="<?= gt_image_url('t/download') ?>" title="<?= $string['export'] ?>" alt="<?= $string['export'] ?>" /></a>
                                                 <?php if ($User->hasCapability('block/gradetracker:delete_restore_units')): ?>
                                                     &nbsp;&nbsp;
                                                     <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" title="<?= $string['delete'] ?>" alt="<?= $string['delete'] ?>" /></a>
@@ -133,6 +134,7 @@
                                                 <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->countQuals() ?></td>
                                                 <td style="background-color:#ffe5e5;color:#808080;">
                                                     <form action="" method="post">
+                                                        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
                                                         <input name="id" type="hidden" value="<?= $delresult->getID() ?>">
                                                         <?= $string['restore'] ?><input type="image" name="restoreUnit" src="/blocks/gradetracker/pix/icons/arrow_undo.png" style="height:15px;width:15px;" alt="<?= $string['restore'] ?>" />
                                                     </form>

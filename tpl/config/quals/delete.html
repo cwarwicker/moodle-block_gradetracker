@@ -7,9 +7,10 @@
     <p><?= $string['level'] ?> : <?=$qualification->getLevelName();?></p>
     <div>
         <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" method="post">
+            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
             <input type="hidden" name="id" value="<?= $qualification->getID(); ?>" />
             <input type="submit" class="gt_btn" name="delete_qual" value="<?= $string['yes'] ?>" />
             <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
-        </form>        
+        </form>
     </div>
 </div>

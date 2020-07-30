@@ -1,7 +1,7 @@
 <?php if(!defined('BCGT')) exit; ?>
 
 <div class="gt_confirm_box">
-    
+
     <h4><?= $string['deletelinks'] ?></h4>
     <h5><?= $moduleLink->getRecordName() ?> (<?= $moduleLink->getModName() ?>)</h5>
     <h6><?= $qual->getDisplayName() ?></h6>
@@ -9,7 +9,7 @@
         <p><?= $unit->getDisplayName() ?></p>
     <?php endif; ?>
     <br><br>
-        
+
     <table style="margin:auto;">
 
         <tr>
@@ -35,9 +35,10 @@
         <?php endforeach; ?>
 
     </table>
-        
+
     <div>
         <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" method="post">
+            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
             <input type="hidden" name="cmid" value="<?= $cmID ?>" />
             <input type="hidden" name="qualid" value="<?= $qual->getID() ?>" />
             <?php if (isset($unit)): ?>
@@ -48,6 +49,6 @@
             <?php endif; ?>
             <input type="submit" class="gt_btn" name="confirm_delete_activity_link" value="<?= $string['yes'] ?>" />
             <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn"><?= $string['no'] ?></a>
-        </form>        
+        </form>
     </div>
 </div>

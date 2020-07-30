@@ -57,6 +57,11 @@ $submission = array(
     'submit_sheet' => optional_param('submit_sheet', false, PARAM_TEXT),
 );
 
+// If confirmed, make sure sesskey is set before actually doing anything.
+if ($submission['confirm']) {
+    require_sesskey();
+}
+
 switch ($type) {
 
     case 'datasheet':
