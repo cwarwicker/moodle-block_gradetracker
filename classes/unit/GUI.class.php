@@ -95,19 +95,36 @@ class GUI extends \GT\Unit {
 
         global $MSGS;
 
-        // Take the data from the form and load it into the qualification object
-        $unitID = (isset($_POST['id'])) ? $_POST['id'] : false;
-        $structureID = (isset($_POST['unit_type'])) ? $_POST['unit_type'] : false;
-        $levelID = (isset($_POST['unit_level'])) ? $_POST['unit_level'] : false;
-        $name = (isset($_POST['unit_name'])) ? $_POST['unit_name'] : '';
-        $number = (isset($_POST['unit_number'])) ? $_POST['unit_number'] : null;
-        $code = (isset($_POST['unit_code'])) ? $_POST['unit_code'] : '';
-        $credits = (isset($_POST['unit_credits'])) ? $_POST['unit_credits'] : null;
-        $desc = (isset($_POST['unit_desc'])) ? $_POST['unit_desc'] : '';
-        $grading = (isset($_POST['unit_grading_structure'])) ? $_POST['unit_grading_structure'] : '';
-        $criteria = (isset($_POST['unit_criteria'])) ? $_POST['unit_criteria'] : false;
+        $submission = array(
+            'save_unit' => optional_param('save_unit', false, PARAM_TEXT),
+        );
 
-        $customElements = (isset($_POST['custom_elements'])) ? $_POST['custom_elements'] : false;
+        $settings = array(
+            'id' => optional_param('id', false, PARAM_INT),
+            'unit_type' => optional_param('unit_type', false, PARAM_INT),
+            'unit_level' => optional_param('unit_level', false, PARAM_INT),
+            'unit_name' => optional_param('unit_name', false, PARAM_TEXT),
+            'unit_number' => optional_param('unit_number', false, PARAM_TEXT),
+            'unit_code' => optional_param('unit_code', false, PARAM_TEXT),
+            'unit_credits' => optional_param('unit_credits', false, PARAM_TEXT),
+            'unit_desc' => optional_param('unit_desc', false, PARAM_TEXT),
+            'unit_grading_structure' => optional_param('unit_grading_structure', false, PARAM_INT),
+            'unit_criteria' => df_optional_param_array_recursive('unit_criteria', false, PARAM_TEXT),
+            'custom_elements' => df_optional_param_array_recursive('custom_elements', false, PARAM_TEXT),
+        );
+
+        // Take the data from the form and load it into the qualification object
+        $unitID = ($settings['id']) ? $settings['id'] : false;
+        $structureID = ($settings['unit_type']) ? $settings['unit_type'] : false;
+        $levelID = ($settings['unit_level']) ? $settings['unit_level'] : false;
+        $name = ($settings['unit_name']) ? $settings['unit_name'] : '';
+        $number = ($settings['unit_number']) ? $settings['unit_number'] : null;
+        $code = ($settings['unit_code']) ? $settings['unit_code'] : '';
+        $credits = ($settings['unit_credits']) ? $settings['unit_credits'] : null;
+        $desc = ($settings['unit_desc']) ? $settings['unit_desc'] : '';
+        $grading = ($settings['unit_grading_structure']) ? $settings['unit_grading_structure'] : '';
+        $criteria = ($settings['unit_criteria']) ? $settings['unit_criteria'] : false;
+        $customElements = ($settings['custom_elements']) ? $settings['custom_elements'] : false;
 
         // If the ID isn't already set by the valid object
         if (!$this->isValid()) {
@@ -127,7 +144,7 @@ class GUI extends \GT\Unit {
         $this->setCustomElementValues($customElements);
 
         // Save the qualification
-        if (isset($_POST['save_unit'])) {
+        if ($submission['save_unit']) {
 
             if ($this->hasNoErrors() && $this->save()) {
                 $MSGS['success'] = get_string('unitsaved', 'block_gradetracker');
@@ -153,11 +170,19 @@ class GUI extends \GT\Unit {
 
         global $MSGS;
 
-        $structureID = (isset($_POST['unit_type'])) ? $_POST['unit_type'] : false;
-        $levelID = (isset($_POST['unit_level'])) ? $_POST['unit_level'] : false;
-        $unitNumber = (isset($_POST['unitNumber'])) ? trim($_POST['unitNumber']) : false;
-        $code = (isset($_POST['code'])) ? trim($_POST['code']) : false;
-        $name = (isset($_POST['name'])) ? trim($_POST['name']) : false;
+        $settings = array(
+            'unit_type' => optional_param('unit_type', false, PARAM_INT),
+            'unit_level' => optional_param('unit_level', false, PARAM_INT),
+            'unitNumber' => optional_param('unitNumber', false, PARAM_TEXT),
+            'code' => optional_param('code', false, PARAM_TEXT),
+            'name' => optional_param('name', false, PARAM_TEXT),
+        );
+
+        $structureID = ($settings['unit_type']) ? $settings['unit_type'] : false;
+        $levelID = ($settings['unit_level']) ? $settings['unit_level'] : false;
+        $unitNumber = ($settings['unitNumber']) ? trim($settings['unitNumber']) : false;
+        $code = ($settings['code']) ? trim($settings['code']) : false;
+        $name = ($settings['name']) ? trim($settings['name']) : false;
 
         $this->searchParams = array();
         $this->searchParams['structureID'] = $structureID;
@@ -167,9 +192,7 @@ class GUI extends \GT\Unit {
         $this->searchParams['code'] = $code;
         $this->searchParams['deleted'] = ($deleted) ? 1 : 0;
 
-        $results = self::search($this->searchParams);
-
-        return $results;
+        return self::search($this->searchParams);
 
     }
 
