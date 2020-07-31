@@ -1,54 +1,54 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<h2><?= $string['dataimport'] ?></h2>
-<p><?= $string['cetagrades:desc'] ?></p>
+<h2><?php echo $string['dataimport'] ?></h2>
+<p><?php echo $string['cetagrades:desc'] ?></p>
 <p>
     <?php if ($templateFile): ?>
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
-        <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?php echo $templateFile ?>">
+        <img src="<?php echo gt_image_url('f/spreadsheet') ?>" /> <?php echo $string['csvtemplate'] ?>
     </a>
     <?php else: ?>
-        [[<?= $string['filenotfound'] ?>]]
+        [[<?php echo $string['filenotfound'] ?>]]
     <?php endif; ?>
 
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     <?php if ($exampleFile): ?>
-        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
-            <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?php echo $exampleFile ?>">
+            <img src="<?php echo gt_image_url('f/spreadsheet') ?>" /> <?php echo $string['csvexample'] ?>
         </a>
     <?php else: ?>
-        [[<?= $string['filenotfound'] ?>]]
+        [[<?php echo $string['filenotfound'] ?>]]
     <?php endif; ?>
 
     &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ceta&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ceta&reload=1"><img style="vertical-align:top;" src="<?php echo gt_image_url('t/reload'); ?>" title="<?php echo $string['reloadcsvs'] ?>" /></a>
 
 </p>
 
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
     <input type="file" name="file" />
     <br />
-    <h3><?= $string['options'] ?></h3>
-    <input type="radio" name="importoptions" value="importcourseshortname" checked/> <?= $string['ceta:importbycourseshortname'] ?> - <small><?= $string['ceta:importbycourseshortname:desc'] ?></small><br>
-    <input type="radio" name="importoptions" value="importcourseid"/> <?= $string['ceta:importbycourseid'] ?> - <small><?= $string['ceta:importbycourseid:desc'] ?></small><br>
+    <h3><?php echo $string['options'] ?></h3>
+    <input type="radio" name="importoptions" value="importcourseshortname" checked/> <?php echo $string['ceta:importbycourseshortname'] ?> - <small><?php echo $string['ceta:importbycourseshortname:desc'] ?></small><br>
+    <input type="radio" name="importoptions" value="importcourseid"/> <?php echo $string['ceta:importbycourseid'] ?> - <small><?php echo $string['ceta:importbycourseid:desc'] ?></small><br>
     <br />
-    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?= $string['import'] ?>" />
+    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?php echo $string['import'] ?>" />
 
 </form>
 <br />
 
-<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
 
 <br />
 
 <?php if (!empty($MSGS['success'])): ?>
 
 <div id='gt_import_output' class='gt_cmd gt_hidden'>
-    <?= $MSGS['output'] ?>
+    <?php echo $MSGS['output'] ?>
 </div>
 
 <?php endif; ?>
@@ -57,15 +57,15 @@
 
 <hr class="gt_hr">
 
-<h2><?= $string['dataexport'] ?></h2>
-<p><?= $string['cetagrades:descExport'] ?></p>
-<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ceta" method="post" enctype="multipart/form-data">
-<input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-<h3><?= $string['options'] ?></h3>
-<input type="radio" name="export" value="shortname" checked/> <?= $string['ceta:exportbycourseshortname'] ?> - <small><?= $string['ceta:exportbycourseshortname:desc'] ?></small><br>
-<input type="radio" name="export" value="idnumber"/> <?= $string['ceta:exportbycourseid'] ?> - <small><?= $string['ceta:exportbycourseid:desc'] ?></small><br>
+<h2><?php echo $string['dataexport'] ?></h2>
+<p><?php echo $string['cetagrades:descExport'] ?></p>
+<form action="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ceta" method="post" enctype="multipart/form-data">
+<input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+<h3><?php echo $string['options'] ?></h3>
+<input type="radio" name="export" value="shortname" checked/> <?php echo $string['ceta:exportbycourseshortname'] ?> - <small><?php echo $string['ceta:exportbycourseshortname:desc'] ?></small><br>
+<input type="radio" name="export" value="idnumber"/> <?php echo $string['ceta:exportbycourseid'] ?> - <small><?php echo $string['ceta:exportbycourseid:desc'] ?></small><br>
 <br />
-<input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
+<input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?php echo $string['export'] ?>" />
 </form>
 
 <br />

@@ -1,26 +1,26 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class='gt_c'>
-    <a href='config.php?view=structures&section=builds&page=new'><input type='button' class='gt_btn' value='<?= $string['addnewbuild'] ?>' /></a>
+    <a href='config.php?view=structures&section=builds&page=new'><input type='button' class='gt_btn' value='<?php echo $string['addnewbuild'] ?>' /></a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <div id='gt_import_div'><a href='#' class='gt_btn gt_toggle' toggle='#gt_upload_div'><?= $string['importnewstructure'] ?></a></div>
+    <div id='gt_import_div'><a href='#' class='gt_btn gt_toggle' toggle='#gt_upload_div'><?php echo $string['importnewstructure'] ?></a></div>
     <div id='gt_upload_div' style='display:none;'>
         <br>
         <form action="" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
             <input type="file" name="file" accept="text/xml,application/zip" /><br>
-            <small><b><?= $string['createlevelsubtype'] ?></b></small>: <input type="checkbox" name="create" value="1" /><br>
-            <small><b><?= $string['updatebuildimport'] ?></b></small>:
-                <input type="radio" name="update_method" value="" checked /> <small><?= $string['skip'] ?></small>
+            <small><b><?php echo $string['createlevelsubtype'] ?></b></small>: <input type="checkbox" name="create" value="1" /><br>
+            <small><b><?php echo $string['updatebuildimport'] ?></b></small>:
+                <input type="radio" name="update_method" value="" checked /> <small><?php echo $string['skip'] ?></small>
                 &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="update_method" value="overwrite" /> <small><?= $string['overwrite'] ?></small>
+                <input type="radio" name="update_method" value="overwrite" /> <small><?php echo $string['overwrite'] ?></small>
                 &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="update_method" value="merge" /> <small><?= $string['merge'] ?></small>
+                <input type="radio" name="update_method" value="merge" /> <small><?php echo $string['merge'] ?></small>
             <br>
-            <input type="submit" name="import_qual_build" class="gt_btn_small gt_blue" value="<?= $string['upload'] ?>" />
+            <input type="submit" name="import_qual_build" class="gt_btn_small gt_blue" value="<?php echo $string['upload'] ?>" />
         </form>
     </div>
 </div>
@@ -28,7 +28,7 @@
 <br>
 <?php if (!empty($MSGS['import_output'])): ?>
     <div id='gt_import_output' class='gt_cmd'>
-        <?= $MSGS['import_output'] ?>
+        <?php echo $MSGS['import_output'] ?>
     </div>
     <br>
 <?php endif; ?>
@@ -42,15 +42,15 @@
 
           <thead>
             <tr>
-              <th colspan="7"><?= $string['qualbuilds'] ?></th>
+              <th colspan="7"><?php echo $string['qualbuilds'] ?></th>
             </tr>
             <tr>
-                <th><?= $string['type'] ?></th>
-                <th><?= $string['level'] ?></th>
-                <th><?= $string['subtype'] ?></th>
-                <th><?= $string['qualawards'] ?></th>
-                <th><?= $string['assessmentawards'] ?></th>
-                <th><?= $string['defaults'] ?></th>
+                <th><?php echo $string['type'] ?></th>
+                <th><?php echo $string['level'] ?></th>
+                <th><?php echo $string['subtype'] ?></th>
+                <th><?php echo $string['qualawards'] ?></th>
+                <th><?php echo $string['assessmentawards'] ?></th>
+                <th><?php echo $string['defaults'] ?></th>
                 <th></th>
             </tr>
           </thead>
@@ -58,28 +58,28 @@
             <?php foreach($builds as $build): ?>
 
                 <tr>
-                    <td><?= $build->getStructureRealName() ?></td>
-                    <td><?= $build->getLevelName() ?></td>
-                    <td><?= $build->getSubTypeName() ?></td>
+                    <td><?php echo $build->getStructureRealName() ?></td>
+                    <td><?php echo $build->getLevelName() ?></td>
+                    <td><?php echo $build->getSubTypeName() ?></td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=awards&id=<?= $build->getID() ?>"><img src="<?= gt_image_url('i/grades') ?>" alt="grades" /></a>
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=awards&id=<?php echo $build->getID() ?>"><img src="<?php echo gt_image_url('i/grades') ?>" alt="grades" /></a>
                         <?php if (!$build->getAwards()): ?>
                             <br><small style="color:red;">(!)</small>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&type=criteria&build=<?= $build->getID() ?>">
-                            <img src="<?= gt_image_url('i/grades') ?>" alt="grades" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade&page=edit&type=criteria&build=<?php echo $build->getID() ?>">
+                            <img src="<?php echo gt_image_url('i/grades') ?>" alt="grades" />
                         </a>
                     </td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=defaults&id=<?= $build->getID() ?>">
-                            <img src="<?= gt_image_url('i/report') ?>" alt="defaults" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=defaults&id=<?php echo $build->getID() ?>">
+                            <img src="<?php echo gt_image_url('i/report') ?>" alt="defaults" />
                         </a>
                     </td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=delete&id=<?= $build->getID() ?>">
-                            <img src="<?= gt_image_url('t/delete') ?>" alt="delete" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds&page=delete&id=<?php echo $build->getID() ?>">
+                            <img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" />
                         </a>
                     </td>
                 </tr>
@@ -90,7 +90,7 @@
 
     <?php else: ?>
 
-        <p class='gt_c'><?= $string['nodata'] ?></p>
+        <p class='gt_c'><?php echo $string['nodata'] ?></p>
 
     <?php endif; ?>
 

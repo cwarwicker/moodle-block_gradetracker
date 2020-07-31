@@ -3,45 +3,45 @@
 
 <form action="" method="post" enctype="multipart/form-data">
 
-    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    <?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-    <h2><?= $string['assessmentsettings'] ?></h2>
-    <p><?= $string['assessmentsettings:desc'] ?></p>
+    <h2><?php echo $string['assessmentsettings'] ?></h2>
+    <p><?php echo $string['assessmentsettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:assessments:fields'] ?></strong> - <?= $string['config:assessments:fields:desc'] ?></small>
+    <small><strong><?php echo $string['config:assessments:fields'] ?></strong> - <?php echo $string['config:assessments:fields:desc'] ?></small>
     <br>
     <table id='gt_custom_assessment_form_fields'>
         <tr>
-            <th><?= $string['name'] ?></th>
-            <th><?= $string['type'] ?></th>
-            <th><?= $string['options'] ?></th>
-            <th><a href="#" id="gt_add_assessment_form_field"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" alt="add new" /></a></th>
+            <th><?php echo $string['name'] ?></th>
+            <th><?php echo $string['type'] ?></th>
+            <th><?php echo $string['options'] ?></th>
+            <th><a href="#" id="gt_add_assessment_form_field"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/add.png" alt="add new" /></a></th>
         </tr>
 
         <?php $cntCustomFormElements = 0; ?>
 
         <?php if ($fields): ?>
             <?php foreach($fields as $element): ?>
-                <tr class="gt_custom_assessment_form_field_row" id="gt_custom_assessment_form_field_row_<?= $cntCustomFormElements ?>">
+                <tr class="gt_custom_assessment_form_field_row" id="gt_custom_assessment_form_field_row_<?php echo $cntCustomFormElements ?>">
                     <td>
-                        <input type="hidden" name="custom_form_fields_ids[<?= $cntCustomFormElements ?>]" value="<?= $element->getID() ?>" />
-                        <input type="text" name="custom_form_fields_names[<?= $cntCustomFormElements ?>]" value="<?= \gt_html($element->getName()) ?>" />
+                        <input type="hidden" name="custom_form_fields_ids[<?php echo $cntCustomFormElements ?>]" value="<?php echo $element->getID() ?>" />
+                        <input type="text" name="custom_form_fields_names[<?php echo $cntCustomFormElements ?>]" value="<?php echo \gt_html($element->getName()) ?>" />
                     </td>
                     <td>
-                        <select class="gt_add_assessment_form_field_type" num="<?= $cntCustomFormElements ?>" name="custom_form_fields_types[<?= $cntCustomFormElements ?>]">
+                        <select class="gt_add_assessment_form_field_type" num="<?php echo $cntCustomFormElements ?>" name="custom_form_fields_types[<?php echo $cntCustomFormElements ?>]">
                             <option></option>
-                            <option value="TEXT" <?= ($element->getType() == "TEXT") ? 'selected' : ''; ?>><?= $string['element:text'] ?></option>
-                            <option value="NUMBER" <?= ($element->getType() == "NUMBER") ? 'selected' : ''; ?>><?= $string['element:number'] ?></option>
-                            <option value="TEXTBOX" <?= ($element->getType() == "TEXTBOX") ? 'selected' : ''; ?>><?= $string['element:textbox'] ?></option>
-                            <option value="SELECT" <?= ($element->getType() == "SELECT") ? 'selected' : ''; ?>><?= $string['element:select'] ?></option>
-                            <option value="CHECKBOX" <?= ($element->getType() == "CHECKBOX") ? 'selected' : ''; ?>><?= $string['element:checkbox'] ?></option>
+                            <option value="TEXT" <?php echo ($element->getType() == "TEXT") ? 'selected' : ''; ?>><?php echo $string['element:text'] ?></option>
+                            <option value="NUMBER" <?php echo ($element->getType() == "NUMBER") ? 'selected' : ''; ?>><?php echo $string['element:number'] ?></option>
+                            <option value="TEXTBOX" <?php echo ($element->getType() == "TEXTBOX") ? 'selected' : ''; ?>><?php echo $string['element:textbox'] ?></option>
+                            <option value="SELECT" <?php echo ($element->getType() == "SELECT") ? 'selected' : ''; ?>><?php echo $string['element:select'] ?></option>
+                            <option value="CHECKBOX" <?php echo ($element->getType() == "CHECKBOX") ? 'selected' : ''; ?>><?php echo $string['element:checkbox'] ?></option>
                         </select>
                     </td>
-                    <td><input type="text" style="<?= ($element->getType() != 'SELECT') ? 'display:none;' : ''; ?>" id="custom_form_fields_options_<?= $cntCustomFormElements ?>" name="custom_form_fields_options[<?= $cntCustomFormElements ?>]" placeholder="option1,option2,option3" value="<?= \gt_html($element->getOptionsString()) ?>"></td>
-                    <td><a href="#" class="gt_remove" remove="#gt_custom_assessment_form_field_row_<?= $cntCustomFormElements ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" alt="remove"></a></td>
+                    <td><input type="text" style="<?php echo ($element->getType() != 'SELECT') ? 'display:none;' : ''; ?>" id="custom_form_fields_options_<?php echo $cntCustomFormElements ?>" name="custom_form_fields_options[<?php echo $cntCustomFormElements ?>]" placeholder="option1,option2,option3" value="<?php echo \gt_html($element->getOptionsString()) ?>"></td>
+                    <td><a href="#" class="gt_remove" remove="#gt_custom_assessment_form_field_row_<?php echo $cntCustomFormElements ?>"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png" alt="remove"></a></td>
                 </tr>
                 <?php $cntCustomFormElements++ ?>
             <?php endforeach; ?>
@@ -55,11 +55,11 @@
 
     <br><br>
 
-    <small><strong><?= $string['config:assessments:comments'] ?></strong> - <?= $string['config:assessments:comments:desc'] ?></small>
+    <small><strong><?php echo $string['config:assessments:comments'] ?></strong> - <?php echo $string['config:assessments:comments:desc'] ?></small>
     <br>
-    <input type="checkbox" name="use_assessments_comments" value="1" <?= ($GT->getSetting('use_assessments_comments') == 1) ? 'checked' : '' ?> />
+    <input type="checkbox" name="use_assessments_comments" value="1" <?php echo ($GT->getSetting('use_assessments_comments') == 1) ? 'checked' : '' ?> />
 
     <br><br>
-    <input type="submit" name="submitconfig" class="gt_btn gt_blue"  value="<?= $string['save'] ?>" />
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue"  value="<?php echo $string['save'] ?>" />
 
 </form>

@@ -4,19 +4,19 @@
 
 <div class="gt_confirm_box">
 
-    <h4><?= $string['delete'] ?> : <?= $CriteriaAwardStructure->getName() ?></h4>
+    <h4><?php echo $string['delete'] ?> : <?php echo $CriteriaAwardStructure->getName() ?></h4>
 
     <div>
 
-        <?= sprintf($string['delete:critgradingstructure:sure'], $CriteriaAwardStructure->countCriteria()) ?>
+        <?php echo sprintf($string['delete:critgradingstructure:sure'], $CriteriaAwardStructure->countCriteria()) ?>
         <br><br>
-        <form action="config.php?view=structures&section=grade&page=edit&type=criteria&<?= (!is_null($CriteriaAwardStructure->getQualBuildID())) ? 'build='.$CriteriaAwardStructure->getQualBuildID() : 'id='.$CriteriaAwardStructure->getQualStructureID() ?>" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <form action="config.php?view=structures&section=grade&page=edit&type=criteria&<?php echo (!is_null($CriteriaAwardStructure->getQualBuildID())) ? 'build='.$CriteriaAwardStructure->getQualBuildID() : 'id='.$CriteriaAwardStructure->getQualStructureID() ?>" method="post">
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-            <input type="hidden" name="grading_structure_id" value="<?= $CriteriaAwardStructure->getID() ?>" />
-            <input type="submit" class="gt_btn" name="delete_crit_grading_structure" value="<?= $string['yes'] ?>" />
+            <input type="hidden" name="grading_structure_id" value="<?php echo $CriteriaAwardStructure->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_crit_grading_structure" value="<?php echo $string['yes'] ?>" />
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?php echo $string['no'] ?>" />
 
         </form>
 
@@ -25,5 +25,5 @@
 </div>
 
 <?php else: ?>
-    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+    <?php echo gt_error_alert_box( $string['invalidrecord'] ) ?>
 <?php endif; ?>

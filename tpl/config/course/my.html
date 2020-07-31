@@ -1,29 +1,29 @@
 <table class="gt_config_plain">
     <tr>
-        <th><?= $string['course'] ?></th>
-        <th><?= $string['edit'] ?></th>
-        <th><?= $string['gotocoursepage'] ?></th>
-        <th><?= $string['system:count:quals'] ?></th>
-        <th><?= $string['system:count:staff'] ?></th>
-        <th><?= $string['system:count:students'] ?></th>
+        <th><?php echo $string['course'] ?></th>
+        <th><?php echo $string['edit'] ?></th>
+        <th><?php echo $string['gotocoursepage'] ?></th>
+        <th><?php echo $string['system:count:quals'] ?></th>
+        <th><?php echo $string['system:count:staff'] ?></th>
+        <th><?php echo $string['system:count:students'] ?></th>
     </tr>
     <?php if ($courses): ?>
         <?php foreach($courses as $course): ?>
             <tr>
-                <td><?= $course->fullname ?></td>
+                <td><?php echo $course->fullname ?></td>
                 <td>
-                  <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'>
-                    <img src="<?= gt_image_url('t/edit') ?>" />
+                  <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?php echo $course->id ?>'>
+                    <img src="<?php echo gt_image_url('t/edit') ?>" />
                   </a>
                 </td>
                 <td>
-                  <a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'>
-                    <img src="<?= gt_image_url('t/viewdetails') ?>" />
+                  <a href='<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $course->id ?>' target='_blank'>
+                    <img src="<?php echo gt_image_url('t/viewdetails') ?>" />
                   </a>
                 </td>
-                <td><?= $course->countCourseQualifications(true); ?></td>
-                <td><?= $course->countStaff(); ?></td>
-                <td><?= $course->countStudents(); ?></td>
+                <td><?php echo $course->countCourseQualifications(true); ?></td>
+                <td><?php echo $course->countStaff(); ?></td>
+                <td><?php echo $course->countStudents(); ?></td>
             </tr>
         <?php endforeach; ?>
     <?php endif; ?>

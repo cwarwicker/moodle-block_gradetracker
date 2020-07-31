@@ -1,32 +1,32 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <?php if ($Unit->isDeleted()): ?>
-    <?= gt_info_alert_box( $string['recordisdeleted'] ) ?>
+    <?php echo gt_info_alert_box( $string['recordisdeleted'] ) ?>
 <?php endif; ?>
 
 <div class="gt_full_page">
 
     <form action="" method="post">
-        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
          <div class='gt_form_panel'>
 
             <div class='gt_form_panel_heading'>
-                <?= ($Unit->isValid()) ? $string['editunit'] : $string['newunit'] ?>
+                <?php echo ($Unit->isValid()) ? $string['editunit'] : $string['newunit'] ?>
             </div>
 
             <div class='gt_form_panel_body'>
 
                 <p class="gt_c">
-                    <input type="submit" class="gt_btn gt_blue" name="save_unit" value="<?= $string['save'] ?>" />
-                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <input type="submit" class="gt_btn gt_blue" name="save_unit" value="<?php echo $string['save'] ?>" />
+                    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
                 </p>
 
                 <?php if ($Unit->isValid()): ?>
-                    <input type="hidden" id="unit_id" name="id" value="<?= $Unit->getID() ?>" />
+                    <input type="hidden" id="unit_id" name="id" value="<?php echo $Unit->getID() ?>" />
                 <?php endif; ?>
 
                 <div>
@@ -34,14 +34,14 @@
                     <table id="gt_qual_form_table">
 
                         <tr>
-                            <td><?= $string['unittype'] ?></td>
+                            <td><?php echo $string['unittype'] ?></td>
                             <td>
-                                <select id="unit_type_id" class="gt_form_control" name="unit_type" onchange="this.form.submit();return false;" <?= ($Unit->isValid()) ? 'disabled' : ''; ?> >
+                                <select id="unit_type_id" class="gt_form_control" name="unit_type" onchange="this.form.submit();return false;" <?php echo ($Unit->isValid()) ? 'disabled' : ''; ?> >
                                     <option value=""></option>
                                     <?php if ($structures): ?>
                                         <?php foreach($structures as $struc): ?>
                                             <?php if ($struc->isLevelEnabled('Units')): ?>
-                                                <option value="<?= $struc->getID() ?>" <?= ($Structure && $Structure->getID() == $struc->getID()) ? 'selected' : ''; ?> ><?= $struc->getName() ?></option>
+                                                <option value="<?php echo $struc->getID() ?>" <?php echo ($Structure && $Structure->getID() == $struc->getID()) ? 'selected' : ''; ?> ><?php echo $struc->getName() ?></option>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -52,52 +52,52 @@
                         <?php if ($Structure): ?>
 
                             <tr>
-                                <td><?= $string['level'] ?></td>
+                                <td><?php echo $string['level'] ?></td>
                                 <td>
                                     <select id="gt_load_unit_defaults" name="unit_level"  class="gt_form_control">
                                         <option value=""></option>
                                         <?php if (isset($levels) && $levels): ?>
                                             <?php foreach($levels as $level): ?>
-                                                <option value="<?= $level->getID() ?>" <?= ($Unit->getLevelID() == $level->getID()) ? 'selected' : ''; ?> ><?= $level->getName() ?></option>
+                                                <option value="<?php echo $level->getID() ?>" <?php echo ($Unit->getLevelID() == $level->getID()) ? 'selected' : ''; ?> ><?php echo $level->getName() ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <img src="<?= gt_image_url('i/loading_small') ?>" alt="loading" id="gt_level_loading" class="gt_hidden gt_middle" />
+                                    <img src="<?php echo gt_image_url('i/loading_small') ?>" alt="loading" id="gt_level_loading" class="gt_hidden gt_middle" />
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['unitnumber'] ?></td>
+                                <td><?php echo $string['unitnumber'] ?></td>
                                 <td>
-                                    <input type="text"  class="gt_form_control gt_text_small" name="unit_number" value="<?= \gt_html($Unit->getUnitNumber()) ?>" min="1" />
+                                    <input type="text"  class="gt_form_control gt_text_small" name="unit_number" value="<?php echo \gt_html($Unit->getUnitNumber()) ?>" min="1" />
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['name'] ?></td>
+                                <td><?php echo $string['name'] ?></td>
                                 <td>
-                                    <input type="text"  class="gt_form_control" name="unit_name" value="<?= $Unit->getName() ?>" />
+                                    <input type="text"  class="gt_form_control" name="unit_name" value="<?php echo $Unit->getName() ?>" />
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['uniquecode'] ?></td>
+                                <td><?php echo $string['uniquecode'] ?></td>
                                 <td>
-                                    <input type="text" class="gt_form_control" name="unit_code" value="<?= \gt_html($Unit->getCode()) ?>" />
+                                    <input type="text" class="gt_form_control" name="unit_code" value="<?php echo \gt_html($Unit->getCode()) ?>" />
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['description'] ?></td>
+                                <td><?php echo $string['description'] ?></td>
                                 <td>
-                                    <textarea name="unit_desc" class="gt_form_control"><?= \gt_html($Unit->getDescription()) ?></textarea>
+                                    <textarea name="unit_desc" class="gt_form_control"><?php echo \gt_html($Unit->getDescription()) ?></textarea>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['credits'] ?></td>
+                                <td><?php echo $string['credits'] ?></td>
                                 <td>
-                                    <input type="number" min="0" name="unit_credits" class="gt_form_control" value="<?= \gt_html($Unit->getCredits()) ?>" />
+                                    <input type="number" min="0" name="unit_credits" class="gt_form_control" value="<?php echo \gt_html($Unit->getCredits()) ?>" />
                                 </td>
                             </tr>
 
@@ -106,9 +106,9 @@
                                 <?php foreach($Unit->getCustomFormElements() as $element): ?>
 
                                 <tr>
-                                    <td><?= $element->getName() ?></td>
+                                    <td><?php echo $element->getName() ?></td>
                                     <td>
-                                        <?= $element->display( array('name' => 'custom_elements', 'class' => 'gt_unit_element gt_form_control', 'fancy' => true) ) ?>
+                                        <?php echo $element->display( array('name' => 'custom_elements', 'class' => 'gt_unit_element gt_form_control', 'fancy' => true) ) ?>
                                     </td>
                                 </tr>
 
@@ -117,17 +117,17 @@
                             <?php endif; ?>
 
                             <tr>
-                                <td><?= $string['gradestructure'] ?></td>
+                                <td><?php echo $string['gradestructure'] ?></td>
                                 <td>
                                     <?php if ($unitGradingStructures): ?>
                                         <select name="unit_grading_structure" class="gt_form_control">
                                             <option value=""></option>
                                             <?php foreach($unitGradingStructures as $grading): ?>
-                                                <option value="<?= $grading->getID() ?>" <?= ($Unit->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?= $grading->getName() ?></option>
+                                                <option value="<?php echo $grading->getID() ?>" <?php echo ($Unit->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?php echo $grading->getName() ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     <?php else: ?>
-                                        <?= $string['nogradestructuresdefined'] ?>
+                                        <?php echo $string['nogradestructuresdefined'] ?>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -142,8 +142,8 @@
                         <div class='gt_form_panel'>
 
                             <div class='gt_form_panel_sub_heading'>
-                                <?= $string['criteria'] ?>
-                                <span><a href="#" id="gt_add_new_criterion"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon gt_middle" alt="<?= $string['add'] ?>" /></a></span>
+                                <?php echo $string['criteria'] ?>
+                                <span><a href="#" id="gt_add_new_criterion"><img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon gt_middle" alt="<?php echo $string['add'] ?>" /></a></span>
                             </div>
 
                             <div class='gt_form_panel_sub_body'>
@@ -151,15 +151,15 @@
                                     <table class="gt_unit_criteria_letters">
                                         <tr>
                                             <?php foreach($criteriaLetters as $letter): ?>
-                                                <th><?= $letter ?></th>
+                                                <th><?php echo $letter ?></th>
                                             <?php endforeach; ?>
                                         </tr>
                                         <tr>
                                             <?php foreach($criteriaLetters as $letter): ?>
                                                 <td>
-                                                    <select class="gt_update_unit_criteria_letter" letter="<?= $letter ?>">
+                                                    <select class="gt_update_unit_criteria_letter" letter="<?php echo $letter ?>">
                                                         <?php for($i = 0; $i < 100; $i++): ?>
-                                                            <option value="<?= $i ?>" <?= (array_key_exists($letter, $lettersCount) && $lettersCount[$letter] == $i) ? 'selected' : '' ?> ><?= $i ?></option>
+                                                            <option value="<?php echo $i ?>" <?php echo (array_key_exists($letter, $lettersCount) && $lettersCount[$letter] == $i) ? 'selected' : '' ?> ><?php echo $i ?></option>
                                                         <?php endfor; ?>
                                                     </select>
                                                 </td>
@@ -171,18 +171,18 @@
                                 <table id="gt_unit_criteria" class='gt_unit_criteria_table'>
 
                                     <tr>
-                                        <th><?= $string['name'] ?></th>
-                                        <th><?= $string['type'] ?></th>
-                                        <th><?= $string['options'] ?></th>
-                                        <th><?= $string['details'] ?></th>
-                                        <th><?= $string['weighting'] ?></th>
-                                        <th><?= $string['parent'] ?></th>
-                                        <th><?= $string['gradestructure'] ?></th>
-                                        <th><?= $string['gradingtype'] ?></th>
+                                        <th><?php echo $string['name'] ?></th>
+                                        <th><?php echo $string['type'] ?></th>
+                                        <th><?php echo $string['options'] ?></th>
+                                        <th><?php echo $string['details'] ?></th>
+                                        <th><?php echo $string['weighting'] ?></th>
+                                        <th><?php echo $string['parent'] ?></th>
+                                        <th><?php echo $string['gradestructure'] ?></th>
+                                        <th><?php echo $string['gradingtype'] ?></th>
                                         <th></th>
                                         <th>
                                           <a href='#' class='gt_remove' remove='.gt_unit_criteria_table_row'>
-                                            <img src='<?= gt_image_url('t/delete') ?>' alt='delete' />
+                                            <img src='<?php echo gt_image_url('t/delete') ?>' alt='delete' />
                                         </a>
                                       </th>
                                     </tr>
@@ -196,87 +196,87 @@
                                             <?php $dNum++; ?>
                                             <?php $dynamicNum = ($criterion->getDynamicNumber() !== false) ? $criterion->getDynamicNumber() : $dNum ?>
 
-                                            <tr class='gt_criterion_row_<?= $dynamicNum ?> gt_unit_criteria_table_row' rowNum='<?= $dynamicNum ?>'>
+                                            <tr class='gt_criterion_row_<?php echo $dynamicNum ?> gt_unit_criteria_table_row' rowNum='<?php echo $dynamicNum ?>'>
 
                                                 <td>
                                                     <?php if ($criterion->isValid()): ?>
-                                                        <input type='hidden' name='unit_criteria[<?= $dynamicNum ?>][id]' id='gt_crit_id_input_<?= $dynamicNum ?>' value='<?= $criterion->getID() ?>' />
+                                                        <input type='hidden' name='unit_criteria[<?php echo $dynamicNum ?>][id]' id='gt_crit_id_input_<?php echo $dynamicNum ?>' value='<?php echo $criterion->getID() ?>' />
                                                     <?php endif; ?>
-                                                    <input type='text' placeholder='C<?= $dynamicNum ?>' name='unit_criteria[<?= $dynamicNum ?>][name]' value='<?= $criterion->getName() ?>' class='critNameInput' />
+                                                    <input type='text' placeholder='C<?php echo $dynamicNum ?>' name='unit_criteria[<?php echo $dynamicNum ?>][name]' value='<?php echo $criterion->getName() ?>' class='critNameInput' />
                                                 </td>
 
                                                 <td>
-                                                    <select id='gt_change_criterion_type' critNum='<?= $dynamicNum ?>' name='unit_criteria[<?= $dynamicNum ?>][type]'>
+                                                    <select id='gt_change_criterion_type' critNum='<?php echo $dynamicNum ?>' name='unit_criteria[<?php echo $dynamicNum ?>][type]'>
                                                         <?php foreach(\GT\Criterion::getSupportedTypes() as $type): ?>
                                                             <?php if ($Structure->isLevelEnabled($type->id)): ?>
-                                                                <option value='<?= $type->id ?>' <?= ($criterion->getType() == $type->id) ? 'selected' : ''; ?> ><?= $type->type ?></option>
+                                                                <option value='<?php echo $type->id ?>' <?php echo ($criterion->getType() == $type->id) ? 'selected' : ''; ?> ><?php echo $type->type ?></option>
                                                             <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </td>
 
-                                                <td id='gt_criterion_options_cell_<?= $dynamicNum ?>' class='gt_criterion_options_cell'>
+                                                <td id='gt_criterion_options_cell_<?php echo $dynamicNum ?>' class='gt_criterion_options_cell'>
                                                     <?php foreach((array)$criterion->getFormOptions() as $opt): ?>
                                                         <?php $formElement = \GT\FormElement::create($opt); ?>
-                                                        <small><?= $opt->label ?></small><br>
-                                                        <?= $formElement->display( array('name' => 'unit_criteria['.$dynamicNum.'][options]') ) ?>
+                                                        <small><?php echo $opt->label ?></small><br>
+                                                        <?php echo $formElement->display( array('name' => 'unit_criteria['.$dynamicNum.'][options]') ) ?>
                                                         <br>
                                                     <?php endforeach; ?>
                                                 </td>
 
-                                                <td><textarea name='unit_criteria[<?= $dynamicNum ?>][details]'><?= $criterion->getDescription() ?></textarea></td>
+                                                <td><textarea name='unit_criteria[<?php echo $dynamicNum ?>][details]'><?php echo $criterion->getDescription() ?></textarea></td>
 
-                                                <td><input type='number' min='0' step='any' placeholder='1.0' name='unit_criteria[<?= $dynamicNum ?>][weight]' value='<?= $criterion->getAttribute('weighting') ?>' /></td>
+                                                <td><input type='number' min='0' step='any' placeholder='1.0' name='unit_criteria[<?php echo $dynamicNum ?>][weight]' value='<?php echo $criterion->getAttribute('weighting') ?>' /></td>
 
                                                 <td>
-                                                    <select name='unit_criteria[<?= $dynamicNum ?>][parent]' class='parent_criteria_select'>
-                                                        <option value=''><?= $string['na'] ?></option>
+                                                    <select name='unit_criteria[<?php echo $dynamicNum ?>][parent]' class='parent_criteria_select'>
+                                                        <option value=''><?php echo $string['na'] ?></option>
                                                          <?php $pDNum = 0; ?>
                                                             <?php foreach($flatCriteria as $crit): ?>
                                                                 <?php $pDNum++ ?>
                                                                 <?php $pDynamicNumber = ($crit->getDynamicNumber() !== false) ? $crit->getDynamicNumber() : $pDNum; ?>
-                                                                <option value='<?= $pDynamicNumber ?>' <?= ( ($criterion->getParentID() > 0 && $criterion->getParentID() == $crit->getID()) || ( $criterion->getParentNumber() == $pDynamicNumber ) ) ? 'selected' : ''; ?> ><?= $crit->getName() ?></option>
+                                                                <option value='<?php echo $pDynamicNumber ?>' <?php echo ( ($criterion->getParentID() > 0 && $criterion->getParentID() == $crit->getID()) || ( $criterion->getParentNumber() == $pDynamicNumber ) ) ? 'selected' : ''; ?> ><?php echo $crit->getName() ?></option>
                                                             <?php endforeach; ?>
                                                     </select>&nbsp;&nbsp;
-                                                    <a href='#' class='gt_add_child_criterion' critNum='<?= $dynamicNum ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/node.png' class='gt_16' alt='<?= $string['addchildcrit'] ?>' title='<?= $string['addchildcrit'] ?>' /></a>
+                                                    <a href='#' class='gt_add_child_criterion' critNum='<?php echo $dynamicNum ?>'><img src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/node.png' class='gt_16' alt='<?php echo $string['addchildcrit'] ?>' title='<?php echo $string['addchildcrit'] ?>' /></a>
                                                 </td>
 
                                                 <td>
-                                                    <select name='unit_criteria[<?= $dynamicNum ?>][grading]' id='gt_crit_grading_input_<?= $dynamicNum ?>' class='gt_change_criterion_grading_structure' critNum='<?= $dynamicNum ?>'>
+                                                    <select name='unit_criteria[<?php echo $dynamicNum ?>][grading]' id='gt_crit_grading_input_<?php echo $dynamicNum ?>' class='gt_change_criterion_grading_structure' critNum='<?php echo $dynamicNum ?>'>
                                                         <?php if($criteriaGradingStructures): ?>
                                                             <option value=""></option>
                                                             <?php foreach($criteriaGradingStructures as $grading): ?>
-                                                                <option value='<?= $grading->getID() ?>' <?= ($criterion->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?= $grading->getName() ?></option>
+                                                                <option value='<?php echo $grading->getID() ?>' <?php echo ($criterion->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?php echo $grading->getName() ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
                                                 </td>
 
                                                 <td>
-                                                    <select name='unit_criteria[<?= $dynamicNum ?>][gradingtype]'>
+                                                    <select name='unit_criteria[<?php echo $dynamicNum ?>][gradingtype]'>
                                                         <?php foreach( \GT\CriteriaAward::getSupportedGradingTypes() as $type): ?>
-                                                            <option value='<?= $type ?>' <?= ($criterion->getAttribute('gradingtype') == $type) ? 'selected' : ''; ?> ><?= $type ?></option>
+                                                            <option value='<?php echo $type ?>' <?php echo ($criterion->getAttribute('gradingtype') == $type) ? 'selected' : ''; ?> ><?php echo $type ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </td>
 
                                                 <td>
-                                                    <a href='#' class='gt_duplicate_criterion' critNum='<?= $dynamicNum ?>'>
-                                                        <img src='<?= gt_image_url('t/copy') ?>' alt='copy' />
+                                                    <a href='#' class='gt_duplicate_criterion' critNum='<?php echo $dynamicNum ?>'>
+                                                        <img src='<?php echo gt_image_url('t/copy') ?>' alt='copy' />
                                                     </a>
 
                                                 </td>
 
                                                 <td>
-                                                    <a href='#' class='gt_remove_criterion' critNum='<?= $dynamicNum ?>'>
-                                                        <img src='<?= gt_image_url('t/delete') ?>' alt='delete' />
+                                                    <a href='#' class='gt_remove_criterion' critNum='<?php echo $dynamicNum ?>'>
+                                                        <img src='<?php echo gt_image_url('t/delete') ?>' alt='delete' />
                                                     </a>
                                                 </td>
 
                                             </tr>
 
                                             <?php if ($criterion->hasFormSubRow() !== false): ?>
-                                                <tr class='gt_criterion_row_<?= $dynamicNum ?> gt_unit_criteria_table_sub_row' rowNum='<?= $dynamicNum ?>'>
+                                                <tr class='gt_criterion_row_<?php echo $dynamicNum ?> gt_unit_criteria_table_sub_row' rowNum='<?php echo $dynamicNum ?>'>
                                                     <?php $this->set("criterion", $criterion)->set("dynamicNum", $dynamicNum); ?>
                                                     <?php $this->load($CFG->dirroot . '/blocks/gradetracker/tpl/config/units/criteria_types/'.$criterion->hasFormSubRow().'.html') ?>
                                                     <?php $this->display() ?>
@@ -302,19 +302,19 @@
                 <?php if ($Structure): ?>
                     <div class='gt_form_panel'>
 
-                        <div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt2'><?= $string['qualifications'] ?></div>
+                        <div class='gt_form_panel_sub_heading gt_form_panel_sub_heading_alt2'><?php echo $string['qualifications'] ?></div>
                         <div class='gt_form_panel_sub_body'>
                             <?php if ($Unit->getQualifications()): ?>
                                 <table id='gt_unit_quals'>
                                     <?php foreach($Unit->getQualifications() as $qual): ?>
                                         <tr>
-                                            <td><?= $qual->getDisplayName() ?></td>
-                                            <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?= $qual->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="<?= $string['edit'] ?>" /></a></td>
+                                            <td><?php echo $qual->getDisplayName() ?></td>
+                                            <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=edit&id=<?php echo $qual->getID() ?>"><img src="<?php echo gt_image_url('t/edit') ?>" alt="<?php echo $string['edit'] ?>" /></a></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </table>
                             <?php else: ?>
-                                <?= $string['noresults'] ?>
+                                <?php echo $string['noresults'] ?>
                             <?php endif; ?>
                         </div>
 
@@ -323,8 +323,8 @@
 
                 <p class="gt_c">
                     <br>
-                    <input type="submit" class="gt_btn gt_blue" name="save_unit" value="<?= $string['save'] ?>" />
-                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <input type="submit" class="gt_btn gt_blue" name="save_unit" value="<?php echo $string['save'] ?>" />
+                    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
                 </p>
 
             </div>
@@ -337,12 +337,12 @@
         <br><br><br><br>
         <p class='gt_c'>
             <?php if ($Unit->isValid() && !$Unit->isDeleted()): ?>
-                <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $Unit->getID() ?>' class='gt_btn gt_red'><?= $string['delete'] ?></a>
+                <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?php echo $Unit->getID() ?>' class='gt_btn gt_red'><?php echo $string['delete'] ?></a>
             <?php elseif ($Unit->isValid() && $Unit->isDeleted()): ?>
                 <form action='' method='post' class='gt_c'>
-                    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-                    <input type='hidden' name='id' value='<?= $Unit->getID() ?>' />
-                    <input type='submit' class='gt_btn gt_red' name='restoreUnit' value='<?= $string['restore'] ?>' />
+                    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+                    <input type='hidden' name='id' value='<?php echo $Unit->getID() ?>' />
+                    <input type='submit' class='gt_btn gt_red' name='restoreUnit' value='<?php echo $string['restore'] ?>' />
                 </form>
             <?php endif; ?>
         </p>

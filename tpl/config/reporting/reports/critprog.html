@@ -1,23 +1,23 @@
 <?php if(!defined('BCGT')) exit; ?>
 
 <div class="gt_form_panel">
-    <div class="gt_form_panel_heading"><?= $string['reports:critprog'] ?></div>
+    <div class="gt_form_panel_heading"><?php echo $string['reports:critprog'] ?></div>
     <div class="gt_form_panel_body">
-        <p><?= $string['reports:critprog:desc'] ?></p>
-        
+        <p><?php echo $string['reports:critprog:desc'] ?></p>
+
         <div class="gt_c">
-            <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/cpreport.png" class="gt_box_shadow" style="width:800px;" />
+            <img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/cpreport.png" class="gt_box_shadow" style="width:800px;" />
             <br><br>
-            <small><?= $string['reports:critprog:screenshot'] ?></small>
+            <small><?php echo $string['reports:critprog:screenshot'] ?></small>
             <br><br>
         </div>
 
         <table class="gt_reporting_options">
 
             <tr>
-                <th><?= $string['coursecats'] ?></th>
-                <th><?= $string['qualstructure'] ?></th>
-                <th><?= $string['options'] ?></th>
+                <th><?php echo $string['coursecats'] ?></th>
+                <th><?php echo $string['qualstructure'] ?></th>
+                <th><?php echo $string['options'] ?></th>
             </tr>
 
             <tr>
@@ -25,28 +25,28 @@
                     <select name='categories' class='report_option' multiple='multiple'>
                         <?php if ($categories): ?>
                             <?php foreach($categories as $catID => $cat): ?>
-                                <option value="<?= $catID ?>"><?= $cat ?></option>
+                                <option value="<?php echo $catID ?>"><?php echo $cat ?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </select>
                 </td>
                 <td>
                     <select name="structureID" class='report_option'>
-                        <option value=""><?= $string['pleaseselect'] ?></option>
+                        <option value=""><?php echo $string['pleaseselect'] ?></option>
                         <?php if ($structures): ?>
-                            <option value="all"><?= $string['all'] ?></option>
+                            <option value="all"><?php echo $string['all'] ?></option>
                             <?php foreach($structures as $structure): ?>
-                                <option value="<?= $structure->getID() ?>"><?= $structure->getName() ?></option>
+                                <option value="<?php echo $structure->getID() ?>"><?php echo $structure->getName() ?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </select>
                 </td>
                 <td>
-                    <small><?= $string['reports:passsummary:options:values'] ?></small><br>
+                    <small><?php echo $string['reports:passsummary:options:values'] ?></small><br>
                     <select name='extraAwardNames' multiple='multiple' class='report_option'>
                         <?php if ($awardNames): ?>
                             <?php foreach($awardNames as $name): ?>
-                                <option value='<?= $name->name ?>'><?= $name->shortname ?> - <?= $name->name ?></option>
+                                <option value='<?php echo $name->name ?>'><?php echo $name->shortname ?> - <?php echo $name->name ?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </select>
@@ -56,7 +56,7 @@
         </table>
 
         <p class="gt_c">
-            <input id="gt_run_report" report="CP" type="button" name="run" value="<?= $string['run'] ?>" class="gt_run_report gt_btn gt_green" />
+            <input id="gt_run_report" report="CP" type="button" name="run" value="<?php echo $string['run'] ?>" class="gt_run_report gt_btn gt_green" />
         </p>
 
         <div class="gt_c">

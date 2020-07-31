@@ -3,28 +3,28 @@
 <div class="gt_full_page">
 
     <form id="course_search" method="post">
-        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
         <div class="gt_form_panel">
-            <div class="gt_form_panel_heading"><?= $string['config:coursesearch'] ?></div>
+            <div class="gt_form_panel_heading"><?php echo $string['config:coursesearch'] ?></div>
 
             <div class="gt_form_panel_body">
-                <small><?= $string['config:coursesnamesearch'] ?></small>
+                <small><?php echo $string['config:coursesnamesearch'] ?></small>
 
                 <table id="gt_qual_form_table">
                     <tr>
-                        <td><?= $string['category'] ?> :</td>
+                        <td><?php echo $string['category'] ?> :</td>
                         <td>
                             <select name="coursecats">
                                 <option></option>
                                 <?php foreach($categories as $catID => $catName): ?>
-                                    <option value="<?= $catID ?>"><?= $catName ?></option>
+                                    <option value="<?php echo $catID ?>"><?php echo $catName ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td><?= $string['config:coursename'] ?> :</td>
+                        <td><?php echo $string['config:coursename'] ?> :</td>
                         <td>
                         <input type="text" class="gt_form_control" name="coursename" />
                         </td>
@@ -33,7 +33,7 @@
                         <td></td>
                         <td>
                             <br />
-                            <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?= $string['search'] ?>" />
+                            <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?php echo $string['search'] ?>" />
                         </td>
                     </tr>
                 </table>
@@ -41,34 +41,34 @@
                 <?php if (isset($courses)): ?>
                   <table class="gt_config">
                       <tr>
-                          <th><?= $string['course'] ?></th>
-                          <th><?= $string['load'] ?></th>
-                          <th><?= $string['gotocoursepage'] ?></th>
-                          <th><?= $string['system:count:quals'] ?></th>
-                          <th><?= $string['system:count:staff'] ?></th>
-                          <th><?= $string['system:count:students'] ?></th>
+                          <th><?php echo $string['course'] ?></th>
+                          <th><?php echo $string['load'] ?></th>
+                          <th><?php echo $string['gotocoursepage'] ?></th>
+                          <th><?php echo $string['system:count:quals'] ?></th>
+                          <th><?php echo $string['system:count:staff'] ?></th>
+                          <th><?php echo $string['system:count:students'] ?></th>
                       </tr>
                       <?php if($courses): ?>
                         <?php foreach($courses as $course): ?>
                           <tr>
-                              <td><?= $course->fullname ?></td>
+                              <td><?php echo $course->fullname ?></td>
                               <td>
-                                <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?= $course->id ?>'>
-                                  <img src="<?= gt_image_url('t/edit') ?>" />
+                                <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&section=quals&id=<?php echo $course->id ?>'>
+                                  <img src="<?php echo gt_image_url('t/edit') ?>" />
                                 </a>
                               </td>
                               <td>
-                                <a href='<?= $CFG->wwwroot ?>/course/view.php?id=<?= $course->id ?>' target='_blank'>
-                                  <img src="<?= gt_image_url('t/viewdetails') ?>" />
+                                <a href='<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $course->id ?>' target='_blank'>
+                                  <img src="<?php echo gt_image_url('t/viewdetails') ?>" />
                                 </a>
                               </td>
-                              <td><?= $course->countCourseQualifications(true); ?></td>
-                              <td><?= $course->countStaff(); ?></td>
-                              <td><?= $course->countStudents(); ?></td>
+                              <td><?php echo $course->countCourseQualifications(true); ?></td>
+                              <td><?php echo $course->countStaff(); ?></td>
+                              <td><?php echo $course->countStudents(); ?></td>
                           </tr>
                         <?php endforeach; ?>
                       <?php else: ?>
-                          <tr><td colspan="6"><?= $string['nodata'] ?></td></tr>
+                          <tr><td colspan="6"><?php echo $string['nodata'] ?></td></tr>
                       <?php endif; ?>
                     </table>
                 <?php endif; ?>

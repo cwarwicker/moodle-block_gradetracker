@@ -1,16 +1,16 @@
 <?php if(!defined('BCGT')) exit; ?>
 <div class="gt_confirm_box">
-    <h4><?= $string['delete'] ?> : <?= $qualification->getName();?> ?</h4>
+    <h4><?php echo $string['delete'] ?> : <?php echo $qualification->getName();?> ?</h4>
     <br />
-    <p><?= $string['type'] ?> : <?=$qualification->getStructureName();?></p>
-    <p><?= $string['subtype'] ?> : <?=$qualification->getSubTypeName();?></p>
-    <p><?= $string['level'] ?> : <?=$qualification->getLevelName();?></p>
+    <p><?php echo $string['type'] ?> : <?php echo$qualification->getStructureName();?></p>
+    <p><?php echo $string['subtype'] ?> : <?php echo$qualification->getSubTypeName();?></p>
+    <p><?php echo $string['level'] ?> : <?php echo$qualification->getLevelName();?></p>
     <div>
-        <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-            <input type="hidden" name="id" value="<?= $qualification->getID(); ?>" />
-            <input type="submit" class="gt_btn" name="delete_qual" value="<?= $string['yes'] ?>" />
-            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+        <form action="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=quals&section=search" method="post">
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+            <input type="hidden" name="id" value="<?php echo $qualification->getID(); ?>" />
+            <input type="submit" class="gt_btn" name="delete_qual" value="<?php echo $string['yes'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?php echo $string['no'] ?>" />
         </form>
     </div>
 </div>

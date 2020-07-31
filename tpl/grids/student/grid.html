@@ -7,19 +7,19 @@
     <?php $cnt = 2; ?>
     <thead>
       <tr>
-          <th class="gt_grid_unit_name"><?= $string['unit'] ?> <?= ($Qualification->getDefaultCredits() > 0) ? '('.$string['totalcredits'] . ': '.$Qualification->countUnitCredits().'/'.$Qualification->getDefaultCredits().')' : '' ?></th>
-          <th class="gt_grid_unit_award"><?= $string['award'] ?></th>
+          <th class="gt_grid_unit_name"><?php echo $string['unit'] ?> <?php echo ($Qualification->getDefaultCredits() > 0) ? '('.$string['totalcredits'] . ': '.$Qualification->countUnitCredits().'/'.$Qualification->getDefaultCredits().')' : '' ?></th>
+          <th class="gt_grid_unit_award"><?php echo $string['award'] ?></th>
           <?php if ($Qualification->isFeatureEnabledByName('percentagecomp')): ?>
-              <th class="gt_grid_progress"><?= $string['progress'] ?></th>
+              <th class="gt_grid_progress"><?php echo $string['progress'] ?></th>
               <?php $cnt++ ?>
           <?php endif; ?>
 
           <?php foreach($Qualification->getHeaderCriteriaNames() as $crit): ?>
-              <th cname="<?= $crit['name'] ?>"><?= $crit['name'] ?></th>
+              <th cname="<?php echo $crit['name'] ?>"><?php echo $crit['name'] ?></th>
               <?php $cnt++ ?>
               <?php if ($crit['sub']): ?>
                   <?php foreach($crit['sub'] as $sub): ?>
-                      <th><?= $sub ?></th>
+                      <th><?php echo $sub ?></th>
                       <?php $cnt++ ?>
                   <?php endforeach; ?>
               <?php endif; ?>
@@ -27,7 +27,7 @@
 
           <?php if ($Qualification->getStructure() && $Qualification->getStructure()->getSetting('iv_column') == 1): ?>
               <?php $cnt++ ?>
-              <th title='<?= $string['iv:desc'] ?>'><?= $string['iv'] ?></th>
+              <th title='<?php echo $string['iv:desc'] ?>'><?php echo $string['iv'] ?></th>
           <?php endif; ?>
 
           <?php if (!isset($print) || !$print): ?>
@@ -48,42 +48,42 @@
 
                       <td class="gt_grid_unit_name">
                           <?php if (\gt_has_capability('block/gradetracker:view_unit_grids') && (!isset($print) || !$print)): ?>
-                              <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $unit->getShortenedDisplayName() ?></a>
+                              <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?php echo $unit->getID() ?>&qualID=<?php echo $Qualification->getID() ?>&access=<?php echo $params['access'] ?>" target="_blank"><?php echo $unit->getShortenedDisplayName() ?></a>
                           <?php else: ?>
-                              <?= $unit->getShortenedDisplayName() ?>
+                              <?php echo $unit->getShortenedDisplayName() ?>
                           <?php endif; ?>
 
                           <?php if (!isset($print) || !$print): ?>
 
-                              <br><a href="#" class="gt_unit_info" uID="<?= $unit->getID() ?>" uName="<?= \gt_html($unit->getDisplayName()) ?>"><img src="<?= gt_image_url('i/info') ?>" alt="<?= $string['info'] ?>" /></a>
+                              <br><a href="#" class="gt_unit_info" uID="<?php echo $unit->getID() ?>" uName="<?php echo \gt_html($unit->getDisplayName()) ?>"><img src="<?php echo gt_image_url('i/info') ?>" alt="<?php echo $string['info'] ?>" /></a>
 
                               <?php if ( \gt_has_capability('block/gradetracker:configure_units') && !$external): ?>
                                   &nbsp;&nbsp;
-                                  <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $unit->getID() ?>" target="_blank"><img src="<?= gt_image_url('i/edit') ?>" alt="<?= $string['edit'] ?>" /></a>
+                                  <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?php echo $unit->getID() ?>" target="_blank"><img src="<?php echo gt_image_url('i/edit') ?>" alt="<?php echo $string['edit'] ?>" /></a>
                               <?php endif; ?>
 
-                              <div id="pUUI_<?= $unit->getID() ?>" class="gt_popup gt_hidden"></div>
+                              <div id="pUUI_<?php echo $unit->getID() ?>" class="gt_popup gt_hidden"></div>
 
                           <?php endif; ?>
 
                           <?php if ($unit->getCredits() > 0): ?>
-                              <br><small>(<?= $unit->getCredits() ?> <?= $string['credits'] ?>)</small>
+                              <br><small>(<?php echo $unit->getCredits() ?> <?php echo $string['credits'] ?>)</small>
                           <?php endif; ?>
 
                       </td>
 
-                      <td class="gt_grid_unit_award" sID="<?= $Student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>"><?= $unit->getAwardCell( $params['access'] ) ?></td>
+                      <td class="gt_grid_unit_award" sID="<?php echo $Student->id ?>" qID="<?php echo $Qualification->getID() ?>" uID="<?php echo $unit->getID() ?>"><?php echo $unit->getAwardCell( $params['access'] ) ?></td>
 
                       <!-- Progress Bar -->
                       <?php if ($Qualification->isFeatureEnabledByName('percentagecomp')): ?>
                           <td class="gt_grid_progress">
                               <?php if ($unit->unitCal() === $string['na']): ?>
-                                  <?= $string['na']; ?>
+                                  <?php echo $string['na']; ?>
                               <?php else: ?>
                                   <div class="gt_meter">
-                                      <span class='progress_bar_S<?= $Student->id ?>Q<?= $Qualification->getID() ?>U<?= $unit->getID() ?>' style="width: <?= $unit->unitCal() ?>%"></span>
+                                      <span class='progress_bar_S<?php echo $Student->id ?>Q<?php echo $Qualification->getID() ?>U<?php echo $unit->getID() ?>' style="width: <?php echo $unit->unitCal() ?>%"></span>
                                   </div>
-                                  <small class='progress_percent_S<?= $Student->id ?>Q<?= $Qualification->getID() ?>U<?= $unit->getID() ?>'><?= $unit->unitCal() ?>%</small>
+                                  <small class='progress_percent_S<?php echo $Student->id ?>Q<?php echo $Qualification->getID() ?>U<?php echo $unit->getID() ?>'><?php echo $unit->unitCal() ?>%</small>
                               <?php endif; ?>
                           </td>
                       <?php endif; ?>
@@ -92,9 +92,9 @@
                       <?php foreach($Qualification->getHeaderCriteriaNames() as $crit): ?>
 
                           <?php if ( ($criterion = $unit->getCriterionByName($crit['name'])) !== false  ): ?>
-                              <td id="CRITERION_Q_<?= $Qualification->getID() ?>U_<?= $unit->getID() ?>C_<?= $criterion->getID() ?>S_<?= $Student->id ?>" class="gt_grid_cell gt_grid_cell_<?= $params['access'] ?> <?= ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?= $Student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" cID="<?= $criterion->getID() ?>" cName="<?= \gt_html($criterion->getName()) ?>" access="<?= $params['access'] ?>">
-                                  <?= $criterion->getCell( $params['access'] ) ?>
-                                  <div id='pU_<?= $Student->id ?>_<?= $Qualification->getID() ?>_<?= $unit->getID() ?>_<?= $criterion->getID() ?>' class='gt_popup' title='<?= \gt_html($criterion->getName()) ?>'></div>
+                              <td id="CRITERION_Q_<?php echo $Qualification->getID() ?>U_<?php echo $unit->getID() ?>C_<?php echo $criterion->getID() ?>S_<?php echo $Student->id ?>" class="gt_grid_cell gt_grid_cell_<?php echo $params['access'] ?> <?php echo ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?php echo $Student->id ?>" qID="<?php echo $Qualification->getID() ?>" uID="<?php echo $unit->getID() ?>" cID="<?php echo $criterion->getID() ?>" cName="<?php echo \gt_html($criterion->getName()) ?>" access="<?php echo $params['access'] ?>">
+                                  <?php echo $criterion->getCell( $params['access'] ) ?>
+                                  <div id='pU_<?php echo $Student->id ?>_<?php echo $Qualification->getID() ?>_<?php echo $unit->getID() ?>_<?php echo $criterion->getID() ?>' class='gt_popup' title='<?php echo \gt_html($criterion->getName()) ?>'></div>
                               </td>
                           <?php else: ?>
                               <td class="gt_cell_blank"></td>
@@ -103,9 +103,9 @@
                           <?php if ($crit['sub']): ?>
                               <?php foreach($crit['sub'] as $sub): ?>
                                   <?php if ( ($criterion = $unit->getCriterionByName($sub)) !== false  ): ?>
-                                      <td id="CRITERION_Q_<?= $Qualification->getID() ?>U_<?= $unit->getID() ?>C_<?= $criterion->getID() ?>S_<?= $Student->id ?>" class="gt_grid_cell gt_grid_cell_<?= $params['access'] ?> <?= ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?= $Student->id ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" cID="<?= $criterion->getID() ?>"  cName="<?= \gt_html($criterion->getName()) ?>" access="<?= $params['access'] ?>">
-                                          <?= $criterion->getCell( $params['access'] ) ?>
-                                          <div id='pU_<?= $Student->id ?>_<?= $Qualification->getID() ?>_<?= $unit->getID() ?>_<?= $criterion->getID() ?>' class='gt_popup' title='<?= \gt_html($criterion->getName()) ?>'></div>
+                                      <td id="CRITERION_Q_<?php echo $Qualification->getID() ?>U_<?php echo $unit->getID() ?>C_<?php echo $criterion->getID() ?>S_<?php echo $Student->id ?>" class="gt_grid_cell gt_grid_cell_<?php echo $params['access'] ?> <?php echo ($criterion->hasUserComments()) ? 'gt_has_comments' : '' ?>" sID="<?php echo $Student->id ?>" qID="<?php echo $Qualification->getID() ?>" uID="<?php echo $unit->getID() ?>" cID="<?php echo $criterion->getID() ?>"  cName="<?php echo \gt_html($criterion->getName()) ?>" access="<?php echo $params['access'] ?>">
+                                          <?php echo $criterion->getCell( $params['access'] ) ?>
+                                          <div id='pU_<?php echo $Student->id ?>_<?php echo $Qualification->getID() ?>_<?php echo $unit->getID() ?>_<?php echo $criterion->getID() ?>' class='gt_popup' title='<?php echo \gt_html($criterion->getName()) ?>'></div>
                                       </td>
                                   <?php else: ?>
                                       <td class="gt_cell_blank"></td>
@@ -116,13 +116,13 @@
                       <?php endforeach; ?>
 
                       <?php if ($Qualification->getStructure() && $Qualification->getStructure()->getSetting('iv_column') == 1): ?>
-                          <?= $unit->getIVCell( $params['access'] ) ?>
+                          <?php echo $unit->getIVCell( $params['access'] ) ?>
                       <?php endif; ?>
 
                       <?php if (!isset($print) || !$print): ?>
                           <!-- This is a nasty hack -->
                           <td class='gt_grid_end'>
-                              <img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/empty.png">
+                              <img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/empty.png">
                           </td>
                       <?php endif; ?>
 
@@ -135,7 +135,7 @@
       <?php else: ?>
 
           <tr>
-              <td colspan="<?= $cnt ?>"><?= $string['nodata'] ?></td>
+              <td colspan="<?php echo $cnt ?>"><?php echo $string['nodata'] ?></td>
           </tr>
 
       <?php endif; ?>

@@ -4,9 +4,9 @@
     <tbody>
       <tr>
 
-          <td class="elbp_summary_title" style="background-image:url('<?= $CFG->wwwroot ?><?= $obj->getPath() ?>pix/elbp_prior_learning/icon.png');">
-            <?= get_string('priorquals', 'block_gradetracker') ?>: <?= count($prior) ?><br>
-            <?= get_string('gcsescore', 'block_gradetracker') ?>: <?= $avgScore ?>
+          <td class="elbp_summary_title" style="background-image:url('<?php echo $CFG->wwwroot ?><?php echo $obj->getPath() ?>pix/elbp_prior_learning/icon.png');">
+            <?php echo get_string('priorquals', 'block_gradetracker') ?>: <?php echo count($prior) ?><br>
+            <?php echo get_string('gcsescore', 'block_gradetracker') ?>: <?php echo $avgScore ?>
           </td>
 
       </tr>
@@ -18,14 +18,14 @@
       <?php if($prior): ?>
             <?php foreach($prior as $pqual): ?>
             <tr>
-                <td><?= \gt_html($pqual->getType()->name) ?></td>
-                <td><?= \gt_html($pqual->getType()->name) ?> <?= get_string('in', 'block_gradetracker') ?> <?= \gt_html($pqual->getSubjectName($pqual->getSubjectID())) ?></td>
-                <td><?= \gt_html($pqual->getGradeObject()->grade) ?></td>
+                <td><?php echo \gt_html($pqual->getType()->name) ?></td>
+                <td><?php echo \gt_html($pqual->getType()->name) ?> <?php echo get_string('in', 'block_gradetracker') ?> <?php echo \gt_html($pqual->getSubjectName($pqual->getSubjectID())) ?></td>
+                <td><?php echo \gt_html($pqual->getGradeObject()->grade) ?></td>
             </tr>
             <?php endforeach; ?>
       <?php else: ?>
             <tr>
-                <td class='c'><?= get_string('noresults', 'block_gradetracker') ?></td>
+                <td class='c'><?php echo get_string('noresults', 'block_gradetracker') ?></td>
             </tr>
       <?php endif; ?>
     </tbody>

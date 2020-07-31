@@ -1,16 +1,16 @@
 <?php if(!defined('BCGT')) exit; ?>
 <div class="gt_confirm_box">
-    <h4><?= $string['copy'] ?> : <?= $copyQual->getName();?> ?</h4>
+    <h4><?php echo $string['copy'] ?> : <?php echo $copyQual->getName();?> ?</h4>
     <br />
-    <p><?= $string['type'] ?> : <?=$copyQual->getStructureName();?></p>
-    <p><?= $string['subtype'] ?> : <?=$copyQual->getSubTypeName();?></p>
-    <p><?= $string['level'] ?> : <?=$copyQual->getLevelName();?></p>
+    <p><?php echo $string['type'] ?> : <?php echo$copyQual->getStructureName();?></p>
+    <p><?php echo $string['subtype'] ?> : <?php echo$copyQual->getSubTypeName();?></p>
+    <p><?php echo $string['level'] ?> : <?php echo$copyQual->getLevelName();?></p>
     <div>
         <form action="" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-            <input type="hidden" name="id" value="<?= $copyQual->getID(); ?>" />
-            <input type="submit" class="gt_btn" name="copy_qual" value="<?= $string['yes'] ?>" />
-            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+            <input type="hidden" name="id" value="<?php echo $copyQual->getID(); ?>" />
+            <input type="submit" class="gt_btn" name="copy_qual" value="<?php echo $string['yes'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?php echo $string['no'] ?>" />
         </form>
     </div>
 </div>

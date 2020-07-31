@@ -3,34 +3,34 @@
 <div class='gt_form_panel'>
 
     <div class='gt_form_panel_heading'>
-        <?= $Course->getName() ?> : <?= $string['breadcrumbs:config:course:activities:add'] ?>
+        <?php echo $Course->getName() ?> : <?php echo $string['breadcrumbs:config:course:activities:add'] ?>
     </div>
 
     <div class='gt_form_panel_body'>
 
         <form action="" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-            <input type="hidden" name="courseID" id="gt_cid" value="<?= $Course->id ?>" />
+            <input type="hidden" name="courseID" id="gt_cid" value="<?php echo $Course->id ?>" />
 
-            <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-            <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+            <?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+            <?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
             <p class="gt_c">
-                <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_activity_links" value="<?= $string['save'] ?>">
-                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
+                <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_activity_links" value="<?php echo $string['save'] ?>">
+                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities" class="gt_btn gt_btn_small gt_red"><?php echo $string['back'] ?></a>
             </p>
 
             <?php if ($viewBy == 'cm'): ?>
 
-                <input type="hidden" name="coursemoduleid" id="gt_cmid" value="<?= $cmID ?>" />
+                <input type="hidden" name="coursemoduleid" id="gt_cmid" value="<?php echo $cmID ?>" />
 
                 <table id="gt_activity_links">
 
                     <tr>
-                        <td><?= $string['activity'] ?></td>
+                        <td><?php echo $string['activity'] ?></td>
                         <td>
-                            <b><img src="<?= $moduleActivity->getModIcon() ?>" alt="<?= $moduleActivity->getModName() ?>" /> <?= $moduleActivity->getRecordName() ?> (<?= $moduleActivity->getModName() ?>)</b>
+                            <b><img src="<?php echo $moduleActivity->getModIcon() ?>" alt="<?php echo $moduleActivity->getModName() ?>" /> <?php echo $moduleActivity->getRecordName() ?> (<?php echo $moduleActivity->getModName() ?>)</b>
                             <br><br>
                         </td>
                     </tr>
@@ -40,21 +40,21 @@
                         <?php foreach($courseQuals as $qual): ?>
 
                             <tr>
-                                <td><?= $qual->getDisplayName() ?></td>
+                                <td><?php echo $qual->getDisplayName() ?></td>
                                 <td class="gt_mod_hook_activities">
                                     <?php if ($qual->getUnits()): ?>
 
-                                        <select id='gt_mod_hook_<?= $qual->getID() ?>_units_select' class='gt_mod_hook_units' qualID='<?= $qual->getID() ?>'>
+                                        <select id='gt_mod_hook_<?php echo $qual->getID() ?>_units_select' class='gt_mod_hook_units' qualID='<?php echo $qual->getID() ?>'>
                                             <option value=""></option>
                                             <?php foreach($qual->getUnits() as $unit): ?>
-                                                <option value="<?= $unit->getID() ?>" <?= (array_key_exists($unit->getID(), $unitsLinked[$qual->getID()])) ? 'disabled' : ''; ?> ><?= $unit->getDisplayName() ?></option>
+                                                <option value="<?php echo $unit->getID() ?>" <?php echo (array_key_exists($unit->getID(), $unitsLinked[$qual->getID()])) ? 'disabled' : ''; ?> ><?php echo $unit->getDisplayName() ?></option>
                                             <?php endforeach; ?>
                                         </select>
 
-                                        <span id='gt_mod_hook_loader_<?= $qual->getID() ?>' class='gt_hidden'><img src="<?= gt_image_url('i/loading_small') ?>" alt='loading' /></span>
+                                        <span id='gt_mod_hook_loader_<?php echo $qual->getID() ?>' class='gt_hidden'><img src="<?php echo gt_image_url('i/loading_small') ?>" alt='loading' /></span>
                                         <br><br>
 
-                                         <div id='gt_mod_hook_qual_units_<?= $qual->getID() ?>'>
+                                         <div id='gt_mod_hook_qual_units_<?php echo $qual->getID() ?>'>
 
                                              <?php if ($unitsLinked[$qual->getID()]): ?>
 
@@ -62,15 +62,15 @@
 
                                                     <?php $criteria = $unit->sortCriteria(false, true); ?>
 
-                                                        <div id='gt_hooked_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?>' class='gt_hooked_unit'>
+                                                        <div id='gt_hooked_unit_<?php echo $qual->getID() ?>_<?php echo $unit->getID() ?>' class='gt_hooked_unit'>
 
-                                                            <?= $unit->getDisplayName() ?> <a href='#' class='gt_mod_hook_delete_unit' qualID='<?= $qual->getID() ?>' unitID='<?= $unit->getID() ?>'><img src="<?= gt_image_url('t/delete') ?>" /></a><br>
+                                                            <?php echo $unit->getDisplayName() ?> <a href='#' class='gt_mod_hook_delete_unit' qualID='<?php echo $qual->getID() ?>' unitID='<?php echo $unit->getID() ?>'><img src="<?php echo gt_image_url('t/delete') ?>" /></a><br>
 
                                                             <table class='gt_c gt_hook_unit_criteria'>
                                                                 <tr>
                                                                     <?php if ($criteria): ?>
                                                                         <?php foreach($criteria as $criterion): ?>
-                                                                            <th><?= $criterion->getName() ?></th>
+                                                                            <th><?php echo $criterion->getName() ?></th>
                                                                         <?php endforeach; ?>
                                                                     <?php endif; ?>
                                                                 </tr>
@@ -80,14 +80,14 @@
                                                                         <?php foreach($criteria as $criterion): ?>
                                                                             <td>
                                                                                 <?php if ($moduleActivity->getRecordParts()): ?>
-                                                                                    <select name="gt_criteria[<?= $qual->getID() ?>][<?= $unit->getID() ?>][<?= $criterion->getID() ?>]">
+                                                                                    <select name="gt_criteria[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][<?php echo $criterion->getID() ?>]">
                                                                                         <option value="0"></option>
                                                                                         <?php foreach($moduleActivity->getRecordParts() as $part): ?>
-                                                                                            <option value="<?= $part->id ?>" <?= (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID(), $part->id)) ? 'selected' : ''; ?> ><?= $part->name ?></option>
+                                                                                            <option value="<?php echo $part->id ?>" <?php echo (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID(), $part->id)) ? 'selected' : ''; ?> ><?php echo $part->name ?></option>
                                                                                         <?php endforeach; ?>
                                                                                     </select>
                                                                                 <?php else: ?>
-                                                                                    <input type='checkbox' name='gt_criteria[<?= $qual->getID() ?>][<?= $unit->getID() ?>][<?= $criterion->getID() ?>]' <?= ( (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID())) ? 'checked' : '' )  ?> />
+                                                                                    <input type='checkbox' name='gt_criteria[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][<?php echo $criterion->getID() ?>]' <?php echo ( (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID())) ? 'checked' : '' )  ?> />
                                                                                 <?php endif; ?>
                                                                             </td>
                                                                         <?php endforeach; ?>
@@ -104,7 +104,7 @@
                                          </div>
 
                                     <?php else: ?>
-                                        <?= $string['qualnounits'] ?>
+                                        <?php echo $string['qualnounits'] ?>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -112,7 +112,7 @@
                         <?php endforeach; ?>
 
                     <?php else: ?>
-                        <?= $string['coursenoquals'] ?>
+                        <?php echo $string['coursenoquals'] ?>
                     <?php endif; ?>
 
                 </table>
@@ -122,13 +122,13 @@
                 <table id="gt_activity_links">
 
                     <tr>
-                        <td><?= $string['qualification'] ?></td>
+                        <td><?php echo $string['qualification'] ?></td>
                         <td>
                             <select name="qualid" class="gt_mod_change_qual_units">
                                 <option value=""></option>
                                 <?php if ($courseQuals): ?>
                                     <?php foreach($courseQuals as $courseQual): ?>
-                                        <option value="<?= $courseQual->getID() ?>" <?= ($qual->getID() == $courseQual->getID()) ? 'selected' : ''; ?> ><?= $courseQual->getDisplayName() ?></option>
+                                        <option value="<?php echo $courseQual->getID() ?>" <?php echo ($qual->getID() == $courseQual->getID()) ? 'selected' : ''; ?> ><?php echo $courseQual->getDisplayName() ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -136,7 +136,7 @@
                     </tr>
 
                     <tr>
-                        <td><?= $string['unit'] ?></td>
+                        <td><?php echo $string['unit'] ?></td>
                         <td>
                             <select name="unitid" id="gt_mod_change_qual_units_units">
                                 <option value=""></option>
@@ -144,7 +144,7 @@
                                     <?php foreach($courseQuals as $courseQual): ?>
                                         <?php if ($courseQual->getUnits()): ?>
                                             <?php foreach($courseQual->getUnits() as $qualUnit): ?>
-                                                <option class="AQU Q_<?= $courseQual->getID() ?> <?= ($courseQual->getID() <> $qual->getID()) ? 'gt_hidden' : ''; ?> " value="<?= $qualUnit->getID() ?>" <?= ($unit->getID() == $qualUnit->getID()) ? 'selected' : ''; ?> ><?= $qualUnit->getDisplayName() ?></option>
+                                                <option class="AQU Q_<?php echo $courseQual->getID() ?> <?php echo ($courseQual->getID() <> $qual->getID()) ? 'gt_hidden' : ''; ?> " value="<?php echo $qualUnit->getID() ?>" <?php echo ($unit->getID() == $qualUnit->getID()) ? 'selected' : ''; ?> ><?php echo $qualUnit->getDisplayName() ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
@@ -155,17 +155,17 @@
                     </tr>
 
                     <tr>
-                        <td><?= $string['activity'] ?></td>
+                        <td><?php echo $string['activity'] ?></td>
                         <td>
                             <select name="coursemoduleid" class="gt_mod_activity">
                                 <option value=""></option>
                                 <?php if ($activities): ?>
                                     <?php foreach($activities as $activity): ?>
-                                        <option value="<?= $activity->getCourseModID() ?>" <?= (array_key_exists($activity->getCourseModID(), $unitActivities)) ? 'disabled' : ''; ?> ><?= $activity->getRecordName() ?></option>
+                                        <option value="<?php echo $activity->getCourseModID() ?>" <?php echo (array_key_exists($activity->getCourseModID(), $unitActivities)) ? 'disabled' : ''; ?> ><?php echo $activity->getRecordName() ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-                            <span id='gt_mod_hook_loader_activity' class='gt_hidden'><img src="<?= gt_image_url('i/loading_small') ?>" alt='loading' /></span>
+                            <span id='gt_mod_hook_loader_activity' class='gt_hidden'><img src="<?php echo gt_image_url('i/loading_small') ?>" alt='loading' /></span>
                         </td>
                     </tr>
 
@@ -175,17 +175,17 @@
 
                             <?php if ($unitActivities): ?>
                                 <?php foreach($unitActivities as $activity): ?>
-                                    <div id="gt_hooked_activity_<?= $activity->getCourseModID() ?>" class='gt_hooked_unit'>
-                                        <img src="<?= $activity->getModIcon() ?>"> <?= $activity->getRecordName() ?>
-                                        <a href="#" class="gt_mod_hook_delete_activity" cmid="<?= $activity->getCourseModID() ?>">
-                                            <img src="<?= gt_image_url('t/delete') ?>">
+                                    <div id="gt_hooked_activity_<?php echo $activity->getCourseModID() ?>" class='gt_hooked_unit'>
+                                        <img src="<?php echo $activity->getModIcon() ?>"> <?php echo $activity->getRecordName() ?>
+                                        <a href="#" class="gt_mod_hook_delete_activity" cmid="<?php echo $activity->getCourseModID() ?>">
+                                            <img src="<?php echo gt_image_url('t/delete') ?>">
                                         </a>
                                         <br>
                                         <table class="gt_c gt_hook_unit_criteria">
                                             <tr>
                                                 <?php if ($criteria): ?>
                                                     <?php foreach($criteria as $crit): ?>
-                                                        <th><?= $crit->getName() ?></th>
+                                                        <th><?php echo $crit->getName() ?></th>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </tr>
@@ -194,14 +194,14 @@
                                                     <?php foreach($criteria as $crit): ?>
                                                         <td>
                                                             <?php if ($activity->getRecordParts()): ?>
-                                                                <select name="gt_criteria[<?= $activity->getCourseModID() ?>][<?= $crit->getID() ?>]">
+                                                                <select name="gt_criteria[<?php echo $activity->getCourseModID() ?>][<?php echo $crit->getID() ?>]">
                                                                     <option value="0"></option>
                                                                     <?php foreach($activity->getRecordParts() as $part): ?>
-                                                                        <option value="<?= $part->id ?>" <?= (\GT\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID(), $part->id)) ? 'selected' : ''; ?> ><?= $part->name ?></option>
+                                                                        <option value="<?php echo $part->id ?>" <?php echo (\GT\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID(), $part->id)) ? 'selected' : ''; ?> ><?php echo $part->name ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
                                                             <?php else: ?>
-                                                                <input type="checkbox" name="gt_criteria[<?= $activity->getCourseModID() ?>][<?= $crit->getID() ?>]" <?= (\GT\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID())) ? 'checked' : ''; ?> >
+                                                                <input type="checkbox" name="gt_criteria[<?php echo $activity->getCourseModID() ?>][<?php echo $crit->getID() ?>]" <?php echo (\GT\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID())) ? 'checked' : ''; ?> >
                                                             <?php endif; ?>
                                                         </td>
                                                     <?php endforeach; ?>
@@ -220,8 +220,8 @@
             <?php endif; ?>
 
             <p class="gt_c">
-                <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_activity_links" value="<?= $string['save'] ?>">
-                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn gt_btn_small gt_red"><?= $string['back'] ?></a>
+                <input type="submit" class="gt_btn gt_btn_small gt_blue" name="submit_activity_links" value="<?php echo $string['save'] ?>">
+                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities" class="gt_btn gt_btn_small gt_red"><?php echo $string['back'] ?></a>
             </p>
 
         </form>

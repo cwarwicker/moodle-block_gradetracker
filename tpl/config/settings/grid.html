@@ -2,64 +2,64 @@
 
 <form action="" method="post" enctype="multipart/form-data">
 
-    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    <?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-    <h2><?= $string['gridsettings'] ?></h2>
-    <p><?= $string['gridsettings:desc'] ?></p>
+    <h2><?php echo $string['gridsettings'] ?></h2>
+    <p><?php echo $string['gridsettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:fixedlinks'] ?></strong> - <?= $string['config:fixedlinks:desc'] ?></small>
+    <small><strong><?php echo $string['config:fixedlinks'] ?></strong> - <?php echo $string['config:fixedlinks:desc'] ?></small>
     <br>
-    <input type="checkbox" name="grid_fixed_links" value="1" <?= ($GT->getSetting('grid_fixed_links') == 1) ? 'checked' : '' ?> />
+    <input type="checkbox" name="grid_fixed_links" value="1" <?php echo ($GT->getSetting('grid_fixed_links') == 1) ? 'checked' : '' ?> />
 
     <br><br>
 
-    <small><strong><?= $string['config:assessment:showqualsonepage'] ?></strong> - <?= $string['config:assessment:showqualsonepage:desc'] ?></small>
+    <small><strong><?php echo $string['config:assessment:showqualsonepage'] ?></strong> - <?php echo $string['config:assessment:showqualsonepage:desc'] ?></small>
     <br>
-    <input type="checkbox" name="assessment_grid_show_quals_one_page" value="1"  <?= ($GT->getSetting('assessment_grid_show_quals_one_page') == 1) ? 'checked' : '' ?> />
+    <input type="checkbox" name="assessment_grid_show_quals_one_page" value="1"  <?php echo ($GT->getSetting('assessment_grid_show_quals_one_page') == 1) ? 'checked' : '' ?> />
 
     <br><br><br>
 
 
 
 
-    <h2><?= $string['studentgridsettings'] ?></h2>
-    <p><?= $string['studentgridsettings:desc'] ?></p>
+    <h2><?php echo $string['studentgridsettings'] ?></h2>
+    <p><?php echo $string['studentgridsettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:grid:showucas'] ?></strong> - <?= $string['config:grid:showucas:desc'] ?></small>
+    <small><strong><?php echo $string['config:grid:showucas'] ?></strong> - <?php echo $string['config:grid:showucas:desc'] ?></small>
     <br>
-    <input type="checkbox" name="student_grid_show_ucas" value="1"  <?= ($GT->getSetting('student_grid_show_ucas') == 1) ? 'checked' : '' ?> />
+    <input type="checkbox" name="student_grid_show_ucas" value="1"  <?php echo ($GT->getSetting('student_grid_show_ucas') == 1) ? 'checked' : '' ?> />
 
     <br><br>
 
-    <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
+    <small><strong><?php echo $string['config:grid:navlinks'] ?></strong> - <?php echo $string['config:grid:navlinks:desc'] ?></small>
     <br>
 
-    <a href="#" class="gt_add_link_stud_grid"><?= $string['addnew'] ?> <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addnew'] ?>" /></a>
+    <a href="#" class="gt_add_link_stud_grid"><?php echo $string['addnew'] ?> <img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?php echo $string['addnew'] ?>" /></a>
 
     <div id="gt_config_stud_grid_nav_links">
         <?php if ($GT->getStudentGridNavigation()): ?>
             <?php $cnt = 0; ?>
             <?php foreach($GT->getStudentGridNavigation() as $link): ?>
                 <?php $cnt++ ?>
-                <div id="gt_stud_nav_link_<?= $cnt ?>" class="gt_stud_nav_link">
+                <div id="gt_stud_nav_link_<?php echo $cnt ?>" class="gt_stud_nav_link">
                     <br>
-                    <input type="text" name="student_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" />
-                    <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" />
-                    <a href="#" class="gt_remove" remove="#gt_stud_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
-                    <a href="#" class="gt_add_link_stud_grid" parent="<?= $cnt ?>"><img src="<?= gt_image_url('t/add') ?>" alt="<?= $string['addsublink'] ?>" /></a>
+                    <input type="text" name="student_grid_nav[<?php echo $cnt ?>][name]" value="<?php echo \gt_html($link->name) ?>" placeholder="<?php echo $string['name'] ?>" />
+                    <input type="text" class="gt_nav_url" name="student_grid_nav[<?php echo $cnt ?>][url]" value="<?php echo \gt_html($link->url) ?>" placeholder="<?php echo $string['url'] ?>" />
+                    <a href="#" class="gt_remove" remove="#gt_stud_nav_link_<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="<?php echo $string['delete'] ?>" /></a>
+                    <a href="#" class="gt_add_link_stud_grid" parent="<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/add') ?>" alt="<?php echo $string['addsublink'] ?>" /></a>
                     <br>
-                    <div id="gt_stud_nav_link_<?= $cnt ?>_sub">
+                    <div id="gt_stud_nav_link_<?php echo $cnt ?>_sub">
                     <?php if (isset($link->sub) && $link->sub): ?>
                         <?php $pNum = $cnt; ?>
                         <?php foreach($link->sub as $sub): ?>
                             <?php $cnt++ ?>
-                            <span id="gt_stud_nav_link_<?= $cnt ?>" class="gt_stud_nav_link">
-                                <input type="text" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" />
-                                <input type="text" class="gt_nav_url" name="student_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" />
-                                <a href="#" class="gt_remove" remove="#gt_stud_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                            <span id="gt_stud_nav_link_<?php echo $cnt ?>" class="gt_stud_nav_link">
+                                <input type="text" name="student_grid_nav[<?php echo $pNum ?>][sub][<?php echo $cnt ?>][name]" value="<?php echo \gt_html($sub->name) ?>" placeholder="<?php echo $string['name'] ?>" />
+                                <input type="text" class="gt_nav_url" name="student_grid_nav[<?php echo $pNum ?>][sub][<?php echo $cnt ?>][url]" value="<?php echo \gt_html($sub->url) ?>" placeholder="<?php echo $string['url'] ?>" />
+                                <a href="#" class="gt_remove" remove="#gt_stud_nav_link_<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="<?php echo $string['delete'] ?>" /></a>
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -78,41 +78,41 @@
 
 
 
-    <h2><?= $string['unitgridsettings'] ?></h2>
-    <p><?= $string['unitgridsettings:desc'] ?></p>
+    <h2><?php echo $string['unitgridsettings'] ?></h2>
+    <p><?php echo $string['unitgridsettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:unitgridpaging'] ?></strong> - <?= $string['config:unitgridpaging:desc'] ?></small>
+    <small><strong><?php echo $string['config:unitgridpaging'] ?></strong> - <?php echo $string['config:unitgridpaging:desc'] ?></small>
     <br>
-    <input type="number" name="unit_grid_paging" min="0" class="gt_small" value="<?= (int)$GT->getSetting('unit_grid_paging') ?>" />
+    <input type="number" name="unit_grid_paging" min="0" class="gt_small" value="<?php echo (int)$GT->getSetting('unit_grid_paging') ?>" />
 
     <br><br>
 
-    <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
+    <small><strong><?php echo $string['config:grid:navlinks'] ?></strong> - <?php echo $string['config:grid:navlinks:desc'] ?></small>
     <br>
 
-    <a href="#" class="gt_add_link_unit_grid"><?= $string['addnew'] ?> <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addnew'] ?>" /></a>
+    <a href="#" class="gt_add_link_unit_grid"><?php echo $string['addnew'] ?> <img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?php echo $string['addnew'] ?>" /></a>
 
     <div id="gt_config_unit_grid_nav_links">
         <?php if ($GT->getUnitGridNavigation()): ?>
             <?php $cnt = 0; ?>
             <?php foreach($GT->getUnitGridNavigation() as $link): ?>
                 <?php $cnt++ ?>
-                <div id="gt_unit_nav_link_<?= $cnt ?>" class="gt_unit_nav_link">
+                <div id="gt_unit_nav_link_<?php echo $cnt ?>" class="gt_unit_nav_link">
                     <br>
-                    <input type="text" name="unit_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" />
-                    <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" />
-                    <a href="#" class="gt_remove" remove="#gt_unit_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
-                    <a href="#" class="gt_add_link_unit_grid" parent="<?= $cnt ?>"><img src="<?= gt_image_url('t/add') ?>" alt="<?= $string['addsublink'] ?>" /></a>
+                    <input type="text" name="unit_grid_nav[<?php echo $cnt ?>][name]" value="<?php echo \gt_html($link->name) ?>" placeholder="<?php echo $string['name'] ?>" />
+                    <input type="text" class="gt_nav_url" name="unit_grid_nav[<?php echo $cnt ?>][url]" value="<?php echo \gt_html($link->url) ?>" placeholder="<?php echo $string['url'] ?>" />
+                    <a href="#" class="gt_remove" remove="#gt_unit_nav_link_<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="<?php echo $string['delete'] ?>" /></a>
+                    <a href="#" class="gt_add_link_unit_grid" parent="<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/add') ?>" alt="<?php echo $string['addsublink'] ?>" /></a>
                     <br>
-                    <div id="gt_unit_nav_link_<?= $cnt ?>_sub">
+                    <div id="gt_unit_nav_link_<?php echo $cnt ?>_sub">
                     <?php if (isset($link->sub) && $link->sub): ?>
                         <?php $pNum = $cnt; ?>
                         <?php foreach($link->sub as $sub): ?>
                             <?php $cnt++ ?>
-                            <span id="gt_unit_nav_link_<?= $cnt ?>" class="gt_unit_nav_link">
-                                <input type="text" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" />
-                                <input type="text" class="gt_nav_url" name="unit_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" />
-                                <a href="#" class="gt_remove" remove="#gt_unit_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                            <span id="gt_unit_nav_link_<?php echo $cnt ?>" class="gt_unit_nav_link">
+                                <input type="text" name="unit_grid_nav[<?php echo $pNum ?>][sub][<?php echo $cnt ?>][name]" value="<?php echo \gt_html($sub->name) ?>" placeholder="<?php echo $string['name'] ?>" />
+                                <input type="text" class="gt_nav_url" name="unit_grid_nav[<?php echo $pNum ?>][sub][<?php echo $cnt ?>][url]" value="<?php echo \gt_html($sub->url) ?>" placeholder="<?php echo $string['url'] ?>" />
+                                <a href="#" class="gt_remove" remove="#gt_unit_nav_link_<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="<?php echo $string['delete'] ?>" /></a>
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -134,41 +134,41 @@
 
 
 
-    <h2><?= $string['classgridsettings'] ?></h2>
-    <p><?= $string['classgridsettings:desc'] ?></p>
+    <h2><?php echo $string['classgridsettings'] ?></h2>
+    <p><?php echo $string['classgridsettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:classgridpaging'] ?></strong> - <?= $string['config:classgridpaging:desc'] ?></small>
+    <small><strong><?php echo $string['config:classgridpaging'] ?></strong> - <?php echo $string['config:classgridpaging:desc'] ?></small>
     <br>
-    <input type="number" name="class_grid_paging" min="0" class="gt_small" value="<?= (int)$GT->getSetting('class_grid_paging') ?>" />
+    <input type="number" name="class_grid_paging" min="0" class="gt_small" value="<?php echo (int)$GT->getSetting('class_grid_paging') ?>" />
 
     <br><br>
 
-    <small><strong><?= $string['config:grid:navlinks'] ?></strong> - <?= $string['config:grid:navlinks:desc'] ?></small>
+    <small><strong><?php echo $string['config:grid:navlinks'] ?></strong> - <?php echo $string['config:grid:navlinks:desc'] ?></small>
     <br>
 
-    <a href="#" class="gt_add_link_class_grid"><?= $string['addnew'] ?> <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?= $string['addnew'] ?>" /></a>
+    <a href="#" class="gt_add_link_class_grid"><?php echo $string['addnew'] ?> <img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="<?php echo $string['addnew'] ?>" /></a>
 
     <div id="gt_config_class_grid_nav_links">
         <?php if ($GT->getClassGridNavigation()): ?>
             <?php $cnt = 0; ?>
             <?php foreach($GT->getClassGridNavigation() as $link): ?>
                 <?php $cnt++ ?>
-                <div id="gt_class_nav_link_<?= $cnt ?>" class="gt_class_nav_link">
+                <div id="gt_class_nav_link_<?php echo $cnt ?>" class="gt_class_nav_link">
                     <br>
-                    <input type="text" name="class_grid_nav[<?= $cnt ?>][name]" value="<?= \gt_html($link->name) ?>" placeholder="<?= $string['name'] ?>" />
-                    <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $cnt ?>][url]" value="<?= \gt_html($link->url) ?>" placeholder="<?= $string['url'] ?>" />
-                    <a href="#" class="gt_remove" remove="#gt_class_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
-                    <a href="#" class="gt_add_link_class_grid" parent="<?= $cnt ?>"><img src="<?= gt_image_url('t/add') ?>"  alt="<?= $string['addsublink'] ?>" /></a>
+                    <input type="text" name="class_grid_nav[<?php echo $cnt ?>][name]" value="<?php echo \gt_html($link->name) ?>" placeholder="<?php echo $string['name'] ?>" />
+                    <input type="text" class="gt_nav_url" name="class_grid_nav[<?php echo $cnt ?>][url]" value="<?php echo \gt_html($link->url) ?>" placeholder="<?php echo $string['url'] ?>" />
+                    <a href="#" class="gt_remove" remove="#gt_class_nav_link_<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="<?php echo $string['delete'] ?>" /></a>
+                    <a href="#" class="gt_add_link_class_grid" parent="<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/add') ?>"  alt="<?php echo $string['addsublink'] ?>" /></a>
                     <br>
-                    <div id="gt_class_nav_link_<?= $cnt ?>_sub">
+                    <div id="gt_class_nav_link_<?php echo $cnt ?>_sub">
                     <?php if (isset($link->sub) && $link->sub): ?>
                         <?php $pNum = $cnt; ?>
                         <?php foreach($link->sub as $sub): ?>
                             <?php $cnt++ ?>
-                            <span id="gt_class_nav_link_<?= $cnt ?>" class="gt_class_nav_link">
-                                <input type="text" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][name]" value="<?= \gt_html($sub->name) ?>" placeholder="<?= $string['name'] ?>" />
-                                <input type="text" class="gt_nav_url" name="class_grid_nav[<?= $pNum ?>][sub][<?= $cnt ?>][url]" value="<?= \gt_html($sub->url) ?>" placeholder="<?= $string['url'] ?>" />
-                                <a href="#" class="gt_remove" remove="#gt_class_nav_link_<?= $cnt ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="<?= $string['delete'] ?>" /></a>
+                            <span id="gt_class_nav_link_<?php echo $cnt ?>" class="gt_class_nav_link">
+                                <input type="text" name="class_grid_nav[<?php echo $pNum ?>][sub][<?php echo $cnt ?>][name]" value="<?php echo \gt_html($sub->name) ?>" placeholder="<?php echo $string['name'] ?>" />
+                                <input type="text" class="gt_nav_url" name="class_grid_nav[<?php echo $pNum ?>][sub][<?php echo $cnt ?>][url]" value="<?php echo \gt_html($sub->url) ?>" placeholder="<?php echo $string['url'] ?>" />
+                                <a href="#" class="gt_remove" remove="#gt_class_nav_link_<?php echo $cnt ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="<?php echo $string['delete'] ?>" /></a>
                                 <br>
                             </span>
                         <?php endforeach; ?>
@@ -182,6 +182,6 @@
 
     <br>
 
-    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?php echo $string['save'] ?>" />
 
 </form>

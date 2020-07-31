@@ -1,39 +1,39 @@
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div>
 
     <form action="" method="post">
-        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
         <div class='gt_form_panel'>
 
             <div class='gt_form_panel_heading'>
-                <?= $Build->getName() ?>
+                <?php echo $Build->getName() ?>
             </div>
 
             <div class='gt_form_panel_body'>
 
-                <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
+                <input type="hidden" name="build_id" value="<?php echo $Build->getID() ?>" />
 
                 <p class="gt_c">
-                    <input type="submit" class="gt_btn gt_blue" name="submit_qual_build_awards" value="<?= $string['save'] ?>" />
-                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <input type="submit" class="gt_btn gt_blue" name="submit_qual_build_awards" value="<?php echo $string['save'] ?>" />
+                    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
                 </p>
 
                 <table id="gt_build_award_table" class="gt_form_table">
 
                     <tr>
-                        <th><?= $string['rank'] ?></th>
-                        <th><?= $string['awardname'] ?></th>
-                        <th><?= $string['unitpointslower'] ?></th>
-                        <th><?= $string['unitpointsupper'] ?></th>
-                        <th><?= $string['qoescorelower'] ?></th>
-                        <th><?= $string['qoescoreupper'] ?></th>
-                        <th><?= $string['ucaspoints'] ?></th>
+                        <th><?php echo $string['rank'] ?></th>
+                        <th><?php echo $string['awardname'] ?></th>
+                        <th><?php echo $string['unitpointslower'] ?></th>
+                        <th><?php echo $string['unitpointsupper'] ?></th>
+                        <th><?php echo $string['qoescorelower'] ?></th>
+                        <th><?php echo $string['qoescoreupper'] ?></th>
+                        <th><?php echo $string['ucaspoints'] ?></th>
                         <th>
                             <a href="#" id="gt_add_build_award">
-                                <img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" />
+                                <img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" />
                             </a>
                         </th>
                     </tr>
@@ -43,18 +43,18 @@
                         <?php foreach($Build->getAwards() as $award): ?>
                             <?php $cntAwards++; ?>
 
-                            <tr id="gt_build_award_row_<?= $cntAwards ?>">
+                            <tr id="gt_build_award_row_<?php echo $cntAwards ?>">
                                 <td>
-                                    <input type="hidden" name="build_award_id[<?= $cntAwards ?>]" value="<?= $award->getID() ?>" />
-                                    <input type="number" step="any" name="build_award_rank[<?= $cntAwards ?>]" value="<?= $award->getRank() ?>" />
+                                    <input type="hidden" name="build_award_id[<?php echo $cntAwards ?>]" value="<?php echo $award->getID() ?>" />
+                                    <input type="number" step="any" name="build_award_rank[<?php echo $cntAwards ?>]" value="<?php echo $award->getRank() ?>" />
                                 </td>
-                                <td><input type="text" name="build_award_name[<?= $cntAwards ?>]" value="<?= $award->getName() ?>" /></td>
-                                <td><input type="number" step="any" min="0" name="build_award_points_lower[<?= $cntAwards ?>]" value="<?= $award->getPointsLower() ?>" /></td>
-                                <td><input type="number" step="any" min="0" name="build_award_points_upper[<?= $cntAwards ?>]" value="<?= $award->getPointsUpper() ?>" /></td>
-                                <td><input type="number" step="any" min="0" name="build_award_qoe_lower[<?= $cntAwards ?>]" value="<?= $award->getQOELower() ?>" /></td>
-                                <td><input type="number" step="any" min="0" name="build_award_qoe_upper[<?= $cntAwards ?>]" value="<?= $award->getQOEUpper() ?>" /></td>
-                                <td><input type="number" step="any" min="0" name="build_award_ucas[<?= $cntAwards ?>]" value="<?= $award->getUcas() ?>" /></td>
-                                <td><a href="#" class="gt_remove" remove="#gt_build_award_row_<?= $cntAwards ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
+                                <td><input type="text" name="build_award_name[<?php echo $cntAwards ?>]" value="<?php echo $award->getName() ?>" /></td>
+                                <td><input type="number" step="any" min="0" name="build_award_points_lower[<?php echo $cntAwards ?>]" value="<?php echo $award->getPointsLower() ?>" /></td>
+                                <td><input type="number" step="any" min="0" name="build_award_points_upper[<?php echo $cntAwards ?>]" value="<?php echo $award->getPointsUpper() ?>" /></td>
+                                <td><input type="number" step="any" min="0" name="build_award_qoe_lower[<?php echo $cntAwards ?>]" value="<?php echo $award->getQOELower() ?>" /></td>
+                                <td><input type="number" step="any" min="0" name="build_award_qoe_upper[<?php echo $cntAwards ?>]" value="<?php echo $award->getQOEUpper() ?>" /></td>
+                                <td><input type="number" step="any" min="0" name="build_award_ucas[<?php echo $cntAwards ?>]" value="<?php echo $award->getUcas() ?>" /></td>
+                                <td><a href="#" class="gt_remove" remove="#gt_build_award_row_<?php echo $cntAwards ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" /></a></td>
                             </tr>
 
                         <?php endforeach; ?>

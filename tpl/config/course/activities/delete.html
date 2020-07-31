@@ -2,18 +2,18 @@
 
 <div class="gt_confirm_box">
 
-    <h4><?= $string['deletelinks'] ?></h4>
-    <h5><?= $moduleLink->getRecordName() ?> (<?= $moduleLink->getModName() ?>)</h5>
-    <h6><?= $qual->getDisplayName() ?></h6>
+    <h4><?php echo $string['deletelinks'] ?></h4>
+    <h5><?php echo $moduleLink->getRecordName() ?> (<?php echo $moduleLink->getModName() ?>)</h5>
+    <h6><?php echo $qual->getDisplayName() ?></h6>
     <?php if (isset($unit)): ?>
-        <p><?= $unit->getDisplayName() ?></p>
+        <p><?php echo $unit->getDisplayName() ?></p>
     <?php endif; ?>
     <br><br>
 
     <table style="margin:auto;">
 
         <tr>
-            <th colspan="<?= $moduleLink->countCriteriaOnModule($qual->getID(), false, $part) ?>"><?= $qual->getDisplayName() ?></th>
+            <th colspan="<?php echo $moduleLink->countCriteriaOnModule($qual->getID(), false, $part) ?>"><?php echo $qual->getDisplayName() ?></th>
         </tr>
 
         <?php foreach( $unitArray as $u): ?>
@@ -21,12 +21,12 @@
             <?php if ($criteria = $moduleLink->getCriteriaOnModule($qual->getID(), $u, $part)): ?>
 
                 <tr>
-                    <th class="gt_unit_name" colspan="<?= $moduleLink->countCriteriaOnModule($qual->getID(), false, $part) ?>"><?= $u->getDisplayName() ?></th>
+                    <th class="gt_unit_name" colspan="<?php echo $moduleLink->countCriteriaOnModule($qual->getID(), false, $part) ?>"><?php echo $u->getDisplayName() ?></th>
                 </tr>
 
                 <tr>
                     <?php foreach( $criteria as $crit): ?>
-                        <td><?= $crit->getName() ?></td>
+                        <td><?php echo $crit->getName() ?></td>
                     <?php endforeach; ?>
                 </tr>
 
@@ -37,18 +37,18 @@
     </table>
 
     <div>
-        <form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-            <input type="hidden" name="cmid" value="<?= $cmID ?>" />
-            <input type="hidden" name="qualid" value="<?= $qual->getID() ?>" />
+        <form action="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities" method="post">
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+            <input type="hidden" name="cmid" value="<?php echo $cmID ?>" />
+            <input type="hidden" name="qualid" value="<?php echo $qual->getID() ?>" />
             <?php if (isset($unit)): ?>
-                <input type="hidden" name="unitid" value="<?= $unit->getID() ?>" />
+                <input type="hidden" name="unitid" value="<?php echo $unit->getID() ?>" />
             <?php endif; ?>
             <?php if ($part): ?>
-                <input type="hidden" name="part" value="<?= $part ?>" />
+                <input type="hidden" name="part" value="<?php echo $part ?>" />
             <?php endif; ?>
-            <input type="submit" class="gt_btn" name="confirm_delete_activity_link" value="<?= $string['yes'] ?>" />
-            <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities" class="gt_btn"><?= $string['no'] ?></a>
+            <input type="submit" class="gt_btn" name="confirm_delete_activity_link" value="<?php echo $string['yes'] ?>" />
+            <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities" class="gt_btn"><?php echo $string['no'] ?></a>
         </form>
     </div>
 </div>

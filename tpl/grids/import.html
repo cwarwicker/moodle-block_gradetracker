@@ -1,44 +1,44 @@
 <?php if ($grid == 'student'): ?>
-    <h1 class="c"><?= $Student->getDisplayName() ?></h1>
+    <h1 class="c"><?php echo $Student->getDisplayName() ?></h1>
 <?php endif; ?>
 
 <h2 class="c">
     <?php if ($grid == 'student' || $grid == 'class'): ?>
-        <?= $Qualification->getDisplayName() ?>
+        <?php echo $Qualification->getDisplayName() ?>
     <?php elseif ($grid == 'unit'): ?>
-        <?= $Qualification->getDisplayName() ?> - <?= $Unit->getDisplayName() ?>
+        <?php echo $Qualification->getDisplayName() ?> - <?php echo $Unit->getDisplayName() ?>
     <?php endif; ?>
 </h2>
 
 <?php if ($isAssessmentView): ?>
-    <h3 class="c"><?= $string['assessmentview'] ?></h3>
+    <h3 class="c"><?php echo $string['assessmentview'] ?></h3>
 <?php endif; ?>
 
-<p class="c"><?= $string['import:datasheet:'.$grid.':desc'] ?></p>
+<p class="c"><?php echo $string['import:datasheet:'.$grid.':desc'] ?></p>
 
 <form action="" method="post" class="c" enctype="multipart/form-data">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
     <input id="uploadFile" class="gt_upload_file" placeholder="" disabled="disabled">
       <div class="gt_file_upload gt_btn gt_blue">
-          <span><?= $string['choosefile'] ?></span>
+          <span><?php echo $string['choosefile'] ?></span>
           <input id="uploadBtn" name="sheet" type="file" class="gt_upload">
       </div>
     <br><br>
-    <input class="gt_btn" type="submit" name="submit_sheet" value="<?= $string['import'] ?>">
+    <input class="gt_btn" type="submit" name="submit_sheet" value="<?php echo $string['import'] ?>">
 </form>
 <br>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
 
 <?php if (isset($MSGS['confirmed'])): ?>
-    <?= \gt_success_alert_box( sprintf( $string['import:datasheet:process:summary'], $MSGS['cnt'] ) ) ?>
+    <?php echo \gt_success_alert_box( sprintf( $string['import:datasheet:process:summary'], $MSGS['cnt'] ) ) ?>
     <br><br>
     <div id='gt_import_output_cmd' class='gt_cmd gt_hidden'>
-        <?= $MSGS['output'] ?>
+        <?php echo $MSGS['output'] ?>
     </div>
 <?php elseif (isset($MSGS['output'])): ?>
     <div id='gt_import_output' class='gt_import_output'>
-        <?= $MSGS['output'] ?>
+        <?php echo $MSGS['output'] ?>
     </div>
 <?php endif; ?>
 
@@ -46,10 +46,10 @@
 
 <p class="c">
     <?php if ($grid == 'student'): ?>
-        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $Student->id ?>&qualID=<?= $Qualification->getID() ?>&ass=<?= (int)$isAssessmentView ?>">
+        <input type="button" class="gt_btn gt_goto" value="<?php echo $string['backtogrid'] ?>" url="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?php echo $Student->id ?>&qualID=<?php echo $Qualification->getID() ?>&ass=<?php echo (int)$isAssessmentView ?>">
     <?php elseif ($grid == 'unit'): ?>
-        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $Unit->getID() ?>&qualID=<?= $Qualification->getID() ?>">
+        <input type="button" class="gt_btn gt_goto" value="<?php echo $string['backtogrid'] ?>" url="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?php echo $Unit->getID() ?>&qualID=<?php echo $Qualification->getID() ?>">
     <?php elseif ($grid == 'class'): ?>
-        <input type="button" class="gt_btn gt_goto" value="<?= $string['backtogrid'] ?>" url="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?= $Qualification->getID() ?>&ass=<?= (int)$isAssessmentView ?>">
+        <input type="button" class="gt_btn gt_goto" value="<?php echo $string['backtogrid'] ?>" url="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=class&id=<?php echo $Qualification->getID() ?>&ass=<?php echo (int)$isAssessmentView ?>">
     <?php endif; ?>
 </p>

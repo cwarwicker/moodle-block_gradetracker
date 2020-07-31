@@ -4,19 +4,19 @@
 
 <div class="gt_confirm_box">
 
-    <h4><?= $string['breadcrumbs:config:structures:levels:delete'] ?> - <?= $Level->getName() ?></h4>
+    <h4><?php echo $string['breadcrumbs:config:structures:levels:delete'] ?> - <?php echo $Level->getName() ?></h4>
 
     <div>
 
-        <?= sprintf($string['delete:level:sure'], $Level->countQualifications(), $Level->countQualificationBuilds()) ?>
+        <?php echo sprintf($string['delete:level:sure'], $Level->countQualifications(), $Level->countQualificationBuilds()) ?>
         <br><br>
         <form action="config.php?view=structures&section=levels" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-            <input type="hidden" name="level_id" value="<?= $Level->getID() ?>" />
-            <input type="submit" class="gt_btn" name="delete_level" value="<?= $string['yes'] ?>" />
+            <input type="hidden" name="level_id" value="<?php echo $Level->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_level" value="<?php echo $string['yes'] ?>" />
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?php echo $string['no'] ?>" />
 
         </form>
 
@@ -25,5 +25,5 @@
 </div>
 
 <?php else: ?>
-    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+    <?php echo gt_error_alert_box( $string['invalidrecord'] ) ?>
 <?php endif; ?>

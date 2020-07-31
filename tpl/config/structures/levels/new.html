@@ -1,49 +1,49 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
     <div class='gt_form_panel'>
 
         <div class='gt_form_panel_heading'>
-            <?= $string['newlevel'] ?>
+            <?php echo $string['newlevel'] ?>
         </div>
 
         <div class='gt_form_panel_body'>
 
             <?php if ($Level->isValid()): ?>
-                <input type="hidden" name="level_id" value="<?= $Level->getID() ?>" />
-                <input type="hidden" name="level_deleted" value="<?= $Level->getDeleted() ?>" />
+                <input type="hidden" name="level_id" value="<?php echo $Level->getID() ?>" />
+                <input type="hidden" name="level_deleted" value="<?php echo $Level->getDeleted() ?>" />
             <?php endif; ?>
 
             <p class="gt_c">
-                <input type="submit" class="gt_btn gt_blue" name="submit" value="<?= $string['save'] ?>" />
-                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                <input type="submit" class="gt_btn gt_blue" name="submit" value="<?php echo $string['save'] ?>" />
+                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
             </p>
 
             <table class="gt_simple_form_table">
 
                 <tr>
-                    <td><?= $string['name'] ?></td>
+                    <td><?php echo $string['name'] ?></td>
                     <td>
-                        <input type="text" name="level_name" value="<?= $Level->getName() ?>" placeholder="e.g. Level 3" />
+                        <input type="text" name="level_name" value="<?php echo $Level->getName() ?>" placeholder="e.g. Level 3" />
                     </td>
                 </tr>
 
                 <tr>
-                    <td><?= $string['shortname'] ?></td>
+                    <td><?php echo $string['shortname'] ?></td>
                     <td>
-                        <input type="text" name="level_shortname" value="<?= $Level->getShortName() ?>" placeholder="e.g. L3" />
+                        <input type="text" name="level_shortname" value="<?php echo $Level->getShortName() ?>" placeholder="e.g. L3" />
                     </td>
                 </tr>
 
                 <tr>
-                    <td><?= $string['order'] ?></td>
+                    <td><?php echo $string['order'] ?></td>
                     <td>
-                        <input type="number" name="level_order" value="<?= $Level->getOrderNumber() ?>" step="any" />
+                        <input type="number" name="level_order" value="<?php echo $Level->getOrderNumber() ?>" step="any" />
                     </td>
                 </tr>
 

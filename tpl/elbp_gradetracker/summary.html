@@ -3,8 +3,8 @@
 <table class="elbp_summary_table">
     <tbody>
       <tr>
-           <td class="elbp_summary_title" style="background-image:url('<?= $CFG->wwwroot ?><?= $obj->getPath() ?>pix/elbp_gradetracker/icon.png');">
-            <?= get_string('mytrackers', 'block_gradetracker') ?>
+           <td class="elbp_summary_title" style="background-image:url('<?php echo $CFG->wwwroot ?><?php echo $obj->getPath() ?>pix/elbp_gradetracker/icon.png');">
+            <?php echo get_string('mytrackers', 'block_gradetracker') ?>
           </td>
       </tr>
     </tbody>
@@ -15,11 +15,11 @@
     <tbody>
       <?php if ($quals): foreach($quals as $qual): ?>
       <tr>
-          <td><a href="#" class="gt_elbp_load_popup" qualID="<?= $qual->getID() ?>"><?= $qual->getDisplayName() ?></a></td>
+          <td><a href="#" class="gt_elbp_load_popup" qualID="<?php echo $qual->getID() ?>"><?php echo $qual->getDisplayName() ?></a></td>
       </tr>
       <?php endforeach; else: ?>
       <tr>
-          <td class='c'><?= get_string('noresults', 'block_gradetracker') ?></td>
+          <td class='c'><?php echo get_string('noresults', 'block_gradetracker') ?></td>
       </tr>
       <?php endif; ?>
     </tbody>

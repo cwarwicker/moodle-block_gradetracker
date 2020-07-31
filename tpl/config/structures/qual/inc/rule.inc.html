@@ -1,40 +1,40 @@
-<div id='gt_rule_content_<?= $ruleSetNum ?>_<?= $ruleNum ?>' class='gt_rule_content' style='display:none;'>
+<div id='gt_rule_content_<?php echo $ruleSetNum ?>_<?php echo $ruleNum ?>' class='gt_rule_content' style='display:none;'>
 
     <div class='gt_rule_content_section_float'>
-        <div class='gt_rule_settings_heading'><?= $string['rule:setting:details'] ?></div>
+        <div class='gt_rule_settings_heading'><?php echo $string['rule:setting:details'] ?></div>
         <table class='gt_rule_settings_table'>
             <tr>
-                <td><?= $string['rulename'] ?></td>
+                <td><?php echo $string['rulename'] ?></td>
                 <td>
                     <?php if (isset($rule)): ?>
-                        <input type='hidden' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][id]' class='gt_rule_id' value='<?= $rule->getID() ?>' />
+                        <input type='hidden' name='rule_sets[<?php echo $ruleSetNum ?>][rules][<?php echo $ruleNum ?>][id]' class='gt_rule_id' value='<?php echo $rule->getID() ?>' />
                     <?php endif; ?>
-                    <input type='text' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][name]' class='gt_rule_name' value='<?= (isset($rule)) ? \gt_html($rule->getName()) : get_string('newrule', 'block_gradetracker') ?>' />
+                    <input type='text' name='rule_sets[<?php echo $ruleSetNum ?>][rules][<?php echo $ruleNum ?>][name]' class='gt_rule_name' value='<?php echo (isset($rule)) ? \gt_html($rule->getName()) : get_string('newrule', 'block_gradetracker') ?>' />
                 </td>
             </tr>
             <tr>
-                <td><?= $string['description'] ?></td>
+                <td><?php echo $string['description'] ?></td>
                 <td>
-                    <textarea name="rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][desc]"><?= (isset($rule)) ? \gt_html($rule->getDescription()): '' ?></textarea>
+                    <textarea name="rule_sets[<?php echo $ruleSetNum ?>][rules][<?php echo $ruleNum ?>][desc]"><?php echo (isset($rule)) ? \gt_html($rule->getDescription()): '' ?></textarea>
                 </td>
             </tr>
         </table>
     </div>
 
     <div class='gt_rule_content_section_float'>
-        <div class='gt_rule_settings_heading'><?= $string['rule:setting:event'] ?></div>
+        <div class='gt_rule_settings_heading'><?php echo $string['rule:setting:event'] ?></div>
         <table class='gt_rule_settings_table'>
             <?php foreach(\GT\Rule::getEvents() as $onEvent): ?>
             <tr>
                 <td>
                     <div class="gt_fancy_checkbox">
-                        <input id="chkbox_<?= $onEvent ?>_<?= $ruleSetNum ?>_<?= $ruleNum ?>" type='radio' name='rule_sets[<?= $ruleSetNum ?>][rules][<?= $ruleNum ?>][onevent]' class='gt_rule_event gt_middle gt_rule_on_event_<?= $ruleSetNum ?>_<?= $ruleNum ?>' value='<?= $onEvent ?>' <?= (isset($rule) && $rule->getOnEvent() == $onEvent) ? 'checked' : '' ?> />
-                        <label for="chkbox_<?= $onEvent ?>_<?= $ruleSetNum ?>_<?= $ruleNum ?>"></label>
+                        <input id="chkbox_<?php echo $onEvent ?>_<?php echo $ruleSetNum ?>_<?php echo $ruleNum ?>" type='radio' name='rule_sets[<?php echo $ruleSetNum ?>][rules][<?php echo $ruleNum ?>][onevent]' class='gt_rule_event gt_middle gt_rule_on_event_<?php echo $ruleSetNum ?>_<?php echo $ruleNum ?>' value='<?php echo $onEvent ?>' <?php echo (isset($rule) && $rule->getOnEvent() == $onEvent) ? 'checked' : '' ?> />
+                        <label for="chkbox_<?php echo $onEvent ?>_<?php echo $ruleSetNum ?>_<?php echo $ruleNum ?>"></label>
                     </div>
                 </td>
                 <td>
-                    <?= $onEvent ?><br>
-                    <small><?= $string['rule:event:'.$onEvent] ?></small>
+                    <?php echo $onEvent ?><br>
+                    <small><?php echo $string['rule:event:'.$onEvent] ?></small>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -42,14 +42,14 @@
     </div>
 
     <div class='gt_rule_content_section'>
-        <div class='gt_rule_settings_heading'><?= $string['rule:setting:steps'] ?></div>
-        <a href='#' class='gt_add_rule_step gt_btn gt_btn_small' ruleSetNum='<?= $ruleSetNum ?>' ruleNum='<?= $ruleNum ?>'><?= $string['createrulestep'] ?></a><br><br>
-        <div id='gt_rule_steps_<?= $ruleSetNum ?>_<?= $ruleNum ?>'>
+        <div class='gt_rule_settings_heading'><?php echo $string['rule:setting:steps'] ?></div>
+        <a href='#' class='gt_add_rule_step gt_btn gt_btn_small' ruleSetNum='<?php echo $ruleSetNum ?>' ruleNum='<?php echo $ruleNum ?>'><?php echo $string['createrulestep'] ?></a><br><br>
+        <div id='gt_rule_steps_<?php echo $ruleSetNum ?>_<?php echo $ruleNum ?>'>
             <?php if (isset($rule)): ?>
                 <?php foreach($rule->getSteps() as $step): ?>
                     <?php $numRuleSteps[$ruleSetNum][$ruleNum]++ ?>
                     <?php $ruleStepNum = $numRuleSteps[$ruleSetNum][$ruleNum] ?>
-                    <?= $rule->getTemplateContent('config/structures/qual/inc/rulestep.inc.html', array('RS' => $ruleSetNum, 'R' => $ruleNum, 'S' => $ruleStepNum, 'step' => $step)) ?>
+                    <?php echo $rule->getTemplateContent('config/structures/qual/inc/rulestep.inc.html', array('RS' => $ruleSetNum, 'R' => $ruleNum, 'S' => $ruleStepNum, 'step' => $step)) ?>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>

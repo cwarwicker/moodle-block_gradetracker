@@ -1,52 +1,52 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <?php if (isset($Structure) && $Structure->isValid()): ?>
 
 <?php if (!$UnitAwardStructure->isEnabled()): ?>
-    <?= gt_info_alert_box( $string['structureisdisabled'] ) ?>
+    <?php echo gt_info_alert_box( $string['structureisdisabled'] ) ?>
 <?php endif; ?>
 
 <div>
 
     <form action="" method="post" id="gt_grading_structure_form">
-        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
         <div class='gt_form_panel'>
 
             <div class='gt_form_panel_heading'>
-                <a href="config.php?view=structures&section=grade&page=edit&id=<?= $Structure->getID() ?>&type=unit"><?= $Structure->getName() ?> - <?= $string['unitgradingstructures'] ?></a>
+                <a href="config.php?view=structures&section=grade&page=edit&id=<?php echo $Structure->getID() ?>&type=unit"><?php echo $Structure->getName() ?> - <?php echo $string['unitgradingstructures'] ?></a>
             </div>
 
             <div class='gt_form_panel_body'>
 
                 <p class="gt_c">
-                    <input type="submit" class="gt_btn gt_blue" name="submit_unit_grading_structure" value="<?= $string['save'] ?>" />
-                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <input type="submit" class="gt_btn gt_blue" name="submit_unit_grading_structure" value="<?php echo $string['save'] ?>" />
+                    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=grade" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
                 </p>
 
                 <?php if ($UnitAwardStructure->isValid()): ?>
-                    <input type="hidden" name="grading_id" value="<?= $UnitAwardStructure->getID() ?>" />
+                    <input type="hidden" name="grading_id" value="<?php echo $UnitAwardStructure->getID() ?>" />
                 <?php endif; ?>
 
-                <input type="hidden" name="grading_qual_structure_id" value="<?= $Structure->getID() ?>" />
-                <input type="hidden" name="grading_enabled" value="<?= $UnitAwardStructure->getEnabled() ?>" />
+                <input type="hidden" name="grading_qual_structure_id" value="<?php echo $Structure->getID() ?>" />
+                <input type="hidden" name="grading_enabled" value="<?php echo $UnitAwardStructure->getEnabled() ?>" />
 
-                <label class="gt_input_label"><?= $string['name'] ?></label>
-                <input type="text" name="grading_name" value="<?= $UnitAwardStructure->getName() ?>" placeholder="Pass, Merit, Distinction" />
+                <label class="gt_input_label"><?php echo $string['name'] ?></label>
+                <input type="text" name="grading_name" value="<?php echo $UnitAwardStructure->getName() ?>" placeholder="Pass, Merit, Distinction" />
                 <br><br>
 
                 <table class="gt_form_table" id="gt_grading_structure_table">
 
                     <tr>
-                        <th><?= $string['grade'] ?></th>
-                        <th><?= $string['shortgrade'] ?></th>
-                        <th><?= $string['points'] ?></th>
-                        <th><?= $string['lowerpoints'] ?></th>
-                        <th><?= $string['upperpoints'] ?></th>
-                        <th><a href="#" id="gt_add_unit_grading"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></th>
+                        <th><?php echo $string['grade'] ?></th>
+                        <th><?php echo $string['shortgrade'] ?></th>
+                        <th><?php echo $string['points'] ?></th>
+                        <th><?php echo $string['lowerpoints'] ?></th>
+                        <th><?php echo $string['upperpoints'] ?></th>
+                        <th><a href="#" id="gt_add_unit_grading"><img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></th>
                     </tr>
 
                     <?php if ($UnitAwardStructure->getAwards()): ?>
@@ -54,13 +54,13 @@
                         <?php foreach($UnitAwardStructure->getAwards() as $award): ?>
                             <?php $cntAwards++ ?>
 
-                            <tr id="gt_grading_row_<?= $cntAwards ?>">
-                                <td><input type="hidden" name="grade_ids[<?= $cntAwards ?>]" value="<?= $award->getID() ?>" /><input type="text" name="grade_names[<?= $cntAwards ?>]" placeholder="e.g. Pass" value="<?= $award->getName() ?>" /></td>
-                                <td><input type="text" class="gt_text_small" name="grade_shortnames[<?= $cntAwards ?>]" placeholder="P" value="<?= $award->getShortName() ?>" /></td>
-                                <td><input type="number" min="0" step="any" name="grade_points[<?= $cntAwards ?>]" placeholder="1" value="<?= $award->getPoints() ?>" /></td>
-                                <td><input type="number" min="0" step="any" name="grade_points_lower[<?= $cntAwards ?>]" placeholder="1.0" value="<?= $award->getPointsLower() ?>" /></td>
-                                <td><input type="number" min="0" step="any" name="grade_points_upper[<?= $cntAwards ?>]" placeholder="1.5" value="<?= $award->getPointsUpper() ?>" /></td>
-                                <td><a href="#" class="gt_remove" remove="#gt_grading_row_<?= $cntAwards ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
+                            <tr id="gt_grading_row_<?php echo $cntAwards ?>">
+                                <td><input type="hidden" name="grade_ids[<?php echo $cntAwards ?>]" value="<?php echo $award->getID() ?>" /><input type="text" name="grade_names[<?php echo $cntAwards ?>]" placeholder="e.g. Pass" value="<?php echo $award->getName() ?>" /></td>
+                                <td><input type="text" class="gt_text_small" name="grade_shortnames[<?php echo $cntAwards ?>]" placeholder="P" value="<?php echo $award->getShortName() ?>" /></td>
+                                <td><input type="number" min="0" step="any" name="grade_points[<?php echo $cntAwards ?>]" placeholder="1" value="<?php echo $award->getPoints() ?>" /></td>
+                                <td><input type="number" min="0" step="any" name="grade_points_lower[<?php echo $cntAwards ?>]" placeholder="1.0" value="<?php echo $award->getPointsLower() ?>" /></td>
+                                <td><input type="number" min="0" step="any" name="grade_points_upper[<?php echo $cntAwards ?>]" placeholder="1.5" value="<?php echo $award->getPointsUpper() ?>" /></td>
+                                <td><a href="#" class="gt_remove" remove="#gt_grading_row_<?php echo $cntAwards ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" /></a></td>
                             </tr>
 
                         <?php endforeach; ?>
@@ -71,15 +71,15 @@
 
                 <br><hr><br>
 
-                <h2><?= $string['unitpoints'] ?></h2>
-                <p><?= $string['unitpoints:desc'] ?></p>
+                <h2><?php echo $string['unitpoints'] ?></h2>
+                <p><?php echo $string['unitpoints:desc'] ?></p>
 
                 <table class="gt_form_table gt_table_inline">
 
                     <tr>
-                        <th><?= $string['level'] ?></th>
-                        <th><?= $string['grade'] ?></th>
-                        <th><?= $string['points'] ?></th>
+                        <th><?php echo $string['level'] ?></th>
+                        <th><?php echo $string['grade'] ?></th>
+                        <th><?php echo $string['points'] ?></th>
                     </tr>
 
                     <?php if (isset($buildLevels)): ?>
@@ -91,10 +91,10 @@
                                 <?php foreach($UnitAwardStructure->getAwards() as $award): ?>
 
                                     <tr>
-                                        <td><?= $buildLevel->getName() ?></td>
-                                        <td><?= $award->getName() ?></td>
+                                        <td><?php echo $buildLevel->getName() ?></td>
+                                        <td><?php echo $award->getName() ?></td>
                                         <td>
-                                            <input type="number" min="0" step="0.5" name="unit_points[levels][<?= $buildLevel->getID() ?>][<?= $award->getID() ?>]" value="<?= $UnitAwardStructure->getUnitPoint($buildLevel->getID(), $award->getID()) ?>" />
+                                            <input type="number" min="0" step="0.5" name="unit_points[levels][<?php echo $buildLevel->getID() ?>][<?php echo $award->getID() ?>]" value="<?php echo $UnitAwardStructure->getUnitPoint($buildLevel->getID(), $award->getID()) ?>" />
                                         </td>
                                     </tr>
 
@@ -114,9 +114,9 @@
                 <table class="gt_form_table gt_table_inline">
 
                     <tr>
-                        <th><?= $string['qualbuild'] ?></th>
-                        <th><?= $string['grade'] ?></th>
-                        <th><?= $string['points'] ?></th>
+                        <th><?php echo $string['qualbuild'] ?></th>
+                        <th><?php echo $string['grade'] ?></th>
+                        <th><?php echo $string['points'] ?></th>
                     </tr>
 
                     <?php if (isset($builds)): ?>
@@ -124,10 +124,10 @@
                             <?php if ($UnitAwardStructure->getAwards()): ?>
                                 <?php foreach($UnitAwardStructure->getAwards() as $award): ?>
                                     <tr>
-                                        <td><?= $build->getName() ?></td>
-                                        <td><?= $award->getName() ?></td>
+                                        <td><?php echo $build->getName() ?></td>
+                                        <td><?php echo $award->getName() ?></td>
                                         <td>
-                                            <input type="number" min="0" step="0.5" name="unit_points[builds][<?= $build->getID() ?>][<?= $award->getID() ?>]" value="<?= $UnitAwardStructure->getUnitPoint(null, $award->getID(), $build->getID()) ?>" />
+                                            <input type="number" min="0" step="0.5" name="unit_points[builds][<?php echo $build->getID() ?>][<?php echo $award->getID() ?>]" value="<?php echo $UnitAwardStructure->getUnitPoint(null, $award->getID(), $build->getID()) ?>" />
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -148,5 +148,5 @@
 
 
 <?php else: ?>
-    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+    <?php echo gt_error_alert_box( $string['invalidrecord'] ) ?>
 <?php endif; ?>

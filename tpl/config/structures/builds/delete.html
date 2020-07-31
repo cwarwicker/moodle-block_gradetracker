@@ -4,19 +4,19 @@
 
 <div class="gt_confirm_box">
 
-    <h4><?= $string['breadcrumbs:config:structures:builds:delete'] ?></h4>
+    <h4><?php echo $string['breadcrumbs:config:structures:builds:delete'] ?></h4>
 
     <div>
 
-        <?= sprintf($string['delete:qualbuild:sure'], $Build->countQualifications()) ?>
+        <?php echo sprintf($string['delete:qualbuild:sure'], $Build->countQualifications()) ?>
         <br><br>
         <form action="config.php?view=structures&section=builds" method="post">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-            <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
-            <input type="submit" class="gt_btn" name="delete_build" value="<?= $string['yes'] ?>" />
+            <input type="hidden" name="build_id" value="<?php echo $Build->getID() ?>" />
+            <input type="submit" class="gt_btn" name="delete_build" value="<?php echo $string['yes'] ?>" />
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+            <input type="submit" class="gt_btn" name="run_away" value="<?php echo $string['no'] ?>" />
 
         </form>
 
@@ -25,5 +25,5 @@
 </div>
 
 <?php else: ?>
-    <?= gt_error_alert_box( $string['invalidrecord'] ) ?>
+    <?php echo gt_error_alert_box( $string['invalidrecord'] ) ?>
 <?php endif; ?>

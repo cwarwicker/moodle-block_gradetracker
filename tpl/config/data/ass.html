@@ -1,58 +1,58 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<h2><?= $string['dataimport'] ?></h2>
-<p><?= $string['import:assgrades:desc'] ?></p>
+<h2><?php echo $string['dataimport'] ?></h2>
+<p><?php echo $string['import:assgrades:desc'] ?></p>
 <p>
     <?php if ($templateFile): ?>
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
-        <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?php echo $templateFile ?>">
+        <img src="<?php echo gt_image_url('f/spreadsheet') ?>" /> <?php echo $string['csvtemplate'] ?>
     </a>
     <?php else: ?>
-        [[<?= $string['filenotfound'] ?>]]
+        [[<?php echo $string['filenotfound'] ?>]]
     <?php endif; ?>
 
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     <?php if ($exampleFile): ?>
-        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
-            <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?php echo $exampleFile ?>">
+            <img src="<?php echo gt_image_url('f/spreadsheet') ?>" /> <?php echo $string['csvexample'] ?>
         </a>
     <?php else: ?>
-        [[<?= $string['filenotfound'] ?>]]
+        [[<?php echo $string['filenotfound'] ?>]]
     <?php endif; ?>
 
     &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ass&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=ass&reload=1"><img style="vertical-align:top;" src="<?php echo gt_image_url('t/reload'); ?>" title="<?php echo $string['reloadcsvs'] ?>" /></a>
 
 </p>
 
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
     <input type="file" name="file" />
     <br><br>
     <select name='assID'>
-        <option value=""><?= $string['pleaseselect'] ?></option>
+        <option value=""><?php echo $string['pleaseselect'] ?></option>
         <?php if ($assessments): ?>
             <?php foreach($assessments as $assessment): ?>
-                <option value="<?= $assessment->getID() ?>"><?= $assessment->getName() ?> (<?= $assessment->getDate('d-m-Y') ?>)</option>
+                <option value="<?php echo $assessment->getID() ?>"><?php echo $assessment->getName() ?> (<?php echo $assessment->getDate('d-m-Y') ?>)</option>
             <?php endforeach; ?>
         <?php endif; ?>
     </select><br><br>
-    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?= $string['import'] ?>" />
+    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?php echo $string['import'] ?>" />
 
 </form>
 
 <br />
 
-<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
 
 <?php if (!empty($MSGS['success'])): ?>
 
 <div id='gt_import_output' class='gt_cmd gt_hidden'>
-    <?= $MSGS['output'] ?>
+    <?php echo $MSGS['output'] ?>
 </div>
 
 <?php endif; ?>
@@ -61,22 +61,22 @@
 
 <hr class="gt_hr">
 
-<h2><?= $string['dataexport'] ?></h2>
+<h2><?php echo $string['dataexport'] ?></h2>
 
-<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ass" method="post">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+<form action="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=ass" method="post">
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
     <select name='assID'>
-        <option value=""><?= $string['pleaseselect'] ?></option>
+        <option value=""><?php echo $string['pleaseselect'] ?></option>
         <?php if ($assessments): ?>
             <?php foreach($assessments as $assessment): ?>
-                <option value="<?= $assessment->getID() ?>"><?= $assessment->getName() ?> (<?= $assessment->getDate('d-m-Y') ?>)</option>
+                <option value="<?php echo $assessment->getID() ?>"><?php echo $assessment->getName() ?> (<?php echo $assessment->getDate('d-m-Y') ?>)</option>
             <?php endforeach; ?>
         <?php endif; ?>
     </select><br><br>
-    <input type="checkbox" name="include_names" value="1" /> <?= $string['includenamecols'] ?>
+    <input type="checkbox" name="include_names" value="1" /> <?php echo $string['includenamecols'] ?>
     <br><br>
-    <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
+    <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?php echo $string['export'] ?>" />
 </form>
 
 <br>

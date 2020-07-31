@@ -1,24 +1,24 @@
-<h2><?= $string['targetgrades'] ?></h2>
+<h2><?php echo $string['targetgrades'] ?></h2>
 
-<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=tests&section=tg" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-    <?= $string['avggcsescore'] ?>:
+<form action="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=tests&section=tg" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+    <?php echo $string['avggcsescore'] ?>:
 <br>
-<input type="text" name="gt_avggcsescore" class="gt_30" value="<?= (isset($avggcsescore)) ? $avggcsescore : '' ?>">
+<input type="text" name="gt_avggcsescore" class="gt_30" value="<?php echo (isset($avggcsescore)) ? $avggcsescore : '' ?>">
 
 <br>
 <br>
-<?= $string['qualification'] ?>:
+<?php echo $string['qualification'] ?>:
 <select class="gt_form_control" name="qualid" id="gt_tests_qual_id">
     <option value="-1">   </option>
     <?php foreach($allQuals as $qual): ?>
-        <option id="<?= $qual->getID() ?>" value="<?= $qual->getID() ?>" <?= (isset($qualification) && $qualification->getID() == $qual->getID()) ? 'selected' : '' ?> ><?= $qual->getDisplayName() ?></option>
+        <option id="<?php echo $qual->getID() ?>" value="<?php echo $qual->getID() ?>" <?php echo (isset($qualification) && $qualification->getID() == $qual->getID()) ? 'selected' : '' ?> ><?php echo $qual->getDisplayName() ?></option>
     <?php endforeach; ?>
 
 </select>
 
 <br>
-<input type="submit" class="gt_btn gt_blue" name="submit_calculate" value="<?= $string['calculate'] ?>">
+<input type="submit" class="gt_btn gt_blue" name="submit_calculate" value="<?php echo $string['calculate'] ?>">
 </form>
 <br>
 <br>
@@ -27,11 +27,11 @@
 <?php if (!empty($avggcsescore)): ?>
 
     <div class="gt_alert_info">
-        <?= $string['targetgrade'] ?> -
+        <?php echo $string['targetgrade'] ?> -
         <?php if ($single_award): ?>
-            <?= $single_award->getName() ?> (<?= $string['ucaspoints'] ?> <?= $single_award->getUcas() ?>)
+            <?php echo $single_award->getName() ?> (<?php echo $string['ucaspoints'] ?> <?php echo $single_award->getUcas() ?>)
         <?php else: ?>
-            <?= $string['na'] ?>
+            <?php echo $string['na'] ?>
         <?php endif; ?>
     </div>
 
@@ -39,19 +39,19 @@
 
     <table class="gt_table_tests">
         <tr>
-            <th><?= $string['targetgrade'] ?></th>
-            <th><?= $string['ucaspoints'] ?></th>
-            <th><?= $string['lowerpoints'] ?></th>
-            <th><?= $string['upperpoints'] ?></th>
-            <th><?= $string['ranking'] ?></th>
+            <th><?php echo $string['targetgrade'] ?></th>
+            <th><?php echo $string['ucaspoints'] ?></th>
+            <th><?php echo $string['lowerpoints'] ?></th>
+            <th><?php echo $string['upperpoints'] ?></th>
+            <th><?php echo $string['ranking'] ?></th>
         </tr>
         <?php foreach($awards as $award): ?>
         <tr>
-            <td><?= $award->getName() ?></td>
-            <td><?= $award->getUcas() ?></td>
-            <td><?= $award->getQOELower() ?></td>
-            <td><?= $award->getQOEUpper() ?></td>
-            <td><?= $award->getRank() ?></td>
+            <td><?php echo $award->getName() ?></td>
+            <td><?php echo $award->getUcas() ?></td>
+            <td><?php echo $award->getQOELower() ?></td>
+            <td><?php echo $award->getQOEUpper() ?></td>
+            <td><?php echo $award->getRank() ?></td>
         </tr>
         <?php endforeach; ?>
     </table>

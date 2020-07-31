@@ -1,10 +1,10 @@
 <form action="" method="post">
-<input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-<h2><?= get_string('blockconfig', 'block_elbp') ?></h2>
+<input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+<h2><?php echo get_string('blockconfig', 'block_elbp') ?></h2>
 <?php $OBJ->displayConfig() ?>
 
 
 
 <br><br>
-    <p class='elbp_centre'><input type="submit" name="submitconfig" value="<?= get_string('save', 'block_elbp') ?>" /></p>
+    <p class='elbp_centre'><input type="submit" name="submitconfig" value="<?php echo get_string('save', 'block_elbp') ?>" /></p>
 </form>

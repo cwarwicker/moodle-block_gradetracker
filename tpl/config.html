@@ -2,34 +2,34 @@
 <div id='gt_config' class='gt_config'>
 
     <small class='gt_float_right'>
-        <?= $string['build'] ?> <?= $GT->getPluginVersion() ?> (<?= $GT->getBlockVersion() ?>) <?= $GT->printVersionCheck() ?>
+        <?php echo $string['build'] ?> <?php echo $GT->getPluginVersion() ?> (<?php echo $GT->getBlockVersion() ?>) <?php echo $GT->printVersionCheck() ?>
     </small>
 
     <div class='gt_c'>
-        <img id='gtlogo' name='gtlogo' src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/gradetracker.png' class='gt_logo_text' />
+        <img id='gtlogo' name='gtlogo' src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/gradetracker.png' class='gt_logo_text' />
     </div>
 
     <ul id="gt_dropdown_list">
 
         <?php if ($User->hasCapability('block/gradetracker:configure')): ?>
-            <li class="<?= ($view == '') ? 'selected' : '' ?>">
-                <a href="config.php"><?= $string['overview'] ?></a>
+            <li class="<?php echo ($view == '') ? 'selected' : '' ?>">
+                <a href="config.php"><?php echo $string['overview'] ?></a>
             </li>
         <?php endif; ?>
 
         <?php if ($User->hasCapability('block/gradetracker:view_student_grids') || $User->hasCapability('block/gradetracker:view_unit_grids') || $User->hasCapability('block/gradetracker:view_class_grids')): ?>
 
              <li>
-                <a href="#"><?= $string['grids'] ?></a>
+                <a href="#"><?php echo $string['grids'] ?></a>
                 <ul>
                     <?php if ($User->hasCapability('block/gradetracker:view_student_grids')): ?>
-                        <li><a href="choose.php?type=student"><?= $string['viewbystudent'] ?></a></li>
+                        <li><a href="choose.php?type=student"><?php echo $string['viewbystudent'] ?></a></li>
                     <?php endif; ?>
                     <?php if ($User->hasCapability('block/gradetracker:view_unit_grids')): ?>
-                        <li><a href="choose.php?type=unit"><?= $string['viewbyunit'] ?></a></li>
+                        <li><a href="choose.php?type=unit"><?php echo $string['viewbyunit'] ?></a></li>
                     <?php endif; ?>
                     <?php if ($User->hasCapability('block/gradetracker:view_class_grids')): ?>
-                        <li><a href="choose.php?type=class"><?= $string['viewbyclass'] ?></a></li>
+                        <li><a href="choose.php?type=class"><?php echo $string['viewbyclass'] ?></a></li>
                     <?php endif; ?>
                 </ul>
              </li>
@@ -37,54 +37,54 @@
         <?php endif; ?>
 
         <?php if ($User->hasCapability('block/gradetracker:configure_settings')): ?>
-            <li class="<?= ($view == 'settings') ? 'selected' : '' ?>">
-                <a href="config.php?view=settings"><?= $string['pluginsettings'] ?></a>
+            <li class="<?php echo ($view == 'settings') ? 'selected' : '' ?>">
+                <a href="config.php?view=settings"><?php echo $string['pluginsettings'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'settings' && $section == 'general') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=general"><?= $string['generalsettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'qual') ? 'selected' : '' ?>">
-                        <a href="config.php?view=settings&section=qual"><?= $string['qualsettings'] ?></a>
+                    <li class="<?php echo ($view == 'settings' && $section == 'general') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=general"><?php echo $string['generalsettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'qual') ? 'selected' : '' ?>">
+                        <a href="config.php?view=settings&section=qual"><?php echo $string['qualsettings'] ?></a>
                         <ul>
-                            <li class="<?= ($view == 'settings' && $section == 'qual' && $page == '') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=qual"><?= $string['general'] ?></a></li>
-                            <li class="<?= ($view == 'settings' && $section == 'qual' && $page == 'coefficients') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=qual&page=coefficients"><?= $string['weightingcoefficients'] ?></a></li>
-                            <li class="<?= ($view == 'settings' && $section == 'qual' && $page == 'constants') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=qual&page=constants"><?= $string['weightingconstants'] ?></a></li>
+                            <li class="<?php echo ($view == 'settings' && $section == 'qual' && $page == '') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=qual"><?php echo $string['general'] ?></a></li>
+                            <li class="<?php echo ($view == 'settings' && $section == 'qual' && $page == 'coefficients') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=qual&page=coefficients"><?php echo $string['weightingcoefficients'] ?></a></li>
+                            <li class="<?php echo ($view == 'settings' && $section == 'qual' && $page == 'constants') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=qual&page=constants"><?php echo $string['weightingconstants'] ?></a></li>
                         </ul>
                     </li>
-                    <li class="<?= ($view == 'settings' && $section == 'unit') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=unit"><?= $string['unitsettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'criteria') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=criteria"><?= $string['criteriasettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'grid') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=grid"><?= $string['gridsettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'user') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=user"><?= $string['usersettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'grade') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=grade"><?= $string['gradesettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'assessments') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=assessments"><?= $string['assessmentsettings'] ?></a></li>
-                    <li class="<?= ($view == 'settings' && $section == 'reporting') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=reporting"><?= $string['reportsettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'unit') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=unit"><?php echo $string['unitsettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'criteria') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=criteria"><?php echo $string['criteriasettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'grid') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=grid"><?php echo $string['gridsettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'user') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=user"><?php echo $string['usersettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'grade') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=grade"><?php echo $string['gradesettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'assessments') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=assessments"><?php echo $string['assessmentsettings'] ?></a></li>
+                    <li class="<?php echo ($view == 'settings' && $section == 'reporting') ? 'selected' : '' ?>"><a href="config.php?view=settings&section=reporting"><?php echo $string['reportsettings'] ?></a></li>
                 </ul>
             </li>
         <?php endif; ?>
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_structures')): ?>
-            <li class="<?= ($view == 'structures') ? 'selected' : '' ?>">
-                <a href="config.php?view=structures"><?= $string['structures'] ?></a>
+            <li class="<?php echo ($view == 'structures') ? 'selected' : '' ?>">
+                <a href="config.php?view=structures"><?php echo $string['structures'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'structures' && $section == 'qual') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=qual"><?= $string['qualstructures'] ?></a></li>
-                    <li class="<?= ($view == 'structures' && $section == 'builds') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=builds"><?= $string['qualbuilds'] ?></a></li>
-                    <li class="<?= ($view == 'structures' && $section == 'grade') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=grade"><?= $string['gradestructures'] ?></a></li>
-                    <li class="<?= ($view == 'structures' && $section == 'levels') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=levels"><?= $string['levels'] ?></a></li>
-                    <li class="<?= ($view == 'structures' && $section == 'subtypes') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=subtypes"><?= $string['subtypes'] ?></a></li>
-                    <li class="<?= ($view == 'structures' && $section == 'qoe') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=qoe"><?= $string['qoe'] ?></a></li>
+                    <li class="<?php echo ($view == 'structures' && $section == 'qual') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=qual"><?php echo $string['qualstructures'] ?></a></li>
+                    <li class="<?php echo ($view == 'structures' && $section == 'builds') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=builds"><?php echo $string['qualbuilds'] ?></a></li>
+                    <li class="<?php echo ($view == 'structures' && $section == 'grade') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=grade"><?php echo $string['gradestructures'] ?></a></li>
+                    <li class="<?php echo ($view == 'structures' && $section == 'levels') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=levels"><?php echo $string['levels'] ?></a></li>
+                    <li class="<?php echo ($view == 'structures' && $section == 'subtypes') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=subtypes"><?php echo $string['subtypes'] ?></a></li>
+                    <li class="<?php echo ($view == 'structures' && $section == 'qoe') ? 'selected' : '' ?>"><a href="config.php?view=structures&section=qoe"><?php echo $string['qoe'] ?></a></li>
                 </ul>
             </li>
         <?php endif; ?>
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_quals')): ?>
-            <li class="<?= ($view == 'quals') ? 'selected' : '' ?>">
-                <a href="config.php?view=quals"><?= $string['qualifications'] ?></a>
+            <li class="<?php echo ($view == 'quals') ? 'selected' : '' ?>">
+                <a href="config.php?view=quals"><?php echo $string['qualifications'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'quals' && $section == 'overview') ? 'selected' : '' ?>"><a href="config.php?view=quals&section=overview"><?= $string['overview'] ?></a></li>
-                    <li class="<?= ($view == 'quals' && $section == 'new') ? 'selected' : '' ?>"><a href="config.php?view=quals&section=new"><?= $string['newqualification'] ?></a></li>
-                    <li class="<?= ($view == 'quals' && $section == 'search') ? 'selected' : '' ?>"><a href="config.php?view=quals&section=search"><?= $string['search'] ?></a></li>
+                    <li class="<?php echo ($view == 'quals' && $section == 'overview') ? 'selected' : '' ?>"><a href="config.php?view=quals&section=overview"><?php echo $string['overview'] ?></a></li>
+                    <li class="<?php echo ($view == 'quals' && $section == 'new') ? 'selected' : '' ?>"><a href="config.php?view=quals&section=new"><?php echo $string['newqualification'] ?></a></li>
+                    <li class="<?php echo ($view == 'quals' && $section == 'search') ? 'selected' : '' ?>"><a href="config.php?view=quals&section=search"><?php echo $string['search'] ?></a></li>
                     <?php if ($view == 'quals' && $section == 'edit'): ?>
-                        <li class="selected"><a href=""><?= $string['editqualification'] ?></a></li>
+                        <li class="selected"><a href=""><?php echo $string['editqualification'] ?></a></li>
                     <?php endif; ?>
                 </ul>
             </li>
@@ -92,15 +92,15 @@
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_units')): ?>
-            <li class="<?= ($view == 'units') ? 'selected' : '' ?>">
-                <a href="config.php?view=units"><?= $string['units'] ?></a>
+            <li class="<?php echo ($view == 'units') ? 'selected' : '' ?>">
+                <a href="config.php?view=units"><?php echo $string['units'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'units' && $section == 'overview') ? 'selected' : '' ?>"><a href="config.php?view=units&section=overview"><?= $string['overview'] ?></a></li>
-                    <li class="<?= ($view == 'units' && $section == 'new') ? 'selected' : '' ?>"><a href="config.php?view=units&section=new"><?= $string['newunit'] ?></a></li>
-                    <li class="<?= ($view == 'units' && $section == 'import') ? 'selected' : '' ?>"><a href="config.php?view=units&section=import"><?= $string['import'] ?></a></li>
-                    <li class="<?= ($view == 'units' && $section == 'search') ? 'selected' : '' ?>"><a href="config.php?view=units&section=search"><?= $string['search'] ?></a></li>
+                    <li class="<?php echo ($view == 'units' && $section == 'overview') ? 'selected' : '' ?>"><a href="config.php?view=units&section=overview"><?php echo $string['overview'] ?></a></li>
+                    <li class="<?php echo ($view == 'units' && $section == 'new') ? 'selected' : '' ?>"><a href="config.php?view=units&section=new"><?php echo $string['newunit'] ?></a></li>
+                    <li class="<?php echo ($view == 'units' && $section == 'import') ? 'selected' : '' ?>"><a href="config.php?view=units&section=import"><?php echo $string['import'] ?></a></li>
+                    <li class="<?php echo ($view == 'units' && $section == 'search') ? 'selected' : '' ?>"><a href="config.php?view=units&section=search"><?php echo $string['search'] ?></a></li>
                     <?php if ($view == 'units' && $section == 'edit'): ?>
-                        <li class="selected"><a href=""><?= $string['editunit'] ?></a></li>
+                        <li class="selected"><a href=""><?php echo $string['editunit'] ?></a></li>
                     <?php endif; ?>
                 </ul>
             </li>
@@ -108,16 +108,16 @@
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_course')): ?>
-            <li class="<?= ($view == 'course') ? 'selected' : '' ?>">
-                <a href="config.php?view=course"><?= $string['courses'] ?></a>
+            <li class="<?php echo ($view == 'course') ? 'selected' : '' ?>">
+                <a href="config.php?view=course"><?php echo $string['courses'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'course' && $section == 'my') ? 'selected' : '' ?>"><a href="config.php?view=course&section=my"><?= $string['mycourses'] ?></a></li>
-                    <li class="<?= ($view == 'course' && $section == 'search') ? 'selected' : '' ?>"><a href="config.php?view=course&section=search"><?= $string['search'] ?></a></li>
+                    <li class="<?php echo ($view == 'course' && $section == 'my') ? 'selected' : '' ?>"><a href="config.php?view=course&section=my"><?php echo $string['mycourses'] ?></a></li>
+                    <li class="<?php echo ($view == 'course' && $section == 'search') ? 'selected' : '' ?>"><a href="config.php?view=course&section=search"><?php echo $string['search'] ?></a></li>
                     <?php if ($course): ?>
-                        <li class="<?= ($view == 'course' && $section == 'quals') ? 'selected' : '' ?>"><a href="config.php?view=course&section=quals&id=<?= $course->id ?>"><?= $string['qualsoncourse'] ?></a></li>
-                        <li class="<?= ($view == 'course' && $section == 'userquals') ? 'selected' : '' ?>"><a href="config.php?view=course&section=userquals&id=<?= $course->id ?>"><?= $string['userquals'] ?></a></li>
-                        <li class="<?= ($view == 'course' && $section == 'userunits') ? 'selected' : '' ?>"><a href="config.php?view=course&section=userunits&id=<?= $course->id ?>"><?= $string['userunits'] ?></a></li>
-                        <li class="<?= ($view == 'course' && $section == 'activities') ? 'selected' : '' ?>"><a href="config.php?view=course&section=activities&id=<?= $course->id ?>"><?= $string['activities'] ?></a></li>
+                        <li class="<?php echo ($view == 'course' && $section == 'quals') ? 'selected' : '' ?>"><a href="config.php?view=course&section=quals&id=<?php echo $course->id ?>"><?php echo $string['qualsoncourse'] ?></a></li>
+                        <li class="<?php echo ($view == 'course' && $section == 'userquals') ? 'selected' : '' ?>"><a href="config.php?view=course&section=userquals&id=<?php echo $course->id ?>"><?php echo $string['userquals'] ?></a></li>
+                        <li class="<?php echo ($view == 'course' && $section == 'userunits') ? 'selected' : '' ?>"><a href="config.php?view=course&section=userunits&id=<?php echo $course->id ?>"><?php echo $string['userunits'] ?></a></li>
+                        <li class="<?php echo ($view == 'course' && $section == 'activities') ? 'selected' : '' ?>"><a href="config.php?view=course&section=activities&id=<?php echo $course->id ?>"><?php echo $string['activities'] ?></a></li>
                     <?php endif; ?>
                 </ul>
             </li>
@@ -125,12 +125,12 @@
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_assessments')): ?>
-            <li class="<?= ($view == 'assessments') ? 'selected' : '' ?>">
-                <a href="config.php?view=assessments"><?= $string['assessments'] ?></a>
+            <li class="<?php echo ($view == 'assessments') ? 'selected' : '' ?>">
+                <a href="config.php?view=assessments"><?php echo $string['assessments'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'assessments' && $section == 'manage') ? 'selected' : '' ?>"><a href="config.php?view=assessments&section=manage"><?= $string['manageassessments'] ?></a></li>
+                    <li class="<?php echo ($view == 'assessments' && $section == 'manage') ? 'selected' : '' ?>"><a href="config.php?view=assessments&section=manage"><?php echo $string['manageassessments'] ?></a></li>
                     <?php if ($User->hasCapability('block/gradetracker:edit_activity_settings')): ?>
-                        <li class="<?= ($view == 'assessments' && $section == 'modules') ? 'selected' : '' ?>"><a href="config.php?view=assessments&section=modules"><?= $string['managemodules'] ?></a></li>
+                        <li class="<?php echo ($view == 'assessments' && $section == 'modules') ? 'selected' : '' ?>"><a href="config.php?view=assessments&section=modules"><?php echo $string['managemodules'] ?></a></li>
                     <?php endif; ?>
                 </ul>
             </li>
@@ -138,25 +138,25 @@
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_data')): ?>
-            <li class="<?= ($view == 'data') ? 'selected' : '' ?>">
-                <a href="config.php?view=data"><?= $string['data'] ?></a>
+            <li class="<?php echo ($view == 'data') ? 'selected' : '' ?>">
+                <a href="config.php?view=data"><?php echo $string['data'] ?></a>
                 <ul>
                     <?php if ( \gt_is_plugin_installed('block_bcgt') ): ?>
-                        <li class="<?= ($view == 'data' && $section == 'block_bcgt') ? 'selected' : '' ?>"><a href="config.php?view=data&section=block_bcgt&page=mappings"><?= $string['blockbcgtdata'] ?></a>
+                        <li class="<?php echo ($view == 'data' && $section == 'block_bcgt') ? 'selected' : '' ?>"><a href="config.php?view=data&section=block_bcgt&page=mappings"><?php echo $string['blockbcgtdata'] ?></a>
                             <ul>
-                                <li class="<?= ($view == 'data' && $section == 'block_bcgt' && $page == 'mappings') ? 'selected' : '' ?>"><a href='config.php?view=data&section=block_bcgt&page=mappings'><?= $string['blockbcgtdata:datamapping'] ?></a></li>
-                                <li class="<?= ($view == 'data' && $section == 'block_bcgt' && $page == 'specs') ? 'selected' : '' ?>"><a href='config.php?view=data&section=block_bcgt&page=specs'><?= $string['blockbcgtdata:transferspecs'] ?></a></li>
-                                <li class="<?= ($view == 'data' && $section == 'block_bcgt' && $page == 'data') ? 'selected' : '' ?>"><a href='config.php?view=data&section=block_bcgt&page=data'><?= $string['blockbcgtdata:transferdata'] ?></a></li>
+                                <li class="<?php echo ($view == 'data' && $section == 'block_bcgt' && $page == 'mappings') ? 'selected' : '' ?>"><a href='config.php?view=data&section=block_bcgt&page=mappings'><?php echo $string['blockbcgtdata:datamapping'] ?></a></li>
+                                <li class="<?php echo ($view == 'data' && $section == 'block_bcgt' && $page == 'specs') ? 'selected' : '' ?>"><a href='config.php?view=data&section=block_bcgt&page=specs'><?php echo $string['blockbcgtdata:transferspecs'] ?></a></li>
+                                <li class="<?php echo ($view == 'data' && $section == 'block_bcgt' && $page == 'data') ? 'selected' : '' ?>"><a href='config.php?view=data&section=block_bcgt&page=data'><?php echo $string['blockbcgtdata:transferdata'] ?></a></li>
                             </ul>
                         </li>
                     <?php endif; ?>
-                    <li class="<?= ($view == 'data' && $section == 'qoe') ? 'selected' : '' ?>"><a href="config.php?view=data&section=qoe"><?= $string['qoe'] ?></a></li>
-                    <li class="<?= ($view == 'data' && $section == 'avggcse') ? 'selected' : '' ?>"><a href="config.php?view=data&section=avggcse"><?= $string['avggcsescore'] ?></a></li>
-                    <li class="<?= ($view == 'data' && $section == 'tg') ? 'selected' : '' ?>"><a href="config.php?view=data&section=tg"><?= $string['targetgrades'] ?></a></li>
-                    <li class="<?= ($view == 'data' && $section == 'aspg') ? 'selected' : '' ?>"><a href="config.php?view=data&section=aspg"><?= $string['aspirationalgrades'] ?></a></li>
-                    <li class="<?= ($view == 'data' && $section == 'ceta') ? 'selected' : '' ?>"><a href="config.php?view=data&section=ceta"><?= $string['ceta'] ?></a></li>
-                    <li class="<?= ($view == 'data' && $section == 'ass') ? 'selected' : '' ?>"><a href="config.php?view=data&section=ass"><?= $string['assessmentgrades'] ?></a></li>
-                    <li class="<?= ($view == 'data' && $section == 'wcoe') ? 'selected' : '' ?>"><a href="config.php?view=data&section=wcoe"><?= $string['wcoe'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'qoe') ? 'selected' : '' ?>"><a href="config.php?view=data&section=qoe"><?php echo $string['qoe'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'avggcse') ? 'selected' : '' ?>"><a href="config.php?view=data&section=avggcse"><?php echo $string['avggcsescore'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'tg') ? 'selected' : '' ?>"><a href="config.php?view=data&section=tg"><?php echo $string['targetgrades'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'aspg') ? 'selected' : '' ?>"><a href="config.php?view=data&section=aspg"><?php echo $string['aspirationalgrades'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'ceta') ? 'selected' : '' ?>"><a href="config.php?view=data&section=ceta"><?php echo $string['ceta'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'ass') ? 'selected' : '' ?>"><a href="config.php?view=data&section=ass"><?php echo $string['assessmentgrades'] ?></a></li>
+                    <li class="<?php echo ($view == 'data' && $section == 'wcoe') ? 'selected' : '' ?>"><a href="config.php?view=data&section=wcoe"><?php echo $string['wcoe'] ?></a></li>
                 </ul>
             </li>
         <?php endif; ?>
@@ -164,19 +164,19 @@
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_reporting')): ?>
-            <li class="<?= ($view == 'reporting') ? 'selected' : '' ?>">
-                <a href="config.php?view=reporting"><?= $string['reporting'] ?></a>
+            <li class="<?php echo ($view == 'reporting') ? 'selected' : '' ?>">
+                <a href="config.php?view=reporting"><?php echo $string['reporting'] ?></a>
                 <ul>
                     <?php if ($User->hasCapability('block/gradetracker:view_logs')): ?>
-                        <li class="<?= ($view == 'reporting' && $section == 'logs') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=logs"><?= $string['logs'] ?></a></li>
+                        <li class="<?php echo ($view == 'reporting' && $section == 'logs') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=logs"><?php echo $string['logs'] ?></a></li>
                     <?php endif; ?>
 
                     <?php if ($User->hasCapability('block/gradetracker:run_built_report')): ?>
-                        <li class="<?= ($view == 'reporting' && $section == 'reports') ? 'selected' : '' ?>"><a href="#"><?= $string['prebuiltreports'] ?></a>
+                        <li class="<?php echo ($view == 'reporting' && $section == 'reports') ? 'selected' : '' ?>"><a href="#"><?php echo $string['prebuiltreports'] ?></a>
                             <ul>
-                                <li class="<?= ($view == 'reporting' && $section == 'reports' && $page == 'critprog') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=reports&page=critprog"><?= $string['reports:critprog'] ?></a></li>
-                                <li class="<?= ($view == 'reporting' && $section == 'reports' && $page == 'passprog') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=reports&page=passprog"><?= $string['reports:passprog'] ?></a></li>
-                                <li class="<?= ($view == 'reporting' && $section == 'reports' && $page == 'passsummary') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=reports&page=passsummary"><?= $string['reports:passsummary'] ?></a></li>
+                                <li class="<?php echo ($view == 'reporting' && $section == 'reports' && $page == 'critprog') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=reports&page=critprog"><?php echo $string['reports:critprog'] ?></a></li>
+                                <li class="<?php echo ($view == 'reporting' && $section == 'reports' && $page == 'passprog') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=reports&page=passprog"><?php echo $string['reports:passprog'] ?></a></li>
+                                <li class="<?php echo ($view == 'reporting' && $section == 'reports' && $page == 'passsummary') ? 'selected' : '' ?>"><a href="config.php?view=reporting&section=reports&page=passsummary"><?php echo $string['reports:passsummary'] ?></a></li>
                             </ul>
                         </li>
                     <?php endif; ?>
@@ -186,10 +186,10 @@
 
 
         <?php if ($User->hasCapability('block/gradetracker:configure_tests')): ?>
-            <li class="<?= ($view == 'tests') ? 'selected' : '' ?>">
-                <a href="config.php?view=tests"><?= $string['systemtests'] ?></a>
+            <li class="<?php echo ($view == 'tests') ? 'selected' : '' ?>">
+                <a href="config.php?view=tests"><?php echo $string['systemtests'] ?></a>
                 <ul>
-                    <li class="<?= ($view == 'tests' && $section == 'tg') ? 'selected' : '' ?>"><a href="config.php?view=tests&section=tg"><?= $string['targetgrades'] ?></a></li>
+                    <li class="<?php echo ($view == 'tests' && $section == 'tg') ? 'selected' : '' ?>"><a href="config.php?view=tests&section=tg"><?php echo $string['targetgrades'] ?></a></li>
                </ul>
             </li>
         <?php endif; ?>

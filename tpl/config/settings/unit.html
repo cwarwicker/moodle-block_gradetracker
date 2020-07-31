@@ -2,14 +2,14 @@
 
 <form action="" method="post" enctype="multipart/form-data">
 
-    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    <?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
-    <h2><?= $string['unitsettings'] ?></h2>
-    <p><?= $string['unitsettings:desc'] ?></p>
+    <h2><?php echo $string['unitsettings'] ?></h2>
+    <p><?php echo $string['unitsettings:desc'] ?></p>
 
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?php echo $string['save'] ?>" />
 
 </form>

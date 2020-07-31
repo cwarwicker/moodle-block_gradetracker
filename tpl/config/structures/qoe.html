@@ -4,25 +4,25 @@
 
     <div class="gt_form_panel">
 
-        <div class="gt_form_panel_heading"><?= $string['manageqoe'] ?></div>
+        <div class="gt_form_panel_heading"><?php echo $string['manageqoe'] ?></div>
         <div class="gt_form_panel_body">
 
-            <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-            <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+            <?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+            <?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
             <div class="gt_page_col_33">
                 <div class="gt_form_panel">
-                    <div class="gt_form_panel_sub_heading"><?= $string['subjects'] ?></div>
+                    <div class="gt_form_panel_sub_heading"><?php echo $string['subjects'] ?></div>
                     <div class="gt_form_panel_body">
 
                         <form action="" method="post">
-                            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+                            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
                             <table id="gt_qoe_subjects" class="gt_small_table">
 
                                 <tr>
-                                    <th><?= $string['name'] ?></th>
-                                    <th><a href="#" class="gt_add_qoe_subject"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?= $string['add'] ?>" /></a></th>
+                                    <th><?php echo $string['name'] ?></th>
+                                    <th><a href="#" class="gt_add_qoe_subject"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?php echo $string['add'] ?>" /></a></th>
                                 </tr>
 
                                 <tr id="gt_subjects_cloneme" class="gt_hidden">
@@ -30,17 +30,17 @@
                                         <input type="hidden" name="ids[]" value="" />
                                         <input type="text" name="names[]" value="" />
                                     </td>
-                                    <td><a href="#" class="gt_remove_qoe_row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                    <td><a href="#" class="gt_remove_qoe_row"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?php echo $string['delete'] ?>" /></a></td>
                                 </tr>
 
                                 <?php if ($allSubjects): ?>
                                     <?php foreach($allSubjects as $subject): ?>
                                     <tr>
                                         <td>
-                                            <input type="hidden" name="ids[]" value="<?= $subject->id ?>" />
-                                            <input type="text" name="names[]" value="<?= \gt_html($subject->name) ?>" />
+                                            <input type="hidden" name="ids[]" value="<?php echo $subject->id ?>" />
+                                            <input type="text" name="names[]" value="<?php echo \gt_html($subject->name) ?>" />
                                         </td>
-                                        <td><a href="#" class="gt_remove_qoe_row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                        <td><a href="#" class="gt_remove_qoe_row"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?php echo $string['delete'] ?>" /></a></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -49,7 +49,7 @@
 
                             <br>
                             <p class="gt_c">
-                                <input type="submit" name="save_subjects" class="gt_btn gt_green" value="<?= $string['save'] ?>" />
+                                <input type="submit" name="save_subjects" class="gt_btn gt_green" value="<?php echo $string['save'] ?>" />
                             </p>
 
                         </form>
@@ -60,19 +60,19 @@
 
             <div class="gt_page_col_33">
                 <div class="gt_form_panel">
-                    <div class="gt_form_panel_sub_heading gt_form_panel_sub_heading_alt"><?= $string['types'] ?></div>
+                    <div class="gt_form_panel_sub_heading gt_form_panel_sub_heading_alt"><?php echo $string['types'] ?></div>
                     <div class="gt_form_panel_body">
 
                         <form action="" method="post">
-                            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+                            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
                             <table id="gt_qoe_types" class="gt_small_table">
 
                                 <tr>
-                                    <th><?= $string['name'] ?></th>
-                                    <th><?= $string['level'] ?></th>
-                                    <th><?= $string['weighting'] ?></th>
-                                    <th><a href="#" class="gt_add_qoe_type"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?= $string['add'] ?>" /></a></th>
+                                    <th><?php echo $string['name'] ?></th>
+                                    <th><?php echo $string['level'] ?></th>
+                                    <th><?php echo $string['weighting'] ?></th>
+                                    <th><a href="#" class="gt_add_qoe_type"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?php echo $string['add'] ?>" /></a></th>
                                 </tr>
 
                                 <tr id="gt_types_cloneme" class="gt_hidden">
@@ -82,19 +82,19 @@
                                     </td>
                                     <td><input type="number" name="levels[]" value="" /></td>
                                     <td><input type="number" name="weightings[]" value="" step="0.1" min="0" max="99.5" /></td>
-                                    <td><a href="#" class="gt_remove_qoe_row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                    <td><a href="#" class="gt_remove_qoe_row"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?php echo $string['delete'] ?>" /></a></td>
                                 </tr>
 
                                 <?php if ($allTypes): ?>
                                     <?php foreach($allTypes as $type): ?>
                                     <tr>
                                         <td>
-                                            <input type="hidden" name="ids[]" value="<?= $type->id ?>" />
-                                            <input type="text" name="names[]" value="<?= \gt_html($type->name) ?>" />
+                                            <input type="hidden" name="ids[]" value="<?php echo $type->id ?>" />
+                                            <input type="text" name="names[]" value="<?php echo \gt_html($type->name) ?>" />
                                         </td>
-                                        <td><input type="number" name="levels[]" value="<?= \gt_html($type->lvl) ?>" /></td>
-                                        <td><input type="number" name="weightings[]" value="<?= \gt_html($type->weighting) ?>" step="0.1" min="0" max="99.5" /></td>
-                                        <td><a href="#" class="gt_remove_qoe_row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                        <td><input type="number" name="levels[]" value="<?php echo \gt_html($type->lvl) ?>" /></td>
+                                        <td><input type="number" name="weightings[]" value="<?php echo \gt_html($type->weighting) ?>" step="0.1" min="0" max="99.5" /></td>
+                                        <td><a href="#" class="gt_remove_qoe_row"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?php echo $string['delete'] ?>" /></a></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -103,7 +103,7 @@
 
                             <br>
                             <p class="gt_c">
-                                <input type="submit" name="save_types" class="gt_btn gt_green" value="<?= $string['save'] ?>" />
+                                <input type="submit" name="save_types" class="gt_btn gt_green" value="<?php echo $string['save'] ?>" />
                             </p>
 
                         </form>
@@ -114,20 +114,20 @@
 
             <div class="gt_page_col_33">
                 <div class="gt_form_panel">
-                    <div class="gt_form_panel_sub_heading gt_form_panel_sub_heading_alt2"><?= $string['grades'] ?></div>
+                    <div class="gt_form_panel_sub_heading gt_form_panel_sub_heading_alt2"><?php echo $string['grades'] ?></div>
                     <div class="gt_form_panel_body">
 
                         <form action="" method="post">
-                            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+                            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
                             <table id="gt_qoe_grades" class="gt_small_table">
 
                                 <tr>
-                                    <th><?= $string['type'] ?></th>
-                                    <th><?= $string['grade'] ?></th>
-                                    <th><?= $string['points'] ?></th>
-                                    <th><?= $string['weighting'] ?></th>
-                                    <th><a href="#" class="gt_add_qoe_grade"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?= $string['add'] ?>" /></a></th>
+                                    <th><?php echo $string['type'] ?></th>
+                                    <th><?php echo $string['grade'] ?></th>
+                                    <th><?php echo $string['points'] ?></th>
+                                    <th><?php echo $string['weighting'] ?></th>
+                                    <th><a href="#" class="gt_add_qoe_grade"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus_circle_frame.png" class="gt_icon" alt="<?php echo $string['add'] ?>" /></a></th>
                                 </tr>
 
                                 <tr id="gt_grades_cloneme" class="gt_hidden">
@@ -137,7 +137,7 @@
                                             <option value=""></option>
                                             <?php if ($allTypes): ?>
                                                 <?php foreach($allTypes as $type): ?>
-                                                    <option value="<?= $type->id ?>"><?= \gt_html($type->name) ?></option>
+                                                    <option value="<?php echo $type->id ?>"><?php echo \gt_html($type->name) ?></option>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
                                         </select>
@@ -145,27 +145,27 @@
                                     <td><input type="text" name="grades[]" value="" /></td>
                                     <td><input type="number" name="points[]" value="" step="0.1" min="0" max="99.5" /></td>
                                     <td><input type="number" name="weightings[]" value="" step="0.1" min="0" max="99.5" /></td>
-                                    <td><a href="#" class="gt_remove_qoe_row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                    <td><a href="#" class="gt_remove_qoe_row"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?php echo $string['delete'] ?>" /></a></td>
                                 </tr>
 
                                 <?php if ($allGrades): ?>
                                     <?php foreach($allGrades as $grade): ?>
                                     <tr>
                                         <td>
-                                            <input type="hidden" name="ids[]" value="<?= $grade->id ?>" />
+                                            <input type="hidden" name="ids[]" value="<?php echo $grade->id ?>" />
                                             <select name="types[]">
                                                 <option value=""></option>
                                                 <?php if ($allTypes): ?>
                                                     <?php foreach($allTypes as $type): ?>
-                                                        <option value="<?= $type->id ?>" <?= ($grade->qoeid == $type->id) ? 'selected' : ''; ?> ><?= \gt_html($type->name) ?></option>
+                                                        <option value="<?php echo $type->id ?>" <?php echo ($grade->qoeid == $type->id) ? 'selected' : ''; ?> ><?php echo \gt_html($type->name) ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>
                                         </td>
-                                        <td><input type="text" name="grades[]" value="<?= \gt_html($grade->grade) ?>" /></td>
-                                        <td><input type="number" name="points[]" value="<?= \gt_html($grade->points) ?>" step="0.1" min="0" max="99.5" /></td>
-                                        <td><input type="number" name="weightings[]" value="<?= \gt_html($grade->weighting) ?>" step="0.1" min="0" max="99.5" /></td>
-                                        <td><a href="#" class="gt_remove_qoe_row"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?= $string['delete'] ?>" /></a></td>
+                                        <td><input type="text" name="grades[]" value="<?php echo \gt_html($grade->grade) ?>" /></td>
+                                        <td><input type="number" name="points[]" value="<?php echo \gt_html($grade->points) ?>" step="0.1" min="0" max="99.5" /></td>
+                                        <td><input type="number" name="weightings[]" value="<?php echo \gt_html($grade->weighting) ?>" step="0.1" min="0" max="99.5" /></td>
+                                        <td><a href="#" class="gt_remove_qoe_row"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/delete.png" class="gt_icon" alt="<?php echo $string['delete'] ?>" /></a></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -174,7 +174,7 @@
 
                             <br>
                             <p class="gt_c">
-                                <input type="submit" name="save_grades" class="gt_btn gt_green" value="<?= $string['save'] ?>" />
+                                <input type="submit" name="save_grades" class="gt_btn gt_green" value="<?php echo $string['save'] ?>" />
                             </p>
 
                         </form>

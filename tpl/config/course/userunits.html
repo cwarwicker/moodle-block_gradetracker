@@ -1,22 +1,22 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class="gt_full_page">
 
     <form action="" method="post" id="gt_course_quals_form">
-        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
         <div class="gt_form_panel">
 
-            <div class="gt_form_panel_heading"><?= $Course->getName() ?> - <?= $string['userunits'] ?></div>
+            <div class="gt_form_panel_heading"><?php echo $Course->getName() ?> - <?php echo $string['userunits'] ?></div>
 
             <div class="gt_form_panel_body">
 
                 <p class="gt_c">
-                    <input type="submit" class="gt_btn gt_blue" name="save_user_quals" value="<?= $string['save'] ?>" />
-                    <a href="<?= $CFG->wwwroot ?>/course/view.php?id=<?= $Course->id ?>" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                    <input type="submit" class="gt_btn gt_blue" name="save_user_quals" value="<?php echo $string['save'] ?>" />
+                    <a href="<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $Course->id ?>" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
                     <br><br>
                 </p>
 
@@ -24,18 +24,18 @@
 
                     <?php foreach($Course->getCourseQualifications(true) as $qual): ?>
 
-                        <h1><a href="#" onclick="$('.userunits-qual').hide();$('#userunits-qual-<?= $qual->getID() ?>').show();return false;"><?= $qual->getDisplayName() ?></a></h1>
+                        <h1><a href="#" onclick="$('.userunits-qual').hide();$('#userunits-qual-<?php echo $qual->getID() ?>').show();return false;"><?php echo $qual->getDisplayName() ?></a></h1>
 
-                        <div id="userunits-qual-<?= $qual->getID() ?>" class="userunits-qual hidden">
+                        <div id="userunits-qual-<?php echo $qual->getID() ?>" class="userunits-qual hidden">
 
                             <?php if ($qual->getUnits()): ?>
                                 <br>
                                 <p class="gt_c">
-                                  <a href="#" class="gt_toggle" toggle="#gt_unit_set_<?= $qual->getID() ?>, .gt_unit_set_img"><b><?= $string['unitset'] ?></b> <img src="<?= $CFG->wwwroot ?>/pix/t/sort_desc.png" class="gt_unit_set_img"><img src="<?= $CFG->wwwroot ?>/pix/t/sort_asc.png" class="gt_unit_set_img" style="display:none;"></a>
+                                  <a href="#" class="gt_toggle" toggle="#gt_unit_set_<?php echo $qual->getID() ?>, .gt_unit_set_img"><b><?php echo $string['unitset'] ?></b> <img src="<?php echo $CFG->wwwroot ?>/pix/t/sort_desc.png" class="gt_unit_set_img"><img src="<?php echo $CFG->wwwroot ?>/pix/t/sort_asc.png" class="gt_unit_set_img" style="display:none;"></a>
                                   <br>
-                                  <select id="gt_unit_set_<?= $qual->getID() ?>" style="display:none;" class="gt_course_select" multiple="multiple">
+                                  <select id="gt_unit_set_<?php echo $qual->getID() ?>" style="display:none;" class="gt_course_select" multiple="multiple">
                                       <?php foreach($qual->getUnits() as $unit): ?>
-                                          <option value="<?= $unit->getID() ?>"><?= $unit->getDisplayName() ?></option>
+                                          <option value="<?php echo $unit->getID() ?>"><?php echo $unit->getDisplayName() ?></option>
                                       <?php endforeach; ?>
                                   </select>
                                 </p>
@@ -44,23 +44,23 @@
                                 <?php if ( ($students = $Course->getStudents()) ): ?>
 
                                     <div class="gt_user_units">
-                                      <table id="gt_stud_units_<?= $qual->getID() ?>" defaultCredits="<?= $qual->getDefaultCredits() ?>" class="gt_stud_units gt_config">
+                                      <table id="gt_stud_units_<?php echo $qual->getID() ?>" defaultCredits="<?php echo $qual->getDefaultCredits() ?>" class="gt_stud_units gt_config">
 
                                           <tr>
                                               <th></th>
-                                              <th><?= $string['user'] ?></th>
+                                              <th><?php echo $string['user'] ?></th>
 
                                               <?php if ($qual->getDefaultCredits()): ?>
-                                                  <th><?= $string['credits'] ?></th>
+                                                  <th><?php echo $string['credits'] ?></th>
                                               <?php endif; ?>
 
                                               <?php foreach($qual->getUnits() as $unit): ?>
                                                   <th>
-                                                      <a href="#" class="gt_tick_all" tickType="unit" qualID="<?= $qual->getID() ?>" unitID="<?= $unit->getID() ?>" role="all">
-                                                          <?= $unit->getDisplayName() ?>
+                                                      <a href="#" class="gt_tick_all" tickType="unit" qualID="<?php echo $qual->getID() ?>" unitID="<?php echo $unit->getID() ?>" role="all">
+                                                          <?php echo $unit->getDisplayName() ?>
                                                       </a>
                                                       <br>
-                                                      <small><?= $unit->getCredits() ?> <?= $string['credits'] ?></small>
+                                                      <small><?php echo $unit->getCredits() ?> <?php echo $string['credits'] ?></small>
                                                   </th>
                                               <?php endforeach; ?>
 
@@ -68,14 +68,14 @@
 
                                           <tr class="cRow">
                                               <td></td>
-                                              <td><a href="#" class="gt_tick_all" tickType="user" qualID="<?= $qual->getID() ?>" role="user"><?= $string['students'] ?></a></td>
+                                              <td><a href="#" class="gt_tick_all" tickType="user" qualID="<?php echo $qual->getID() ?>" role="user"><?php echo $string['students'] ?></a></td>
                                               <?php if ($qual->getDefaultCredits()): ?>
                                                   <td></td>
                                               <?php endif; ?>
                                               <?php foreach($qual->getUnits() as $unit): ?>
                                                   <td>
-                                                      <a href='#'  class="gt_tick_all" tickType="unit" qualID="<?= $qual->getID() ?>" unitID="<?= $unit->getID() ?>" role="user">
-                                                          <img class='gt_mass_arrow' src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                                      <a href='#'  class="gt_tick_all" tickType="unit" qualID="<?php echo $qual->getID() ?>" unitID="<?php echo $unit->getID() ?>" role="user">
+                                                          <img class='gt_mass_arrow' src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?php echo $string['tickall'] ?>' title='<?php echo $string['tickall'] ?>' />
                                                       </a>
                                                   </td>
                                               <?php endforeach; ?>
@@ -87,21 +87,21 @@
 
                                                   <?php $qual->loadStudent( $user ) ?>
 
-                                                  <tr class="user_qual_row" sID="<?= $user->id ?>">
-                                                      <td><?= $user->getPicture($Course->id) ?></td>
+                                                  <tr class="user_qual_row" sID="<?php echo $user->id ?>">
+                                                      <td><?php echo $user->getPicture($Course->id) ?></td>
                                                       <td>
-                                                          <a href="#" class="gt_tick_all" tickType="user" qualID="<?= $qual->getID() ?>" userID="<?= $user->id ?>" role="user">
-                                                              <?= $user->getDisplayName() ?>
+                                                          <a href="#" class="gt_tick_all" tickType="user" qualID="<?php echo $qual->getID() ?>" userID="<?php echo $user->id ?>" role="user">
+                                                              <?php echo $user->getDisplayName() ?>
                                                           </a>
                                                       </td>
 
                                                       <?php if ($qual->getDefaultCredits()): ?>
-                                                          <td class='<?= (($userCredits = $qual->getUserUnitCredits()) > $qual->getDefaultCredits()) ? 'gt_incorrect_credits' : '' ?>'><span class="usr_credits_<?= $user->id ?>_<?= $qual->getID() ?>"><?= $userCredits ?></span> / <?= $qual->getDefaultCredits() ?></td>
+                                                          <td class='<?php echo (($userCredits = $qual->getUserUnitCredits()) > $qual->getDefaultCredits()) ? 'gt_incorrect_credits' : '' ?>'><span class="usr_credits_<?php echo $user->id ?>_<?php echo $qual->getID() ?>"><?php echo $userCredits ?></span> / <?php echo $qual->getDefaultCredits() ?></td>
                                                       <?php endif; ?>
 
                                                       <?php foreach($qual->getUnits() as $unit): ?>
                                                           <td>
-                                                              <input type="checkbox" class="gt_freeze_table_checkbox gt_user_unit_checkbox gt_user_unit_user_<?= $qual->getID() ?>_<?= $user->id ?> gt_user_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_user_unit_unit_<?= $qual->getID() ?>" role="STUDENT" sID="<?= $user->id ?>" qID="<?= $qual->getID() ?>" uID="<?= $unit->getID() ?>" credits="<?= $unit->getCredits() ?>" name="user_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STUDENT" ) ) ? 'checked' : ''; ?> />
+                                                              <input type="checkbox" class="gt_freeze_table_checkbox gt_user_unit_checkbox gt_user_unit_user_<?php echo $qual->getID() ?>_<?php echo $user->id ?> gt_user_unit_unit_<?php echo $qual->getID() ?>_<?php echo $unit->getID() ?> gt_user_unit_unit_<?php echo $qual->getID() ?>" role="STUDENT" sID="<?php echo $user->id ?>" qID="<?php echo $qual->getID() ?>" uID="<?php echo $unit->getID() ?>" credits="<?php echo $unit->getCredits() ?>" name="user_qual_units[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][]" value="<?php echo $user->id ?>" <?php echo ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STUDENT" ) ) ? 'checked' : ''; ?> />
                                                           </td>
                                                       <?php endforeach; ?>
 
@@ -113,14 +113,14 @@
 
                                           <tr class="cRow">
                                               <td></td>
-                                              <td><a href="#" class="gt_tick_all" tickType="user" qualID="<?= $qual->getID() ?>" role="staff"><?= $string['staff'] ?></a></td>
+                                              <td><a href="#" class="gt_tick_all" tickType="user" qualID="<?php echo $qual->getID() ?>" role="staff"><?php echo $string['staff'] ?></a></td>
                                               <?php if ($qual->getDefaultCredits()): ?>
                                                   <td></td>
                                               <?php endif; ?>
                                               <?php foreach($qual->getUnits() as $unit): ?>
                                                   <td>
-                                                      <a href='#'  class="gt_tick_all" tickType="unit" qualID="<?= $qual->getID() ?>" unitID="<?= $unit->getID() ?>" role="staff">
-                                                          <img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?= $string['tickall'] ?>' title='<?= $string['tickall'] ?>' />
+                                                      <a href='#'  class="gt_tick_all" tickType="unit" qualID="<?php echo $qual->getID() ?>" unitID="<?php echo $unit->getID() ?>" role="staff">
+                                                          <img src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/arrow_down.png' alt='<?php echo $string['tickall'] ?>' title='<?php echo $string['tickall'] ?>' />
                                                       </a>
                                                   </td>
                                               <?php endforeach; ?>
@@ -133,10 +133,10 @@
                                                   <?php if ($user->isOnQual($qual->getID(), "STAFF")): ?>
 
                                                       <tr>
-                                                          <td><?= $user->getPicture($Course->id) ?></td>
+                                                          <td><?php echo $user->getPicture($Course->id) ?></td>
                                                           <td>
-                                                              <a href="#"  class="gt_tick_all" tickType="user" qualID="<?= $qual->getID() ?>" userID="<?= $user->id ?>" role="staff">
-                                                                  <?= $user->getDisplayName() ?>
+                                                              <a href="#"  class="gt_tick_all" tickType="user" qualID="<?php echo $qual->getID() ?>" userID="<?php echo $user->id ?>" role="staff">
+                                                                  <?php echo $user->getDisplayName() ?>
                                                               </a>
                                                           </td>
 
@@ -146,7 +146,7 @@
 
                                                           <?php foreach($qual->getUnits() as $unit): ?>
                                                               <td>
-                                                                  <input type="checkbox" class="gt_freeze_table_checkbox gt_staff_unit_staff_<?= $qual->getID() ?>_<?= $user->id ?> gt_staff_unit_unit_<?= $qual->getID() ?>_<?= $unit->getID() ?> gt_staff_unit_unit_<?= $qual->getID() ?>" role="STAFF" uID="<?= $unit->getID() ?>" name="staff_qual_units[<?= $qual->getID() ?>][<?= $unit->getID() ?>][]" value="<?= $user->id ?>" <?= ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STAFF" ) ) ? 'checked' : ''; ?> />
+                                                                  <input type="checkbox" class="gt_freeze_table_checkbox gt_staff_unit_staff_<?php echo $qual->getID() ?>_<?php echo $user->id ?> gt_staff_unit_unit_<?php echo $qual->getID() ?>_<?php echo $unit->getID() ?> gt_staff_unit_unit_<?php echo $qual->getID() ?>" role="STAFF" uID="<?php echo $unit->getID() ?>" name="staff_qual_units[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][]" value="<?php echo $user->id ?>" <?php echo ( $user->isOnQualUnit( $qual->getID(), $unit->getID(), "STAFF" ) ) ? 'checked' : ''; ?> />
                                                               </td>
                                                           <?php endforeach; ?>
 
@@ -163,13 +163,13 @@
 
                                 <?php else: ?>
 
-                                    <p class='gt_c'><?= $string['qualnostuds'] ?></p>
+                                    <p class='gt_c'><?php echo $string['qualnostuds'] ?></p>
 
                                 <?php endif; ?>
 
                             <?php else: ?>
 
-                                <p class='gt_c'><?= $string['qualnounits'] ?></p>
+                                <p class='gt_c'><?php echo $string['qualnounits'] ?></p>
 
                             <?php endif; ?>
 
@@ -181,7 +181,7 @@
 
                 <?php else: ?>
 
-                    <p class="gt_c"><?= $string['coursenoquals'] ?></p>
+                    <p class="gt_c"><?php echo $string['coursenoquals'] ?></p>
 
                 <?php endif; ?>
 

@@ -1,40 +1,40 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <form action="" method="post">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
     <div class='gt_form_panel'>
 
         <div class='gt_form_panel_heading'>
-            <?= $string['newqualbuild'] ?>
+            <?php echo $string['newqualbuild'] ?>
         </div>
 
         <div class='gt_form_panel_body'>
 
             <?php if ($Build->isValid()): ?>
-                <input type="hidden" name="build_id" value="<?= $Build->getID() ?>" />
+                <input type="hidden" name="build_id" value="<?php echo $Build->getID() ?>" />
             <?php endif; ?>
 
-            <input type="hidden" name="build_deleted" value="<?= (int)$Build->isDeleted() ?>" />
+            <input type="hidden" name="build_deleted" value="<?php echo (int)$Build->isDeleted() ?>" />
 
             <p class="gt_c">
-                <input type="submit" class="gt_btn gt_blue" name="submit_qual_build" value="<?= $string['save'] ?>" />
-                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds" class="gt_btn gt_red"><?= $string['cancel'] ?></a>
+                <input type="submit" class="gt_btn gt_blue" name="submit_qual_build" value="<?php echo $string['save'] ?>" />
+                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=builds" class="gt_btn gt_red"><?php echo $string['cancel'] ?></a>
             </p>
 
             <table class="gt_simple_form_table">
 
                 <tr>
-                    <td><?= $string['structure'] ?></td>
+                    <td><?php echo $string['structure'] ?></td>
                     <td>
                         <select name="build_structure_id">
-                            <option value=""><?= $string['pleaseselect'] ?></option>
+                            <option value=""><?php echo $string['pleaseselect'] ?></option>
                             <?php if ($qualStructures): ?>
                                 <?php foreach($qualStructures as $structure): ?>
-                                    <option value="<?= $structure->getID() ?>" <?= ($Build->getStructureID() == $structure->getID()) ? 'selected' : ''; ?> ><?= $structure->getName() ?></option>
+                                    <option value="<?php echo $structure->getID() ?>" <?php echo ($Build->getStructureID() == $structure->getID()) ? 'selected' : ''; ?> ><?php echo $structure->getName() ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
@@ -43,13 +43,13 @@
 
 
                 <tr>
-                    <td><?= $string['level'] ?></td>
+                    <td><?php echo $string['level'] ?></td>
                     <td>
                         <select name="build_level_id">
-                            <option value=""><?= $string['pleaseselect'] ?></option>
+                            <option value=""><?php echo $string['pleaseselect'] ?></option>
                             <?php if ($qualLevels): ?>
                                 <?php foreach($qualLevels as $level): ?>
-                                    <option value="<?= $level->getID() ?>" <?= ($Build->getLevelID() == $level->getID()) ? 'selected' : ''; ?> ><?= $level->getName() ?></option>
+                                    <option value="<?php echo $level->getID() ?>" <?php echo ($Build->getLevelID() == $level->getID()) ? 'selected' : ''; ?> ><?php echo $level->getName() ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
@@ -58,13 +58,13 @@
 
 
                 <tr>
-                    <td><?= $string['subtype'] ?></td>
+                    <td><?php echo $string['subtype'] ?></td>
                     <td>
                         <select name="build_subtype_id">
-                            <option value=""><?= $string['pleaseselect'] ?></option>
+                            <option value=""><?php echo $string['pleaseselect'] ?></option>
                             <?php if ($qualSubTypes): ?>
                                 <?php foreach($qualSubTypes as $subType): ?>
-                                    <option value="<?= $subType->getID() ?>" <?= ($Build->getSubTypeID() == $subType->getID()) ? 'selected' : ''; ?> ><?= $subType->getName() ?></option>
+                                    <option value="<?php echo $subType->getID() ?>" <?php echo ($Build->getSubTypeID() == $subType->getID()) ? 'selected' : ''; ?> ><?php echo $subType->getName() ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>

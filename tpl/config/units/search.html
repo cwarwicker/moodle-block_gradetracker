@@ -1,29 +1,29 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class="gt_full_page">
 
     <form action="#results" method="post">
-        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
         <div class="gt_form_panel">
 
-            <div class="gt_form_panel_heading"><?= $string['searchforunit'] ?></div>
+            <div class="gt_form_panel_heading"><?php echo $string['searchforunit'] ?></div>
 
             <div class="gt_form_panel_body">
 
                 <table id="gt_qual_form_table">
 
                     <tr>
-                        <td><?= $string['unittype'] ?></td>
+                        <td><?php echo $string['unittype'] ?></td>
                         <td>
                             <select name="unit_type" class="gt_form_control">
                                 <option value=""></option>
                                 <?php if ($structures): ?>
                                     <?php foreach($structures as $struc): ?>
-                                        <option value="<?= $struc->getID() ?>" <?= (isset($searchParams['structureID']) && $searchParams['structureID'] == $struc->getID()) ? 'selected' : ''; ?> ><?= $struc->getName() ?></option>
+                                        <option value="<?php echo $struc->getID() ?>" <?php echo (isset($searchParams['structureID']) && $searchParams['structureID'] == $struc->getID()) ? 'selected' : ''; ?> ><?php echo $struc->getName() ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -31,13 +31,13 @@
                     </tr>
 
                     <tr>
-                        <td><?= $string['level'] ?></td>
+                        <td><?php echo $string['level'] ?></td>
                         <td>
                             <select name="unit_level" class="gt_form_control">
                                 <option value=""></option>
                                 <?php if ($allLevels): ?>
                                     <?php foreach($allLevels as $level): ?>
-                                        <option value="<?= $level->getID() ?>" <?= (isset($searchParams['levelID']) && $searchParams['levelID'] == $level->getID()) ? 'selected' : ''; ?> ><?= $level->getName() ?></option>
+                                        <option value="<?php echo $level->getID() ?>" <?php echo (isset($searchParams['levelID']) && $searchParams['levelID'] == $level->getID()) ? 'selected' : ''; ?> ><?php echo $level->getName() ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -45,30 +45,30 @@
                     </tr>
 
                     <tr>
-                        <td><?= $string['unitnumber'] ?></td>
+                        <td><?php echo $string['unitnumber'] ?></td>
                         <td>
-                            <input type="text" class="gt_form_control" name="unitNumber" value="<?= (isset($searchParams['unitNumber'])) ? \gt_html($searchParams['unitNumber']) : ''; ?>" />
+                            <input type="text" class="gt_form_control" name="unitNumber" value="<?php echo (isset($searchParams['unitNumber'])) ? \gt_html($searchParams['unitNumber']) : ''; ?>" />
                         </td>
                     </tr>
 
                     <tr>
-                        <td><?= $string['uniquecode'] ?></td>
+                        <td><?php echo $string['uniquecode'] ?></td>
                         <td>
-                            <input type="text" class="gt_form_control" name="code" value="<?= (isset($searchParams['code'])) ? \gt_html($searchParams['code']) : ''; ?>" />
+                            <input type="text" class="gt_form_control" name="code" value="<?php echo (isset($searchParams['code'])) ? \gt_html($searchParams['code']) : ''; ?>" />
                         </td>
                     </tr>
 
                     <tr>
-                        <td><?= $string['unitname'] ?></td>
+                        <td><?php echo $string['unitname'] ?></td>
                         <td>
-                            <input type="text" class="gt_form_control" name="name" value="<?= (isset($searchParams['name'])) ? \gt_html($searchParams['name']) : ''; ?>" />
+                            <input type="text" class="gt_form_control" name="name" value="<?php echo (isset($searchParams['name'])) ? \gt_html($searchParams['name']) : ''; ?>" />
                         </td>
                     </tr>
 
                     <tr>
                         <td></td>
                         <td>
-                            <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?= $string['search'] ?>" />
+                            <input type="submit" class="gt_btn gt_blue" name="submit_search" value="<?php echo $string['search'] ?>" />
                         </td>
                     </tr>
 
@@ -83,11 +83,11 @@
                                 <table id="gt_qual_results" class="gt_config">
 
                                     <tr>
-                                        <th><?= $string['type'] ?></th>
-                                        <th><?= $string['name'] ?></th>
-                                        <th><?= $string['level'] ?></th>
-                                        <th><?= $string['quals'] ?></th>
-                                        <th><?= $string['options'] ?></th>
+                                        <th><?php echo $string['type'] ?></th>
+                                        <th><?php echo $string['name'] ?></th>
+                                        <th><?php echo $string['level'] ?></th>
+                                        <th><?php echo $string['quals'] ?></th>
+                                        <th><?php echo $string['options'] ?></th>
 
                                     </tr>
 
@@ -95,48 +95,48 @@
 
                                         <?php foreach($results as $result): ?>
                                         <tr>
-                                            <td><?= $result->getStructureRealName() ?></td>
+                                            <td><?php echo $result->getStructureRealName() ?></td>
                                             <td>
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $result->getID() ?>">
+                                                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?php echo $result->getID() ?>">
                                                     <?php if ($result->getCode() != ''): ?>
-                                                        (<?= $result->getCode() ?>)&nbsp;&nbsp;&nbsp;
+                                                        (<?php echo $result->getCode() ?>)&nbsp;&nbsp;&nbsp;
                                                     <?php endif; ?>
-                                                    <?= $result->getDisplayName() ?>
+                                                    <?php echo $result->getDisplayName() ?>
                                                 </a>
                                             </td>
-                                            <td><?= $result->getLevelName() ?></td>
-                                            <td><?= $result->countQuals() ?></td>
+                                            <td><?php echo $result->getLevelName() ?></td>
+                                            <td><?php echo $result->countQuals() ?></td>
                                             <td>
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" title="<?= $string['edit'] ?>" alt="<?= $string['edit'] ?>" /></a>
+                                                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=edit&id=<?php echo $result->getID() ?>"><img src="<?php echo gt_image_url('t/edit') ?>" title="<?php echo $string['edit'] ?>" alt="<?php echo $string['edit'] ?>" /></a>
                                                 &nbsp;&nbsp;
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=copy&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/copy') ?>" title="<?= $string['duplicate'] ?>" alt="<?= $string['duplicate'] ?>" /></a>
+                                                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=copy&id=<?php echo $result->getID() ?>"><img src="<?php echo gt_image_url('t/copy') ?>" title="<?php echo $string['duplicate'] ?>" alt="<?php echo $string['duplicate'] ?>" /></a>
                                                 &nbsp;&nbsp;
-                                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?= $result->getID() ?>&sesskey=<?= sesskey() ?>"><img src="<?= gt_image_url('t/download') ?>" title="<?= $string['export'] ?>" alt="<?= $string['export'] ?>" /></a>
+                                                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=structure&structure=unit&structure_id=<?php echo $result->getID() ?>&sesskey=<?php echo sesskey() ?>"><img src="<?php echo gt_image_url('t/download') ?>" title="<?php echo $string['export'] ?>" alt="<?php echo $string['export'] ?>" /></a>
                                                 <?php if ($User->hasCapability('block/gradetracker:delete_restore_units')): ?>
                                                     &nbsp;&nbsp;
-                                                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?= $result->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" title="<?= $string['delete'] ?>" alt="<?= $string['delete'] ?>" /></a>
+                                                    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=units&section=delete&id=<?php echo $result->getID() ?>"><img src="<?php echo gt_image_url('t/delete') ?>" title="<?php echo $string['delete'] ?>" alt="<?php echo $string['delete'] ?>" /></a>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan='5'><?= $string['noresults'] ?></td>
+                                            <td colspan='5'><?php echo $string['noresults'] ?></td>
                                         </tr>
                                     <?php endif; ?>
                                     <?php if ($deletedresults): ?>
                                         <?php if (gt_has_capability('block/gradetracker:view_hidden_units')): ?>
                                                 <?php foreach($deletedresults as $delresult): ?>
                                                 <tr>
-                                                <td style="background-color:#ffe5e5;color:#808080;"><?= $string['deleted'] ?> : <?= $delresult->getStructureName() ?></td>
-                                                <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->getDisplayName() ?></td>
-                                                <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->getLevelName() ?></td>
-                                                <td style="background-color:#ffe5e5;color:#808080;"><?= $delresult->countQuals() ?></td>
+                                                <td style="background-color:#ffe5e5;color:#808080;"><?php echo $string['deleted'] ?> : <?php echo $delresult->getStructureName() ?></td>
+                                                <td style="background-color:#ffe5e5;color:#808080;"><?php echo $delresult->getDisplayName() ?></td>
+                                                <td style="background-color:#ffe5e5;color:#808080;"><?php echo $delresult->getLevelName() ?></td>
+                                                <td style="background-color:#ffe5e5;color:#808080;"><?php echo $delresult->countQuals() ?></td>
                                                 <td style="background-color:#ffe5e5;color:#808080;">
                                                     <form action="" method="post">
-                                                        <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-                                                        <input name="id" type="hidden" value="<?= $delresult->getID() ?>">
-                                                        <?= $string['restore'] ?><input type="image" name="restoreUnit" src="/blocks/gradetracker/pix/icons/arrow_undo.png" style="height:15px;width:15px;" alt="<?= $string['restore'] ?>" />
+                                                        <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+                                                        <input name="id" type="hidden" value="<?php echo $delresult->getID() ?>">
+                                                        <?php echo $string['restore'] ?><input type="image" name="restoreUnit" src="/blocks/gradetracker/pix/icons/arrow_undo.png" style="height:15px;width:15px;" alt="<?php echo $string['restore'] ?>" />
                                                     </form>
                                                 </td>
                                                 </tr>

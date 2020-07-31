@@ -1,12 +1,12 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class='gt_form_panel'>
 
     <div class='gt_form_panel_heading'>
-        <?= $Course->getName() ?> : <?= $string['activities'] ?>
+        <?php echo $Course->getName() ?> : <?php echo $string['activities'] ?>
     </div>
 
     <div class='gt_form_panel_body'>
@@ -16,9 +16,9 @@
         <div id="gt_course_activities_left">
 
             <ul class="gt_vertical_menu">
-                <li><a id="_overview" href="#" class="gt_show_activity_section" section="#gt_activities_section_overview" hide=".gt_section"><?= $string['overview'] ?></a></li>
-                <li><a id="_byactivity" href="#" class="gt_show_activity_section" section="#gt_activities_section_byactivity" hide=".gt_section"><?= $string['byactivity'] ?></a></li>
-                <li><a id="_byunits" href="#" class="gt_show_activity_section selected" section="#gt_activities_section_byunits" hide=".gt_section"><?= $string['byunitscriteria'] ?></a></li>
+                <li><a id="_overview" href="#" class="gt_show_activity_section" section="#gt_activities_section_overview" hide=".gt_section"><?php echo $string['overview'] ?></a></li>
+                <li><a id="_byactivity" href="#" class="gt_show_activity_section" section="#gt_activities_section_byactivity" hide=".gt_section"><?php echo $string['byactivity'] ?></a></li>
+                <li><a id="_byunits" href="#" class="gt_show_activity_section selected" section="#gt_activities_section_byunits" hide=".gt_section"><?php echo $string['byunitscriteria'] ?></a></li>
             </ul>
 
         </div>
@@ -30,7 +30,7 @@
                 <ul class="gt_horizontal_menu">
                      <?php if($courseQuals): ?>
                         <?php foreach($courseQuals as $qual): ?>
-                            <li><a href="#" class="gt_show_activity_section" section="#gt_activities_overview_<?= $qual->getID() ?>" hide=".gt_activities_overview_section"><?= $qual->getDisplayName() ?></a></li>
+                            <li><a href="#" class="gt_show_activity_section" section="#gt_activities_overview_<?php echo $qual->getID() ?>" hide=".gt_activities_overview_section"><?php echo $qual->getDisplayName() ?></a></li>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </ul>
@@ -38,12 +38,12 @@
                 <br>
                 <table id='gt_activities_overview_key'>
                     <tr>
-                        <th colspan='3'><?= $string['key'] ?></th>
+                        <th colspan='3'><?php echo $string['key'] ?></th>
                     </tr>
                     <tr>
-                        <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/tick_round.png" /> - <?= $string['activities:overview:tick:desc'] ?></td>
-                        <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/cross_round.png" /> - <?= $string['activities:overview:cross:desc'] ?></td>
-                        <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/warning_round.png" /> - <?= $string['activities:overview:warning:desc'] ?></td>
+                        <td><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/tick_round.png" /> - <?php echo $string['activities:overview:tick:desc'] ?></td>
+                        <td><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/cross_round.png" /> - <?php echo $string['activities:overview:cross:desc'] ?></td>
+                        <td><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/warning_round.png" /> - <?php echo $string['activities:overview:warning:desc'] ?></td>
                     </tr>
                 </table>
 
@@ -53,17 +53,17 @@
 
                     <?php foreach($courseQuals as $qual): ?>
 
-                        <div id="gt_activities_overview_<?= $qual->getID() ?>" class="gt_activities_overview_section" style="display:none;">
+                        <div id="gt_activities_overview_<?php echo $qual->getID() ?>" class="gt_activities_overview_section" style="display:none;">
 
                             <table class='gt_activities_overview'>
                                 <tr>
-                                    <th><?= $string['unit'] ?></th>
+                                    <th><?php echo $string['unit'] ?></th>
                                     <?php if( ($criteriaNames = $qual->getHeaderCriteriaNames()) ): ?>
                                         <?php foreach($criteriaNames as $criterion): ?>
-                                            <th><?= $criterion['name'] ?></th>
+                                            <th><?php echo $criterion['name'] ?></th>
                                             <?php if ($criterion['sub']): ?>
                                                 <?php foreach($criterion['sub'] as $sub): ?>
-                                                    <th><?= $sub ?></th>
+                                                    <th><?php echo $sub ?></th>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
@@ -73,11 +73,11 @@
                                 <?php if ( ($units = $qual->getUnits()) ): ?>
                                     <?php foreach($units as $qualUnit): ?>
                                         <tr>
-                                            <td><?= $qualUnit->getDisplayName() ?></td>
+                                            <td><?php echo $qualUnit->getDisplayName() ?></td>
                                             <?php foreach($criteriaNames as $crit): ?>
 
                                                 <?php if ( ($criterion = $qualUnit->getCriterionByName($crit['name'])) !== false ): ?>
-                                                    <td class='gt_activities_overview_criterion' qID='<?= $qual->getID() ?>' uID='<?= $qualUnit->getID() ?>' cID='<?= $criterion->getID() ?>'><?= $criterion->getActivityOverviewCell( $qual->getID() ) ?></td>
+                                                    <td class='gt_activities_overview_criterion' qID='<?php echo $qual->getID() ?>' uID='<?php echo $qualUnit->getID() ?>' cID='<?php echo $criterion->getID() ?>'><?php echo $criterion->getActivityOverviewCell( $qual->getID() ) ?></td>
                                                 <?php else: ?>
                                                     <td class='gt_empty'></td>
                                                 <?php endif; ?>
@@ -85,7 +85,7 @@
                                                 <?php if ($crit['sub']): ?>
                                                     <?php foreach($crit['sub'] as $sub): ?>
                                                         <?php if ( ($criterion = $qualUnit->getCriterionByName($sub)) !== false ): ?>
-                                                            <td class='gt_activities_overview_criterion' qID='<?= $qual->getID() ?>' uID='<?= $qualUnit->getID() ?>' cID='<?= $criterion->getID() ?>'><?= $criterion->getActivityOverviewCell( $qual->getID() ) ?></td>
+                                                            <td class='gt_activities_overview_criterion' qID='<?php echo $qual->getID() ?>' uID='<?php echo $qualUnit->getID() ?>' cID='<?php echo $criterion->getID() ?>'><?php echo $criterion->getActivityOverviewCell( $qual->getID() ) ?></td>
                                                         <?php else: ?>
                                                             <td class='gt_empty'></td>
                                                         <?php endif; ?>
@@ -105,25 +105,25 @@
                     <?php endforeach; ?>
 
                     <br>
-                    <div class='c'><img id='gt_activities_overview_loading' style='display:none;' src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="<?= $string['loading'] ?>" /></div>
+                    <div class='c'><img id='gt_activities_overview_loading' style='display:none;' src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/ajax-loader.gif" alt="<?php echo $string['loading'] ?>" /></div>
                     <br>
 
                     <div id='gt_activities_overview_details' style='display:none'>
                         <table>
                             <tr>
-                                <td><?= $string['qualification'] ?>:</td>
+                                <td><?php echo $string['qualification'] ?>:</td>
                                 <td id='gt_activities_overview_details_qual'></td>
                             </tr>
                             <tr>
-                                <td><?= $string['unit'] ?>:</td>
+                                <td><?php echo $string['unit'] ?>:</td>
                                 <td id='gt_activities_overview_details_unit'></td>
                             </tr>
                             <tr>
-                                <td><?= $string['criterion'] ?>:</td>
+                                <td><?php echo $string['criterion'] ?>:</td>
                                 <td id='gt_activities_overview_details_criterion'></td>
                             </tr>
                             <tr>
-                                <td colspan='2'><?= $string['activitylinks'] ?>:</td>
+                                <td colspan='2'><?php echo $string['activitylinks'] ?>:</td>
                             </tr>
 
                         </table>
@@ -140,9 +140,9 @@
                     <tr>
                         <th></th>
                         <th></th>
-                        <th><?= $string['activity'] ?></th>
-                        <th><?= $string['duedate'] ?></th>
-                        <th><?= $string['criteria'] ?></th>
+                        <th><?php echo $string['activity'] ?></th>
+                        <th><?php echo $string['duedate'] ?></th>
+                        <th><?php echo $string['criteria'] ?></th>
                     </tr>
 
                     <?php if ($activities): ?>
@@ -154,28 +154,28 @@
                                 <?php foreach($activityModule->getRecordParts() as $part): ?>
 
                                     <tr>
-                                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=add&cmid=<?= $activityModule->getCourseModID() ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
-                                        <td><img src="<?= $activityModule->getModIcon() ?>" alt="<?= $activityModule->getModName() ?>" /></td>
-                                        <td><a href="<?= $CFG->wwwroot ?>/mod/<?= $activityModule->getModName() ?>/view.php?id=<?= $activityModule->getCourseModID() ?>"><?= $activityModule->getRecordName() ?> (<?= $part->name ?>)</a></td>
-                                        <td><?= $activityModule->getRecordDueDate('D jS M Y, H:i', $part->id) ?></td>
+                                        <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=add&cmid=<?php echo $activityModule->getCourseModID() ?>"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
+                                        <td><img src="<?php echo $activityModule->getModIcon() ?>" alt="<?php echo $activityModule->getModName() ?>" /></td>
+                                        <td><a href="<?php echo $CFG->wwwroot ?>/mod/<?php echo $activityModule->getModName() ?>/view.php?id=<?php echo $activityModule->getCourseModID() ?>"><?php echo $activityModule->getRecordName() ?> (<?php echo $part->name ?>)</a></td>
+                                        <td><?php echo $activityModule->getRecordDueDate('D jS M Y, H:i', $part->id) ?></td>
                                         <td>
                                             <?php foreach( (array)$activityModule->getQualsOnModule($part->id) as $qual): ?>
                                                 <table class="gt_course_activities_qual_table">
 
                                                     <tr>
-                                                        <th colspan="<?= $activityModule->countCriteriaOnModule($qual->getID(), false, $part->id) ?>"><?= $qual->getDisplayName() ?> <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=delete&cmid=<?= $activityModule->getCourseModID() ?>&part=<?= $part->id ?>&qualid=<?= $qual->getID() ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a></th>
+                                                        <th colspan="<?php echo $activityModule->countCriteriaOnModule($qual->getID(), false, $part->id) ?>"><?php echo $qual->getDisplayName() ?> <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=delete&cmid=<?php echo $activityModule->getCourseModID() ?>&part=<?php echo $part->id ?>&qualid=<?php echo $qual->getID() ?>'><img src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a></th>
                                                     </tr>
 
                                                     <?php foreach( (array)$activityModule->getUnitsOnModule($qual->getID()) as $unit): ?>
 
                                                         <?php if ($criteria = $activityModule->getCriteriaOnModule($qual->getID(), $unit, $part->id)): ?>
                                                             <tr>
-                                                                <th class="gt_unit_name" colspan="<?= $activityModule->countCriteriaOnModule($qual->getID(), false, $part->id) ?>"><?= $unit->getDisplayName() ?></th>
+                                                                <th class="gt_unit_name" colspan="<?php echo $activityModule->countCriteriaOnModule($qual->getID(), false, $part->id) ?>"><?php echo $unit->getDisplayName() ?></th>
                                                             </tr>
 
                                                             <tr>
                                                                 <?php foreach( $criteria as $crit): ?>
-                                                                    <td><?= $crit->getName() ?></td>
+                                                                    <td><?php echo $crit->getName() ?></td>
                                                                 <?php endforeach; ?>
                                                             </tr>
                                                         <?php endif; ?>
@@ -192,27 +192,27 @@
                             <?php else: ?>
 
                                 <tr>
-                                    <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=add&cmid=<?= $activityModule->getCourseModID() ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
-                                    <td><img src="<?= $activityModule->getModIcon() ?>" alt="<?= $activityModule->getModName() ?>" /></td>
-                                    <td><a href="<?= $CFG->wwwroot ?>/mod/<?= $activityModule->getModName() ?>/view.php?id=<?= $activityModule->getCourseModID() ?>"><?= $activityModule->getRecordName() ?></a></td>
-                                    <td><?= $activityModule->getRecordDueDate('D jS M Y, H:i') ?></td>
+                                    <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=add&cmid=<?php echo $activityModule->getCourseModID() ?>"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
+                                    <td><img src="<?php echo $activityModule->getModIcon() ?>" alt="<?php echo $activityModule->getModName() ?>" /></td>
+                                    <td><a href="<?php echo $CFG->wwwroot ?>/mod/<?php echo $activityModule->getModName() ?>/view.php?id=<?php echo $activityModule->getCourseModID() ?>"><?php echo $activityModule->getRecordName() ?></a></td>
+                                    <td><?php echo $activityModule->getRecordDueDate('D jS M Y, H:i') ?></td>
                                     <td>
                                         <?php foreach( (array)$activityModule->getQualsOnModule() as $qual): ?>
                                             <table class="gt_course_activities_qual_table">
 
                                                 <tr>
-                                                    <th colspan="<?= $activityModule->countCriteriaOnModule($qual->getID()) ?>"><?= $qual->getDisplayName() ?> <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=delete&cmid=<?= $activityModule->getCourseModID() ?>&qualid=<?= $qual->getID() ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a></th>
+                                                    <th colspan="<?php echo $activityModule->countCriteriaOnModule($qual->getID()) ?>"><?php echo $qual->getDisplayName() ?> <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=delete&cmid=<?php echo $activityModule->getCourseModID() ?>&qualid=<?php echo $qual->getID() ?>'><img src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a></th>
                                                 </tr>
 
                                                 <?php foreach( (array)$activityModule->getUnitsOnModule($qual->getID()) as $unit): ?>
 
                                                     <tr>
-                                                        <th class="gt_unit_name" colspan="<?= $activityModule->countCriteriaOnModule($qual->getID()) ?>"><?= $unit->getDisplayName() ?></th>
+                                                        <th class="gt_unit_name" colspan="<?php echo $activityModule->countCriteriaOnModule($qual->getID()) ?>"><?php echo $unit->getDisplayName() ?></th>
                                                     </tr>
 
                                                     <tr>
                                                         <?php foreach( (array)$activityModule->getCriteriaOnModule($qual->getID(), $unit) as $crit): ?>
-                                                            <td><?= $crit->getName() ?></td>
+                                                            <td><?php echo $crit->getName() ?></td>
                                                         <?php endforeach; ?>
                                                     </tr>
 
@@ -242,8 +242,8 @@
 
                     <tr>
                         <th></th>
-                        <th><?= $string['unit'] ?></th>
-                        <th><?= $string['activities'] ?></th>
+                        <th><?php echo $string['unit'] ?></th>
+                        <th><?php echo $string['activities'] ?></th>
                     </tr>
 
                     <?php if ($courseQuals): ?>
@@ -251,15 +251,15 @@
                         <?php foreach($courseQuals as $qual): ?>
 
                             <tr>
-                                <th colspan="3"><?= $qual->getDisplayName() ?></th>
+                                <th colspan="3"><?php echo $qual->getDisplayName() ?></th>
                             </tr>
 
                             <?php if ($qual->getUnits()): ?>
 
                                 <?php foreach($qual->getUnits() as $unit): ?>
                                     <tr>
-                                        <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=add&qualid=<?= $qual->getID() ?>&unitid=<?= $unit->getID() ?>"><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
-                                        <td class="gt_left"><?= $unit->getDisplayName() ?></td>
+                                        <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=add&qualid=<?php echo $qual->getID() ?>&unitid=<?php echo $unit->getID() ?>"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
+                                        <td class="gt_left"><?php echo $unit->getDisplayName() ?></td>
                                         <td>
                                             <?php foreach((array)\GT\ModuleLink::getModulesOnUnit($qual->getID(), $unit->getID(), $Course->id) as $unitMod): ?>
 
@@ -272,18 +272,18 @@
                                                             <table class="gt_course_activities_qual_table">
 
                                                                 <tr>
-                                                                    <th colspan="<?= $unitMod->countCriteriaOnModule($qual->getID(), $unit, $part->id) ?>">
-                                                                        <img class="gt_16" src="<?= $unitMod->getModIcon() ?>" alt="<?= $unitMod->getModName() ?>" />
-                                                                        <?= $unitMod->getRecordName() ?>
-                                                                        (<?= $part->name ?>) -
-                                                                        <?= $unitMod->getRecordDueDate('D jS M Y, H:i', $part->id) ?>
-                                                                        <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=delete&cmid=<?= $unitMod->getCourseModID() ?>&part=<?= $part->id ?>&qualid=<?= $qual->getID() ?>&unitID=<?= $unit->getID() ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a>
+                                                                    <th colspan="<?php echo $unitMod->countCriteriaOnModule($qual->getID(), $unit, $part->id) ?>">
+                                                                        <img class="gt_16" src="<?php echo $unitMod->getModIcon() ?>" alt="<?php echo $unitMod->getModName() ?>" />
+                                                                        <?php echo $unitMod->getRecordName() ?>
+                                                                        (<?php echo $part->name ?>) -
+                                                                        <?php echo $unitMod->getRecordDueDate('D jS M Y, H:i', $part->id) ?>
+                                                                        <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=delete&cmid=<?php echo $unitMod->getCourseModID() ?>&part=<?php echo $part->id ?>&qualid=<?php echo $qual->getID() ?>&unitID=<?php echo $unit->getID() ?>'><img src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a>
                                                                     </th>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <?php foreach( $criteria as $crit): ?>
-                                                                        <td><?= $crit->getName() ?></td>
+                                                                        <td><?php echo $crit->getName() ?></td>
                                                                     <?php endforeach; ?>
                                                                 </tr>
 
@@ -298,17 +298,17 @@
                                                     <table class="gt_course_activities_qual_table">
 
                                                         <tr>
-                                                            <th colspan="<?= $unitMod->countCriteriaOnModule($qual->getID(), $unit) ?>">
-                                                                <img class="gt_16" src="<?= $unitMod->getModIcon() ?>" alt="<?= $unitMod->getModName() ?>" />
-                                                                <?= $unitMod->getRecordName() ?> -
-                                                                <?= $unitMod->getRecordDueDate('D jS M Y, H:i') ?>
-                                                                <a href='<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?= $Course->id ?>&section=activities&page=delete&cmid=<?= $unitMod->getCourseModID() ?>&qualid=<?= $qual->getID() ?>&unitid=<?= $unit->getID() ?>'><img src='<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a>
+                                                            <th colspan="<?php echo $unitMod->countCriteriaOnModule($qual->getID(), $unit) ?>">
+                                                                <img class="gt_16" src="<?php echo $unitMod->getModIcon() ?>" alt="<?php echo $unitMod->getModName() ?>" />
+                                                                <?php echo $unitMod->getRecordName() ?> -
+                                                                <?php echo $unitMod->getRecordDueDate('D jS M Y, H:i') ?>
+                                                                <a href='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=delete&cmid=<?php echo $unitMod->getCourseModID() ?>&qualid=<?php echo $qual->getID() ?>&unitid=<?php echo $unit->getID() ?>'><img src='<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/remove.png' /></a>
                                                             </th>
                                                         </tr>
 
                                                         <tr>
                                                             <?php foreach( (array)$unitMod->getCriteriaOnModule($qual->getID(), $unit) as $crit): ?>
-                                                                <td><?= $crit->getName() ?></td>
+                                                                <td><?php echo $crit->getName() ?></td>
                                                             <?php endforeach; ?>
                                                         </tr>
 
@@ -338,7 +338,7 @@
 
         <?php else: ?>
 
-        <p><?= $string['nomodlinks'] ?></p>
+        <p><?php echo $string['nomodlinks'] ?></p>
 
         <?php endif; ?>
 
@@ -346,4 +346,4 @@
 
 </div>
 
-<input type="hidden" id="gt_cid" value="<?= $Course->id ?>" />
+<input type="hidden" id="gt_cid" value="<?php echo $Course->id ?>" />

@@ -3,7 +3,7 @@
 <ul class="elbp_tabrow">
     <?php if ($quals): ?>
         <?php foreach($quals as $qual): ?>
-            <li class="elbp_view_link" class="elbp_view_link"><a href="#" class="gt_elbp_load_grid" qualID="<?= $qual->getID() ?>" id="qual<?= $qual->getID() ?>_tab"><?= $qual->getDisplayName() ?></a></li>
+            <li class="elbp_view_link" class="elbp_view_link"><a href="#" class="gt_elbp_load_grid" qualID="<?php echo $qual->getID() ?>" id="qual<?php echo $qual->getID() ?>_tab"><?php echo $qual->getDisplayName() ?></a></li>
         <?php endforeach; ?>
     <?php endif; ?>
 </ul>
@@ -12,6 +12,6 @@
 
 <div id="elbp_gradetracker_content">
 
-    <?= get_string('pleasechoosetracker', 'block_gradetracker') ?>
+    <?php echo get_string('pleasechoosetracker', 'block_gradetracker') ?>
 
 </div>

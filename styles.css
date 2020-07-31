@@ -902,6 +902,8 @@ table.gt_config td img
 table.gt_config.gt_config_white th
 {
     background-color: #fff;
+    color: #000;
+    font-weight: bold;
 }
 
 

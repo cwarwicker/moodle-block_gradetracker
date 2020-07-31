@@ -2,18 +2,18 @@
 
     <div class='gt_form_panel_side'>
 
-            <div class='gt_form_panel_heading'><?= $string['recentactivity'] ?></div>
+            <div class='gt_form_panel_heading'><?php echo $string['recentactivity'] ?></div>
             <div class="gt_form_panel_body">
                 <ul class='gt_recent_activity'>
                     <?php if ($logs): ?>
                         <?php foreach($logs as $log): ?>
                             <li>
-                                <div><?= $log->user->getPicture(null, 50) ?></div>
+                                <div><?php echo $log->user->getPicture(null, 50) ?></div>
                                 <div>
                                     <span>
-                                        <a href='<?= $CFG->wwwroot ?>/user/profile.php?id=<?= $log->user->id ?>'><?= $log->user->getDisplayName() ?></a> <?= $log->details ?>
+                                        <a href='<?php echo $CFG->wwwroot ?>/user/profile.php?id=<?php echo $log->user->id ?>'><?php echo $log->user->getDisplayName() ?></a> <?php echo $log->details ?>
                                     </span><br>
-                                    <small><i class="icon-time"></i> <?= \gt_time_ago($log->timestamp) ?></small>
+                                    <small><i class="icon-time"></i> <?php echo \gt_time_ago($log->timestamp) ?></small>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -26,29 +26,29 @@
     </div>
 
     <div class='gt_form_panel_centre'>
-        <div class='gt_form_panel_heading'><?= $string['systeminfo'] ?></div>
+        <div class='gt_form_panel_heading'><?php echo $string['systeminfo'] ?></div>
         <div class="gt_form_panel_body">
 
             <table id="gt_sys_info">
 
                 <tr>
-                    <td><strong><?= \get_string('system:moodleversion', 'local_df_hub') ?></strong></td>
-                    <td><?= $site->getVersion() ?> (<?= $site->getBuild() ?>)</td>
+                    <td><strong><?php echo \get_string('system:moodleversion', 'local_df_hub') ?></strong></td>
+                    <td><?php echo $site->getVersion() ?> (<?php echo $site->getBuild() ?>)</td>
                 </tr>
 
                 <tr>
-                    <td><strong><?= \sprintf( \get_string('system:pluginversion', 'local_df_hub'), $GT->getPluginTitle() ) ?></strong></td>
-                    <td><?= $GT->getPluginVersion() ?> (<?= $GT->getBlockVersion() ?>)</td>
+                    <td><strong><?php echo \sprintf( \get_string('system:pluginversion', 'local_df_hub'), $GT->getPluginTitle() ) ?></strong></td>
+                    <td><?php echo $GT->getPluginVersion() ?> (<?php echo $GT->getBlockVersion() ?>)</td>
                 </tr>
 
                 <tr>
-                  <td><strong><?= \get_string('system:updatesavailable', 'local_df_hub')  ?></strong></td>
-                    <td><?= $GT->printVersionCheck( true, $string['uptodate'] ) ?></td>
+                  <td><strong><?php echo \get_string('system:updatesavailable', 'local_df_hub')  ?></strong></td>
+                    <td><?php echo $GT->printVersionCheck( true, $string['uptodate'] ) ?></td>
                 </tr>
 
                 <tr>
-                  <td><strong><?= \sprintf( \get_string('system:plugindataroot', 'local_df_hub'), $GT->getPluginTitle() ) ?></strong></td>
-                    <td><em><?= \GT\GradeTracker::dataroot() ?></em> <?= (is_writeable(\GT\GradeTracker::dataroot())) ? "<span style='color:green;'>(".\get_string('writeable', 'local_df_hub') .")</span>" : "<span style='color:red;'>(".\get_string('notwriteable', 'local_df_hub') .")</span>" ?></td>
+                  <td><strong><?php echo \sprintf( \get_string('system:plugindataroot', 'local_df_hub'), $GT->getPluginTitle() ) ?></strong></td>
+                    <td><em><?php echo \GT\GradeTracker::dataroot() ?></em> <?php echo (is_writeable(\GT\GradeTracker::dataroot())) ? "<span style='color:green;'>(".\get_string('writeable', 'local_df_hub') .")</span>" : "<span style='color:red;'>(".\get_string('notwriteable', 'local_df_hub') .")</span>" ?></td>
                 </tr>
 
             </table>
@@ -59,20 +59,20 @@
 
     <div class='gt_form_panel_side'>
 
-        <div class='gt_form_panel_heading'><?= $string['stats'] ?></div>
+        <div class='gt_form_panel_heading'><?php echo $string['stats'] ?></div>
         <div class="gt_form_panel_body">
             <table>
                 <tr>
-                    <td><?= $string['quals'] ?></td>
-                    <td><?= \GT\Qualification::countQuals() ?></td>
+                    <td><?php echo $string['quals'] ?></td>
+                    <td><?php echo \GT\Qualification::countQuals() ?></td>
                 </tr>
                 <tr>
-                    <td><?= $string['units'] ?></td>
-                    <td><?= \GT\Unit::countUnits() ?></td>
+                    <td><?php echo $string['units'] ?></td>
+                    <td><?php echo \GT\Unit::countUnits() ?></td>
                 </tr>
                 <tr>
-                    <td><?= $string['criteria'] ?></td>
-                    <td><?= \GT\Criterion::countCriteria() ?></td>
+                    <td><?php echo $string['criteria'] ?></td>
+                    <td><?php echo \GT\Criterion::countCriteria() ?></td>
                 </tr>
 
                 <tr>
@@ -80,26 +80,26 @@
                 </tr>
 
                 <tr>
-                    <td><?= $string['users'] ?></td>
-                    <td><?= $countUsers ?></td>
+                    <td><?php echo $string['users'] ?></td>
+                    <td><?php echo $countUsers ?></td>
                 </tr>
                 <tr>
-                    <td><?= $string['courses'] ?></td>
-                    <td><?= $countCourses ?></td>
+                    <td><?php echo $string['courses'] ?></td>
+                    <td><?php echo $countCourses ?></td>
                 </tr>
 
             </table>
         </div>
 
 
-        <div class='gt_form_panel_heading'><?= $string['structures'] ?></div>
+        <div class='gt_form_panel_heading'><?php echo $string['structures'] ?></div>
         <div class="gt_form_panel_body">
             <table>
                 <?php if ($structures): ?>
                     <?php foreach($structures as $structure): ?>
                         <tr>
-                            <td><?= $structure->getName() ?></td>
-                            <td><img src="<?= $CFG->wwwroot ?>/blocks/gradetracker/pix/<?= ($structure->isEnabled()) ? 'on' : 'off' ?>.png" /></td>
+                            <td><?php echo $structure->getName() ?></td>
+                            <td><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/<?php echo ($structure->isEnabled()) ? 'on' : 'off' ?>.png" /></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>

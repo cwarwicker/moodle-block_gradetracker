@@ -1,50 +1,50 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<h2><?= $string['dataimport'] ?></h2>
-<p><?= $string['wcoe:desc'] ?></p>
+<h2><?php echo $string['dataimport'] ?></h2>
+<p><?php echo $string['wcoe:desc'] ?></p>
 <p>
     <?php if ($templateFile): ?>
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $templateFile ?>">
-        <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvtemplate'] ?>
+    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?php echo $templateFile ?>">
+        <img src="<?php echo gt_image_url('f/spreadsheet') ?>" /> <?php echo $string['csvtemplate'] ?>
     </a>
     <?php else: ?>
-        [[<?= $string['filenotfound'] ?>]]
+        [[<?php echo $string['filenotfound'] ?>]]
     <?php endif; ?>
 
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     <?php if ($exampleFile): ?>
-        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?= $exampleFile ?>">
-            <img src="<?= gt_image_url('f/spreadsheet') ?>" /> <?= $string['csvexample'] ?>
+        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/download.php?f=<?php echo $exampleFile ?>">
+            <img src="<?php echo gt_image_url('f/spreadsheet') ?>" /> <?php echo $string['csvexample'] ?>
         </a>
     <?php else: ?>
-        [[<?= $string['filenotfound'] ?>]]
+        [[<?php echo $string['filenotfound'] ?>]]
     <?php endif; ?>
 
     &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=wcoe&reload=1"><img style="vertical-align:top;" src="<?= gt_image_url('t/reload'); ?>" title="<?= $string['reloadcsvs'] ?>" /></a>
+    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=data&section=wcoe&reload=1"><img style="vertical-align:top;" src="<?php echo gt_image_url('t/reload'); ?>" title="<?php echo $string['reloadcsvs'] ?>" /></a>
 
 </p>
 
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
     <input type="file" name="file" />
     <br><br>
-    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?= $string['import'] ?>" />
+    <input type="submit" class="gt_btn gt_blue" name="submit_import" value="<?php echo $string['import'] ?>" />
 
 </form>
 
 <br />
 
-<?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
 
 <?php if (!empty($MSGS['success'])): ?>
 
 <div id='gt_import_output' class='gt_cmd gt_hidden'>
-    <?= $MSGS['output'] ?>
+    <?php echo $MSGS['output'] ?>
 </div>
 
 <?php endif; ?>
@@ -53,12 +53,12 @@
 
 <hr class="gt_hr">
 
-<h2><?= $string['dataexport'] ?></h2>
-<p><?= $string['wcoe:descExport'] ?></p>
+<h2><?php echo $string['dataexport'] ?></h2>
+<p><?php echo $string['wcoe:descExport'] ?></p>
 
-<form action="<?= $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=wcoe" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
-    <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?= $string['export'] ?>" />
+<form action="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/export.php?type=data&subtype=wcoe" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
+    <input type="submit" class="gt_btn gt_blue" name="submit_export" value="<?php echo $string['export'] ?>" />
 </form>
 
 <br>

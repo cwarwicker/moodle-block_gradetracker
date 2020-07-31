@@ -2,10 +2,10 @@
 
 <td colspan="10">
 
-    <table id="gt_criterion_sub_table_<?= $dynamicNum ?>" class="gt_criterion_sub_table">
+    <table id="gt_criterion_sub_table_<?php echo $dynamicNum ?>" class="gt_criterion_sub_table">
 
-        <tr id="gt_sub_header_row_<?= $dynamicNum ?>">
-            <td><?= $string['ranges'] ?> &nbsp;&nbsp; <a href="#" class="gt_add_range" critNum="<?= $dynamicNum ?>"><img src="<?= $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></td>
+        <tr id="gt_sub_header_row_<?php echo $dynamicNum ?>">
+            <td><?php echo $string['ranges'] ?> &nbsp;&nbsp; <a href="#" class="gt_add_range" critNum="<?php echo $dynamicNum ?>"><img src="<?php echo $GT->icon('plus_circle_frame') ?>" class="gt_icon" alt="add" /></a></td>
             <td></td>
         </tr>
 
@@ -17,36 +17,36 @@
 
                 <?php $dynamicRangeNum++; ?>
 
-                <tr id="gt_criterion_range_<?= $dynamicNum ?>_<?= $dynamicRangeNum ?>" class="gt_criterion_range_row" rangeNum="<?= $dynamicRangeNum ?>">
+                <tr id="gt_criterion_range_<?php echo $dynamicNum ?>_<?php echo $dynamicRangeNum ?>" class="gt_criterion_range_row" rangeNum="<?php echo $dynamicRangeNum ?>">
 
                     <td class="gt_range_info_cell">
                         <table>
 
                             <tr>
-                                <td><?= $string['name'] ?></td>
+                                <td><?php echo $string['name'] ?></td>
                                 <td>
-                                    <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][id]" value="<?= $child->getID() ?>" />
-                                    <input type="text" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][name]" value="<?= $child->getName() ?>" placeholder="Name" />
+                                    <input type="hidden" name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][id]" value="<?php echo $child->getID() ?>" />
+                                    <input type="text" name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][name]" value="<?php echo $child->getName() ?>" placeholder="Name" />
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['details'] ?></td>
-                                <td><textarea name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][details]" placeholder="Details"><?= $child->getDescription() ?></textarea></td>
+                                <td><?php echo $string['details'] ?></td>
+                                <td><textarea name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][details]" placeholder="Details"><?php echo $child->getDescription() ?></textarea></td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['numobservations'] ?></td>
-                                <td><input type="number" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][numobservations]" value="<?= $child->getAttribute('numobservations') ?>" /></td>
+                                <td><?php echo $string['numobservations'] ?></td>
+                                <td><input type="number" name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][numobservations]" value="<?php echo $child->getAttribute('numobservations') ?>" /></td>
                             </tr>
 
                             <tr>
-                                <td><?= $string['gradestructure'] ?></td>
+                                <td><?php echo $string['gradestructure'] ?></td>
                                 <td>
-                                    <select name='unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][gradingstructure]'>
+                                    <select name='unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][gradingstructure]'>
                                         <?php if($criteriaGradingStructures): ?>
                                             <?php foreach($criteriaGradingStructures as $grading): ?>
-                                                <option value='<?= $grading->getID() ?>' <?= ($child->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?= $grading->getName() ?></option>
+                                                <option value='<?php echo $grading->getID() ?>' <?php echo ($child->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?php echo $grading->getName() ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
@@ -54,16 +54,16 @@
                             </tr>
 
                             <tr>
-                                <td><?= $string['criteria'] ?></td>
+                                <td><?php echo $string['criteria'] ?></td>
                                 <td>
-                                    <a href="#" class="gt_add_range_criterion" critNum="<?= $dynamicNum ?>" rangeNum="<?= $dynamicRangeNum ?>">
-                                        <img src="<?= gt_image_url('t/add') ?>" alt="add" class="gt_no_float">
+                                    <a href="#" class="gt_add_range_criterion" critNum="<?php echo $dynamicNum ?>" rangeNum="<?php echo $dynamicRangeNum ?>">
+                                        <img src="<?php echo gt_image_url('t/add') ?>" alt="add" class="gt_no_float">
                                     </a>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="2"><a href="#" class="gt_remove_range" critNum="<?= $dynamicNum ?>" rangeNum="<?= $dynamicRangeNum ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
+                                <td colspan="2"><a href="#" class="gt_remove_range" critNum="<?php echo $dynamicNum ?>" rangeNum="<?php echo $dynamicRangeNum ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" /></a></td>
                             </tr>
 
                         </table>
@@ -72,9 +72,9 @@
                     <td class="gt_range_criteria_cell">
                         <table>
                             <tr>
-                                <th><?= $string['name'] ?></th>
-                                <th><?= $string['details'] ?></th>
-                                <th><?= $string['gradestructure'] ?></th>
+                                <th><?php echo $string['name'] ?></th>
+                                <th><?php echo $string['details'] ?></th>
+                                <th><?php echo $string['gradestructure'] ?></th>
                                 <th></th>
                             </tr>
 
@@ -86,28 +86,28 @@
 
                                     <?php $dynamicSubNum++; ?>
 
-                                    <tr id="gt_range_criteria_row_<?= $dynamicNum ?>_<?= $dynamicRangeNum ?>_<?= $dynamicSubNum ?>" class="gt_criterion_range_criterion_row">
+                                    <tr id="gt_range_criteria_row_<?php echo $dynamicNum ?>_<?php echo $dynamicRangeNum ?>_<?php echo $dynamicSubNum ?>" class="gt_criterion_range_criterion_row">
                                         <td>
-                                            <input type="hidden" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][id]" value="<?= $subChild->getID() ?>" />
-                                            <input type="text" name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][name]" value="<?= $subChild->getName() ?>" />
+                                            <input type="hidden" name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][criteria][<?php echo $dynamicSubNum ?>][id]" value="<?php echo $subChild->getID() ?>" />
+                                            <input type="text" name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][criteria][<?php echo $dynamicSubNum ?>][name]" value="<?php echo $subChild->getName() ?>" />
                                         </td>
                                         <td>
-                                            <textarea name="unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][details]"><?= $subChild->getDescription() ?></textarea>
+                                            <textarea name="unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][criteria][<?php echo $dynamicSubNum ?>][details]"><?php echo $subChild->getDescription() ?></textarea>
                                         </td>
 
                                         <td>
-                                            <select name='unit_criteria[<?= $dynamicNum ?>][ranges][<?= $dynamicRangeNum ?>][criteria][<?= $dynamicSubNum ?>][gradingstructure]'>
+                                            <select name='unit_criteria[<?php echo $dynamicNum ?>][ranges][<?php echo $dynamicRangeNum ?>][criteria][<?php echo $dynamicSubNum ?>][gradingstructure]'>
                                                 <option value=""></option>
                                                 <?php if($criteriaGradingStructures): ?>
                                                     <?php foreach($criteriaGradingStructures as $grading): ?>
-                                                        <option value='<?= $grading->getID() ?>' <?= ($subChild->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?= $grading->getName() ?></option>
+                                                        <option value='<?php echo $grading->getID() ?>' <?php echo ($subChild->getGradingStructureID() == $grading->getID()) ? 'selected' : ''; ?> ><?php echo $grading->getName() ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>
                                         </td>
 
                                         <td>
-                                            <a href="#" class="gt_remove_range_criterion" critNum="<?= $dynamicNum ?>" rangeNum="<?= $dynamicRangeNum ?>" subCritNum="<?= $dynamicSubNum ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete"></a>
+                                            <a href="#" class="gt_remove_range_criterion" critNum="<?php echo $dynamicNum ?>" rangeNum="<?php echo $dynamicRangeNum ?>" subCritNum="<?php echo $dynamicSubNum ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="delete"></a>
                                         </td>
                                     </tr>
 

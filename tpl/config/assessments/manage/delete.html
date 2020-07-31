@@ -1,24 +1,24 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <?php if ($Assessment->isValid()): ?>
 
     <div class="gt_confirm_box">
 
-        <h4><?= $string['delete'] ?> : <?= $Assessment->getName() ?></h4>
+        <h4><?php echo $string['delete'] ?> : <?php echo $Assessment->getName() ?></h4>
 
         <div>
 
-            <?= sprintf($string['delete:assessment:sure'], $Assessment->countQuals()) ?>
+            <?php echo sprintf($string['delete:assessment:sure'], $Assessment->countQuals()) ?>
             <br><br>
             <form action="" method="post">
-                <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+                <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-                <input type="submit" class="gt_btn" name="confirm_delete_assessment" value="<?= $string['yes'] ?>" />
+                <input type="submit" class="gt_btn" name="confirm_delete_assessment" value="<?php echo $string['yes'] ?>" />
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="submit" class="gt_btn" name="run_away" value="<?= $string['no'] ?>" />
+                <input type="submit" class="gt_btn" name="run_away" value="<?php echo $string['no'] ?>" />
 
             </form>
 
@@ -28,6 +28,6 @@
 
 <?php else: ?>
     <p class="gt_c">
-        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage" class="gt_btn gt_btn_small"><?= get_string('continue') ?></a>
+        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=assessments&section=manage" class="gt_btn gt_btn_small"><?php echo get_string('continue') ?></a>
     </p>
 <?php endif; ?>

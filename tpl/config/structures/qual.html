@@ -1,25 +1,25 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class='gt_c'>
-    <a href='config.php?view=structures&section=qual&page=new' class='gt_btn'><?= $string['addnewstructure'] ?></a>
+    <a href='config.php?view=structures&section=qual&page=new' class='gt_btn'><?php echo $string['addnewstructure'] ?></a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <div id='gt_import_div'><a href='#' class='gt_btn gt_toggle' toggle='#gt_upload_div'><?= $string['importnewstructure'] ?></a></div>
+    <div id='gt_import_div'><a href='#' class='gt_btn gt_toggle' toggle='#gt_upload_div'><?php echo $string['importnewstructure'] ?></a></div>
     <div id='gt_upload_div' style='display:none;'>
         <br>
         <form action="" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+            <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
             <input type="file" name="file" accept="text/xml,application/zip" /><br>
-            <small><b><?= $string['updatestructureimport'] ?></b></small>:
-                <input type="radio" name="update_method" value="" checked /> <small><?= $string['skip'] ?></small>
+            <small><b><?php echo $string['updatestructureimport'] ?></b></small>:
+                <input type="radio" name="update_method" value="" checked /> <small><?php echo $string['skip'] ?></small>
                 &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="update_method" value="overwrite" /> <small><?= $string['overwrite'] ?></small>
+                <input type="radio" name="update_method" value="overwrite" /> <small><?php echo $string['overwrite'] ?></small>
                 &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="update_method" value="merge" /> <small><?= $string['merge'] ?></small>
+                <input type="radio" name="update_method" value="merge" /> <small><?php echo $string['merge'] ?></small>
             <br>
-            <input type="submit" name="import_qual_structure" class="gt_btn_small gt_blue" value="<?= $string['upload'] ?>" />
+            <input type="submit" name="import_qual_structure" class="gt_btn_small gt_blue" value="<?php echo $string['upload'] ?>" />
         </form>
     </div>
 </div>
@@ -27,7 +27,7 @@
 <br>
 <?php if (!empty($MSGS['import_output'])): ?>
     <div id='gt_import_output' class='gt_cmd'>
-        <?= $MSGS['import_output'] ?>
+        <?php echo $MSGS['import_output'] ?>
     </div>
     <br>
 <?php endif; ?>
@@ -39,15 +39,15 @@
 
         <thead>
           <tr>
-            <th colspan="6"><?= $string['qualstructures'] ?></th>
+            <th colspan="6"><?php echo $string['qualstructures'] ?></th>
           </tr>
           <tr>
-              <th><?= $string['name'] ?></th>
-              <th><?= $string['enabled'] ?></th>
-              <th><?= $string['duplicate'] ?></th>
-              <th><?= $string['export'] ?></th>
-              <th><?= $string['edit'] ?></th>
-              <th><?= $string['delete'] ?></th>
+              <th><?php echo $string['name'] ?></th>
+              <th><?php echo $string['enabled'] ?></th>
+              <th><?php echo $string['duplicate'] ?></th>
+              <th><?php echo $string['export'] ?></th>
+              <th><?php echo $string['edit'] ?></th>
+              <th><?php echo $string['delete'] ?></th>
           </tr>
         </thead>
 
@@ -57,12 +57,12 @@
               <?php foreach($qualStructures as $structure): ?>
 
               <tr>
-                  <td><?= $structure->getName() ?><br><small>(<?= $structure->getDisplayName() ?>)</small></td>
-                  <td><form action="" method="post"><input type="hidden" name="sesskey" value="<?= sesskey() ?>" /><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" class="gt_on_off" name="enable_structure" src="<?= ($structure->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?= ($structure->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" /></form></td>
-                  <td><form action="" method="post"><input type="hidden" name="sesskey" value="<?= sesskey() ?>" /><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" name="copy_structure" src="<?= gt_image_url('t/copy') ?>" /></form></td>
-                  <td><form action="" method="post"><input type="hidden" name="sesskey" value="<?= sesskey() ?>" /><input type="hidden" name="structure_id" value="<?= $structure->getID() ?>" /><input type="image" name="export_structure" src="<?= gt_image_url('i/export') ?>" /></form></td>
-                  <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=edit&id=<?= $structure->getID() ?>"><img src="<?= gt_image_url('t/edit') ?>" alt="settings" /></a></td>
-                  <td><a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=delete&id=<?= $structure->getID() ?>"><img src="<?= gt_image_url('t/delete') ?>" alt="delete" /></a></td>
+                  <td><?php echo $structure->getName() ?><br><small>(<?php echo $structure->getDisplayName() ?>)</small></td>
+                  <td><form action="" method="post"><input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" /><input type="hidden" name="structure_id" value="<?php echo $structure->getID() ?>" /><input type="image" class="gt_on_off" name="enable_structure" src="<?php echo ($structure->isEnabled()) ? $CFG->wwwroot . '/blocks/gradetracker/pix/on.png' : $CFG->wwwroot . '/blocks/gradetracker/pix/off.png' ?>" title="<?php echo ($structure->isEnabled()) ? $string['enabled'] : $string['disabled'] ?>" /></form></td>
+                  <td><form action="" method="post"><input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" /><input type="hidden" name="structure_id" value="<?php echo $structure->getID() ?>" /><input type="image" name="copy_structure" src="<?php echo gt_image_url('t/copy') ?>" /></form></td>
+                  <td><form action="" method="post"><input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" /><input type="hidden" name="structure_id" value="<?php echo $structure->getID() ?>" /><input type="image" name="export_structure" src="<?php echo gt_image_url('i/export') ?>" /></form></td>
+                  <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=edit&id=<?php echo $structure->getID() ?>"><img src="<?php echo gt_image_url('t/edit') ?>" alt="settings" /></a></td>
+                  <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=qual&page=delete&id=<?php echo $structure->getID() ?>"><img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" /></a></td>
               </tr>
 
               <?php endforeach; ?>

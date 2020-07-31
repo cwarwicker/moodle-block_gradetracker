@@ -1,23 +1,23 @@
 <form action="" method="post" enctype="multipart/form-data">
 
-    <?= (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
-    <?= (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
+    <?php echo (!empty($MSGS['errors'])) ? \gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?php echo (!empty($MSGS['success'])) ? \gt_success_alert_box($MSGS['success']) : '' ?>
 
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-    <h2><?= $string['usersettings'] ?></h2>
-    <p><?= $string['usersettings:desc'] ?></p>
+    <h2><?php echo $string['usersettings'] ?></h2>
+    <p><?php echo $string['usersettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:studcols'] ?></strong> - <?= $string['config:studcols:desc'] ?></small>
+    <small><strong><?php echo $string['config:studcols'] ?></strong> - <?php echo $string['config:studcols:desc'] ?></small>
     <br>
     <select name="student_columns[]" multiple class="gt_multi_select">
-        <option value="pic" <?= (in_array("pic", $cols)) ? 'selected' : ''; ?> ><?= get_string('pictureofuser') ?></option>
-        <option value="username" <?= (in_array("username", $cols)) ? 'selected' : ''; ?> ><?= get_string('username') ?></option>
-        <option value="idnumber" <?= (in_array("idnumber", $cols)) ? 'selected' : ''; ?> ><?= get_string('idnumber') ?></option>
-        <option value="firstname" <?= (in_array("firstname", $cols)) ? 'selected' : ''; ?> ><?= get_string('firstname') ?></option>
-        <option value="lastname" <?= (in_array("lastname", $cols)) ? 'selected' : ''; ?> ><?= get_string('lastname') ?></option>
-        <option value="name" <?= (in_array("name", $cols)) ? 'selected' : ''; ?> ><?= get_string('fullnameuser') ?></option>
-        <option value="email" <?= (in_array("email", $cols)) ? 'selected' : ''; ?> ><?= get_string('email') ?></option>
+        <option value="pic" <?php echo (in_array("pic", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('pictureofuser') ?></option>
+        <option value="username" <?php echo (in_array("username", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('username') ?></option>
+        <option value="idnumber" <?php echo (in_array("idnumber", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('idnumber') ?></option>
+        <option value="firstname" <?php echo (in_array("firstname", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('firstname') ?></option>
+        <option value="lastname" <?php echo (in_array("lastname", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('lastname') ?></option>
+        <option value="name" <?php echo (in_array("name", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('fullnameuser') ?></option>
+        <option value="email" <?php echo (in_array("email", $cols)) ? 'selected' : ''; ?> ><?php echo get_string('email') ?></option>
     </select>
 
 
@@ -27,6 +27,6 @@
 
     <br><br>
 
-    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?php echo $string['save'] ?>" />
 
 </form>

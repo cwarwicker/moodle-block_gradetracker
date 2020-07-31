@@ -1,10 +1,10 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class='gt_c'>
-    <a href='config.php?view=structures&section=subtypes&page=new'><input type='button' class='gt_btn' value="<?= $string['addnewsubtype'] ?>" /></a>
+    <a href='config.php?view=structures&section=subtypes&page=new'><input type='button' class='gt_btn' value="<?php echo $string['addnewsubtype'] ?>" /></a>
 </div>
 
 <br>
@@ -16,11 +16,11 @@
 
           <thead>
             <tr>
-              <th colspan="4"><?= $string['subtypes'] ?></th>
+              <th colspan="4"><?php echo $string['subtypes'] ?></th>
             </tr>
             <tr>
-                <th><?= $string['name'] ?></th>
-                <th><?= $string['shortname'] ?></th>
+                <th><?php echo $string['name'] ?></th>
+                <th><?php echo $string['shortname'] ?></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -30,28 +30,28 @@
             <?php foreach($subTypes as $subType): ?>
 
                 <tr>
-                    <td><?= $subType->getName() ?></td>
-                    <td><?= $subType->getShortName() ?></td>
+                    <td><?php echo $subType->getName() ?></td>
+                    <td><?php echo $subType->getShortName() ?></td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=subtypes&page=edit&id=<?= $subType->getID() ?>">
-                            <img src="<?= gt_image_url('t/edit') ?>" alt="delete" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=subtypes&page=edit&id=<?php echo $subType->getID() ?>">
+                            <img src="<?php echo gt_image_url('t/edit') ?>" alt="delete" />
                         </a>
                     </td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=subtypes&page=delete&id=<?= $subType->getID() ?>">
-                            <img src="<?= gt_image_url('t/delete') ?>" alt="delete" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=subtypes&page=delete&id=<?php echo $subType->getID() ?>">
+                            <img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" />
                         </a>
                     </td>
                 </tr>
 
             <?php endforeach; ?>
-            
+
           </tbody>
         </table>
 
     <?php else: ?>
 
-        <p class='gt_c'><?= $string['nodata'] ?></p>
+        <p class='gt_c'><?php echo $string['nodata'] ?></p>
 
     <?php endif; ?>
 

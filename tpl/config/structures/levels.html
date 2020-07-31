@@ -1,10 +1,10 @@
 <?php if(!defined('BCGT')) exit; ?>
 
-<?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-<?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+<?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+<?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
 <div class='gt_c'>
-    <a href='config.php?view=structures&section=levels&page=new'><input type='button' class='gt_btn' value="<?= $string['addnewlevel'] ?>" /></a>
+    <a href='config.php?view=structures&section=levels&page=new'><input type='button' class='gt_btn' value="<?php echo $string['addnewlevel'] ?>" /></a>
 </div>
 
 <br>
@@ -16,12 +16,12 @@
 
           <thead>
             <tr>
-              <th colspan="5"><?= $string['levels'] ?></th>
+              <th colspan="5"><?php echo $string['levels'] ?></th>
             </tr>
             <tr>
-                <th><?= $string['name'] ?></th>
-                <th><?= $string['shortname'] ?></th>
-                <th><?= $string['order'] ?></th>
+                <th><?php echo $string['name'] ?></th>
+                <th><?php echo $string['shortname'] ?></th>
+                <th><?php echo $string['order'] ?></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -31,17 +31,17 @@
             <?php foreach($levels as $level): ?>
 
                 <tr>
-                    <td><?= $level->getName() ?></td>
-                    <td><?= $level->getShortName() ?></td>
-                    <td><?= $level->getOrderNumber() ?></td>
+                    <td><?php echo $level->getName() ?></td>
+                    <td><?php echo $level->getShortName() ?></td>
+                    <td><?php echo $level->getOrderNumber() ?></td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels&page=edit&id=<?= $level->getID() ?>">
-                            <img src="<?= gt_image_url('t/edit') ?>" alt="delete" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels&page=edit&id=<?php echo $level->getID() ?>">
+                            <img src="<?php echo gt_image_url('t/edit') ?>" alt="delete" />
                         </a>
                     </td>
                     <td>
-                        <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels&page=delete&id=<?= $level->getID() ?>">
-                            <img src="<?= gt_image_url('t/delete') ?>" alt="delete" />
+                        <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=structures&section=levels&page=delete&id=<?php echo $level->getID() ?>">
+                            <img src="<?php echo gt_image_url('t/delete') ?>" alt="delete" />
                         </a>
                     </td>
                 </tr>
@@ -52,7 +52,7 @@
 
     <?php else: ?>
 
-        <p class='gt_c'><?= $string['nodata'] ?></p>
+        <p class='gt_c'><?php echo $string['nodata'] ?></p>
 
     <?php endif; ?>
 

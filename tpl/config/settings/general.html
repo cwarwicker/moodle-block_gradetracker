@@ -2,108 +2,108 @@
 
 <form action="" method="post" enctype="multipart/form-data">
 
-    <?= (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
-    <?= (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
+    <?php echo (!empty($MSGS['errors'])) ? gt_error_alert_box($MSGS['errors']) : '' ?>
+    <?php echo (!empty($MSGS['success'])) ? gt_success_alert_box($MSGS['success']) : '' ?>
 
-    <input type="hidden" name="sesskey" value="<?= sesskey() ?>" />
+    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
 
-    <h2><?= $string['generalsettings'] ?></h2>
-    <p><?= $string['generalsettings:desc'] ?></p>
+    <h2><?php echo $string['generalsettings'] ?></h2>
+    <p><?php echo $string['generalsettings:desc'] ?></p>
 
-    <small><strong><?= $string['config:title'] ?></strong> - <?= $string['config:title:desc'] ?></small>
+    <small><strong><?php echo $string['config:title'] ?></strong> - <?php echo $string['config:title:desc'] ?></small>
     <br>
-    <input type="text" name="plugin_title" class="gt_small" value="<?= $GT->getPluginTitle() ?>" />
+    <input type="text" name="plugin_title" class="gt_small" value="<?php echo $GT->getPluginTitle() ?>" />
 
     <br><br>
 
-    <small><strong><?= $string['config:layout'] ?></strong> - <?= $string['config:layout:desc'] ?></small>
+    <small><strong><?php echo $string['config:layout'] ?></strong> - <?php echo $string['config:layout:desc'] ?></small>
     <br>
     <?php if (isset($layouts) && $layouts): ?>
         <select name="theme_layout" class="gt_small">
             <option value=""></option>
             <?php foreach($layouts as $key => $layout): ?>
-                <option value="<?= $key ?>" <?= ( $GT->getMoodleThemeLayout() == $key ) ? 'selected' : ''; ?> ><?= $key ?></option>
+                <option value="<?php echo $key ?>" <?php echo ( $GT->getMoodleThemeLayout() == $key ) ? 'selected' : ''; ?> ><?php echo $key ?></option>
             <?php endforeach; ?>
         </select>
     <?php else: ?>
-        <input type="text" name="theme_layout" class="gt_small" value="<?= $GT->getMoodleThemeLayout() ?>" />
+        <input type="text" name="theme_layout" class="gt_small" value="<?php echo $GT->getMoodleThemeLayout() ?>" />
     <?php endif; ?>
 
     <br><br>
 
-    <small><strong><?= $string['config:printlogo'] ?></strong> - <?= $string['config:printlogo:desc'] ?></small>
+    <small><strong><?php echo $string['config:printlogo'] ?></strong> - <?php echo $string['config:printlogo:desc'] ?></small>
     <br>
     <?php if ($GT->getInstitutionLogoUrl()): ?>
-        <img src="<?= $GT->getInstitutionLogoUrl() ?>" class="gt_preview" />
+        <img src="<?php echo $GT->getInstitutionLogoUrl() ?>" class="gt_preview" />
     <?php endif; ?>
     <input type="file" name="institution_logo" class="gt_small" />
 
     <br><br>
 
 
-<!--    <small><strong><?= $string['config:jquery'] ?></strong> - <?= $string['config:jquery:desc'] ?></small>
+<!--    <small><strong><?php echo $string['config:jquery'] ?></strong> - <?php echo $string['config:jquery:desc'] ?></small>
     <br>
-    <input type="checkbox" name="use_gt_jqueryui" value="1" <?= ($GT->getSetting('use_gt_jqueryui') == 1) ? 'checked' : '' ?> />
+    <input type="checkbox" name="use_gt_jqueryui" value="1" <?php echo ($GT->getSetting('use_gt_jqueryui') == 1) ? 'checked' : '' ?> />
 
     <br><br>-->
 
 
-    <small><strong><?= $string['config:studentroles'] ?></strong> - <?= $string['config:studentroles:desc'] ?></small>
+    <small><strong><?php echo $string['config:studentroles'] ?></strong> - <?php echo $string['config:studentroles:desc'] ?></small>
     <br>
-    <input type="text" class="gt_small" name="student_role_shortnames" value="<?= implode(',', $GT->getStudentRoles()) ?>" />
+    <input type="text" class="gt_small" name="student_role_shortnames" value="<?php echo implode(',', $GT->getStudentRoles()) ?>" />
 
     <br><br>
 
-    <small><strong><?= $string['config:staffroles'] ?></strong> - <?= $string['config:staffroles:desc'] ?></small>
+    <small><strong><?php echo $string['config:staffroles'] ?></strong> - <?php echo $string['config:staffroles:desc'] ?></small>
     <br>
-    <input type="text" class="gt_small" name="staff_role_shortnames" value="<?= implode(',', $GT->getStaffRoles()) ?>" />
+    <input type="text" class="gt_small" name="staff_role_shortnames" value="<?php echo implode(',', $GT->getStaffRoles()) ?>" />
 
     <br><br>
 
-    <small><strong><?= $string['config:coursenameformat'] ?></strong> - <?= $string['config:coursenameformat:desc'] ?></small>
+    <small><strong><?php echo $string['config:coursenameformat'] ?></strong> - <?php echo $string['config:coursenameformat:desc'] ?></small>
     <br>
-    <input type="text" class="gt_small" name="course_name_format" value="<?= \gt_html($GT->getCourseNameFormat()) ?>" />
+    <input type="text" class="gt_small" name="course_name_format" value="<?php echo \gt_html($GT->getCourseNameFormat()) ?>" />
 
     <br><br>
 
-    <small><strong><?= $string['config:autoenrol'] ?></strong> - <?= $string['config:autoenrol:desc'] ?></small>
+    <small><strong><?php echo $string['config:autoenrol'] ?></strong> - <?php echo $string['config:autoenrol:desc'] ?></small>
     <br>
-    <input type="checkbox" name="use_auto_enrol_quals" value="1" <?= ($GT->getSetting('use_auto_enrol_quals') == 1) ? 'checked' : '' ?> /><small> - <?= $string['qualifications'] ?></small>
+    <input type="checkbox" name="use_auto_enrol_quals" value="1" <?php echo ($GT->getSetting('use_auto_enrol_quals') == 1) ? 'checked' : '' ?> /><small> - <?php echo $string['qualifications'] ?></small>
     <br>
-    <input type="checkbox" name="use_auto_enrol_units" value="1" <?= ($GT->getSetting('use_auto_enrol_units') == 1) ? 'checked' : '' ?> /><small> - <?= $string['units'] ?> </small>
+    <input type="checkbox" name="use_auto_enrol_units" value="1" <?php echo ($GT->getSetting('use_auto_enrol_units') == 1) ? 'checked' : '' ?> /><small> - <?php echo $string['units'] ?> </small>
 
     <br><br>
 
-    <small><strong><?= $string['config:autounenrol'] ?></strong> - <?= $string['config:autounenrol:desc'] ?></small>
+    <small><strong><?php echo $string['config:autounenrol'] ?></strong> - <?php echo $string['config:autounenrol:desc'] ?></small>
     <br>
-    <input type="checkbox" name="use_auto_unenrol_quals" value="1" <?= ($GT->getSetting('use_auto_unenrol_quals') == 1) ? 'checked' : '' ?> /><small> - <?= $string['qualifications'] ?></small>
+    <input type="checkbox" name="use_auto_unenrol_quals" value="1" <?php echo ($GT->getSetting('use_auto_unenrol_quals') == 1) ? 'checked' : '' ?> /><small> - <?php echo $string['qualifications'] ?></small>
     <br>
-    <input type="checkbox" name="use_auto_unenrol_units" value="1" <?= ($GT->getSetting('use_auto_unenrol_units') == 1) ? 'checked' : '' ?> /><small> - <?= $string['units'] ?> </small>
+    <input type="checkbox" name="use_auto_unenrol_units" value="1" <?php echo ($GT->getSetting('use_auto_unenrol_units') == 1) ? 'checked' : '' ?> /><small> - <?php echo $string['units'] ?> </small>
 
     <br><br>
 
-    <small><strong><?= $string['config:customcss'] ?></strong> - <?= $string['config:customcss:desc'] ?></small>
+    <small><strong><?php echo $string['config:customcss'] ?></strong> - <?php echo $string['config:customcss:desc'] ?></small>
     <br>
-    <textarea name="custom_css" id="gt_custom_css_textarea"><?= \gt_html($GT->getSetting('custom_css')) ?></textarea>
+    <textarea name="custom_css" id="gt_custom_css_textarea"><?php echo \gt_html($GT->getSetting('custom_css')) ?></textarea>
 
 
     <br><br>
 
-    <h2><?= $string['cleanup'] ?></h2>
-    <small><strong><?= $string['config:keeplogsfor'] ?></strong> - <?= $string['config:keeplogsfor:desc'] ?></small><br>
-    <input type="number" class="gt_small" name="keep_logs_for" value="<?= (int)$GT->getSetting('keep_logs_for') ?>" />
+    <h2><?php echo $string['cleanup'] ?></h2>
+    <small><strong><?php echo $string['config:keeplogsfor'] ?></strong> - <?php echo $string['config:keeplogsfor:desc'] ?></small><br>
+    <input type="number" class="gt_small" name="keep_logs_for" value="<?php echo (int)$GT->getSetting('keep_logs_for') ?>" />
 
     <!--
-    <h2><?= $string['advanced'] ?></h2>
+    <h2><?php echo $string['advanced'] ?></h2>
 
-    <small><strong><?= $string['config:templating'] ?></strong> - <?= $string['config:templating:desc'] ?></small>
+    <small><strong><?php echo $string['config:templating'] ?></strong> - <?php echo $string['config:templating:desc'] ?></small>
     <br>
-    <input type="checkbox" name="use_custom_templating" value="1" <?= ($GT->getSetting('use_custom_templating') == 1) ? 'checked' : '' ?> />
+    <input type="checkbox" name="use_custom_templating" value="1" <?php echo ($GT->getSetting('use_custom_templating') == 1) ? 'checked' : '' ?> />
     <br><br>
     -->
 
 
     <br><br><br>
-    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?= $string['save'] ?>" />
+    <input type="submit" name="submitconfig" class="gt_btn gt_blue" value="<?php echo $string['save'] ?>" />
 
 </form>

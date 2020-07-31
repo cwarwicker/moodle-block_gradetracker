@@ -7,11 +7,11 @@
 
         <?php if ($studentCols): ?>
             <?php foreach($studentCols as $col): ?>
-                <th class="gt_grid_user_<?= $col ?> gt_grid_freeze_col"><?= ($col != 'pic') ? get_string($col) : '' ?></th>
+                <th class="gt_grid_user_<?php echo $col ?> gt_grid_freeze_col"><?php echo ($col != 'pic') ? get_string($col) : '' ?></th>
             <?php endforeach; ?>
         <?php endif; ?>
 
-        <th class="gt_grid_qual_award gt_grid_freeze_col"><?= $string['qualaward'] ?></th>
+        <th class="gt_grid_qual_award gt_grid_freeze_col"><?php echo $string['qualaward'] ?></th>
 
         <?php if ($Qualification->getUnits()): ?>
 
@@ -19,9 +19,9 @@
 
                 <th>
                     <?php if( \gt_has_capability('block/gradetracker:view_student_grids') && !isset($print) ): ?>
-                    <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?= $unit->getID() ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $unit->getShortenedDisplayName() ?></a>
+                    <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=unit&id=<?php echo $unit->getID() ?>&qualID=<?php echo $Qualification->getID() ?>&access=<?php echo $params['access'] ?>" target="_blank"><?php echo $unit->getShortenedDisplayName() ?></a>
                     <?php else: ?>
-                        <?= $unit->getShortenedDisplayName() ?>
+                        <?php echo $unit->getShortenedDisplayName() ?>
                     <?php endif; ?>
                 </th>
 
@@ -45,9 +45,9 @@
 
                         <td>
                             <?php if( \gt_has_capability('block/gradetracker:view_student_grids') && !isset($print) ): ?>
-                                <a href="<?= $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?= $student->id ?>&qualID=<?= $Qualification->getID() ?>&access=<?= $params['access'] ?>" target="_blank"><?= $student->getProp($col) ?></a>
+                                <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?php echo $student->id ?>&qualID=<?php echo $Qualification->getID() ?>&access=<?php echo $params['access'] ?>" target="_blank"><?php echo $student->getProp($col) ?></a>
                             <?php else: ?>
-                                <?= $student->getProp($col) ?>
+                                <?php echo $student->getProp($col) ?>
                             <?php endif; ?>
                         </td>
 
@@ -55,12 +55,12 @@
 
                 <?php endif; ?>
 
-                <td class="gt_grid_qual_award qual_award_<?= $student->id ?>_<?= $Qualification->getID() ?>" sID="<?= $student->id ?>" qID="<?= $Qualification->getID() ?>">
+                <td class="gt_grid_qual_award qual_award_<?php echo $student->id ?>_<?php echo $Qualification->getID() ?>" sID="<?php echo $student->id ?>" qID="<?php echo $Qualification->getID() ?>">
                     <?php if ($qualAward = $student->getQualAward($Qualification->getID())): ?>
-                        <?= $string[$qualAward[0]] ?><br>
-                        <?= $qualAward[1]->getName() ?>
+                        <?php echo $string[$qualAward[0]] ?><br>
+                        <?php echo $qualAward[1]->getName() ?>
                     <?php else: ?>
-                        <?= $string['na'] ?>
+                        <?php echo $string['na'] ?>
                     <?php endif; ?>
                 </td>
 
@@ -71,11 +71,11 @@
                         <?php $unit->loadStudent( $student ) ?>
 
                         <?php if ($student->isOnQualUnit($Qualification->getID(), $unit->getID(), "STUDENT")): ?>
-                            <td id="S<?= $student->id ?>_Q<?= $Qualification->getID() ?>_U<?= $unit->getID() ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" sID="<?= $student->id ?>">
-                                <?= $unit->getAwardCell( $params['access'] ); ?>
+                            <td id="S<?php echo $student->id ?>_Q<?php echo $Qualification->getID() ?>_U<?php echo $unit->getID() ?>" qID="<?php echo $Qualification->getID() ?>" uID="<?php echo $unit->getID() ?>" sID="<?php echo $student->id ?>">
+                                <?php echo $unit->getAwardCell( $params['access'] ); ?>
                             </td>
                         <?php else: ?>
-                            <td id="S<?= $student->id ?>_Q<?= $Qualification->getID() ?>_U<?= $unit->getID() ?>" qID="<?= $Qualification->getID() ?>" uID="<?= $unit->getID() ?>" sID="<?= $student->id ?>" class="gt_cell_blank"></td>
+                            <td id="S<?php echo $student->id ?>_Q<?php echo $Qualification->getID() ?>_U<?php echo $unit->getID() ?>" qID="<?php echo $Qualification->getID() ?>" uID="<?php echo $unit->getID() ?>" sID="<?php echo $student->id ?>" class="gt_cell_blank"></td>
                         <?php endif; ?>
 
 
@@ -92,7 +92,7 @@
     <?php else: ?>
 
         <tr>
-            <td colspan="<?= $cnt ?>"><?= $string['nodata'] ?></td>
+            <td colspan="<?php echo $cnt ?>"><?php echo $string['nodata'] ?></td>
         </tr>
 
     <?php endif; ?>
