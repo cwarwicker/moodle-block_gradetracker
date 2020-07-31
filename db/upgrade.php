@@ -75,6 +75,8 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0) {
             }
         }
 
+        upgrade_block_savepoint(true, 2015071300, 'gradetracker');
+
     }
 
     // Add new fields onto the user_assessments table
