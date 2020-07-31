@@ -748,7 +748,7 @@ class GradeTracker {
                     // Require hub
                     require_once($CFG->dirroot . '/local/df_hub/lib.php');
 
-                    $site = new \DF\Site();
+                    $site = new \local_df_hub\site();
                     $TPL->set("site", $site);
 
                     // Qual Structures
