@@ -51,40 +51,9 @@
                     <td><em><?= \GT\GradeTracker::dataroot() ?></em> <?= (is_writeable(\GT\GradeTracker::dataroot())) ? "<span style='color:green;'>(".\get_string('writeable', 'local_df_hub') .")</span>" : "<span style='color:red;'>(".\get_string('notwriteable', 'local_df_hub') .")</span>" ?></td>
                 </tr>
 
-                <tr>
-                    <td colspan="2"><hr></td>
-                </tr>
-
-                <!-- <tr>
-                     <td><strong><?= \get_string('system:registered', 'local_df_hub') ?></strong></td>
-                     <td>
-                         <?php if ($site->isRegistered()): ?>
-
-                             <span><?= \sprintf(\get_string('system:registered:yes', 'local_df_hub'), $site->getUIN(), $site->getLastUpdated('D jS M Y, H:i'), \df_time_ago($site->getLastUpdated())) ?></span><br>
-                             <input type='button' value='<?= $string['update'] ?>' class='gt_btn gt_blue gt_toggle' toggle='#register_site' />
-
-                         <?php else: ?>
-
-                             <a href="#" class="gt_toggle" toggle="#register_site"><?= \get_string('system:registered:no', 'local_df_hub') ?></a>
-                             <img src="<?= \gt_image_url('help') ?>" class="gt_tooltip" title="<?= \get_string('system:resgister:info', 'local_df_hub'); ?>" />
-
-                         <?php endif; ?>
-                     </td>
-                 </tr> -->
-
             </table>
 
         </div>
-
-        <br>
-
-        <div id='register_site' style='display:none;'>
-            <div class='gt_form_panel_heading'><?= $string['system:registered'] ?></div>
-            <div class="gt_form_panel_body">
-              <?= $site->printRegistrationForm() ?>
-            </div>
-        </div>
-
 
     </div>
 
