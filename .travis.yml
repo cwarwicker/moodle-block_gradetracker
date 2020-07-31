@@ -13,14 +13,17 @@ cache:
     - $HOME/.npm
 
 php:
-  # Branch: 37_STABLE can support PHP 7.1, 7.2, 7.3
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 env:
   global:
     - MOODLE_BRANCH=MOODLE_37_STABLE
+    - MOODLE_BRANCH=MOODLE_38_STABLE
+    - MOODLE_BRANCH=MOODLE_39_STABLE
+    - MOODLE_BRANCH=master
   matrix:
     - DB=pgsql
     - DB=mysqli
