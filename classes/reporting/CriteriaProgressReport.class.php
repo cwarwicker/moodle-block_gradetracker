@@ -23,6 +23,10 @@
  */
 namespace GT\Reports;
 
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+
 defined('MOODLE_INTERNAL') or die();
 
 require_once('Report.class.php');
@@ -73,15 +77,13 @@ class CriteriaProgressReport extends \GT\Reports\Report {
         // Are we looking for any specific criteria awards as well?
         $specificAwards = $this->extractParam('extraAwardNames', $params);
 
-        // Setup the PHPExcel object
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Setup Spreadsheet
+        $filename = 'CriteriaProgressReport_' . $User->id . '.xlsx';
         $precision = ini_get('precision');
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel = new \GT\Excel($filename);
         ini_set('precision', $precision); # PHPExcel fucks up the native round() function by changing the precision
 
-        $objPHPExcel->getProperties()
+        $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator($User->getDisplayName())
             ->setLastModifiedBy($User->getDisplayName())
             ->setTitle( get_string('reports:critprog', 'block_gradetracker') )
@@ -89,57 +91,12 @@ class CriteriaProgressReport extends \GT\Reports\Report {
             ->setDescription( get_string('reports:critprog', 'block_gradetracker') . " " . get_string('generatedbygt', 'block_gradetracker'))
             ->setCustomProperty( "GT-REPORT" , $this->name, 's');
 
-        // Remove default sheet
-        $objPHPExcel->removeSheetByIndex(0);
-
-        $styles = array(
-            'centre' => array(
-                'alignment' => array(
-                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                )
-            ),
-            'qual' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => '538DD5')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => 'ffffff')
-                )
-            ),
-            'course' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => 'ffff33')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => '000000')
-                )
-            ),
-            'totals' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => 'B1A0C7')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => 'ffffff')
-                )
-            ),
-            'max' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => '948A54')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => 'ffffff')
-                )
-            )
-
-        );
+        $formats = array();
+        $formats['centre'] = $objPHPExcel->add_format(['align' => 'center']);
+        $formats['qual'] = $objPHPExcel->add_format(['bg_color' => '#538DD5', 'color' => '#ffffff', 'bold' => 1]);
+        $formats['course'] = $objPHPExcel->add_format(['bg_color' => '#ffff33', 'color' => '#000000', 'bold' => 1]);
+        $formats['totals'] = $objPHPExcel->add_format(['bg_color' => '#B1A0C7', 'color' => '#ffffff']);
+        $formats['max'] = $objPHPExcel->add_format(['bg_color' => '#948A54', 'color' => '#ffffff']);
 
         $GTEXE = \GT\Execution::getInstance();
         $GTEXE->COURSE_CAT_MIN_LOAD = true;
@@ -173,20 +130,18 @@ class CriteriaProgressReport extends \GT\Reports\Report {
             foreach ($catArray as $cat) {
 
                 // Create a sheet for this category
-                $objPHPExcel->createSheet($sheetIndex);
-                $objPHPExcel->setActiveSheetIndex($sheetIndex);
-                $objPHPExcel->getActiveSheet()->setTitle( $this->convertStringToWorksheetName($cat->name) );
+                $sheet = $objPHPExcel->addWorksheet( $this->convertStringToWorksheetName($cat->name) );
 
                 $sheetIndex++;
-                $row = 1;
+                $row = 0;
 
                 $courses = $cat->getCourses();
                 if ($courses) {
                     foreach ($courses as $course) {
 
                         // Course name
-                        $objPHPExcel->getActiveSheet()->setCellValue("A{$row}", $course->getNameWithCategory());
-                        $objPHPExcel->getActiveSheet()->mergeCells("A{$row}:C{$row}");
+                        $sheet->writeString($row, Coordinate::columnIndexFromString('A'), $course->getNameWithCategory());
+                        $sheet->mergeCells($row, Coordinate::columnIndexFromString('A'), $row, Coordinate::columnIndexFromString('C'));
 
                         $courseRow = $row;
                         $row++;
@@ -224,8 +179,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                 // Row for Qual name and Criteria headers
 
                                 // Qual Name
-                                $objPHPExcel->getActiveSheet()->setCellValue("A{$row}", $qual->getDisplayName());
-                                $objPHPExcel->getActiveSheet()->mergeCells("A{$row}:C{$row}");
+                                $sheet->writeString($row, Coordinate::columnIndexFromString('A'), $qual->getDisplayName());
+                                $sheet->mergeCells($row, Coordinate::columnIndexFromString('A'), $row, Coordinate::columnIndexFromString('C'));
 
                                 // Reset from qual to qual
                                 $shortCriteriaNames = false;
@@ -240,21 +195,21 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                     if ($shortCriteriaNames) {
                                         foreach ($shortCriteriaNames as $crit) {
                                             $oldLetter = $letter;
-                                            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $crit);
+                                            $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $crit);
                                             $letter++;
 
                                             // Centre align
-                                            $objPHPExcel->getActiveSheet()->getStyle("{$oldLetter}{$row}")->applyFromArray($styles['centre']);
+                                            $sheet->applyFormat($row, Coordinate::columnIndexFromString($oldLetter), $formats['centre']);
 
                                         }
                                     }
 
                                     // Weighted Score
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", get_string('weighting', 'block_gradetracker'));
+                                    $sheet->writeString($row, Coordinate::columnIndexFromString($letter), get_string('weighting', 'block_gradetracker'));
 
                                     // Style
-                                    $objPHPExcel->getActiveSheet()->getStyle("A{$row}:{$letter}{$row}")->applyFromArray($styles['qual']);
-                                    $objPHPExcel->getActiveSheet()->getStyle("A{$courseRow}:{$letter}{$courseRow}")->applyFromArray($styles['course']);
+                                    $sheet->applyRangeFormat(Coordinate::columnIndexFromString('A'), $row, Coordinate::columnIndexFromString($letter), $row, $formats['qual']);
+                                    $sheet->applyRangeFormat(Coordinate::columnIndexFromString('A'), $courseRow, Coordinate::columnIndexFromString($letter), $courseRow, $formats['course']);
 
                                 }
 
@@ -297,8 +252,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                                 $maxWeightedScore += ($critWeighting * $max[$crit]);
 
                                                 // Set into worksheet
-                                                $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $max[$crit]);
-                                                $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->getFont()->setBold(true);
+                                                $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $max[$crit], ['bold' => true]);
 
                                                 $letter++;
 
@@ -306,10 +260,10 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                         }
 
                                         // Maximum weighting, based on the maximum of each of those criteria
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $maxWeightedScore);
+                                        $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $maxWeightedScore);
 
                                         // Style the maximums row
-                                        $objPHPExcel->getActiveSheet()->getStyle("E{$row}:{$letter}{$row}")->applyFromArray($styles['max']);
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString('E'), $row, Coordinate::columnIndexFromString($letter), $row, $formats['max']);
                                         // End of Maximums Row
 
                                         // Student row
@@ -324,9 +278,9 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                             $studentWeighting = 0;
 
                                             // Name
-                                            $objPHPExcel->getActiveSheet()->setCellValue("A{$row}", $student->firstname);
-                                            $objPHPExcel->getActiveSheet()->setCellValue("B{$row}", $student->lastname);
-                                            $objPHPExcel->getActiveSheet()->setCellValue("C{$row}", $student->username);
+                                            $sheet->writeString($row, Coordinate::columnIndexFromString('A'), $student->firstname);
+                                            $sheet->writeString($row, Coordinate::columnIndexFromString('B'), $student->lastname);
+                                            $sheet->writeString($row, Coordinate::columnIndexFromString('C'), $student->username);
 
                                             // Criteria
                                             $letter = 'E';
@@ -350,8 +304,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                                     $studentWeightingMax += ( $critTotal * $weighting );
                                                     $studentWeighting += ( $met * $weighting );
 
-                                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $met);
-                                                    $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->getFont()->setBold(true);
+                                                    $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $met, ['bold' => true]);
                                                     $letter++;
 
                                                 }
@@ -359,7 +312,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
 
                                             // Total student weighting
                                             $studentWeightings[$student->id] = $studentWeighting;
-                                            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $studentWeighting);
+                                            $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $studentWeighting);
 
                                             $row++;
 
@@ -378,23 +331,23 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                                 $weighting = $this->getCriteriaNameWeighting($crit, $structureSettings[$qual->getStructureID()]['weightings']);
                                                 $totalWeighting += ($weighting * $avgTotal);
 
-                                                $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$totalsRow}", $avgTotal);
+                                                $sheet->writeString($totalsRow, Coordinate::columnIndexFromString($letter), $avgTotal);
                                                 $letter++;
                                             }
                                         }
 
                                         // Total weighting
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$totalsRow}", $totalWeighting);
+                                        $sheet->writeString($totalsRow, Coordinate::columnIndexFromString($letter), $totalWeighting);
 
                                         // Style totals row
-                                        $objPHPExcel->getActiveSheet()->getStyle("E{$totalsRow}:{$letter}{$totalsRow}")->applyFromArray($styles['totals']);
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString('E'), $totalsRow, Coordinate::columnIndexFromString($letter), $totalsRow, $formats['totals']);
                                         // End of Totals Row
 
                                         // Maximum weighting percentage of total weighting (max row)
                                         $letter++;
                                         $maxWeightingTotalPercentage = (int)round( @($maxWeightedScore / $totalWeighting) * 100 );
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$maxRow}", $maxWeightingTotalPercentage . '%');
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$maxRow}")->applyFromArray( $this->getPercentageStyle($maxWeightingTotalPercentage) );
+                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $maxWeightingTotalPercentage . '%');
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle($maxWeightingTotalPercentage));
 
                                         // Now work out each student's weighted percentage against the maxWeightedScore
                                         // Not the weighted score of everything they could have achieved, it's against the max
@@ -408,8 +361,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
 
                                             // Calculate percentage based on the best
                                             $studentWeightingPercentage = ($maxWeightedScore > 0) ? (int)round( @($weighting / $maxWeightedScore) * 100 ) : 100;
-                                            $objPHPExcel->getActiveSheet()->setCellValue("D{$redoRow}", $studentWeightingPercentage . '%');
-                                            $objPHPExcel->getActiveSheet()->getStyle("D{$redoRow}")->applyFromArray( $this->getPercentageStyle($studentWeightingPercentage) );
+                                            $sheet->writeString($redoRow, Coordinate::columnIndexFromString('D'), $studentWeightingPercentage . '%');
+                                            $sheet->applyRangeFormat(Coordinate::columnIndexFromString('D'), $redoRow, null, null, $this->getPercentageStyle($studentWeightingPercentage));
 
                                             // Add to status array
                                             if ($studentWeightingPercentage < self::STATUS_BAD) {
@@ -424,8 +377,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
 
                                             // Their percentage complete of the whole qual (total weight)
                                             $studentWeightingPercentageTotal = (int)round( @($weighting / $totalWeighting) * 100 );
-                                            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$redoRow}", $studentWeightingPercentageTotal . '%');
-                                            $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$redoRow}")->applyFromArray( $this->getPercentageStyle($studentWeightingPercentageTotal) );
+                                            $sheet->writeString($redoRow, Coordinate::columnIndexFromString($letter), $studentWeightingPercentageTotal . '%');
+                                            $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $redoRow, null, null, $this->getPercentageStyle($studentWeightingPercentageTotal));
 
                                             $redoRow++;
 
@@ -434,23 +387,23 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                         // Status columns
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_EXCELLENT] / $cntStudents) * 100, 1 );
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$maxRow}", $percent . '%');
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$maxRow}")->applyFromArray( $this->getPercentageStyle(self::STATUS_EXCELLENT - 1) );
+                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_EXCELLENT - 1));
 
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_GOOD] / $cntStudents) * 100, 1 );
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$maxRow}", $percent . '%');
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$maxRow}")->applyFromArray( $this->getPercentageStyle(self::STATUS_GOOD - 1) );
+                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_GOOD - 1));
 
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_POOR] / $cntStudents) * 100, 1 );
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$maxRow}", $percent . '%');
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$maxRow}")->applyFromArray( $this->getPercentageStyle(self::STATUS_POOR - 1) );
+                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_POOR - 1));
 
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_BAD] / $cntStudents) * 100, 1 );
-                                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$maxRow}", $percent . '%');
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$maxRow}")->applyFromArray( $this->getPercentageStyle(self::STATUS_BAD - 1) );
+                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
+                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_BAD - 1));
 
                                     }
 
@@ -476,22 +429,19 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                 }
 
                 // Autosize columns
-                $lastColumn = $objPHPExcel->setActiveSheetIndex( ($sheetIndex - 1) )->getHighestColumn();
+                $lastColumn = $sheet->getWorksheet()->getHighestColumn();
                 for ($col = 'A'; $col <= $lastColumn; $col++) {
-                    $objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+                    $sheet->getWorksheet()->getColumnDimension($col)->setAutoSize(true);
                 }
 
             }
         }
 
-        // End the Spreadsheet generation and save it
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-
+        // End the Spreadsheet generation and save it.
         \gt_create_data_directory('reports');
+        $file = \GT\GradeTracker::dataroot() . '/reports/' . $filename;
+        $objPHPExcel->save($file);
 
-        $file = \GT\GradeTracker::dataroot() . '/reports/CriteriaProgressReport_' . $User->id . '.xlsx';
-        $objWriter->save( $file );
         $download = \gt_create_data_path_code($file);
 
         // Finished

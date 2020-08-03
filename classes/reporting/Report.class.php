@@ -158,14 +158,9 @@ abstract class Report {
         }
 
         return array(
-            'fill' => array(
-                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                'color' => array('rgb' => $bg)
-            ),
-            'font' => array(
-                'bold' => true,
-                'color' => array('rgb' => $font)
-            )
+            'bg_color' => '#' . $bg,
+            'color' => '#' . $font,
+            'bold' => true
         );
 
     }
