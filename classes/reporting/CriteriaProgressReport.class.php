@@ -138,8 +138,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                     foreach ($courses as $course) {
 
                         // Course name
-                        $sheet->writeString($row, Coordinate::columnIndexFromString('A'), $course->getNameWithCategory());
-                        $sheet->mergeCells($row, Coordinate::columnIndexFromString('A'), $row, Coordinate::columnIndexFromString('C'));
+                        $sheet->writeString($row, 'A', $course->getNameWithCategory());
+                        $sheet->mergeCells($row, 'A', $row, 'C');
 
                         $courseRow = $row;
                         $row++;
@@ -177,8 +177,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                 // Row for Qual name and Criteria headers
 
                                 // Qual Name
-                                $sheet->writeString($row, Coordinate::columnIndexFromString('A'), $qual->getDisplayName());
-                                $sheet->mergeCells($row, Coordinate::columnIndexFromString('A'), $row, Coordinate::columnIndexFromString('C'));
+                                $sheet->writeString($row, 'A', $qual->getDisplayName());
+                                $sheet->mergeCells($row, 'A', $row, 'C');
 
                                 // Reset from qual to qual
                                 $shortCriteriaNames = false;
@@ -193,21 +193,21 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                     if ($shortCriteriaNames) {
                                         foreach ($shortCriteriaNames as $crit) {
                                             $oldLetter = $letter;
-                                            $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $crit);
+                                            $sheet->writeString($row, $letter, $crit);
                                             $letter++;
 
                                             // Centre align
-                                            $sheet->applyFormat($row, Coordinate::columnIndexFromString($oldLetter), $formats['centre']);
+                                            $sheet->applyFormat($row, $oldLetter, $formats['centre']);
 
                                         }
                                     }
 
                                     // Weighted Score
-                                    $sheet->writeString($row, Coordinate::columnIndexFromString($letter), get_string('weighting', 'block_gradetracker'));
+                                    $sheet->writeString($row, $letter, get_string('weighting', 'block_gradetracker'));
 
                                     // Style
-                                    $sheet->applyRangeFormat(Coordinate::columnIndexFromString('A'), $row, Coordinate::columnIndexFromString($letter), $row, $formats['qual']);
-                                    $sheet->applyRangeFormat(Coordinate::columnIndexFromString('A'), $courseRow, Coordinate::columnIndexFromString($letter), $courseRow, $formats['course']);
+                                    $sheet->applyRangeFormat('A', $row, $letter, $row, $formats['qual']);
+                                    $sheet->applyRangeFormat('A', $courseRow, $letter, $courseRow, $formats['course']);
 
                                 }
 
@@ -250,7 +250,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                                 $maxWeightedScore += ($critWeighting * $max[$crit]);
 
                                                 // Set into worksheet
-                                                $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $max[$crit], ['bold' => true]);
+                                                $sheet->writeString($row, $letter, $max[$crit], ['bold' => true]);
 
                                                 $letter++;
 
@@ -258,10 +258,10 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                         }
 
                                         // Maximum weighting, based on the maximum of each of those criteria
-                                        $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $maxWeightedScore);
+                                        $sheet->writeString($row, $letter, $maxWeightedScore);
 
                                         // Style the maximums row
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString('E'), $row, Coordinate::columnIndexFromString($letter), $row, $formats['max']);
+                                        $sheet->applyRangeFormat('E', $row, $letter, $row, $formats['max']);
                                         // End of Maximums Row
 
                                         // Student row
@@ -276,9 +276,9 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                             $studentWeighting = 0;
 
                                             // Name
-                                            $sheet->writeString($row, Coordinate::columnIndexFromString('A'), $student->firstname);
-                                            $sheet->writeString($row, Coordinate::columnIndexFromString('B'), $student->lastname);
-                                            $sheet->writeString($row, Coordinate::columnIndexFromString('C'), $student->username);
+                                            $sheet->writeString($row, 'A', $student->firstname);
+                                            $sheet->writeString($row, 'B', $student->lastname);
+                                            $sheet->writeString($row, 'C', $student->username);
 
                                             // Criteria
                                             $letter = 'E';
@@ -302,7 +302,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                                     $studentWeightingMax += ( $critTotal * $weighting );
                                                     $studentWeighting += ( $met * $weighting );
 
-                                                    $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $met, ['bold' => true]);
+                                                    $sheet->writeString($row, $letter, $met, ['bold' => true]);
                                                     $letter++;
 
                                                 }
@@ -310,7 +310,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
 
                                             // Total student weighting
                                             $studentWeightings[$student->id] = $studentWeighting;
-                                            $sheet->writeString($row, Coordinate::columnIndexFromString($letter), $studentWeighting);
+                                            $sheet->writeString($row, $letter, $studentWeighting);
 
                                             $row++;
 
@@ -329,23 +329,23 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                                 $weighting = $this->getCriteriaNameWeighting($crit, $structureSettings[$qual->getStructureID()]['weightings']);
                                                 $totalWeighting += ($weighting * $avgTotal);
 
-                                                $sheet->writeString($totalsRow, Coordinate::columnIndexFromString($letter), $avgTotal);
+                                                $sheet->writeString($totalsRow, $letter, $avgTotal);
                                                 $letter++;
                                             }
                                         }
 
                                         // Total weighting
-                                        $sheet->writeString($totalsRow, Coordinate::columnIndexFromString($letter), $totalWeighting);
+                                        $sheet->writeString($totalsRow, $letter, $totalWeighting);
 
                                         // Style totals row
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString('E'), $totalsRow, Coordinate::columnIndexFromString($letter), $totalsRow, $formats['totals']);
+                                        $sheet->applyRangeFormat('E', $totalsRow, $letter, $totalsRow, $formats['totals']);
                                         // End of Totals Row
 
                                         // Maximum weighting percentage of total weighting (max row)
                                         $letter++;
                                         $maxWeightingTotalPercentage = (int)round( @($maxWeightedScore / $totalWeighting) * 100 );
-                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $maxWeightingTotalPercentage . '%');
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle($maxWeightingTotalPercentage));
+                                        $sheet->writeString($maxRow, $letter, $maxWeightingTotalPercentage . '%');
+                                        $sheet->applyRangeFormat($letter, $maxRow, null, null, $this->getPercentageStyle($maxWeightingTotalPercentage));
 
                                         // Now work out each student's weighted percentage against the maxWeightedScore
                                         // Not the weighted score of everything they could have achieved, it's against the max
@@ -359,8 +359,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
 
                                             // Calculate percentage based on the best
                                             $studentWeightingPercentage = ($maxWeightedScore > 0) ? (int)round( @($weighting / $maxWeightedScore) * 100 ) : 100;
-                                            $sheet->writeString($redoRow, Coordinate::columnIndexFromString('D'), $studentWeightingPercentage . '%');
-                                            $sheet->applyRangeFormat(Coordinate::columnIndexFromString('D'), $redoRow, null, null, $this->getPercentageStyle($studentWeightingPercentage));
+                                            $sheet->writeString($redoRow, 'D', $studentWeightingPercentage . '%');
+                                            $sheet->applyRangeFormat('D', $redoRow, null, null, $this->getPercentageStyle($studentWeightingPercentage));
 
                                             // Add to status array
                                             if ($studentWeightingPercentage < self::STATUS_BAD) {
@@ -375,8 +375,8 @@ class CriteriaProgressReport extends \GT\Reports\Report {
 
                                             // Their percentage complete of the whole qual (total weight)
                                             $studentWeightingPercentageTotal = (int)round( @($weighting / $totalWeighting) * 100 );
-                                            $sheet->writeString($redoRow, Coordinate::columnIndexFromString($letter), $studentWeightingPercentageTotal . '%');
-                                            $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $redoRow, null, null, $this->getPercentageStyle($studentWeightingPercentageTotal));
+                                            $sheet->writeString($redoRow, $letter, $studentWeightingPercentageTotal . '%');
+                                            $sheet->applyRangeFormat($letter, $redoRow, null, null, $this->getPercentageStyle($studentWeightingPercentageTotal));
 
                                             $redoRow++;
 
@@ -385,23 +385,23 @@ class CriteriaProgressReport extends \GT\Reports\Report {
                                         // Status columns
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_EXCELLENT] / $cntStudents) * 100, 1 );
-                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_EXCELLENT - 1));
+                                        $sheet->writeString($maxRow, $letter, $percent . '%');
+                                        $sheet->applyRangeFormat($letter, $maxRow, null, null, $this->getPercentageStyle(self::STATUS_EXCELLENT - 1));
 
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_GOOD] / $cntStudents) * 100, 1 );
-                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_GOOD - 1));
+                                        $sheet->writeString($maxRow, $letter, $percent . '%');
+                                        $sheet->applyRangeFormat($letter, $maxRow, null, null, $this->getPercentageStyle(self::STATUS_GOOD - 1));
 
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_POOR] / $cntStudents) * 100, 1 );
-                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_POOR - 1));
+                                        $sheet->writeString($maxRow, $letter, $percent . '%');
+                                        $sheet->applyRangeFormat($letter, $maxRow, null, null, $this->getPercentageStyle(self::STATUS_POOR - 1));
 
                                         $letter++;
                                         $percent = round( @($statusArray[self::STATUS_BAD] / $cntStudents) * 100, 1 );
-                                        $sheet->writeString($maxRow, Coordinate::columnIndexFromString($letter), $percent . '%');
-                                        $sheet->applyRangeFormat(Coordinate::columnIndexFromString($letter), $maxRow, null, null, $this->getPercentageStyle(self::STATUS_BAD - 1));
+                                        $sheet->writeString($maxRow, $letter, $percent . '%');
+                                        $sheet->applyRangeFormat($letter, $maxRow, null, null, $this->getPercentageStyle(self::STATUS_BAD - 1));
 
                                     }
 
