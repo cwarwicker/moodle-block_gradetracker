@@ -24,8 +24,6 @@
 namespace GT\Reports;
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 defined('MOODLE_INTERNAL') or die();
 

@@ -27,6 +27,7 @@ use core_useragent;
 use MoodleExcelFormat;
 use MoodleExcelWorkbook;
 use MoodleExcelWorksheet;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -116,6 +117,11 @@ class ExcelSheet extends MoodleExcelWorksheet {
      */
     public function writeString($row, $col, $str, $format = null) {
 
+        // If the column is a number, that's fine. But if it's a letter we need to convert it to a column number.
+        if (!ctype_digit($col) && !is_int($col)) {
+            $col = Coordinate::columnIndexFromString($col);
+        }
+
         // Because the Moodle version is going to increment the column numbers (for some reason...) we have to decrement them first.
         $col -= 1;
         parent::write_string($row, $col, $str, $format);
@@ -132,9 +138,19 @@ class ExcelSheet extends MoodleExcelWorksheet {
      */
     public function mergeCells($firstrow, $firstcol, $lastrow, $lastcol) {
 
+        // If the column is a number, that's fine. But if it's a letter we need to convert it to a column number.
+        if (!ctype_digit($firstcol) && !is_int($firstcol)) {
+            $firstcol = Coordinate::columnIndexFromString($firstcol);
+        }
+
+        if (!ctype_digit($lastcol) && !is_int($lastcol)) {
+            $lastcol = Coordinate::columnIndexFromString($lastcol);
+        }
+
         // Because the Moodle version is going to increment the column numbers (for some reason...) we have to decrement them first.
         $firstcol -= 1;
         $lastcol -= 1;
+
         parent::merge_cells($firstrow, $firstcol, $lastrow, $lastcol);
 
     }
@@ -146,7 +162,14 @@ class ExcelSheet extends MoodleExcelWorksheet {
      * @param $format
      */
     public function applyFormat($row, $col, $format) {
+
+        // Make sure the columns are converted to indexes, if passed through as letters.
+        if (!ctype_digit($col) && !is_int($col)) {
+            $col = Coordinate::columnIndexFromString($col);
+        }
+
         parent::apply_format($row, $col, $format);
+
     }
 
     /**
@@ -172,8 +195,28 @@ class ExcelSheet extends MoodleExcelWorksheet {
             $lastrow += 1;
         }
 
+        // Make sure the columns are converted to indexes, if passed through as letters.
+        if (!ctype_digit($firstcol) && !is_int($firstcol)) {
+            $firstcol = Coordinate::columnIndexFromString($firstcol);
+        }
+
+        if (!is_null($lastcol) && !ctype_digit($lastcol) && !is_int($lastcol)) {
+            $lastcol = Coordinate::columnIndexFromString($lastcol);
+        }
+
         $this->worksheet->getStyleByColumnAndRow($firstcol, $firstrow, $lastcol, $lastrow)->applyFromArray($format->get_format_array());
 
+    }
+
+    /**
+     * Get the comment of a cell, using the row and column.
+     * @param $row
+     * @param $col
+     * @return \PhpOffice\PhpSpreadsheet\Comment
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    public function getComment($row, $col) {
+        return $this->worksheet->getComment($col . $row);
     }
 
 }
