@@ -31,9 +31,9 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-require_once($CFG->dirroot . '/lib/excellib.class.php');
-
 defined('MOODLE_INTERNAL') or die();
+
+require_once($CFG->dirroot . '/lib/excellib.class.php');
 
 class Excel extends MoodleExcelWorkbook {
 
@@ -57,6 +57,7 @@ class Excel extends MoodleExcelWorkbook {
     /**
      * Save the spreadsheet into a file instead of just displaying it for download
      * @param $file
+     * @return void
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function save($file) {

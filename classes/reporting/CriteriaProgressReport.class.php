@@ -129,7 +129,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
         if ($catArray) {
             foreach ($catArray as $cat) {
 
-                // Create a sheet for this category
+                // Create a sheet for this category.
                 $sheet = $objPHPExcel->addWorksheet( $this->convertStringToWorksheetName($cat->name) );
 
                 $sheetIndex++;
