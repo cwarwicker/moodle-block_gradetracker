@@ -63,15 +63,13 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
         // Are we looking for any specific criteria awards as well?
         $specificAwards = $this->extractParam('extraAwardNames', $params);
 
-        // Setup the PHPExcel object
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Setup Spreadsheet
+        $filename = 'PassCriteriaSummaryReport_' . $User->id . '.xlsx';
         $precision = ini_get('precision');
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel = new \GT\Excel($filename);
         ini_set('precision', $precision); # PHPExcel fucks up the native round() function by changing the precision
 
-        $objPHPExcel->getProperties()
+        $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator($User->getDisplayName())
             ->setLastModifiedBy($User->getDisplayName())
             ->setTitle( get_string('reports:passsummary', 'block_gradetracker') )
@@ -79,57 +77,12 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
             ->setDescription( get_string('reports:passsummary', 'block_gradetracker') . " " . get_string('generatedbygt', 'block_gradetracker'))
             ->setCustomProperty( "GT-REPORT" , $this->name, 's');
 
-        // Remove default sheet
-        $objPHPExcel->removeSheetByIndex(0);
-
-        $styles = array(
-            'centre' => array(
-                'alignment' => array(
-                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                )
-            ),
-            'qual' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => '538DD5')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => 'ffffff')
-                )
-            ),
-            'course' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => 'ffff33')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => '000000')
-                )
-            ),
-            'totals' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => 'B1A0C7')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => 'ffffff')
-                )
-            ),
-            'max' => array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => '948A54')
-                ),
-                'font' => array(
-                    'bold' => true,
-                    'color' => array('rgb' => 'ffffff')
-                )
-            )
-
-        );
+        $formats = array();
+        $formats['centre'] = $objPHPExcel->add_format(['align' => 'center']);
+        $formats['qual'] = $objPHPExcel->add_format(['bg_color' => '#538DD5', 'color' => '#ffffff', 'bold' => 1]);
+        $formats['course'] = $objPHPExcel->add_format(['bg_color' => '#ffff33', 'color' => '#000000', 'bold' => 1]);
+        $formats['totals'] = $objPHPExcel->add_format(['bg_color' => '#B1A0C7', 'color' => '#ffffff']);
+        $formats['max'] = $objPHPExcel->add_format(['bg_color' => '#948A54', 'color' => '#ffffff']);
 
         $GTEXE = \GT\Execution::getInstance();
         $GTEXE->COURSE_CAT_MIN_LOAD = true;
@@ -163,56 +116,45 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
             foreach ($catArray as $cat) {
 
                 // Create a sheet for this category
-                $objPHPExcel->createSheet($sheetIndex);
-                $objPHPExcel->setActiveSheetIndex($sheetIndex);
-                $objPHPExcel->getActiveSheet()->setTitle( $this->convertStringToWorksheetName($cat->name) );
+                $sheet = $objPHPExcel->addWorksheet( $this->convertStringToWorksheetName($cat->name) );
 
                 $sheetIndex++;
-                $row = 1;
+                $row = 0;
 
                 // Headers
-                $objPHPExcel->getActiveSheet()->setCellValue("A{$row}", get_string('course'));
-                $objPHPExcel->getActiveSheet()->setCellValue("B{$row}", get_string('qualification', 'block_gradetracker'));
-                $objPHPExcel->getActiveSheet()->setCellValue("C{$row}", get_string('students'));
+                $sheet->writeString($row, 'A', get_string('course'));
+                $sheet->writeString($row, 'B', get_string('qualification', 'block_gradetracker'));
+                $sheet->writeString($row, 'C', get_string('students'));
 
                 // "Pass" criteria achieved based on total on qual (This is the Pass - Total column on the PassProg report)
-                $objPHPExcel->getActiveSheet()->setCellValue("D{$row}", get_string('reports:passprog:header:passcritachievedtotal', 'block_gradetracker'));
-                $objPHPExcel->getActiveSheet()->getComment("D{$row}")->getText()->createTextRun('Student "Pass" No. / Total "Pass" No.');
+                $sheet->writeString($row, 'D', get_string('reports:passprog:header:passcritachievedtotal', 'block_gradetracker'));
+                $sheet->getComment($row, 'D')->getText()->createTextRun('Student "Pass" No. / Total "Pass" No.');
 
                 // Percentage of weighted total assessed (This is the All - Best column on the PassProg report)
-                $objPHPExcel->getActiveSheet()->setCellValue("E{$row}", get_string('reports:passprog:header:weightedscoreachieved', 'block_gradetracker'));
-                $objPHPExcel->getActiveSheet()->getComment("E{$row}")->getText()->createTextRun('Student Weighting / Max Weighting');
+                $sheet->writeString($row, 'E', get_string('reports:passprog:header:weightedscoreachieved', 'block_gradetracker'));
+                $sheet->getComment($row, 'E')->getText()->createTextRun('Student Weighting / Max Weighting');
 
                 // Proportion of assessed "Pass" criteria achieved
-                $objPHPExcel->getActiveSheet()->setCellValue("F{$row}", get_string('reports:passsummary:header:propassach', 'block_gradetracker'));
-                $objPHPExcel->getActiveSheet()->mergeCells("F{$row}:I{$row}");
+                $sheet->writeString($row, 'F', get_string('reports:passsummary:header:propassach', 'block_gradetracker'));
+                $sheet->mergeCells( $row, 'F', $row, 'I');
 
                 // Proportion of weighted criteria
-                $objPHPExcel->getActiveSheet()->setCellValue("J{$row}", get_string('reports:passsummary:header:propwtach', 'block_gradetracker'));
-                $objPHPExcel->getActiveSheet()->mergeCells("J{$row}:M{$row}");
+                $sheet->writeString($row, 'J',  get_string('reports:passsummary:header:propwtach', 'block_gradetracker'));
+                $sheet->mergeCells( $row, 'J', $row, 'M');
 
-                $objPHPExcel->getActiveSheet()->getStyle("A{$row}:M{$row}")->applyFromArray($styles['qual']);
+                $sheet->applyRangeFormat('A', $row, 'M', $row, $formats['qual']);
 
                 $row++;
 
                 // Status headers
-                $objPHPExcel->getActiveSheet()->setCellValue("F{$row}", '≥85');
-                $objPHPExcel->getActiveSheet()->getStyle("F{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1) );
-                $objPHPExcel->getActiveSheet()->setCellValue("G{$row}", '≥70');
-                $objPHPExcel->getActiveSheet()->getStyle("G{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1) );
-                $objPHPExcel->getActiveSheet()->setCellValue("H{$row}", '≥50');
-                $objPHPExcel->getActiveSheet()->getStyle("H{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1) );
-                $objPHPExcel->getActiveSheet()->setCellValue("I{$row}", '<50');
-                $objPHPExcel->getActiveSheet()->getStyle("I{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1) );
-
-                $objPHPExcel->getActiveSheet()->setCellValue("J{$row}", '≥85');
-                $objPHPExcel->getActiveSheet()->getStyle("J{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1) );
-                $objPHPExcel->getActiveSheet()->setCellValue("K{$row}", '≥70');
-                $objPHPExcel->getActiveSheet()->getStyle("K{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1) );
-                $objPHPExcel->getActiveSheet()->setCellValue("L{$row}", '≥50');
-                $objPHPExcel->getActiveSheet()->getStyle("L{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1) );
-                $objPHPExcel->getActiveSheet()->setCellValue("M{$row}", '<50');
-                $objPHPExcel->getActiveSheet()->getStyle("M{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1) );
+                $sheet->writeString($row, 'F', '≥85', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1));
+                $sheet->writeString($row, 'G', '≥70', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1));
+                $sheet->writeString($row, 'H', '≥50', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1));
+                $sheet->writeString($row, 'I', '<50', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1));
+                $sheet->writeString($row, 'J', '≥85', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1));
+                $sheet->writeString($row, 'K', '≥70', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1));
+                $sheet->writeString($row, 'L', '≥50', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1));
+                $sheet->writeString($row, 'M', '<50', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1));
 
                 $row++;
                 // End of status headers
@@ -270,14 +212,14 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     $method = 'all';
                                 }
 
-                                $objPHPExcel->getActiveSheet()->setCellValue("A{$row}", $course->getNameWithCategory());
-                                $objPHPExcel->getActiveSheet()->setCellValue("B{$row}", $qual->getDisplayName());
+                                $sheet->writeString($row, 'A', $course->getNameWithCategory());
+                                $sheet->writeString($row, 'B', $qual->getDisplayName());
 
                                 $dataQualification = new \GT\Qualification\DataQualification($qual->getID());
                                 $data = $dataQualification->getQualificationReportStudents(false, $view, false, $shortCriteriaNames, $course->id, $specificAwards);
 
                                 $cntStudents = count($data);
-                                $objPHPExcel->getActiveSheet()->setCellValue("C{$row}", $cntStudents);
+                                $sheet->writeString($row, 'C', $cntStudents);
 
                                 if ($data) {
 
@@ -459,9 +401,8 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     // Pass - Total
                                     $passTotal = round( @($totalPass / $cntStudents), 1 );
                                     $passTotalPercentage = (float)round( @($maxPass / $passTotal) * 100, 1 );
-                                    $objPHPExcel->getActiveSheet()->setCellValue("D{$row}", "{$passTotalPercentage}%");
-                                    $objPHPExcel->getActiveSheet()->getComment("D{$row}")->getText()->createTextRun($maxPass . '/' . $passTotal);
-                                    $objPHPExcel->getActiveSheet()->getStyle("D{$row}")->applyFromArray( $this->getPercentageStyle($passTotalPercentage) );
+                                    $sheet->writeString($row, 'D', $passTotalPercentage . '%', $this->getPercentageStyle($passTotalPercentage));
+                                    $sheet->getComment($row, 'D')->getText()->createTextRun($maxPass . '/' . $passTotal);
 
                                     // All - Best
                                     $totalWeighting = 0;
@@ -477,9 +418,8 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     }
 
                                     $maxWeightingTotalPercentage = (!is_null($maxWeightedScore)) ? (float)round( @($maxWeightedScore / $totalWeighting) * 100, 1 ) : get_string('na', 'block_gradetracker');
-                                    $objPHPExcel->getActiveSheet()->setCellValue("E{$row}", $maxWeightingTotalPercentage . ( (!is_null($maxWeightedScore)) ? '%' : '' ));
-                                    $objPHPExcel->getActiveSheet()->getComment("E{$row}")->getText()->createTextRun($maxWeightedScore . '/' . $totalWeighting);
-                                    $objPHPExcel->getActiveSheet()->getStyle("E{$row}")->applyFromArray( $this->getPercentageStyle($maxWeightingTotalPercentage) );
+                                    $sheet->writeString($row, 'E', $maxWeightingTotalPercentage . ( (!is_null($maxWeightedScore)) ? '%' : '' ), $this->getPercentageStyle($maxWeightingTotalPercentage));
+                                    $sheet->getComment($row, 'E')->getText()->createTextRun($maxWeightedScore . '/' . $totalWeighting);
 
                                     foreach ($data as $student) {
 
@@ -518,23 +458,19 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     // Pass Status columns
                                     $letter = 'F';
                                     $percent = round( @($passStatusArray[\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT] / $cntStudents) * 100, 1 );
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent . '%');
-                                    $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1) );
+                                    $sheet->writeString($row, $letter, $percent . '%', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1) );
                                     $letter++;
 
                                     $percent = round( @($passStatusArray[\GT\Reports\CriteriaProgressReport::STATUS_GOOD] / $cntStudents) * 100, 1 );
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent . '%');
-                                    $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1) );
+                                    $sheet->writeString($row, $letter, $percent . '%', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1));
                                     $letter++;
 
                                     $percent = round( @($passStatusArray[\GT\Reports\CriteriaProgressReport::STATUS_POOR] / $cntStudents) * 100, 1 );
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent . '%');
-                                    $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1) );
+                                    $sheet->writeString($row, $letter, $percent . '%', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1));
                                     $letter++;
 
                                     $percent = round( @($passStatusArray[\GT\Reports\CriteriaProgressReport::STATUS_BAD] / $cntStudents) * 100, 1 );
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent . '%');
-                                    $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1) );
+                                    $sheet->writeString($row, $letter, $percent . '%', $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1));
                                     $letter++;
 
                                     // Status columns
@@ -542,9 +478,9 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     if (!$shortCriteriaNames) {
                                         $percent = get_string('na', 'block_gradetracker');
                                     }
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent);
+                                    $sheet->writeString($row, $letter, $percent);
                                     if ($shortCriteriaNames) {
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1) );
+                                        $sheet->applyFormat($row, $letter, $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_EXCELLENT - 1) );
                                     }
                                     $letter++;
 
@@ -552,9 +488,9 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     if (!$shortCriteriaNames) {
                                         $percent = get_string('na', 'block_gradetracker');
                                     }
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent);
+                                    $sheet->writeString($row, $letter, $percent);
                                     if ($shortCriteriaNames) {
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1) );
+                                        $sheet->applyFormat($row, $letter, $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_GOOD - 1) );
                                     }
                                     $letter++;
 
@@ -562,9 +498,9 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     if (!$shortCriteriaNames) {
                                         $percent = get_string('na', 'block_gradetracker');
                                     }
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent);
+                                    $sheet->writeString($row, $letter, $percent);
                                     if ($shortCriteriaNames) {
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1) );
+                                        $sheet->applyFormat($row, $letter, $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_POOR - 1) );
                                     }
                                     $letter++;
 
@@ -572,9 +508,9 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                     if (!$shortCriteriaNames) {
                                         $percent = get_string('na', 'block_gradetracker');
                                     }
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$row}", $percent);
+                                    $sheet->writeString($row, $letter, $percent);
                                     if ($shortCriteriaNames) {
-                                        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$row}")->applyFromArray( $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1) );
+                                        $sheet->applyFormat($row, $letter, $this->getPercentageStyle(\GT\Reports\CriteriaProgressReport::STATUS_BAD - 1) );
                                     }
                                     $letter++;
 
@@ -599,22 +535,19 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                 }
 
                 // Autosize columns
-                $lastColumn = $objPHPExcel->setActiveSheetIndex( ($sheetIndex - 1) )->getHighestColumn();
+                $lastColumn = $sheet->getWorksheet()->getHighestColumn();
                 for ($col = 'A'; $col <= $lastColumn; $col++) {
-                    $objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+                    $sheet->getWorksheet()->getColumnDimension($col)->setAutoSize(true);
                 }
 
             }
         }
 
         // End the Spreadsheet generation and save it
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-
         \gt_create_data_directory('reports');
+        $file = \GT\GradeTracker::dataroot() . '/reports/' . $filename;
+        $objPHPExcel->save($file);
 
-        $file = \GT\GradeTracker::dataroot() . '/reports/PassCriteriaSummaryReport_' . $User->id . '.xlsx';
-        $objWriter->save( $file );
         $download = \gt_create_data_path_code($file);
 
         // Finished

@@ -216,6 +216,7 @@ class ExcelSheet extends MoodleExcelWorksheet {
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function getComment($row, $col) {
+        $row += 1;
         return $this->worksheet->getComment($col . $row);
     }
 
