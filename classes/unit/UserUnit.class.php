@@ -24,6 +24,8 @@
 
 namespace GT\Unit;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 defined('MOODLE_INTERNAL') or die();
 
 require_once('Unit.class.php');
@@ -643,16 +645,9 @@ class UserUnit extends \GT\Unit {
 
         }
 
-        // Try to open file
-
-        // Require PHPExcel library
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Open with PHPExcel reader
         try {
-            $inputFileType = \PHPExcel_IOFactory::identify($file);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($file);
+            $objPHPExcel = IOFactory::load($file);
         } catch (Exception $e) {
             print_error($e->getMessage());
             return false;
@@ -873,12 +868,10 @@ class UserUnit extends \GT\Unit {
         $qual = new \GT\Qualification( $this->qualID );
         $name = preg_replace("/[^a-z 0-9]/i", "", $this->getDisplayName() . ' - ' . $qual->getDisplayName());
 
-        // Require PHPExcel library
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Setup Spreadsheet
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->getProperties()
+        $filename = $name . '.xlsx';
+        $objPHPExcel = new \GT\Excel($filename);
+        $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator(fullname($USER))
             ->setLastModifiedBy(fullname($USER))
             ->setTitle( $this->getDisplayName() . " - " . $qual->getDisplayName() )
@@ -887,37 +880,24 @@ class UserUnit extends \GT\Unit {
             ->setCustomProperty( "GT-DATASHEET-TYPE" , "UNIT", 's')
             ->setCustomProperty( "GT-DATASHEET-DOWNLOADED" , time(), 'i');
 
-        // Remove default sheet
-        $objPHPExcel->removeSheetByIndex(0);
+        // Style for blank cells - criteria not on that unit.
+        $formats = array();
+        $formats['blank'] = $objPHPExcel->add_format(['bg_color' => '#EDEDED']);
 
-        // Style for blank cells - criteria not on that unit
-        $blankCellStyle = array(
-            'fill' => array(
-                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                'color' => array('rgb' => 'EDEDED')
-            )
-        );
+        // Create sheets.
+        $sheets = array();
+        $sheets['main'] = $objPHPExcel->addWorksheet( get_string('grades', 'block_gradetracker') );
+        $sheets['comments'] = $objPHPExcel->addWorksheet( get_string('comments', 'block_gradetracker') );
 
-        // Set current sheet
-        $objPHPExcel->createSheet(0);
-        $objPHPExcel->createSheet(1);
-        $objPHPExcel->setActiveSheetIndex(1);
-        $objPHPExcel->getActiveSheet()->setTitle( get_string('comments', 'block_gradetracker') );
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->setTitle( get_string('grades', 'block_gradetracker') );
+        $row = 0;
 
         // User Headers
-        $objPHPExcel->getActiveSheet()->setCellValue("A1", "ID");
-        $objPHPExcel->getActiveSheet()->setCellValue("B1", get_string('firstname'));
-        $objPHPExcel->getActiveSheet()->setCellValue("C1", get_string('lastname'));
-        $objPHPExcel->getActiveSheet()->setCellValue("D1", get_string('username'));
-
-        $objPHPExcel->setActiveSheetIndex(1);
-        $objPHPExcel->getActiveSheet()->setCellValue("A1", "ID");
-        $objPHPExcel->getActiveSheet()->setCellValue("B1", get_string('firstname'));
-        $objPHPExcel->getActiveSheet()->setCellValue("C1", get_string('lastname'));
-        $objPHPExcel->getActiveSheet()->setCellValue("D1", get_string('username'));
-        $objPHPExcel->setActiveSheetIndex(0);
+        foreach ($sheets as $sheet) {
+            $sheet->writeString($row, 'A', 'ID');
+            $sheet->writeString($row, 'B', get_string('firstname'));
+            $sheet->writeString($row, 'C', get_string('lastname'));
+            $sheet->writeString($row, 'D', get_string('username'));
+        }
 
         $letter = 'E';
 
@@ -927,19 +907,15 @@ class UserUnit extends \GT\Unit {
 
             foreach ($criteria as $criterion) {
 
-                $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", $criterion['name']);
-                $objPHPExcel->setActiveSheetIndex(1);
-                $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", $criterion['name']);
-                $objPHPExcel->setActiveSheetIndex(0);
+                $sheets['main']->writeString($row, $letter, $criterion['name']);
+                $sheets['comments']->writeString($row, $letter, $criterion['name']);
                 $letter++;
 
                 if (isset($criterion['sub']) && $criterion['sub']) {
                     foreach ($criterion['sub'] as $sub) {
                         $subName = (isset($sub['name'])) ? $sub['name'] : $sub;
-                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", $subName);
-                        $objPHPExcel->setActiveSheetIndex(1);
-                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", $subName);
-                        $objPHPExcel->setActiveSheetIndex(0);
+                        $sheets['main']->writeString($row, $letter, $subName);
+                        $sheets['comments']->writeString($row, $letter, $subName);
                         $letter++;
                     }
                 }
@@ -950,13 +926,13 @@ class UserUnit extends \GT\Unit {
 
         // IV Column?
         if ($qual->getStructure() && $qual->getStructure()->getSetting('iv_column') == 1) {
-            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", get_string('iv', 'block_gradetracker') . ' - ' . get_string('date'));
+            $sheets['main']->writeString($row, $letter, get_string('iv', 'block_gradetracker') . ' - ' . get_string('date'));
             $letter++;
-            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", get_string('iv', 'block_gradetracker') . ' - ' . get_string('verifier', 'block_gradetracker'));
+            $sheets['main']->writeString($row, $letter, get_string('iv', 'block_gradetracker') . ' - ' . get_string('verifier', 'block_gradetracker'));
             $letter++;
         }
 
-        $rowNum = 2;
+        $row++;
 
         $students = $this->getUsers("STUDENT", false, $courseID, $groupID);
 
@@ -968,16 +944,13 @@ class UserUnit extends \GT\Unit {
                 if ($this->student->isOnQualUnit($this->qualID, $this->id, "STUDENT")) {
 
                     // User cells
-                    $objPHPExcel->getActiveSheet()->setCellValue("A{$rowNum}", $this->student->id);
-                    $objPHPExcel->getActiveSheet()->setCellValue("B{$rowNum}", $this->student->firstname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("C{$rowNum}", $this->student->lastname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("D{$rowNum}", $this->student->username);
-                    $objPHPExcel->setActiveSheetIndex(1);
-                    $objPHPExcel->getActiveSheet()->setCellValue("A{$rowNum}", $this->student->id);
-                    $objPHPExcel->getActiveSheet()->setCellValue("B{$rowNum}", $this->student->firstname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("C{$rowNum}", $this->student->lastname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("D{$rowNum}", $this->student->username);
-                    $objPHPExcel->setActiveSheetIndex(0);
+                    foreach ($sheets as $sheet) {
+                        $sheet->writeString($row, 'A', $this->student->id);
+                        $sheet->writeString($row, 'B', $this->student->firstname);
+                        $sheet->writeString($row, 'C', $this->student->lastname);
+                        $sheet->writeString($row, 'D', $this->student->username);
+                    }
+
                     $letter = 'E';
 
                     // Criteria cells
@@ -988,14 +961,11 @@ class UserUnit extends \GT\Unit {
                             $criterion = $this->getCriterionByName($crit['name']);
 
                             // Value
-                            $criterion->getExcelCell($objPHPExcel, $rowNum, $letter);
+                            $criterion->getExcelCell($sheets['main'], $row, $letter);
 
                             // Comment
-                            $objPHPExcel->setActiveSheetIndex(1);
                             $comments = ($criterion->getUserComments()) ? $criterion->getUserComments() : '';
-                            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $comments);
-                            $objPHPExcel->setActiveSheetIndex(0);
-
+                            $sheets['comments']->writeString($row, $letter, $comments);
                             $letter++;
 
                             // Sub Criteria
@@ -1007,14 +977,11 @@ class UserUnit extends \GT\Unit {
                                     $subCrit = $this->getCriterionByName($subName);
 
                                     // Value
-                                    $subCrit->getExcelCell($objPHPExcel, $rowNum, $letter);
+                                    $subCrit->getExcelCell($sheets['main'], $row, $letter);
 
                                     // Comment
-                                    $objPHPExcel->setActiveSheetIndex(1);
                                     $comments = ($subCrit->getUserComments()) ? $criterion->getUserComments() : '';
-                                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $comments);
-                                    $objPHPExcel->setActiveSheetIndex(0);
-
+                                    $sheets['comments']->writeString($row, $letter, $comments);
                                     $letter++;
 
                                 }
@@ -1038,14 +1005,14 @@ class UserUnit extends \GT\Unit {
                             $ivWho = '';
                         }
 
-                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $ivDate);
+                        $sheets['main']->writeString($row, $letter, $ivDate);
                         $letter++;
-                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $ivWho);
+                        $sheets['main']->writeString($row, $letter, $ivWho);
                         $letter++;
 
                     }
 
-                    $rowNum++;
+                    $row++;
 
                 }
 
@@ -1054,23 +1021,11 @@ class UserUnit extends \GT\Unit {
         }
 
         // Freeze rows and cols (everything to the left of E and above 2)
-        $objPHPExcel->getActiveSheet()->freezePane('E2');
-        $objPHPExcel->setActiveSheetIndex(1);
-        $objPHPExcel->getActiveSheet()->freezePane('E2');
-
-        // End
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $sheets['main']->getWorksheet()->freezePane('E2');
+        $sheets['comments']->getWorksheet()->freezePane('E2');
 
         // Set headers to download spreadsheet
-        ob_clean();
-        header("Pragma: public");
-        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-        header('Content-Disposition: attachment; filename="'.$name.'.xlsx"');
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
-        ob_clean();
-        $objWriter->save('php://output');
+        $objPHPExcel->serve();
         exit;
 
     }

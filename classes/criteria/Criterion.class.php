@@ -26,6 +26,11 @@
 
 namespace GT;
 
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
+
 defined('MOODLE_INTERNAL') or die();
 
 abstract class Criterion {
@@ -1402,11 +1407,14 @@ abstract class Criterion {
 
     /**
      * Get the cell when exporting to an excel spreadsheet
-     * @param type $objPHPExcel
+     * @param type $sheet
      * @param type $rowNum
      * @param type $letter
      */
-    public function getExcelCell(&$objPHPExcel, $rowNum, $letter) {
+    public function getExcelCell(&$sheet, $rowNum, $letter) {
+
+        // When specifying the cell by string, e.g. 'A0', we need to increment the row number, as the indexes start at 0.
+        $rowInc = $rowNum + 1;
 
         // Check the grading structure is valid
         $gradingStructure = $this->getGradingStructure();
@@ -1416,14 +1424,16 @@ abstract class Criterion {
 
         $award = $this->getUserAward();
         $value = ($award) ? $award->getShortName() : get_string('na', 'block_gradetracker');
-        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $value);
+        $sheet->writeString($rowNum, $letter, $value);
 
         // Select menu
         $conditionalValuesArray = array(
             'met' => array(),
             'no' => array()
         );
+
         $values = $this->getPossibleValues();
+
         $possibleValues = array();
         $possibleValues[] = get_string('na', 'block_gradetracker');
         if ($values) {
@@ -1442,9 +1452,9 @@ abstract class Criterion {
         // Can't be more than 255 characters or Excel breaks
         if (strlen($possibleValuesString) <= 255) {
 
-            $objValidation = $objPHPExcel->getActiveSheet()->getCell("{$letter}{$rowNum}")->getDataValidation();
-            $objValidation->setType( \PHPExcel_Cell_DataValidation::TYPE_LIST );
-            $objValidation->setErrorStyle( \PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+            $objValidation = $sheet->getWorksheet()->getCell("{$letter}{$rowInc}")->getDataValidation();
+            $objValidation->setType( DataValidation::TYPE_LIST );
+            $objValidation->setErrorStyle( DataValidation::STYLE_INFORMATION );
             $objValidation->setAllowBlank(false);
             $objValidation->setShowInputMessage(true);
             $objValidation->setShowErrorMessage(true);
@@ -1455,36 +1465,9 @@ abstract class Criterion {
 
         }
 
-        // Conditional Formatting
-
-        // Met
-        $objConditional = new \PHPExcel_Style_Conditional();
-        $objConditional->setConditionType( \PHPExcel_Style_Conditional::CONDITION_EXPRESSION )
-            ->setOperatorType( \PHPExcel_Style_Conditional::OPERATOR_EQUAL );
-        if ($conditionalValuesArray['met']) {
-            foreach ($conditionalValuesArray['met'] as $met) {
-                $objConditional->addCondition($letter . $rowNum . '="'.$met.'"');
-            }
-        }
-        $objConditional->getStyle()->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getEndColor()->setARGB(\PHPExcel_Style_Color::COLOR_GREEN);
-
-        // NOT Met
-        $objConditional2 = new \PHPExcel_Style_Conditional();
-        $objConditional2->setConditionType( \PHPExcel_Style_Conditional::CONDITION_EXPRESSION )
-            ->setOperatorType( \PHPExcel_Style_Conditional::OPERATOR_EQUAL );
-        if ($conditionalValuesArray['no']) {
-            foreach ($conditionalValuesArray['no'] as $no) {
-                $objConditional2->addCondition($letter . $rowNum . '="'.$no.'"');
-            }
-        }
-        $objConditional2->getStyle()->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->getEndColor()->setARGB(\PHPExcel_Style_Color::COLOR_RED);
-        $objConditional2->getStyle()->getFont()->getColor()->setARGB(\PHPExcel_Style_Color::COLOR_WHITE);
-
-        // Append styles to sheet
-        $conditionalStyles = $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$rowNum}")->getConditionalStyles();
-        array_push($conditionalStyles, $objConditional);
-        array_push($conditionalStyles, $objConditional2);
-        $objPHPExcel->getActiveSheet()->getStyle("{$letter}{$rowNum}")->setConditionalStyles($conditionalStyles);
+        // Conditional Formatting.
+        $sheet->applyConditionalFormatInArray($rowNum, $letter, $conditionalValuesArray['met'], null, Color::COLOR_GREEN);
+        $sheet->applyConditionalFormatInArray($rowNum, $letter, $conditionalValuesArray['no'], Color::COLOR_WHITE, Color::COLOR_RED);
 
     }
 

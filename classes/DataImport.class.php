@@ -23,6 +23,8 @@
  */
 namespace GT;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 defined('MOODLE_INTERNAL') or die();
 
 /**
@@ -2281,14 +2283,9 @@ class DataImport {
             return false;
         }
 
-        // Require PHPExcel library
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Open with PHPExcel reader
         try {
-            $inputFileType = \PHPExcel_IOFactory::identify($this->file['tmp_name']);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($this->file['tmp_name']);
+            $objPHPExcel = IOFactory::load($this->file['tmp_name']);
         } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
             return false;

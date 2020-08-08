@@ -28,6 +28,8 @@ use MoodleExcelFormat;
 use MoodleExcelWorkbook;
 use MoodleExcelWorksheet;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Style\Conditional;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -93,6 +95,11 @@ class Excel extends MoodleExcelWorkbook {
 
         header('Content-Type: '.$mimetype);
         header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private", false);
+
+        $objwriter = IOFactory::createWriter($this->objspreadsheet, $this->type);
+        $objwriter->save('php://output');
 
     }
 
@@ -218,6 +225,42 @@ class ExcelSheet extends MoodleExcelWorksheet {
     public function getComment($row, $col) {
         $row += 1;
         return $this->worksheet->getComment($col . $row);
+    }
+
+    /**
+     * Apply conditional formatting to a cell, if its value matches any of the supplied values
+     * @param string $cell
+     * @param array $matchingValues
+     */
+    public function applyConditionalFormatInArray(int $row, string $col, array $matchingValues, string $fontColour = null, string $backgroundColour = null) {
+
+        $row += 1;
+        $cell = $col . $row;
+
+        $conditionalStyles = $this->getWorksheet()->getStyle($cell)->getConditionalStyles();
+
+        // Loop through the possible matching values and apply a condition for them all.
+        foreach ($matchingValues as $val) {
+
+            $conditional = new Conditional();
+            $conditional->setConditionType(Conditional::CONDITION_CELLIS);
+            $conditional->setOperatorType(Conditional::OPERATOR_EQUAL);
+            $conditional->addCondition('"' . $val . '"');
+
+            if (!is_null($fontColour)) {
+                $conditional->getStyle()->getFont()->getColor()->setARGB($fontColour);
+            }
+
+            if (!is_null($backgroundColour)) {
+                $conditional->getStyle()->getFill()->setFillType(Fill::FILL_SOLID)->getEndColor()->setARGB($backgroundColour);
+            }
+
+            $conditionalStyles[] = $conditional;
+
+        }
+
+        $this->getWorksheet()->getStyle($cell)->setConditionalStyles($conditionalStyles);
+
     }
 
 }
