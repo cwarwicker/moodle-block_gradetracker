@@ -25,6 +25,8 @@
 
 namespace GT;
 
+use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
+
 defined('MOODLE_INTERNAL') or die();
 
 class Assessment {
@@ -570,7 +572,7 @@ class Assessment {
      * @param type $rowNum
      * @param type $letter
      */
-    public function getExcelGradeCell(&$objPHPExcel, $rowNum, $letter) {
+    public function getExcelGradeCell(&$sheet, $rowNum, $letter) {
 
         if (!$this->qualification) {
             return false;
@@ -580,16 +582,17 @@ class Assessment {
             return false;
         }
 
+        $rowInc = $rowNum + 1;
         $grade = $this->getUserGrade();
         $grade->setDefaultName('');
 
-        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $grade->getShortName());
+        $sheet->writeString($rowNum, $letter, $grade->getShortName());
 
         $gradingMethod = $this->getSetting('grading_method');
         if ($gradingMethod == 'numeric') {
 
             // Set the score
-            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $this->getUserScore());
+            $sheet->writeString($rowNum, $letter, $this->getUserScore());
 
             $min = (int)$this->getSetting('numeric_grading_min');
             $max = (int)$this->getSetting('numeric_grading_max');
@@ -600,9 +603,9 @@ class Assessment {
             // Just have a normal cell
             if (strlen($possibleValuesString) <= 255) {
 
-                $objValidation = $objPHPExcel->getActiveSheet()->getCell("{$letter}{$rowNum}")->getDataValidation();
-                $objValidation->setType( \PHPExcel_Cell_DataValidation::TYPE_LIST );
-                $objValidation->setErrorStyle( \PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+                $objValidation = $sheet->getWorksheet()->getCell("{$letter}{$rowInc}")->getDataValidation();
+                $objValidation->setType( DataValidation::TYPE_LIST );
+                $objValidation->setErrorStyle( DataValidation::STYLE_INFORMATION );
                 $objValidation->setAllowBlank(true);
                 $objValidation->setShowInputMessage(true);
                 $objValidation->setShowErrorMessage(true);
@@ -634,9 +637,9 @@ class Assessment {
                 // Just have a normal cell
                 if (strlen($possibleValuesString) <= 255) {
 
-                    $objValidation = $objPHPExcel->getActiveSheet()->getCell("{$letter}{$rowNum}")->getDataValidation();
-                    $objValidation->setType( \PHPExcel_Cell_DataValidation::TYPE_LIST );
-                    $objValidation->setErrorStyle( \PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+                    $objValidation = $sheet->getWorksheet()->getCell("{$letter}{$rowInc}")->getDataValidation();
+                    $objValidation->setType( DataValidation::TYPE_LIST );
+                    $objValidation->setErrorStyle( DataValidation::STYLE_INFORMATION );
                     $objValidation->setAllowBlank(false);
                     $objValidation->setShowInputMessage(true);
                     $objValidation->setShowErrorMessage(true);
@@ -659,7 +662,7 @@ class Assessment {
      * @param type $rowNum
      * @param type $letter
      */
-    public function getExcelCetaCell(&$objPHPExcel, $rowNum, $letter) {
+    public function getExcelCetaCell(&$sheet, $rowNum, $letter) {
 
         if (!$this->qualification) {
             return false;
@@ -669,10 +672,11 @@ class Assessment {
             return false;
         }
 
+        $rowInc = $rowNum + 1;
         $grade = $this->getUserCeta();
         $grade->setDefaultName('');
 
-        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $grade->getName());
+        $sheet->writeString($rowNum, $letter, $grade->getName());
 
         $QualBuild = $this->qualification->getBuild();
         if ($QualBuild && $QualBuild->isValid() && !$QualBuild->isDeleted()) {
@@ -692,9 +696,9 @@ class Assessment {
             // Can't have more than 255 characters or Excel breaks
             if (strlen($possibleValuesString) <= 255) {
 
-                $objValidation = $objPHPExcel->getActiveSheet()->getCell("{$letter}{$rowNum}")->getDataValidation();
-                $objValidation->setType( \PHPExcel_Cell_DataValidation::TYPE_LIST );
-                $objValidation->setErrorStyle( \PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+                $objValidation = $sheet->getWorksheet()->getCell("{$letter}{$rowInc}")->getDataValidation();
+                $objValidation->setType( DataValidation::TYPE_LIST );
+                $objValidation->setErrorStyle( DataValidation::STYLE_INFORMATION );
                 $objValidation->setAllowBlank(false);
                 $objValidation->setShowInputMessage(true);
                 $objValidation->setShowErrorMessage(true);
@@ -716,7 +720,7 @@ class Assessment {
      * @param type $rowNum
      * @param type $letter
      */
-    public function getExcelCustomFormFieldCell(&$objPHPExcel, $rowNum, $letter, $field) {
+    public function getExcelCustomFormFieldCell(&$sheet, $rowNum, $letter, $field) {
 
         if (!$this->qualification) {
             return false;
@@ -726,33 +730,41 @@ class Assessment {
             return false;
         }
 
+        $rowInc = $rowNum + 1;
+
         // Get the value of this attribute
+        $options = false;
         $value = $this->getCustomFieldValue($field, 'v', '');
         $field->setValue($value);
-
-        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}{$rowNum}", $field->getValue());
+        $sheet->writeString($rowNum, $letter, $field->getValue());
 
         // SELECT MENU
         if ($field->getType() == "SELECT") {
 
             $options = $field->getOptions();
-            $possibleValuesString = '"'.implode(",", $options).'"';
+            $possibleValuesString = '"' . implode(",", $options) . '"';
 
-            // Can't have more than 255 characters or Excel breaks
-            if (strlen($possibleValuesString) <= 255) {
+        } else if ($field->getType() == "CHECKBOX") {
 
-                $objValidation = $objPHPExcel->getActiveSheet()->getCell("{$letter}{$rowNum}")->getDataValidation();
-                $objValidation->setType( \PHPExcel_Cell_DataValidation::TYPE_LIST );
-                $objValidation->setErrorStyle( \PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
-                $objValidation->setAllowBlank(false);
-                $objValidation->setShowInputMessage(true);
-                $objValidation->setShowErrorMessage(true);
-                $objValidation->setShowDropDown(true);
-                $objValidation->setErrorTitle('input error');
-                $objValidation->setError( get_string('import:datasheet:process:error:value', 'block_gradetracker') );
-                $objValidation->setFormula1($possibleValuesString);
+            $options = [1, 0];
+            $possibleValuesString = '"' . implode(",", $options) . '"';
 
-            }
+        }
+
+        // Are there select menu options we want to apply?
+        // Can't have more than 255 characters or Excel breaks
+        if ($options && strlen($possibleValuesString) <= 255) {
+
+            $objValidation = $sheet->getWorksheet()->getCell("{$letter}{$rowInc}")->getDataValidation();
+            $objValidation->setType( DataValidation::TYPE_LIST );
+            $objValidation->setErrorStyle( DataValidation::STYLE_INFORMATION );
+            $objValidation->setAllowBlank(false);
+            $objValidation->setShowInputMessage(true);
+            $objValidation->setShowErrorMessage(true);
+            $objValidation->setShowDropDown(true);
+            $objValidation->setErrorTitle('input error');
+            $objValidation->setError( get_string('import:datasheet:process:error:value', 'block_gradetracker') );
+            $objValidation->setFormula1($possibleValuesString);
 
         }
 
