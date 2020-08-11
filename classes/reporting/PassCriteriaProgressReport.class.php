@@ -23,7 +23,7 @@
  */
 namespace GT\Reports;
 
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use local_df_hub\excel;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -68,7 +68,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
         // Setup Spreadsheet
         $precision = ini_get('precision');
         $filename = 'PassCriteriaProgressReport_' . $User->id . '.xlsx';
-        $objPHPExcel = new \GT\Excel($filename);
+        $objPHPExcel = new excel($filename);
         ini_set('precision', $precision); # PHPExcel fucks up the native round() function by changing the precision
 
         $objPHPExcel->getSpreadsheet()->getProperties()
@@ -129,7 +129,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
 
                         // Course name
                         $sheet->writeString($row, 'A', $course->getNameWithCategory());
-                        $sheet->mergeCells($row, 'A', $row, Coordinate::columnIndexFromString('C'));
+                        $sheet->mergeCells($row, 'A', $row, 'C');
 
                         $courseRow = $row;
                         $row++;
@@ -180,7 +180,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
 
                                 // Qual Name
                                 $sheet->writeString($row, 'A', $qual->getDisplayName());
-                                $sheet->mergeCells($row, 'A', $row, Coordinate::columnIndexFromString('C'));
+                                $sheet->mergeCells($row, 'A', $row, 'C');
 
                                 $letter = 'D';
 
@@ -315,7 +315,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
 
                                         // Pass Criteria - Get the max any student has for Pass criteria achieved
                                         $passCriteriaCellLetter = $letter;
-                                        $sheet->writeString($row, $letter, 'maxPass to be overwritten', $formats['max'] + ['bold' => true]);
+                                        $sheet->writeString($row, $letter, 'maxPass to be overwritten', $formats['max']);
 
                                         $qualMaxWeightingCell = ['row' => $row, 'col' => $letter];
 
@@ -463,7 +463,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
                                     if (!$shortCriteriaNames || $method == 'bygradestructure') {
                                         // To be overwritten later
                                         $totalPassCriteriaCell = ['row' => $totalsRow, 'col' => $letter];
-                                        $sheet->writeString($totalsRow, $letter, 'ttlPass to be overwritten', $formats['totals'] + ['bold' => true]);
+                                        $sheet->writeString($totalsRow, $letter, 'ttlPass to be overwritten', $formats['totals']);
                                         $letter++;
                                     }
 

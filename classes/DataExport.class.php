@@ -23,6 +23,8 @@
  */
 namespace GT;
 
+require_once($CFG->dirroot . '/lib/excellib.class.php');
+
 defined('MOODLE_INTERNAL') or die();
 
 class DataExport {

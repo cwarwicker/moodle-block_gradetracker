@@ -25,7 +25,7 @@
 
 namespace GT\Qualification;
 
-use GT\Excel;
+use local_df_hub\excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 defined('MOODLE_INTERNAL') or die();
@@ -2589,7 +2589,7 @@ class UserQualification extends \GT\Qualification {
         $filename = $name . '.xlsx';
 
         // Setup Spreadsheet
-        $objPHPExcel = new Excel($filename);
+        $objPHPExcel = new excel($filename);
         $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator(fullname($USER))
             ->setLastModifiedBy(fullname($USER))
@@ -3018,7 +3018,7 @@ class UserQualification extends \GT\Qualification {
         $filename = $name . '.xlsx';
 
         // Setup Spreadsheet
-        $objPHPExcel = new Excel($filename);
+        $objPHPExcel = new excel($filename);
         $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator(fullname($USER))
             ->setLastModifiedBy(fullname($USER))

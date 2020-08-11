@@ -24,6 +24,7 @@
 
 namespace GT\Unit;
 
+use local_df_hub\excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 defined('MOODLE_INTERNAL') or die();
@@ -870,7 +871,7 @@ class UserUnit extends \GT\Unit {
 
         // Setup Spreadsheet
         $filename = $name . '.xlsx';
-        $objPHPExcel = new \GT\Excel($filename);
+        $objPHPExcel = new excel($filename);
         $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator(fullname($USER))
             ->setLastModifiedBy(fullname($USER))

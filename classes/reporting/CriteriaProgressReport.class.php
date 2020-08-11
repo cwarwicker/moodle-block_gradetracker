@@ -23,7 +23,7 @@
  */
 namespace GT\Reports;
 
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use local_df_hub\excel;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -78,7 +78,7 @@ class CriteriaProgressReport extends \GT\Reports\Report {
         // Setup Spreadsheet
         $filename = 'CriteriaProgressReport_' . $User->id . '.xlsx';
         $precision = ini_get('precision');
-        $objPHPExcel = new \GT\Excel($filename);
+        $objPHPExcel = new excel($filename);
         ini_set('precision', $precision); # PHPExcel fucks up the native round() function by changing the precision
 
         $objPHPExcel->getSpreadsheet()->getProperties()

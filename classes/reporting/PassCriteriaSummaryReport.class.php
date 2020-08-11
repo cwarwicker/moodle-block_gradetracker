@@ -23,6 +23,8 @@
  */
 namespace GT\Reports;
 
+use local_df_hub\excel;
+
 defined('MOODLE_INTERNAL') or die();
 
 require_once('Report.class.php');
@@ -66,7 +68,7 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
         // Setup Spreadsheet
         $filename = 'PassCriteriaSummaryReport_' . $User->id . '.xlsx';
         $precision = ini_get('precision');
-        $objPHPExcel = new \GT\Excel($filename);
+        $objPHPExcel = new excel($filename);
         ini_set('precision', $precision); # PHPExcel fucks up the native round() function by changing the precision
 
         $objPHPExcel->getSpreadsheet()->getProperties()
@@ -296,10 +298,10 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
 
                                             }
 
-                                            // Total student weighting
-                                            $studentWeightings[$student->id] = $studentWeighting;
-
                                         }
+
+                                        // Total student weighting
+                                        $studentWeightings[$student->id] = $studentWeighting;
 
                                         // First need to work out what constitutes a "Pass" criteria
                                         // By First Letter
@@ -386,7 +388,7 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
 
                                     }
 
-                                     // Now if we were doing by grade structure, need to loop through students again
+                                    // Now if we were doing by grade structure, need to loop through students again
                                     // As in the previous loop we worked out the best pass score, now we can divide by it
                                     if ($method == 'bygradestructure') {
 
@@ -441,7 +443,7 @@ class PassCriteriaSummaryReport extends \GT\Reports\Report {
                                         }
 
                                         // Pass Status
-                                        $studentPassPercentageBest = $studentPassPercentageArray[$student->id];
+                                        $studentPassPercentageBest = @$studentPassPercentageArray[$student->id];
 
                                         if ($studentPassPercentageBest < \GT\Reports\CriteriaProgressReport::STATUS_BAD) {
                                             $passStatusArray[\GT\Reports\CriteriaProgressReport::STATUS_BAD]++;
