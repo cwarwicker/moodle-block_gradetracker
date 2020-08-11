@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') or die();
 
-$plugin->version = 2020031900;  // YYYYMMDDHH (year, month, day, 24-hr time)
+$plugin->version = 2020031901;  // YYYYMMDDHH (year, month, day, 24-hr time)
 $plugin->requires = 2017111300; // Moodle 3.4
 $plugin->cron = 3600;
 $plugin->component = 'block_gradetracker';

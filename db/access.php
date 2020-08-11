@@ -38,6 +38,16 @@ $capabilities = array(
         )
     ),
 
+    'block/gradetracker:myaddinstance' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'student' => CAP_PREVENT,
+            'teacher' => CAP_PREVENT,
+            'editingteacher' => CAP_ALLOW,
+        )
+    ),
+
     // Can see the configuration link and get to the page
     'block/gradetracker:configure' => array(
         'captype' => 'read',
