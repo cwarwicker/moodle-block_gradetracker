@@ -26,6 +26,7 @@
 namespace GT\Qualification;
 
 use GT\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -2208,16 +2209,9 @@ class UserQualification extends \GT\Qualification {
 
         }
 
-        // Try to open file
-
-        // Require PHPExcel library
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Open with PHPExcel reader
         try {
-            $inputFileType = \PHPExcel_IOFactory::identify($file);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($file);
+            $objPHPExcel = IOFactory::load($file);
         } catch (Exception $e) {
             print_error($e->getMessage());
             return false;
