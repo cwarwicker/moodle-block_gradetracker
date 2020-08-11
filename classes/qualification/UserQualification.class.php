@@ -1766,16 +1766,9 @@ class UserQualification extends \GT\Qualification {
 
         }
 
-        // Try to open file
-
-        // Require PHPExcel library
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
-
         // Open with PHPExcel reader
         try {
-            $inputFileType = \PHPExcel_IOFactory::identify($file);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($file);
+            $objPHPExcel = IOFactory::load($file);
         } catch (Exception $e) {
             print_error($e->getMessage());
             return false;
@@ -3004,7 +2997,6 @@ class UserQualification extends \GT\Qualification {
         $sheets['main']->getWorksheet()->freezePane('C2');
         $sheets['comments']->getWorksheet()->freezePane('C2');
 
-        // Set headers to download spreadsheet
         $objPHPExcel->serve();
         exit;
 
@@ -3023,13 +3015,11 @@ class UserQualification extends \GT\Qualification {
         $groupID = optional_param('groupID', false, PARAM_INT);
 
         $name = preg_replace("/[^a-z 0-9]/i", "", $this->getDisplayName());
-
-        // Require PHPExcel library
-        require_once($CFG->dirroot . '/lib/phpexcel/PHPExcel.php');
+        $filename = $name . '.xlsx';
 
         // Setup Spreadsheet
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->getProperties()
+        $objPHPExcel = new Excel($filename);
+        $objPHPExcel->getSpreadsheet()->getProperties()
             ->setCreator(fullname($USER))
             ->setLastModifiedBy(fullname($USER))
             ->setTitle( $this->getDisplayName() )
@@ -3038,34 +3028,21 @@ class UserQualification extends \GT\Qualification {
             ->setCustomProperty( "GT-DATASHEET-TYPE" , "CLASS", 's')
             ->setCustomProperty( "GT-DATASHEET-DOWNLOADED" , time(), 'i');
 
-        // Remove default sheet
-        $objPHPExcel->removeSheetByIndex(0);
-
-        // Style for blank cells - criteria not on that unit
-        $blankCellStyle = array(
-            'fill' => array(
-                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                'color' => array('rgb' => 'EDEDED')
-            )
-        );
+        $formats = array();
+        $formats['blank'] = $objPHPExcel->add_format(['bg_color' => '#EDEDED']);
+        $formats['centre'] = $objPHPExcel->add_format(['align' => 'center']);
 
         $QualStructure = $this->getStructure();
 
         if (!$QualStructure->isLevelEnabled("Units") || ($assessmentView == 1 && $this->getAssessments()) ) {
 
-            $objPHPExcel->getProperties()->setCustomProperty("GT-DATASHEET-ASSESSMENT-VIEW", 1, 'i');
+            $objPHPExcel->getSpreadsheet()->getProperties()->setCustomProperty("GT-DATASHEET-ASSESSMENT-VIEW", 1, 'i');
 
-            // Set current sheet
-            $objPHPExcel->createSheet(0);
-            $objPHPExcel->setActiveSheetIndex(0);
-            $objPHPExcel->getActiveSheet()->setTitle( get_string('grades', 'block_gradetracker') );
+            $sheets = array();
+            $sheets['main'] = $objPHPExcel->addWorksheet( get_string('grades', 'block_gradetracker') );
+            $sheets['comments'] = $objPHPExcel->addWorksheet( get_string('comments', 'block_gradetracker') );
 
-            // Now the second sheet, for the comments
-            $objPHPExcel->createSheet(1);
-            $objPHPExcel->setActiveSheetIndex(1);
-            $objPHPExcel->getActiveSheet()->setTitle( get_string('comments', 'block_gradetracker') );
-
-            $objPHPExcel->setActiveSheetIndex(0);
+            $rowNum = 0;
 
             // The student list
             $students = $this->getUsers("STUDENT", $courseID, $groupID);
@@ -3073,25 +3050,16 @@ class UserQualification extends \GT\Qualification {
             // Get the assessments on this qual
             $assessments = $this->getAssessments();
 
-            // Grades sheet headers
-            $objPHPExcel->getActiveSheet()->setCellValue("A1", "SID");
-            $objPHPExcel->getActiveSheet()->setCellValue("B1", get_string('firstname'));
-            $objPHPExcel->getActiveSheet()->setCellValue("C1", get_string('lastname'));
-            $objPHPExcel->getActiveSheet()->setCellValue("D1", get_string('username'));
+            foreach ($sheets as $sheet) {
+                $sheet->writeString($rowNum, 'A', 'SID');
+                $sheet->writeString($rowNum, 'B', get_string('firstname'));
+                $sheet->writeString($rowNum, 'C', get_string('lastname'));
+                $sheet->writeString($rowNum, 'D', get_string('username'));
+            }
+
             $letter = 'E';
-
-            $letterAfterStudCols = $letter;
-
-            // Comments sheet headers
-            $objPHPExcel->setActiveSheetIndex(1);
-            $objPHPExcel->getActiveSheet()->setCellValue("A1", "SID");
-            $objPHPExcel->getActiveSheet()->setCellValue("B1", get_string('firstname'));
-            $objPHPExcel->getActiveSheet()->setCellValue("C1", get_string('lastname'));
-            $objPHPExcel->getActiveSheet()->setCellValue("D1", get_string('username'));
             $commentsLetter = 'E';
-
-            // Set active sheet back to grades sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $letterAfterStudCols = $letter;
 
             // Default colspan to use
             $defaultColspan = 1;
@@ -3132,7 +3100,7 @@ class UserQualification extends \GT\Qualification {
                 foreach ($assessments as $assessment) {
 
                     $oldLetter = $letter;
-                    $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", "[{$assessment->getID()}] " . $assessment->getName());
+                    $sheets['main']->writeString($rowNum, $letter, "[{$assessment->getID()}] " . $assessment->getName());
 
                     // If using CETA or Custom Form Fields, we will need to merge cells
                     if ( ($this->isFeatureEnabledByName('cetagrades') && $assessment->isCetaEnabled()) || array_key_exists($assessment->getID(), $customFieldsArray) ) {
@@ -3150,14 +3118,8 @@ class UserQualification extends \GT\Qualification {
                         }
 
                         // Merge them
-                        $objPHPExcel->getActiveSheet()->mergeCells("{$oldLetter}1:{$letter}1");
-                        $objPHPExcel->getActiveSheet()->getStyle("{$oldLetter}1:{$letter}1")->applyFromArray(
-                            array(
-                                    'alignment' => array(
-                                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                                )
-                            )
-                        );
+                        $sheets['main']->mergeCells($rowNum, $oldLetter, $rowNum, $letter);
+                        $sheets['main']->applyRangeFormat($oldLetter, $rowNum, $letter, $rowNum, $formats['centre']);
 
                     }
 
@@ -3165,10 +3127,8 @@ class UserQualification extends \GT\Qualification {
                     $letter++;
 
                     // Comments worksheet
-                    $objPHPExcel->setActiveSheetIndex(1);
-                    $objPHPExcel->getActiveSheet()->setCellValue("{$commentsLetter}1", "[{$assessment->getID()}] " . $assessment->getName());
+                    $sheets['comments']->writeString($rowNum, $commentsLetter, "[{$assessment->getID()}] " . $assessment->getName());
                     $commentsLetter++;
-                    $objPHPExcel->setActiveSheetIndex(0);
 
                 }
 
@@ -3178,6 +3138,7 @@ class UserQualification extends \GT\Qualification {
             if ($this->isFeatureEnabledByName('cetagrades') || $customFieldsArray) {
 
                 $letter = $letterAfterStudCols;
+                $rowNum++;
 
                 if ($assessments) {
 
@@ -3186,18 +3147,18 @@ class UserQualification extends \GT\Qualification {
                         // Custom Form Fields first
                         if (array_key_exists($assessment->getID(), $customFieldsArray) && $customFieldsArray[$assessment->getID()]) {
                             foreach ($customFieldsArray[$assessment->getID()] as $field) {
-                                $objPHPExcel->getActiveSheet()->setCellValue("{$letter}2", "[{$field->getID()}] " . $field->getName());
+                                $sheets['main']->writeString($rowNum, $letter, "[{$field->getID()}] " . $field->getName());
                                 $letter++;
                             }
                         }
 
                         // Then Grade column
-                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}2", get_string('grade', 'block_gradetracker'));
+                        $sheets['main']->writeString($rowNum, $letter, get_string('grade', 'block_gradetracker'));
                         $letter++;
 
                         // Then CETA column
                         if ($assessment->isCetaEnabled()) {
-                            $objPHPExcel->getActiveSheet()->setCellValue("{$letter}2", get_string('ceta', 'block_gradetracker'));
+                            $sheets['main']->writeString($rowNum, $letter, get_string('ceta', 'block_gradetracker'));
                             $letter++;
                         }
 
@@ -3205,11 +3166,9 @@ class UserQualification extends \GT\Qualification {
 
                 }
 
-                $rowNum = 3;
-
-            } else {
-                $rowNum = 2;
             }
+
+            $rowNum++;
 
             // Loop through students
             if ($students) {
@@ -3217,22 +3176,15 @@ class UserQualification extends \GT\Qualification {
 
                     $this->loadStudent($student);
 
-                    // Student columns
-                    $objPHPExcel->getActiveSheet()->setCellValue("A{$rowNum}", $student->id);
-                    $objPHPExcel->getActiveSheet()->setCellValue("B{$rowNum}", $student->firstname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("C{$rowNum}", $student->lastname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("D{$rowNum}", $student->username);
+                    foreach ($sheets as $sheet) {
+                        $sheet->writeString($rowNum, 'A', $student->id);
+                        $sheet->writeString($rowNum, 'B', $student->firstname);
+                        $sheet->writeString($rowNum, 'C', $student->lastname);
+                        $sheet->writeString($rowNum, 'D', $student->username);
+                    }
+
                     $letter = 'E';
-
-                    $objPHPExcel->setActiveSheetIndex(1);
-                    $objPHPExcel->getActiveSheet()->setCellValue("A{$rowNum}", $student->id);
-                    $objPHPExcel->getActiveSheet()->setCellValue("B{$rowNum}", $student->firstname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("C{$rowNum}", $student->lastname);
-                    $objPHPExcel->getActiveSheet()->setCellValue("D{$rowNum}", $student->username);
                     $commentsLetter = 'E';
-
-                    // Reset back to grades sheet
-                    $objPHPExcel->setActiveSheetIndex(0);
 
                     // Assessments
                     if ($assessments) {
@@ -3244,25 +3196,23 @@ class UserQualification extends \GT\Qualification {
                             // Custom Form Fields first
                             if (array_key_exists($assessment->getID(), $customFieldsArray) && $customFieldsArray[$assessment->getID()]) {
                                 foreach ($customFieldsArray[$assessment->getID()] as $field) {
-                                    $assessment->getExcelCustomFormFieldCell($objPHPExcel, $rowNum, $letter, $field);
+                                    $assessment->getExcelCustomFormFieldCell($sheets['main'], $rowNum, $letter, $field);
                                     $letter++;
                                 }
                             }
 
                             // Then Grade column
-                            $assessment->getExcelGradeCell($objPHPExcel, $rowNum, $letter);
+                            $assessment->getExcelGradeCell($sheets['main'], $rowNum, $letter);
                             $letter++;
 
                             // Then CETA column
                             if ($assessment->isCetaEnabled()) {
-                                $assessment->getExcelCetaCell($objPHPExcel, $rowNum, $letter);
+                                $assessment->getExcelCetaCell($sheets['main'], $rowNum, $letter);
                                 $letter++;
                             }
 
                             // Comments sheet
-                            $objPHPExcel->setActiveSheetIndex(1);
-                            $objPHPExcel->getActiveSheet()->setCellValue("{$commentsLetter}{$rowNum}", $assessment->getUserComments());
-                            $objPHPExcel->setActiveSheetIndex(0);
+                            $sheets['comments']->writeString($rowNum, $commentsLetter, $assessment->getUserComments());
                             $commentsLetter++;
 
                         }
@@ -3289,31 +3239,32 @@ class UserQualification extends \GT\Qualification {
                 }
 
                 // Set current sheet
-                $objPHPExcel->createSheet($unitNum);
-                $objPHPExcel->setActiveSheetIndex($unitNum);
-                $objPHPExcel->getActiveSheet()->setTitle( $unitName );
+                $sheet = $objPHPExcel->addWorksheet($unitName);
 
                 // User & Criteria headers
                 $students = $unit->getUsers("STUDENT", false, $courseID, $groupID);
                 $criteria = $unit->getHeaderCriteriaNames();
 
-                $objPHPExcel->getActiveSheet()->setCellValue("A1", "ID");
-                $objPHPExcel->getActiveSheet()->setCellValue("B1", get_string('firstname'));
-                $objPHPExcel->getActiveSheet()->setCellValue("C1", get_string('lastname'));
-                $objPHPExcel->getActiveSheet()->setCellValue("D1", get_string('username'));
+                $rowNum = 0;
+
+                $sheet->writeString($rowNum, 'A', 'ID');
+                $sheet->writeString($rowNum, 'B', get_string('firstname'));
+                $sheet->writeString($rowNum, 'C', get_string('lastname'));
+                $sheet->writeString($rowNum, 'D', get_string('username'));
+
                 $letter = 'E';
 
                 if ($criteria) {
 
                     foreach ($criteria as $criterion) {
 
-                        $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", $criterion['name']);
+                        $sheet->writeString($rowNum, $letter, $criterion['name']);;
                         $letter++;
 
                         if (isset($criterion['sub']) && $criterion['sub']) {
                             foreach ($criterion['sub'] as $sub) {
                                 $subName = (isset($sub['name'])) ? $sub['name'] : $sub;
-                                $objPHPExcel->getActiveSheet()->setCellValue("{$letter}1", $subName);
+                                $sheet->writeString($rowNum, $letter, $subName);;
                                 $letter++;
                             }
                         }
@@ -3322,7 +3273,7 @@ class UserQualification extends \GT\Qualification {
 
                 }
 
-                $rowNum = 2;
+                $rowNum++;
 
                 if ($students) {
 
@@ -3330,24 +3281,25 @@ class UserQualification extends \GT\Qualification {
 
                         $unit->loadStudent($student);
 
-                        $objPHPExcel->getActiveSheet()->setCellValue("A{$rowNum}", $student->id);
-                        $objPHPExcel->getActiveSheet()->setCellValue("B{$rowNum}", $student->firstname);
-                        $objPHPExcel->getActiveSheet()->setCellValue("C{$rowNum}", $student->lastname);
-                        $objPHPExcel->getActiveSheet()->setCellValue("D{$rowNum}", $student->username);
+                        $sheet->writeString($rowNum, 'A', $student->id);
+                        $sheet->writeString($rowNum, 'B', $student->firstname);
+                        $sheet->writeString($rowNum, 'C', $student->lastname);
+                        $sheet->writeString($rowNum, 'D', $student->username);
+
                         $letter = 'E';
 
                         if ($criteria) {
                             foreach ($criteria as $crit) {
 
                                 $criterion = $unit->getCriterionByName($crit['name']);
-                                $criterion->getExcelCell($objPHPExcel, $rowNum, $letter);
+                                $criterion->getExcelCell($sheet, $rowNum, $letter);
                                 $letter++;
 
                                 if (isset($crit['sub']) && $crit['sub']) {
                                     foreach ($crit['sub'] as $sub) {
                                         $subName = (isset($sub['name'])) ? $sub['name'] : $sub;
                                         $subCriterion = $unit->getCriterionByName($subName);
-                                        $subCriterion->getExcelCell($objPHPExcel, $rowNum, $letter);
+                                        $subCriterion->getExcelCell($sheet, $rowNum, $letter);
                                         $letter++;
                                     }
                                 }
@@ -3367,20 +3319,8 @@ class UserQualification extends \GT\Qualification {
 
         }
 
-        // End
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Xlsx');
-
-        // Set headers to download spreadsheet
-        ob_clean();
-        header("Pragma: public");
-        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-        header('Content-Disposition: attachment; filename="'.$name.'.xlsx"');
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
-
-        ob_clean();
-        $objWriter->save('php://output');
+        // Serve the spreadsheet.
+        $objPHPExcel->serve();
         exit;
 
     }
