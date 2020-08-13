@@ -28,8 +28,8 @@ require_once($CFG->dirroot . '/blocks/elbp/lib.php');
 // Need to be logged in to view this page
 require_login();
 
-$ELBP = ELBP\ELBP::instantiate();
-$DBC = new ELBP\DB();
+$ELBP = block_elbp\ELBP::instantiate();
+$DBC = new block_elbp\DB();
 
 $view = optional_param('view', 'main', PARAM_ALPHA);
 
@@ -39,13 +39,13 @@ if (!$access['god']) {
 }
 
 try {
-    $OBJ = \ELBP\Plugins\Plugin::instaniate("elbp_prior_learning");
-} catch (\ELBP\ELBPException $e) {
+    $OBJ = \block_elbp\Plugins\Plugin::instaniate("elbp_prior_learning");
+} catch (\block_elbp\ELBPException $e) {
     echo $e->getException();
     exit;
 }
 
-$TPL = new \ELBP\Template();
+$TPL = new \block_elbp\Template();
 $MSGS['errors'] = '';
 $MSGS['success'] = '';
 
@@ -79,7 +79,7 @@ $TPL->set("OUTPUT", $OUTPUT);
 try {
     $TPL->load( $CFG->dirroot . $OBJ->getPath() . '/tpl/elbp_prior_learning/config.html' );
     $TPL->display();
-} catch (\ELBP\ELBPException $e) {
+} catch (\block_elbp\ELBPException $e) {
     echo $e->getException();
 }
 

@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace ELBP\Plugins;
+namespace block_elbp\Plugins;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -44,7 +44,7 @@ class elbp_gradetracker extends Plugin {
                 "name" => strip_namespace(get_class($this)),
                 "title" => "Grade Tracker",
                 "path" => '/blocks/gradetracker/',
-                "version" => \ELBP\ELBP::getBlockVersionStatic()
+                "version" => \block_elbp\ELBP::getBlockVersionStatic()
             ) );
         } else {
             parent::__construct( strip_namespace(get_class($this)) );
@@ -77,7 +77,7 @@ class elbp_gradetracker extends Plugin {
 
     public function getSummaryBox() {
 
-        $TPL = new \ELBP\Template();
+        $TPL = new \block_elbp\Template();
 
         $user = new \block_gradetracker\User($this->student->id);
 
@@ -92,7 +92,7 @@ class elbp_gradetracker extends Plugin {
 
         try {
             return $TPL->load($this->CFG->dirroot . $this->path . 'tpl/elbp_gradetracker/summary.html');
-        } catch (\ELBP\ELBPException $e) {
+        } catch (\block_elbp\ELBPException $e) {
             return $e->getException();
         }
 
@@ -103,7 +103,7 @@ class elbp_gradetracker extends Plugin {
 
         $output = "";
 
-        $TPL = new \ELBP\Template();
+        $TPL = new \block_elbp\Template();
 
         $user = new \block_gradetracker\User($this->student->id);
 
@@ -116,7 +116,7 @@ class elbp_gradetracker extends Plugin {
 
         try {
             $output .= $TPL->load($this->CFG->dirroot . $this->path . 'tpl/elbp_gradetracker/expanded.html');
-        } catch (\ELBP\ELBPException $e) {
+        } catch (\block_elbp\ELBPException $e) {
             $output .= $e->getException();
         }
 
@@ -192,7 +192,7 @@ class elbp_gradetracker extends Plugin {
                 try {
                     $TPL->load( $this->CFG->dirroot . $this->path . 'tpl/elbp_gradetracker/'.$params['type'].'.html' );
                     $TPL->display();
-                } catch (\ELBP\ELBPException $e) {
+                } catch (\block_elbp\ELBPException $e) {
                     echo $e->getException();
                 }
                 exit;
