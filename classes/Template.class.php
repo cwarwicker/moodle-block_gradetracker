@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -62,7 +62,7 @@ class Template {
      * Set a variable to be used in the template
      * @param type $var
      * @param type $val
-     * @return \GT\Template
+     * @return \block_gradetracker\Template
      */
     public function set($var, $val, $final = false) {
 
@@ -126,7 +126,7 @@ class Template {
      * Load a template file
      * @param type $template
      * @return type
-     * @throws \GT\GTException
+     * @throws \block_gradetracker\GTException
      */
     public function load($template) {
 
@@ -136,7 +136,7 @@ class Template {
         $this->output = '';
 
         // Are we using custom templating?
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
         if ($GT->getSetting('use_custom_templating') == 1) {
 
             // Strip the standard path from it and see if one exists in Moodledata for this
@@ -151,7 +151,7 @@ class Template {
 
         // If the file doesn't exist, throw an exception
         if (!file_exists($template)) {
-            throw new \GT\GTException( get_string('template', 'block_gradetracker'), get_string('filenotfound', 'block_gradetracker'), $template, get_string('createfileorchangepath', 'block_gradetracker'));
+            throw new \block_gradetracker\GTException( get_string('template', 'block_gradetracker'), get_string('filenotfound', 'block_gradetracker'), $template, get_string('createfileorchangepath', 'block_gradetracker'));
         }
 
         // Extract any variables into the template

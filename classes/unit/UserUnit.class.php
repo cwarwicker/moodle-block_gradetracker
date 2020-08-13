@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Unit;
+namespace block_gradetracker\Unit;
 
 use local_df_hub\excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') or die();
 
 require_once('Unit.class.php');
 
-class UserUnit extends \GT\Unit {
+class UserUnit extends \block_gradetracker\Unit {
 
     protected $qualID = false;
     protected $student = false;
@@ -83,7 +83,7 @@ class UserUnit extends \GT\Unit {
     /**
      * Set which qualification this userunit is for
      * @param type $id
-     * @return \GT\Unit\UserUnit
+     * @return \block_gradetracker\Unit\UserUnit
      */
     public function setQualID($id) {
         $this->qualID = $id;
@@ -123,16 +123,16 @@ class UserUnit extends \GT\Unit {
     }
 
     public function getUserLastUpdateBy() {
-        return new \GT\User($this->userLastUpdateBy);
+        return new \block_gradetracker\User($this->userLastUpdateBy);
     }
 
-    public function setUserAward(\GT\UnitAward $award) {
+    public function setUserAward(\block_gradetracker\UnitAward $award) {
         $this->userAward = $award;
         return $this;
     }
 
     public function setUserAwardID($id) {
-        $this->userAward = new \GT\UnitAward($id);
+        $this->userAward = new \block_gradetracker\UnitAward($id);
     }
 
     public function setUserComments($comments) {
@@ -187,9 +187,9 @@ class UserUnit extends \GT\Unit {
 
     /**
      * Get the students or staff on this unit on this qual
-     * @global \GT\Unit\type $DB
+     * @global \block_gradetracker\Unit\type $DB
      * @param $role
-     * @return boolean|\GT\User
+     * @return boolean|\block_gradetracker\User
      */
     public function getUsers($role = "STUDENT", $page = 1, $courseID = false, $groupID = false) {
 
@@ -255,7 +255,7 @@ class UserUnit extends \GT\Unit {
         $params[] = $role;
 
         // Page
-        $limit = \GT\Setting::getSetting('unit_grid_paging');
+        $limit = \block_gradetracker\Setting::getSetting('unit_grid_paging');
         if ($limit <= 0) {
             $limit = false;
         }
@@ -271,13 +271,13 @@ class UserUnit extends \GT\Unit {
 
         if ($records) {
             foreach ($records as $record) {
-                $user = new \GT\User($record->userid);
+                $user = new \block_gradetracker\User($record->userid);
                 $return[] = $user;
             }
         }
 
         // Sort them
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortUsers($return);
 
         return $return;
@@ -293,7 +293,7 @@ class UserUnit extends \GT\Unit {
      */
     public function clearStudent($useCriteria = false) {
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         $this->student = false;
         $this->userUnitRecordID = false;
@@ -318,12 +318,12 @@ class UserUnit extends \GT\Unit {
 
     /**
      * Load a student into the userunit object
-     * @param \GT\User $student
+     * @param \block_gradetracker\User $student
      */
     public function loadStudent($student) {
 
         $criteria = false;
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         // Now load into all the criteria
         if (!isset($GTEXE->UNIT_MIN_LOAD) || !$GTEXE->UNIT_MIN_LOAD) {
@@ -339,7 +339,7 @@ class UserUnit extends \GT\Unit {
         }
 
         // Might be a User object we passed in
-        if ($student instanceof \GT\User) {
+        if ($student instanceof \block_gradetracker\User) {
 
             if ($student->isValid()) {
                 $this->student = $student;
@@ -348,7 +348,7 @@ class UserUnit extends \GT\Unit {
         } else {
 
             // Or might be just an ID
-            $user = new \GT\User($student);
+            $user = new \block_gradetracker\User($student);
             if ($user->isValid()) {
                 $this->student = $user;
             }
@@ -364,7 +364,7 @@ class UserUnit extends \GT\Unit {
             $this->_userRow = $record;
             if ($record) {
                 $this->userUnitRecordID = $record->id;
-                $this->userAward = new \GT\UnitAward($record->awardid);
+                $this->userAward = new \block_gradetracker\UnitAward($record->awardid);
                 $this->userComments = $record->comments;
                 $this->userStudentComments = $record->studentcomments;
                 $this->userLastUpdate = $record->lastupdate;
@@ -386,7 +386,7 @@ class UserUnit extends \GT\Unit {
 
     /**
      * Reload the user award from the database
-     * @global \GT\Unit\type $DB
+     * @global \block_gradetracker\Unit\type $DB
      */
     public function reloadUserAward() {
 
@@ -394,16 +394,16 @@ class UserUnit extends \GT\Unit {
 
         $record = $DB->get_record("bcgt_user_units", array("userid" => $this->student->id, "unitid" => $this->id));
         if ($record) {
-            $this->userAward = new \GT\UnitAward($record->awardid);
+            $this->userAward = new \block_gradetracker\UnitAward($record->awardid);
         } else {
-            $this->userAward = new \GT\UnitAward();
+            $this->userAward = new \block_gradetracker\UnitAward();
         }
 
     }
 
     /**
      * Save the user's unit data
-     * @global \GT\Unit\type $DB
+     * @global \block_gradetracker\Unit\type $DB
      * @global type $USER
      * @return boolean
      */
@@ -414,9 +414,9 @@ class UserUnit extends \GT\Unit {
         \gt_debug("Saving User Unit Award. With parameter notifyEvent (".(int)$notifyEvent.")");
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_UNIT;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_UNIT;
         $Log->beforejson = array(
             'awardid' => ($this->_userRow) ? $this->_userRow->awardid : null
         );
@@ -453,7 +453,7 @@ class UserUnit extends \GT\Unit {
         // Otherwise it keeps autocalculating through until the top level, with no parents and does it then
         if ($notifyEvent) {
 
-            $Event = new \GT\Event( GT_EVENT_UNIT_UPDATE, array(
+            $Event = new \block_gradetracker\Event( GT_EVENT_UNIT_UPDATE, array(
                 'sID' => $this->student->id,
                 'qID' => $this->qualID,
                 'uID' => $this->id,
@@ -470,9 +470,9 @@ class UserUnit extends \GT\Unit {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualID,
-                \GT\Log::GT_LOG_ATT_UNITID => $this->id,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualID,
+                \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -553,7 +553,7 @@ class UserUnit extends \GT\Unit {
 
     /**
      * Get the IV cell for a student's unit
-     * @global \GT\Unit\type $User
+     * @global \block_gradetracker\Unit\type $User
      * @param type $access
      * @return string
      */
@@ -625,12 +625,12 @@ class UserUnit extends \GT\Unit {
         );
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_UNIT_GRID;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_UNIT_GRID;
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualID,
-                \GT\Log::GT_LOG_ATT_UNITID => $this->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualID,
+                \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->id
             );
 
         $Log->save();
@@ -642,7 +642,7 @@ class UserUnit extends \GT\Unit {
                 print_error('errors:missingparams', 'block_gradetracker');
             }
 
-            $file = \GT\GradeTracker::dataroot() . '/tmp/U_' . $settings['unitID'] . '_' . $settings['qualID'] . '_' . $settings['now'] . '.xlsx';
+            $file = \block_gradetracker\GradeTracker::dataroot() . '/tmp/U_' . $settings['unitID'] . '_' . $settings['qualID'] . '_' . $settings['now'] . '.xlsx';
 
         }
 
@@ -654,7 +654,7 @@ class UserUnit extends \GT\Unit {
             return false;
         }
 
-        $qual = new \GT\Qualification( $this->qualID );
+        $qual = new \block_gradetracker\Qualification( $this->qualID );
 
         // Checkboxes
         $studentFilter = $settings['students'];
@@ -692,7 +692,7 @@ class UserUnit extends \GT\Unit {
 
         $eventCriteria = false;
         $studentArray = array();
-        $naValueObj = new \GT\CriteriaAward();
+        $naValueObj = new \block_gradetracker\CriteriaAward();
 
         $cnt = 0;
 
@@ -715,7 +715,7 @@ class UserUnit extends \GT\Unit {
                         break;
                     }
 
-                    $student = new \GT\User($studentID);
+                    $student = new \block_gradetracker\User($studentID);
                     if (!$student->isValid()) {
                         $output .= "[{$row}] " . get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                         break;
@@ -830,7 +830,7 @@ class UserUnit extends \GT\Unit {
                 $output .= sprintf( get_string('import:datasheet:process:autocalcunit', 'block_gradetracker'), $stud->getName(), $this->getUserAward()->getName()) . '<br>';
 
                 // Recalculate predicted grades
-                $userQual = new \GT\Qualification\UserQualification($qual->getID());
+                $userQual = new \block_gradetracker\Qualification\UserQualification($qual->getID());
                 $userQual->loadStudent($stud);
                 $userQual->loadUnits();
                 $userQual->calculatePredictedAwards();
@@ -857,7 +857,7 @@ class UserUnit extends \GT\Unit {
     /**
      * Export unit data sheet
      * @global type $CFG
-     * @global \GT\Unit\type $USER
+     * @global \block_gradetracker\Unit\type $USER
      */
     public function export() {
 
@@ -866,7 +866,7 @@ class UserUnit extends \GT\Unit {
         $courseID = optional_param('courseID', false, PARAM_INT);
         $groupID = optional_param('groupID', false, PARAM_INT);
 
-        $qual = new \GT\Qualification( $this->qualID );
+        $qual = new \block_gradetracker\Qualification( $this->qualID );
         $name = preg_replace("/[^a-z 0-9]/i", "", $this->getDisplayName() . ' - ' . $qual->getDisplayName());
 
         // Setup Spreadsheet
@@ -1074,7 +1074,7 @@ class UserUnit extends \GT\Unit {
             return false;
         }
 
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortUnitValues($possibleAwardArray, 'asc');
 
         $maxPoints = $gradingStructure->getMaxPoints();
@@ -1212,7 +1212,7 @@ class UserUnit extends \GT\Unit {
         // one, change it back to N/A
         if (!$userAward && $currentUserAward && $currentUserAward->isValid()) {
 
-            $na = new \GT\UnitAward(false);
+            $na = new \block_gradetracker\UnitAward(false);
             $this->setUserAward($na);
             $this->saveUser($notifyEvent);
             $this->jsonResult = array( $this->id => false );

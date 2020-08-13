@@ -20,7 +20,7 @@
 
                 <?php if ($assessment->getSetting('grading_method') != 'none'): ?>
                     <?php if($percentile = $Qualification->getClassAssessmentWeightingPercentile($assessment, $students)): ?>
-                        <th class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                        <th class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
                             <?php echo $percentile->percentile ?>
                         </th>
                     <?php else: ?>
@@ -30,7 +30,7 @@
 
                 <?php if ($Qualification->isFeatureEnabledByName('cetagrades') && $assessment->isCetaEnabled()): ?>
                     <?php if($percentile = $Qualification->getClassAssessmentCetaWeightingPercentile($assessment, $students)): ?>
-                        <th class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                        <th class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
                             <?php echo $percentile->percentile ?>
                         </th>
                     <?php else: ?>
@@ -200,7 +200,7 @@
                         <?php if ($canSeeWeightings): ?>
 
                             <?php if($percentile = $Qualification->getUserAssessmentWeightingPercentile($assessment)): ?>
-                                <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($student->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($student->getDisplayName() . " - " . $assessment->getName()) ?>'>
                                     <?php echo $percentile->percentile ?>
                                 </td>
                             <?php else: ?>
@@ -228,7 +228,7 @@
                             <!-- Weighting cell -->
                             <?php if ($canSeeWeightings): ?>
                                 <?php if($percentile = $Qualification->getUserAssessmentCetaWeightingPercentile($assessment)): ?>
-                                    <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($student->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                    <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($student->getDisplayName() . " - " . $assessment->getName()) ?>'>
                                         <?php echo $percentile->percentile ?>
                                     </td>
                                 <?php else: ?>

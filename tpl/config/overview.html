@@ -48,7 +48,7 @@
 
                 <tr>
                   <td><strong><?php echo \sprintf( \get_string('system:plugindataroot', 'local_df_hub'), $GT->getPluginTitle() ) ?></strong></td>
-                    <td><em><?php echo \GT\GradeTracker::dataroot() ?></em> <?php echo (is_writeable(\GT\GradeTracker::dataroot())) ? "<span style='color:green;'>(".\get_string('writeable', 'local_df_hub') .")</span>" : "<span style='color:red;'>(".\get_string('notwriteable', 'local_df_hub') .")</span>" ?></td>
+                    <td><em><?php echo \block_gradetracker\GradeTracker::dataroot() ?></em> <?php echo (is_writeable(\block_gradetracker\GradeTracker::dataroot())) ? "<span style='color:green;'>(".\get_string('writeable', 'local_df_hub') .")</span>" : "<span style='color:red;'>(".\get_string('notwriteable', 'local_df_hub') .")</span>" ?></td>
                 </tr>
 
             </table>
@@ -64,15 +64,15 @@
             <table>
                 <tr>
                     <td><?php echo $string['quals'] ?></td>
-                    <td><?php echo \GT\Qualification::countQuals() ?></td>
+                    <td><?php echo \block_gradetracker\Qualification::countQuals() ?></td>
                 </tr>
                 <tr>
                     <td><?php echo $string['units'] ?></td>
-                    <td><?php echo \GT\Unit::countUnits() ?></td>
+                    <td><?php echo \block_gradetracker\Unit::countUnits() ?></td>
                 </tr>
                 <tr>
                     <td><?php echo $string['criteria'] ?></td>
-                    <td><?php echo \GT\Criterion::countCriteria() ?></td>
+                    <td><?php echo \block_gradetracker\Criterion::countCriteria() ?></td>
                 </tr>
 
                 <tr>

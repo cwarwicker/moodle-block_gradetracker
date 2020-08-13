@@ -24,7 +24,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -63,7 +63,7 @@ class Unit {
 
         global $DB;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         if ($id) {
 
@@ -129,7 +129,7 @@ class Unit {
             return $this->structure;
         }
 
-        $this->structure = new \GT\QualificationStructure($this->structureID);
+        $this->structure = new \block_gradetracker\QualificationStructure($this->structureID);
         return $this->structure;
 
     }
@@ -149,7 +149,7 @@ class Unit {
             return $this->level;
         }
 
-        $this->level = new \GT\Level($this->levelID);
+        $this->level = new \block_gradetracker\Level($this->levelID);
         return $this->level;
 
     }
@@ -222,7 +222,7 @@ class Unit {
     public function getGradingStructure() {
 
         if ($this->gradingStructure === false) {
-            $this->gradingStructure = new \GT\UnitAwardStructure($this->getGradingStructureID());
+            $this->gradingStructure = new \block_gradetracker\UnitAwardStructure($this->getGradingStructureID());
         }
 
         return $this->gradingStructure;
@@ -259,7 +259,7 @@ class Unit {
     /**
      * I am not sure why I have this variable twice in 2 different methods
      * @param type $id
-     * @return \GT\Unit
+     * @return \block_gradetracker\Unit
      */
     public function getQualStructureID() {
         return $this->qualStructureID;
@@ -268,7 +268,7 @@ class Unit {
     /**
      * I am not sure why I have this variable twice in 2 different methods
      * @param type $id
-     * @return \GT\Unit
+     * @return \block_gradetracker\Unit
      */
     public function setQualStructureID($id) {
         $this->qualStructureID = $id;
@@ -317,13 +317,13 @@ class Unit {
 
     /**
      * Load the unit's criteria from the database
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     protected function loadCriteria($parentID = null, &$obj = false) {
 
         global $DB;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         if ($this->criteria === false) {
             $this->criteria = array();
@@ -334,7 +334,7 @@ class Unit {
 
             foreach ($criteria as $criterion) {
 
-                $critObj = \GT\Criterion::load($criterion->id);
+                $critObj = \block_gradetracker\Criterion::load($criterion->id);
                 if ($critObj && $critObj->isValid()) {
 
                     // Set the qualID if we have it
@@ -472,7 +472,7 @@ class Unit {
 
             foreach ($criteria as $num => $criterion) {
 
-                $critObj = \GT\Criterion::load(false, $criterion['type']);
+                $critObj = \block_gradetracker\Criterion::load(false, $criterion['type']);
 
                 if ($critObj) {
 
@@ -580,7 +580,7 @@ class Unit {
     public function loadCustomFormElements() {
 
         // Get the possible elements for the qualification form
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         $elements = $structure->getCustomFormElements('unit');
 
         // Get the saved
@@ -600,7 +600,7 @@ class Unit {
     /**
      * Take the values from the Qualification form and load them into the FormElement objects
      * @param type $array
-     * @return \GT\Qualification
+     * @return \block_gradetracker\Qualification
      */
     public function setCustomElementValues($array) {
 
@@ -736,7 +736,7 @@ class Unit {
 
         $this->possibleAwards = array();
 
-        $structure = new \GT\UnitAwardStructure($this->gradingStructureID);
+        $structure = new \block_gradetracker\UnitAwardStructure($this->gradingStructureID);
         if ($structure->isValid()) {
             $awards = $structure->getAwards();
             if ($awards) {
@@ -778,7 +778,7 @@ class Unit {
 
         }
 
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortCriteriaValues($values);
 
         return $values;
@@ -787,8 +787,8 @@ class Unit {
 
     /**
      * Get a list of qualifications this unit is assigned to
-     * @global \GT\type $DB
-     * @return \GT\Qualification
+     * @global \block_gradetracker\type $DB
+     * @return \block_gradetracker\Qualification
      */
     public function getQualifications() {
 
@@ -799,7 +799,7 @@ class Unit {
         $results = $DB->get_records("bcgt_qual_units", array("unitid" => $this->id));
         if ($results) {
             foreach ($results as $result) {
-                $obj = new \GT\Qualification($result->qualid);
+                $obj = new \block_gradetracker\Qualification($result->qualid);
                 if ($obj->isValid() && !$obj->isDeleted()) {
                     $return[] = $obj;
                 }
@@ -807,7 +807,7 @@ class Unit {
         }
 
         // Order them
-        $Sort = new \GT\Sorter();
+        $Sort = new \block_gradetracker\Sorter();
         $Sort->sortQualifications($return);
 
         return $return;
@@ -816,7 +816,7 @@ class Unit {
 
     /**
      * Get a unit attribute
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $userID
      * @return type
@@ -832,7 +832,7 @@ class Unit {
 
     /**
      * Get all the attributes for this unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getUnitAttributes() {
@@ -864,9 +864,9 @@ class Unit {
 
         // ------------ Logging Info
         if (!is_null($userID)) {
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
             $Log->beforejson = array(
                 $attribute => ($check) ? $check->value : null
             );
@@ -897,9 +897,9 @@ class Unit {
             );
 
             $Log->attributes = array(
-                    \GT\Log::GT_LOG_ATT_QUALID => $qualID,
-                    \GT\Log::GT_LOG_ATT_UNITID => $this->id,
-                    \GT\Log::GT_LOG_ATT_STUDID => $userID
+                    \block_gradetracker\Log::GT_LOG_ATT_QUALID => $qualID,
+                    \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->id,
+                    \block_gradetracker\Log::GT_LOG_ATT_STUDID => $userID
                 );
 
             $Log->save();
@@ -913,7 +913,7 @@ class Unit {
 
     /**
      * Delete a unit attribute
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $userID
      * @param type $qualID
@@ -923,9 +923,9 @@ class Unit {
 
         global $DB;
 
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
 
         $check = $this->getAttribute($attribute, $userID, $qualID);
         $Log->beforejson = array(
@@ -938,9 +938,9 @@ class Unit {
 
             // ----------- Log the action
             $Log->attributes = array(
-                    \GT\Log::GT_LOG_ATT_QUALID => $qualID,
-                    \GT\Log::GT_LOG_ATT_UNITID => $this->id,
-                    \GT\Log::GT_LOG_ATT_STUDID => $userID
+                    \block_gradetracker\Log::GT_LOG_ATT_QUALID => $qualID,
+                    \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->id,
+                    \block_gradetracker\Log::GT_LOG_ATT_STUDID => $userID
                 );
 
             $Log->afterjson = array(
@@ -959,7 +959,7 @@ class Unit {
     /**
      * Check if this unit has any criteria of a given type
      * The type is an id refering to the bcgt_qual_structure_levels table
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $typeID
      * @return type
      */
@@ -986,7 +986,7 @@ class Unit {
 
     /**
      * Check if this unit has any activity links
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getActivityLinks($qualID = false) {
@@ -1006,7 +1006,7 @@ class Unit {
         $records = $DB->get_records("bcgt_activity_refs", array("qualid" => $qualID, "unitid" => $this->id, "deleted" => 0));
         if ($records) {
             foreach ($records as $record) {
-                $obj = \GT\ModuleLink::getModuleLinkFromCourseModule($record->cmid);
+                $obj = \block_gradetracker\ModuleLink::getModuleLinkFromCourseModule($record->cmid);
                 if ($obj) {
                     $obj->criteria = $obj->getCriteriaOnModule($qualID, $this, false);
                     $return[$record->cmid] = $obj;
@@ -1069,19 +1069,19 @@ class Unit {
 
     /**
      * Check there are no errors with anything submitted
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function hasNoErrors() {
 
         global $DB;
 
-        $Structure = new \GT\QualificationStructure( $this->structureID );
+        $Structure = new \block_gradetracker\QualificationStructure( $this->structureID );
 
         // Check if level is set
         if (strlen($this->levelID) == 0 || $this->levelID <= 0 || is_null($this->levelID)) {
             $this->errors[] = get_string('errors:unit:level', 'block_gradetracker');
-        } else if (!\GT\QualificationBuild::exists($this->structureID, $this->levelID)) {
+        } else if (!\block_gradetracker\QualificationBuild::exists($this->structureID, $this->levelID)) {
             // Check we can have this structure & level
             // It's an elseif because if level isn't set then this obviously won't be correct
             $this->errors[] = get_string('errors:unit:build', 'block_gradetracker');
@@ -1108,7 +1108,7 @@ class Unit {
         }
 
         // Check for grading structure
-        $gradingStructure = new \GT\UnitAwardStructure($this->gradingStructureID);
+        $gradingStructure = new \block_gradetracker\UnitAwardStructure($this->gradingStructureID);
         if (!$gradingStructure->isValid() || !$gradingStructure->isEnabled() || $gradingStructure->getQualStructureID() <> $Structure->getID()) {
             $this->errors[] = get_string('errors:unit:grading', 'block_gradetracker');
         }
@@ -1202,7 +1202,7 @@ class Unit {
         global $DB, $CFG;
 
         // create new unit object
-        $newunit = new \GT\Unit();
+        $newunit = new \block_gradetracker\Unit();
         $newunit->setStructureID($this->structureID);
         $newunit->setLevelID($this->levelID);
         $newunit->setGradingStructureID($this->gradingStructureID);
@@ -1253,7 +1253,7 @@ class Unit {
     }
     /**
      * Save the unit to the DB
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function save() {
@@ -1292,7 +1292,7 @@ class Unit {
         $this->saveCriteria();
 
         // Order them properly again
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortCriteria($this->criteria);
 
         // Delete any we removed
@@ -1366,7 +1366,7 @@ class Unit {
 
     /**
      * Delete any criteria we removed from the Unit creation form
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     private function deleteRemovedCriteria() {
 
@@ -1484,7 +1484,7 @@ class Unit {
                     switch ( get_class($criterion) ) {
 
                         // Standard criterion
-                        case 'GT\Criteria\StandardCriterion':
+                        case 'block_gradetracker\Criteria\StandardCriterion':
 
                              // If only 1 level of sub criteria, add them in
                             // Though if this top level criterion has the setting "force popup" don't show the sub criteria in the grid table
@@ -1504,12 +1504,12 @@ class Unit {
                         break;
 
                         // Numeric criterion - Only top level go in the header
-                        case 'GT\Criteria\NumericCriterion':
+                        case 'block_gradetracker\Criteria\NumericCriterion':
 
                         break;
 
                         // Ranged criterion - Only top level go in the header
-                        case 'GT\Criteria\RangedCriterion':
+                        case 'block_gradetracker\Criteria\RangedCriterion':
 
                         break;
 
@@ -1659,8 +1659,8 @@ class Unit {
             $objs = true;
         }
 
-        $Sorter = new \GT\Sorter();
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $Sorter = new \block_gradetracker\Sorter();
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         $customOrder = $structure->getCustomOrder('criteria');
         if ($customOrder) {
             $Sorter->sortCriteriaCustom($criteria, $customOrder, $objs, true);
@@ -1738,7 +1738,7 @@ class Unit {
                         if (strpos($attribute, 'conversion_chart') === 0) {
 
                             $awardID = str_replace('conversion_chart_', '', $attribute);
-                            $award = new \GT\CriteriaAward($awardID);
+                            $award = new \block_gradetracker\CriteriaAward($awardID);
                             $att->addAttribute('award', $award->getName());
 
                         }
@@ -1844,7 +1844,7 @@ class Unit {
         }
 
         // Check Qual structure exists
-        $QualStructure = \GT\QualificationStructure::findByName($nodes['qualificationStructure']);
+        $QualStructure = \block_gradetracker\QualificationStructure::findByName($nodes['qualificationStructure']);
         if (!$QualStructure) {
             $result['errors'][] = get_string('errors:qualbuild:type', 'block_gradetracker') . ' - ' . $nodes['qualificationStructure'];
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
@@ -1852,7 +1852,7 @@ class Unit {
         }
 
         // Check Level exists
-        $Level = \GT\Level::findByName($nodes['level']);
+        $Level = \block_gradetracker\Level::findByName($nodes['level']);
         if (!$Level) {
             $result['errors'][] = get_string('errors:qualbuild:level', 'block_gradetracker') . ' - ' . $nodes['level'];
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
@@ -1860,7 +1860,7 @@ class Unit {
         }
 
         // Check QualBuild for this Structure and level exists.
-        $Build = \GT\QualificationBuild::find($QualStructure->getID(), $Level->getID());
+        $Build = \block_gradetracker\QualificationBuild::find($QualStructure->getID(), $Level->getID());
         if (!$Build || (is_array($Build) && count($Build) <> 1)) {
             $result['errors'][] = get_string('errors:qualawards:buildid', 'block_gradetracker') . ' - ' . $nodes['qualificationStructure'] . '/' . $nodes['level'];
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
@@ -1871,10 +1871,10 @@ class Unit {
         $Build = reset($Build);
 
         // Now actually get the QualificationBuild object instead of stdClass;
-        $Build = new \GT\QualificationBuild($Build->id);
+        $Build = new \block_gradetracker\QualificationBuild($Build->id);
 
         // Check grading structure exists.
-        $GradingStructure = \GT\UnitAwardStructure::findByName($nodes['gradingStructure'], $QualStructure->getID());
+        $GradingStructure = \block_gradetracker\UnitAwardStructure::findByName($nodes['gradingStructure'], $QualStructure->getID());
         if (!$GradingStructure) {
             $result['errors'][] = get_string('errors:unit:grading', 'block_gradetracker') . ' - ' . $nodes['gradingStructure'];
             $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
@@ -1906,17 +1906,17 @@ class Unit {
                 $type = (string)$critNode->type;
                 switch($type) {
                     case 'Ranged Criteria':
-                        $criterion = new \GT\Criteria\RangedCriterion();
+                        $criterion = new \block_gradetracker\Criteria\RangedCriterion();
                     break;
                     case 'Numeric Criteria':
-                        $criterion = new \GT\Criteria\NumericCriterion();
+                        $criterion = new \block_gradetracker\Criteria\NumericCriterion();
                     break;
                     default:
-                        $criterion = new \GT\Criteria\StandardCriterion();
+                        $criterion = new \block_gradetracker\Criteria\StandardCriterion();
                     break;
                 }
 
-                $StructureLevel = \GT\QualificationStructureLevel::getByName($type);
+                $StructureLevel = \block_gradetracker\QualificationStructureLevel::getByName($type);
 
                 $criterion->setDynamicNumber($exportID);
                 $criterion->setQualStructureID($QualStructure->getID());
@@ -1928,7 +1928,7 @@ class Unit {
                 }
 
                 // Check crit grading structure exists as well.
-                $critGradingStructure = \GT\CriteriaAwardStructure::findByName((string)$critNode->gradingStructure, $QualStructure->getID(), $Build->getID());
+                $critGradingStructure = \block_gradetracker\CriteriaAwardStructure::findByName((string)$critNode->gradingStructure, $QualStructure->getID(), $Build->getID());
                 if (!$critGradingStructure) {
                     $result['errors'][] = get_string('invalidgradingstructure', 'block_gradetracker') . ' - ' . (string)$critNode->gradingStructure;
                     $result['output'] .= get_string('errorsfound', 'block_gradetracker') . '<br>';
@@ -2074,14 +2074,14 @@ class Unit {
         // Unzip the file
         $fp = \get_file_packer();
         $tmpFileName = 'import-unit-' . time() . '-' . $USER->id . '.zip';
-        $extracted = $fp->extract_to_pathname($file, \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName);
+        $extracted = $fp->extract_to_pathname($file, \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $tmpFileName);
 
         if ($extracted) {
             foreach ($extracted as $extractedFile => $bool) {
 
                 $result['output'] .= sprintf( get_string('import:datasheet:process:file', 'block_gradetracker'), $extractedFile ) . '<br>';
 
-                $load = \GT\GradeTracker::dataroot() . '/tmp/' . $tmpFileName . '/' . $extractedFile;
+                $load = \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $tmpFileName . '/' . $extractedFile;
                 $import = self::importXML($load);
 
                 // Append to result
@@ -2101,9 +2101,9 @@ class Unit {
 
     /**
      * Search for units
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $params
-     * @return \GT\Unit
+     * @return \block_gradetracker\Unit
      */
     public static function search($params) {
 
@@ -2160,7 +2160,7 @@ class Unit {
         $results = $DB->get_records_sql($sql, $sqlParams);
         if ($results) {
             foreach ($results as $result) {
-                $unit = new \GT\Unit($result->id);
+                $unit = new \block_gradetracker\Unit($result->id);
                 if ($unit->isValid()) {
                     $return[] = $unit;
                 }
@@ -2168,7 +2168,7 @@ class Unit {
         }
 
         if (!isset($params['sort']) || $params['sort'] == true) {
-            $Sorter = new \GT\Sorter();
+            $Sorter = new \block_gradetracker\Sorter();
             $Sorter->sortUnitsByLevel($return);
         }
 
@@ -2178,22 +2178,22 @@ class Unit {
 
     /**
      * Get the structure's display name
-     * @return \GT\QualificationStructure
+     * @return \block_gradetracker\QualificationStructure
      */
     public function getStructureName() {
 
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getDisplayName() : false;
 
     }
 
     /**
      * Get the structure's real name
-     * @return \GT\QualificationStructure
+     * @return \block_gradetracker\QualificationStructure
      */
     public function getStructureRealName() {
 
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getName() : false;
 
     }
@@ -2204,7 +2204,7 @@ class Unit {
      */
     public function getLevelName() {
 
-        $level = new \GT\Level ($this->levelID);
+        $level = new \block_gradetracker\Level ($this->levelID);
         return ($level) ? $level->getName() : false;
 
     }
@@ -2216,7 +2216,7 @@ class Unit {
      */
     public static function name($id) {
 
-        $unit = new \GT\Unit($id);
+        $unit = new \block_gradetracker\Unit($id);
         return $unit->getDisplayName();
 
     }
@@ -2224,7 +2224,7 @@ class Unit {
 
     /**
      * Count non-deleted units in system
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function countUnits() {
@@ -2243,7 +2243,7 @@ class Unit {
     public static function getAllUnits($sortInSearch = true) {
 
         $units = self::search( array('sort' => $sortInSearch) );
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortUnits($units);
 
         return $units;

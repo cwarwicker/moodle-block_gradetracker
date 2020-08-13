@@ -57,7 +57,7 @@
                         <?php if (isset($Course) && ($groups = $Qualification->getGroups($courseID))): ?>
                             <?php if ($groups['parent']): ?>
                                 <?php foreach($groups['parent'] as $pID => $parentGroups): ?>
-                                    <optgroup label="<?php echo \GT\Course::getNameById($pID) ?>">
+                                    <optgroup label="<?php echo \block_gradetracker\Course::getNameById($pID) ?>">
                                         <?php foreach($parentGroups as $group): ?>
                                             <option value="<?php echo $group->id ?>" <?php echo ($groupID == $group->id) ? 'selected' : '' ?> ><?php echo $group->name ?> (<?php echo $group->usercnt ?>)</option>
                                         <?php endforeach; ?>
@@ -66,7 +66,7 @@
                             <?php endif; ?>
 
                             <?php if ($groups['direct']): ?>
-                                <optgroup label="<?php echo \GT\Course::getNameById($courseID) ?>">
+                                <optgroup label="<?php echo \block_gradetracker\Course::getNameById($courseID) ?>">
                                     <?php foreach($groups['direct'] as $group): ?>
                                         <option value="<?php echo $group->id ?>" <?php echo ($groupID == $group->id) ? 'selected' : '' ?> ><?php echo $group->name ?> (<?php echo $group->usercnt ?>)</option>
                                     <?php endforeach; ?>
@@ -75,7 +75,7 @@
 
                             <?php if ($groups['child']): ?>
                                 <?php foreach($groups['child'] as $cID => $childGroups): ?>
-                                    <optgroup label="<?php echo \GT\Course::getNameById($cID) ?>">
+                                    <optgroup label="<?php echo \block_gradetracker\Course::getNameById($cID) ?>">
                                         <?php foreach($childGroups as $group): ?>
                                             <option value="<?php echo $group->id ?>" <?php echo ($groupID == $group->id) ? 'selected' : '' ?> ><?php echo $group->name ?> (<?php echo $group->usercnt ?>)</option>
                                         <?php endforeach; ?>

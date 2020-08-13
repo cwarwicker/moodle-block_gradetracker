@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -404,9 +404,9 @@ class FormElement {
 
             case 'QUALPICKER':
 
-                $allStructures = \GT\QualificationStructure::getAllStructures();
-                $allLevels = \GT\Level::getAllLevels();
-                $allSubTypes = \GT\SubType::getAllSubTypes();
+                $allStructures = \block_gradetracker\QualificationStructure::getAllStructures();
+                $allLevels = \block_gradetracker\Level::getAllLevels();
+                $allSubTypes = \block_gradetracker\SubType::getAllSubTypes();
 
                 // Load the quals into an array and then sort them
                 $qualArray = array();
@@ -414,7 +414,7 @@ class FormElement {
                 if ($this->value && is_array($this->value)) {
                     foreach ($this->value as $val) {
                         if (is_numeric($val)) {
-                            $val = new \GT\Qualification($val);
+                            $val = new \block_gradetracker\Qualification($val);
                         }
 
                         if ($val->isValid()) {
@@ -424,7 +424,7 @@ class FormElement {
                 }
 
                 // Sort
-                $Sorter = new \GT\Sorter();
+                $Sorter = new \block_gradetracker\Sorter();
                 $Sorter->sortQualifications($qualArray);
 
                 $output .= "<div class='gt_qual_picker'>";
@@ -453,7 +453,7 @@ class FormElement {
                 if ($this->value && is_array($this->value)) {
                     foreach ($this->value as $val) {
                         if (is_numeric($val)) {
-                            $val = new \GT\Qualification($val);
+                            $val = new \block_gradetracker\Qualification($val);
                         }
 
                         if ($val->isValid()) {
@@ -561,7 +561,7 @@ class FormElement {
      */
     public static function create(\stdClass $params) {
 
-        $obj = new \GT\FormElement();
+        $obj = new \block_gradetracker\FormElement();
 
         if (isset($params->id)) {
             $obj->setID($params->id);

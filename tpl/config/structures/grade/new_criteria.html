@@ -80,8 +80,8 @@
                                 <td>
                                     <select name="grade_specialvals[<?php echo $cntAwards ?>]">
                                         <option value=""></option>
-                                        <?php if(\GT\CriteriaAward::getSupportedSpecialVals()): ?>
-                                            <?php foreach(\GT\CriteriaAward::getSupportedSpecialVals() as $val): ?>
+                                        <?php if(\block_gradetracker\CriteriaAward::getSupportedSpecialVals()): ?>
+                                            <?php foreach(\block_gradetracker\CriteriaAward::getSupportedSpecialVals() as $val): ?>
                                                 <option value="<?php echo $val ?>" <?php echo ($award->getSpecialVal() == $val) ? 'selected' : ''; ?> ><?php echo $val ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>

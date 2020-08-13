@@ -22,7 +22,7 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -176,7 +176,7 @@ class QualificationAward {
 
     /**
      * Check the award has no errors
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function hasNoErrors() {
@@ -234,7 +234,7 @@ class QualificationAward {
 
     /**
      * Save a Qual Build Award
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function save() {
@@ -267,7 +267,7 @@ class QualificationAward {
 
     /**
      * Delete the award
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function delete() {
@@ -279,7 +279,7 @@ class QualificationAward {
 
     /**
      *
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $buildID
      * @param type $name
      */
@@ -288,7 +288,7 @@ class QualificationAward {
         global $DB;
 
         $record = $DB->get_record("bcgt_qual_build_awards", array("buildid" => $buildID, "name" => $name), "id");
-        return ($record) ? new \GT\QualificationAward($record->id) : false;
+        return ($record) ? new \block_gradetracker\QualificationAward($record->id) : false;
 
     }
 

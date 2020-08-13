@@ -35,14 +35,14 @@ $course = false;
 $context = context_course::instance(SITEID);
 
 if ($cID) {
-    $course = new \GT\Course($cID);
+    $course = new \block_gradetracker\Course($cID);
     if (!$course->isValid()) {
         print_error( get_string('invalidcourseid') );
     }
     $context = context_course::instance($course->id);
 }
 
-$GT = new \GT\GradeTracker();
+$GT = new \block_gradetracker\GradeTracker();
 
 $PAGE->set_context($context);
 $PAGE->set_title ( get_string('dashboard', 'block_gradetracker') );
@@ -57,17 +57,17 @@ $GT->loadCSS();
 // Can we view all qualifications?
 if (gt_has_capability('block/gradetracker:view_all_quals')) {
     $user = false;
-    $qualifications = \GT\Qualification::getAllQualifications();
+    $qualifications = \block_gradetracker\Qualification::getAllQualifications();
     $searchinstance = "searchQualID";
     $submitsearch = "submit_filter_all";
 } else {
-    $user = new \GT\User($USER->id);
+    $user = new \block_gradetracker\User($USER->id);
     $qualifications = $user->getQualifications('STAFF');
     $searchinstance = "myQualID";
     $submitsearch = "submit_filter_my";
 }
 
-$studentuser = new \GT\User($USER->id);
+$studentuser = new \block_gradetracker\User($USER->id);
 $studentquals = $studentuser->getQualifications('STUDENT');
 
 // If they are only on 1 qualification, just take them straight to it
@@ -78,7 +78,7 @@ if ($studentquals && count($studentquals) == 1) {
 
 echo $OUTPUT->header();
 
-$TPL = new \GT\Template();
+$TPL = new \block_gradetracker\Template();
 $TPL->set("user", $user);
 $TPL->set("qualifications", $qualifications);
 $TPL->set("searchinstance", $searchinstance);

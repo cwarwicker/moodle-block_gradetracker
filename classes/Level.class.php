@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -166,7 +166,7 @@ class Level {
 
         $qual_builds = $DB->get_records("bcgt_qual_builds", array("levelid" => $this->id, "deleted" => 0));
         foreach ($qual_builds as $build) {
-            $qual_build = new \GT\QualificationBuild($build->id);
+            $qual_build = new \block_gradetracker\QualificationBuild($build->id);
             $qual_build->delete();
         }
 
@@ -263,9 +263,9 @@ class Level {
 
     /**
      * Get all the possible levels for a structure, based on the builds available
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $structureID
-     * @return \GT\Level
+     * @return \block_gradetracker\Level
      */
     public static function getAllStructureLevels($structureID) {
 
@@ -278,7 +278,7 @@ class Level {
 
         if ($records) {
             foreach ($records as $record) {
-                $return[] = new \GT\Level($record->levelid);
+                $return[] = new \block_gradetracker\Level($record->levelid);
             }
         }
 
@@ -300,7 +300,7 @@ class Level {
         $return = array();
         if ($records) {
             foreach ($records as $record) {
-                $return[] = new \GT\Level($record->id);
+                $return[] = new \block_gradetracker\Level($record->id);
             }
         }
 
@@ -310,7 +310,7 @@ class Level {
 
     /**
      * Find a level by its name
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $name
      * @return type
      */
@@ -319,7 +319,7 @@ class Level {
         global $DB;
 
         $record = $DB->get_record("bcgt_qual_levels", array("name" => $name, "deleted" => 0));
-        return ($record) ? new \GT\Level($record->id) : false;
+        return ($record) ? new \block_gradetracker\Level($record->id) : false;
 
     }
 

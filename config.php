@@ -35,7 +35,7 @@ if (!gt_has_capability('block/gradetracker:configure')) {
     print_error( get_string('invalidaccess', 'block_gradetracker') );
 }
 
-$User = new \GT\User($USER->id);
+$User = new \block_gradetracker\User($USER->id);
 
 $view = optional_param('view', false, PARAM_TEXT);
 $section = optional_param('section', false, PARAM_TEXT);
@@ -68,8 +68,8 @@ if ( (!$section || $section == '') && $view && array_key_exists($view, $defaultS
     $section = $defaultSections[$view];
 }
 
-$GT = new \GT\GradeTracker();
-$TPL = new \GT\Template();
+$GT = new \block_gradetracker\GradeTracker();
+$TPL = new \block_gradetracker\Template();
 $MSGS = false;
 $VARS = false;
 
@@ -90,9 +90,9 @@ $GT->loadCSS();
 
 // Try and load page-specific javascript
 if (file_exists($CFG->dirroot . '/blocks/gradetracker/amd/src/config_'.$view.'_'.$section.'.js')) {
-    $PAGE->requires->js_call_amd("block_gradetracker/config_{$view}_{$section}", 'init', \GT\Output::initAMD($view, $section));
+    $PAGE->requires->js_call_amd("block_gradetracker/config_{$view}_{$section}", 'init', \block_gradetracker\Output::initAMD($view, $section));
 } else if (file_exists($CFG->dirroot . '/blocks/gradetracker/amd/src/config_'.$view.'.js')) {
-    $PAGE->requires->js_call_amd("block_gradetracker/config_{$view}", 'init', \GT\Output::initAMD($view));
+    $PAGE->requires->js_call_amd("block_gradetracker/config_{$view}", 'init', \block_gradetracker\Output::initAMD($view));
 }
 
 // If course is set, put that into breadcrumb

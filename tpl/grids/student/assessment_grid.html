@@ -109,7 +109,7 @@
                     <?php if ($canSeeWeightings): ?>
                         <?php if($percentile = $qualification->getUserAssessmentCetaWeightingPercentile()): ?>
                             <!-- This weighting column uses the latest CETA grade the student has got -->
-                            <td class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                            <td class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
                                 <?php echo $percentile->percentile ?>
                             </td>
                         <?php else: ?>
@@ -151,7 +151,7 @@
 
                                     <?php if ($qualification->getAssessment($assessment->getID())): ?>
                                         <?php if($percentile = $qualification->getUserAssessmentWeightingPercentile($assessment)): ?>
-                                            <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                            <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
                                                 <?php echo $percentile->percentile ?>
                                             </td>
                                         <?php else: ?>
@@ -182,7 +182,7 @@
 
                                     <?php if ($qualification->getAssessment($assessment->getID())): ?>
                                         <?php if($percentile = $qualification->getUserAssessmentCetaWeightingPercentile($assessment)): ?>
-                                            <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
+                                            <td class="gt_percentile gt_hidden_percentile_cell" style="display:none;background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;" title='<?php echo \gt_html($qualification->getDisplayName() . " - " . $assessment->getName()) ?>'>
                                                 <?php echo $percentile->percentile ?>
                                             </td>
                                         <?php else: ?>

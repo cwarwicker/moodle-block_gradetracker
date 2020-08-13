@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT\CSV;
+namespace block_gradetracker\CSV;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -36,7 +36,7 @@ class Example {
 
         global $DB;
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/targetgrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/targetgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -54,7 +54,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersTargetGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersTargetGrades;
         fputcsv($fh, $headers);
 
         // Create some example data
@@ -64,7 +64,7 @@ class Example {
 
         if ($quals) {
             foreach ($quals as $qual) {
-                $qual = new \GT\Qualification($qual->id);
+                $qual = new \block_gradetracker\Qualification($qual->id);
                 if ($qual->isValid()) {
 
                     $grades = $qual->getBuild()->getAwards();
@@ -106,7 +106,7 @@ class Example {
 
         global $DB;
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/aspirationalgrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/aspirationalgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -124,7 +124,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersAspirationalGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersAspirationalGrades;
         fputcsv($fh, $headers);
 
         // Create some example data
@@ -134,7 +134,7 @@ class Example {
 
         if ($quals) {
             foreach ($quals as $qual) {
-                $qual = new \GT\Qualification($qual->id);
+                $qual = new \block_gradetracker\Qualification($qual->id);
                 if ($qual->isValid()) {
 
                     $grades = $qual->getBuild()->getAwards();
@@ -171,7 +171,7 @@ class Example {
 
         global $DB;
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/cetagrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/cetagrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -189,7 +189,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersCetaGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersCetaGrades;
         fputcsv($fh, $headers);
 
         // Create some example data
@@ -199,7 +199,7 @@ class Example {
 
         if ($quals) {
             foreach ($quals as $qual) {
-                $qual = new \GT\Qualification($qual->id);
+                $qual = new \block_gradetracker\Qualification($qual->id);
                 if ($qual->isValid()) {
 
                     $grades = $qual->getBuild()->getAwards();
@@ -240,7 +240,7 @@ class Example {
      */
     public static function generateExampleQoECSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/qoe.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/qoe.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -258,7 +258,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersQOE;
+        $headers = \block_gradetracker\CSV\Template::$headersQOE;
         fputcsv($fh, $headers);
 
         fputcsv($fh, array('student1', 'English Lit', 'GCSE', '2', 'A', '2014'));
@@ -281,7 +281,7 @@ class Example {
 
     public static function generateExampleWCoeCSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/wcoe.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/wcoe.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -299,7 +299,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersWCoe;
+        $headers = \block_gradetracker\CSV\Template::$headersWCoe;
         fputcsv($fh, $headers);
 
         fputcsv($fh, array('AS Level', 'Level 3', 'AS', 'English Literature', 'coefficient_1', '0.1'));
@@ -325,7 +325,7 @@ class Example {
      */
     public static function generateExampleAvgGCSECSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/avggcse.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/avggcse.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -343,7 +343,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersAvgGCSE;
+        $headers = \block_gradetracker\CSV\Template::$headersAvgGCSE;
         fputcsv($fh, $headers);
 
         fputcsv($fh, array('student1', '50.2'));
@@ -372,7 +372,7 @@ class Example {
 
         global $DB;
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/examples/assgrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/assgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -390,7 +390,7 @@ class Example {
         }
 
         // Now lets create the new one - The headers are going to be in English so we can easily compare headers
-        $headers = \GT\CSV\Template::$headersAssGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersAssGrades;
         fputcsv($fh, $headers);
 
         fputcsv($fh, array( 'student001', 'ABC101-16', 'A Level', 'Level 3', 'AS', 'English', 'B', 'A', 'Well done' ));

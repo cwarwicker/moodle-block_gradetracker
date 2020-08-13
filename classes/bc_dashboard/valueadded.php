@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT\bc_dashboard;
+namespace block_gradetracker\bc_dashboard;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -106,7 +106,7 @@ class valueadded extends \block_bc_dashboard\Report\Element {
         if ($results['users']) {
             foreach ($results['users'] as $key => $row) {
 
-                $user = new \GT\User($row['id']);
+                $user = new \block_gradetracker\User($row['id']);
                 $quals = $user->getQualifications("STUDENT");
 
                 // Loop through their quals, in case they are on multiple ones, in which case we'll do an average

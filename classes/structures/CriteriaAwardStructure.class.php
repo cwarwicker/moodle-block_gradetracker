@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -82,12 +82,12 @@ class CriteriaAwardStructure {
         }
 
         if (!is_null($this->qualStructureID)) {
-            $qualStructure = new \GT\QualificationStructure($this->qualStructureID);
+            $qualStructure = new \block_gradetracker\QualificationStructure($this->qualStructureID);
             if (!$qualStructure->isValid() || $qualStructure->isDeleted()) {
                 $valid = false;
             }
         } else if (!is_null($this->qualBuildID)) {
-            $qualBuild = new \GT\QualificationBuild($this->qualBuildID);
+            $qualBuild = new \block_gradetracker\QualificationBuild($this->qualBuildID);
             if (!$qualBuild->isValid() || $qualBuild->isDeleted()) {
                 $valid = false;
             }
@@ -201,7 +201,7 @@ class CriteriaAwardStructure {
         $records = $DB->get_records("bcgt_criteria_awards", array("gradingstructureid" => $this->id), "id");
         if ($records) {
             foreach ($records as $record) {
-                $this->awards[$record->id] = new \GT\CriteriaAward($record->id);
+                $this->awards[$record->id] = new \block_gradetracker\CriteriaAward($record->id);
             }
         }
 
@@ -222,7 +222,7 @@ class CriteriaAwardStructure {
      */
     public function getAwards($metOnly = false, $sortOrder = 'asc') {
 
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortCriteriaValues($this->awards, $sortOrder);
 
         // Do we only want the ones that are "MET"?
@@ -261,7 +261,7 @@ class CriteriaAwardStructure {
 
     /**
      * Get award by name, but from the DB not the object
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $name
      * @return type
      */
@@ -270,7 +270,7 @@ class CriteriaAwardStructure {
         global $DB;
 
         $record = $DB->get_record("bcgt_criteria_awards", array("gradingstructureid" => $this->id, "name" => $name), "id");
-        return ($record) ? new \GT\CriteriaAward($record->id) : false;
+        return ($record) ? new \block_gradetracker\CriteriaAward($record->id) : false;
 
     }
 
@@ -299,9 +299,9 @@ class CriteriaAwardStructure {
 
     /**
      * Add an award to the structure
-     * @param \GT\CriteriaAward $award
+     * @param \block_gradetracker\CriteriaAward $award
      */
-    public function addAward(\GT\CriteriaAward $award) {
+    public function addAward(\block_gradetracker\CriteriaAward $award) {
 
         // If it already exists, don't append another one, update the existing object
         if ($award->isValid()) {
@@ -524,7 +524,7 @@ class CriteriaAwardStructure {
 
     /**
      * Check it has no errors
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function hasNoErrors() {
@@ -627,7 +627,7 @@ class CriteriaAwardStructure {
 
      /**
       * Delete the grading structure
-      * @global \GT\type $DB
+      * @global \block_gradetracker\type $DB
       * @return boolean
       */
     public function delete() {
@@ -655,7 +655,7 @@ class CriteriaAwardStructure {
 
      /**
       * Delete any awards that were on the grading structure before but not submitted this time
-      * @global \GT\type $DB
+      * @global \block_gradetracker\type $DB
       */
     public function deleteRemovedAwards() {
 
@@ -691,7 +691,7 @@ class CriteriaAwardStructure {
 
     /**
      * Enable or Disable the grading structure, based on whichever it currently is
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function toggleEnabled() {
 
@@ -750,7 +750,7 @@ class CriteriaAwardStructure {
 
             foreach ($gradeIDs as $key => $id) {
 
-                $award = new \GT\CriteriaAward($id);
+                $award = new \block_gradetracker\CriteriaAward($id);
                 $award->setName($settings['grade_names'][$key]);
                 $award->setShortName($settings['grade_shortnames'][$key]);
                 $award->setSpecialVal($settings['grade_specialvals'][$key]);

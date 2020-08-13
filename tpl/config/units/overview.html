@@ -3,14 +3,14 @@
     <div class='gt_overview_box'>
         <h6><?php echo $string['overview:quals:activeunits'] ?></h6>
         <div class='graph'>
-            <?php echo $stats['active']->output( new \GT\StatisticsBarChartOutput('overview:quals:activeunits', 'name', 'green', array('context' => 'unit', 'field' => 'unitid')) ) ?>
+            <?php echo $stats['active']->output( new \block_gradetracker\StatisticsBarChartOutput('overview:quals:activeunits', 'name', 'green', array('context' => 'unit', 'field' => 'unitid')) ) ?>
         </div>
     </div>
 
     <div class='gt_overview_box'>
         <h6><?php echo $string['overview:quals:inactiveunits'] ?></h6>
         <div class='graph'>
-            <?php echo $stats['inactive']->output( new \GT\StatisticsBarChartOutput('overview:quals:inactiveunits', 'name', 'red', array('context' => 'unit', 'field' => 'unitid')) ) ?>
+            <?php echo $stats['inactive']->output( new \block_gradetracker\StatisticsBarChartOutput('overview:quals:inactiveunits', 'name', 'red', array('context' => 'unit', 'field' => 'unitid')) ) ?>
         </div>
     </div>
 

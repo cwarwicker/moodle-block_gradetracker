@@ -35,7 +35,7 @@ $f = required_param('f', PARAM_TEXT);
 
 $record = $DB->get_record("bcgt_file_codes", array("code" => $f));
 if ($record) {
-    $record->path = \GT\GradeTracker::dataroot() . DIRECTORY_SEPARATOR . $record->path;
+    $record->path = \block_gradetracker\GradeTracker::dataroot() . DIRECTORY_SEPARATOR . $record->path;
 }
 
 if (!$record || !file_exists($record->path)) {

@@ -47,9 +47,9 @@ if ($skipLogin) {
     require_login();
 }
 
-$GT = new \GT\GradeTracker();
-$TPL = new \GT\Template();
-$User = new \GT\User($USER->id);
+$GT = new \block_gradetracker\GradeTracker();
+$TPL = new \block_gradetracker\Template();
+$User = new \block_gradetracker\User($USER->id);
 
 // If action not defined exit.
 if (!$action) {
@@ -65,7 +65,7 @@ switch ($action) {
 
         $qualID = $params['qualID'];
 
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             echo json_encode( \gt_error_alert_box( get_string('invalidqual', 'block_gradetracker') ) );
             exit;
@@ -85,7 +85,7 @@ switch ($action) {
         $view = $params['view'];
         $page = (isset($params['page'])) ? $params['page'] : 1;
 
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             echo json_encode( \gt_error_alert_box( get_string('invalidqual', 'block_gradetracker') ) );
             exit;
@@ -161,7 +161,7 @@ switch ($action) {
         try {
             $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/unit/grid.html' );
             echo json_encode( $TPL->getOutput() );
-        } catch (\GT\GTException $e) {
+        } catch (\block_gradetracker\GTException $e) {
             echo json_encode( $e->getException() );
         }
 
@@ -176,7 +176,7 @@ switch ($action) {
         $assessmentView = $params['assessmentView'];
         $page = (isset($params['page'])) ? $params['page'] : 1;
 
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             echo json_encode( \gt_error_alert_box( get_string('invalidqual', 'block_gradetracker') ) );
             exit;
@@ -198,7 +198,7 @@ switch ($action) {
             exit;
         }
 
-        $QualStructure = new \GT\QualificationStructure($Qualification->getStructureID());
+        $QualStructure = new \block_gradetracker\QualificationStructure($Qualification->getStructureID());
         if (!$QualStructure->isValid()) {
             echo json_encode( \gt_error_alert_box( get_string('invalidqual', 'block_gradetracker') ) );
             exit;
@@ -225,7 +225,7 @@ switch ($action) {
                 $hasWeightings = true;
                 $canSeeWeightings = \gt_has_capability('block/gradetracker:see_weighting_percentiles');
 
-                $TPL->set("weightingPercentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
+                $TPL->set("weightingPercentiles", \block_gradetracker\Setting::getSetting('qual_weighting_percentiles'));
 
             }
 
@@ -308,7 +308,7 @@ switch ($action) {
         try {
             $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/class/'.$file.'.html' );
             echo json_encode( $TPL->getOutput() );
-        } catch (\GT\GTException $e) {
+        } catch (\block_gradetracker\GTException $e) {
             echo json_encode( $e->getException() );
         }
 
@@ -317,7 +317,7 @@ switch ($action) {
     // Get the popup content for a criterion with sub criteria or ranges or somesuch.
     case 'get_criterion_popup':
 
-        $criterion = \GT\Criterion::load($params['critID']);
+        $criterion = \block_gradetracker\Criterion::load($params['critID']);
         if ($criterion->isValid()) {
             $criterion->setQualID($params['qualID']);
             $criterion->loadStudent($params['studentID']);
@@ -328,7 +328,7 @@ switch ($action) {
 
     case 'get_unit_info_popup':
 
-        $unit = new \GT\Unit($params['unitID']);
+        $unit = new \block_gradetracker\Unit($params['unitID']);
         if ($unit->isValid()) {
             echo $unit->getPopUpInfo();
         }
@@ -346,7 +346,7 @@ switch ($action) {
             }
         }
 
-        $criterion = \GT\Criterion::load($params['critID']);
+        $criterion = \block_gradetracker\Criterion::load($params['critID']);
         if ($criterion->isValid()) {
             $criterion->setQualID($params['qualID']);
             $criterion->loadStudent($params['studentID']);
@@ -358,7 +358,7 @@ switch ($action) {
     // Get the popup box for adding a comment to a criterion.
     case 'get_criterion_comment_popup':
 
-        $criterion = \GT\Criterion::load($params['critID']);
+        $criterion = \block_gradetracker\Criterion::load($params['critID']);
         if ($criterion->isValid()) {
             $criterion->setQualID($params['qualID']);
             $criterion->loadStudent($params['studentID']);
@@ -372,9 +372,9 @@ switch ($action) {
     // Get the info for the criterion info popup.
     case 'get_assessment_info_popup':
 
-        $assessment = new \GT\Assessment($params['assID']);
+        $assessment = new \block_gradetracker\Assessment($params['assID']);
         if ($assessment) {
-            $assessment->setQualification( new \GT\Qualification($params['qualID']));
+            $assessment->setQualification( new \block_gradetracker\Qualification($params['qualID']));
             $assessment->loadStudent($params['studentID']);
             if ($assessment->getStudent()) {
                 echo $assessment->getPopUpInfo();
@@ -386,9 +386,9 @@ switch ($action) {
     // Get the popup box for adding a comment to a formal assessment.
     case 'get_assessment_comment_popup':
 
-        $assessment = new \GT\Assessment($params['assID']);
+        $assessment = new \block_gradetracker\Assessment($params['assID']);
         if ($assessment) {
-            $assessment->setQualification( new \GT\Qualification($params['qualID']));
+            $assessment->setQualification( new \block_gradetracker\Qualification($params['qualID']));
             $assessment->loadStudent($params['studentID']);
             if ($assessment->getStudent()) {
                 echo $assessment->getPopUpComments();
@@ -399,7 +399,7 @@ switch ($action) {
 
     case 'get_range_info':
 
-        $range = \GT\Criterion::load($params['critID']);
+        $range = \block_gradetracker\Criterion::load($params['critID']);
         if ($range->isValid()) {
             $range->setQualID($params['qualID']);
             $range->loadStudent($params['studentID']);
@@ -414,7 +414,7 @@ switch ($action) {
         $result = array();
 
         $qualID = $params['qualID'];
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             exit;
         }
@@ -468,7 +468,7 @@ switch ($action) {
 
         $studentID = $params['studentID'];
 
-        $user = new \GT\User($studentID);
+        $user = new \block_gradetracker\User($studentID);
         $score = $user->calculateAverageGCSEScore();
 
         $result = array();
@@ -486,7 +486,7 @@ switch ($action) {
         $studentID = $params['studentID'];
         $qualID = $params['qualID'];
 
-        $user = new \GT\User($studentID);
+        $user = new \block_gradetracker\User($studentID);
 
         if (is_array($qualID)) {
 
@@ -525,7 +525,7 @@ switch ($action) {
         $result = array();
 
         $qualID = $params['qualID'];
-        $qualification = new \GT\Qualification($qualID);
+        $qualification = new \block_gradetracker\Qualification($qualID);
         if ($qualification->isValid() && !$qualification->isDeleted()) {
 
             $users = $qualification->getUsers("STUDENT");
@@ -610,7 +610,7 @@ switch ($action) {
         $studentID = $params['studentID'];
         $qualID = $params['qualID'];
 
-        $user = new \GT\User($studentID);
+        $user = new \block_gradetracker\User($studentID);
 
         if (is_array($qualID)) {
 
@@ -648,7 +648,7 @@ switch ($action) {
         $result = array();
 
         $qualID = $params['qualID'];
-        $qualification = new \GT\Qualification($qualID);
+        $qualification = new \block_gradetracker\Qualification($qualID);
         if ($qualification->isValid() && !$qualification->isDeleted()) {
             $users = $qualification->getUsers("STUDENT");
             if ($users) {
@@ -688,12 +688,12 @@ switch ($action) {
     break;
 
     case 'get_rule_events':
-        $events = \GT\Rule::getEvents();
+        $events = \block_gradetracker\Rule::getEvents();
         echo json_encode($events);
     break;
 
     case 'get_rule_comparisons':
-        $rule = new \GT\Rule();
+        $rule = new \block_gradetracker\Rule();
         $comparisons = $rule->getAllOperators();
         echo json_encode($comparisons);
     break;
@@ -701,7 +701,7 @@ switch ($action) {
     case 'get_builds':
 
         $return = array();
-        $builds = \GT\QualificationBuild::getAllBuilds($params['structureID']);
+        $builds = \block_gradetracker\QualificationBuild::getAllBuilds($params['structureID']);
         if ($builds) {
             foreach ($builds as $build) {
                 $return[$build->getID()] = $build->getName();
@@ -715,7 +715,7 @@ switch ($action) {
     case 'get_build_defaults':
 
         $buildID = $params['buildID'];
-        $build = new \GT\QualificationBuild($buildID);
+        $build = new \block_gradetracker\QualificationBuild($buildID);
         $defaults = array();
         if ($build->isValid()) {
             $defaults = $build->getAllDefaultValues();
@@ -726,7 +726,7 @@ switch ($action) {
 
     case 'get_unit_defaults':
 
-        $build = \GT\UnitBuild::load($params['structureID'], $params['levelID']);
+        $build = \block_gradetracker\UnitBuild::load($params['structureID'], $params['levelID']);
         $defaults = $build->getAllDefaultValues();
         echo json_encode($defaults);
 
@@ -734,7 +734,7 @@ switch ($action) {
 
     case 'get_filtered_quals':
 
-        $quals = \GT\Qualification::search( array(
+        $quals = \block_gradetracker\Qualification::search( array(
             "structureID" => $params['structureID'],
             "levelID" => $params['levelID'],
             "subTypeID" => $params['subTypeID'],
@@ -759,7 +759,7 @@ switch ($action) {
 
     case 'get_filtered_units':
 
-        $units = \GT\Unit::search( array(
+        $units = \block_gradetracker\Unit::search( array(
             "structureID" => $params['structureID'],
             "levelID" => $params['levelID'],
             "nameORcode" => $params['name']
@@ -783,7 +783,7 @@ switch ($action) {
 
     case 'get_filtered_courses':
 
-        $courses = \GT\Course::search( array(
+        $courses = \block_gradetracker\Course::search( array(
             "name" => $params['name'],
             "catID" => $params['catID']
         ) );
@@ -807,12 +807,12 @@ switch ($action) {
     case 'get_criterion_options':
 
         $results = array();
-        $criterion = \GT\Criterion::load(false, $params['critType']);
+        $criterion = \block_gradetracker\Criterion::load(false, $params['critType']);
         if ($criterion) {
             $results = $criterion->getFormOptions();
             if ($results) {
                 foreach ($results as $result) {
-                    $element = \GT\FormElement::create($result);
+                    $element = \block_gradetracker\FormElement::create($result);
                     $result->element = $element->display( array('name' => 'unit_criteria['.$params['num'].'][options]') );
                 }
             }
@@ -824,7 +824,7 @@ switch ($action) {
 
     case 'get_met_values':
 
-        $GradingStructure = new \GT\CriteriaAwardStructure($params['gradingStructureID']);
+        $GradingStructure = new \block_gradetracker\CriteriaAwardStructure($params['gradingStructureID']);
         if (!$GradingStructure->isValid()) {
             exit;
         }
@@ -849,17 +849,17 @@ switch ($action) {
 
         $output = '';
 
-        $criterion = \GT\Criterion::load($params['critID'], $params['critType'], true);
+        $criterion = \block_gradetracker\Criterion::load($params['critID'], $params['critType'], true);
         if ($criterion && $params['num'] > 0) {
 
             $criterion->setGradingStructureID($params['gradingID']);
             $criterion->loadChildren();
 
-            $TPL = new \GT\Template();
+            $TPL = new \block_gradetracker\Template();
             $TPL->set("criterion", $criterion)->set("dynamicNum", $params['num']);
             try {
                 $output = $TPL->load($CFG->dirroot . '/blocks/gradetracker/tpl/config/units/criteria_types/'.$criterion->hasFormSubRow().'.html');
-            } catch (\GT\GTException $e) {
+            } catch (\block_gradetracker\GTException $e) {
                 // Do nothing.
             }
 
@@ -873,11 +873,11 @@ switch ($action) {
 
         // if the course and the course module are set.
         if (isset($params['courseID'], $params['cmID'])) {
-            $course = new \GT\Course($params['courseID']);
+            $course = new \block_gradetracker\Course($params['courseID']);
             $activity = $course->getActivity($params['cmID']);
         }
 
-        $unit = new \GT\Unit($params['unitID']);
+        $unit = new \block_gradetracker\Unit($params['unitID']);
 
         $return = array();
         $return['unit'] = $unit->getDisplayName();
@@ -904,12 +904,12 @@ switch ($action) {
 
     case 'get_mod_hook_unit_activities':
 
-        $unitMods = \GT\ModuleLink::getModulesOnUnit($params['qualID'], $params['unitID'], $params['courseID']);
+        $unitMods = \block_gradetracker\ModuleLink::getModulesOnUnit($params['qualID'], $params['unitID'], $params['courseID']);
         $return = array();
         $criteriaArray = array();
 
         // The unit's criteria.
-        $unit = new \GT\Unit($params['unitID']);
+        $unit = new \block_gradetracker\Unit($params['unitID']);
         if ($unit) {
             $criteria = $unit->sortCriteria(false, true);
             if ($criteria) {
@@ -936,7 +936,7 @@ switch ($action) {
                 $obj->linked = array();
                 if ($criteriaArray) {
                     foreach ($criteriaArray as $crit) {
-                        if ($check = \GT\Activity::checkExists($unitMod->getCourseModID(), $params['qualID'], $unit->getID(), $crit->id)) {
+                        if ($check = \block_gradetracker\Activity::checkExists($unitMod->getCourseModID(), $params['qualID'], $unit->getID(), $crit->id)) {
                             $obj->linked[] = $crit->id;
                         }
                     }
@@ -947,7 +947,7 @@ switch ($action) {
                     $obj->partsLinked = array();
                     if ($criteriaArray) {
                         foreach ($criteriaArray as $crit) {
-                            if ($check = \GT\Activity::checkExists($unitMod->getCourseModID(), $params['qualID'], $unit->getID(), $crit->id, false)) {
+                            if ($check = \block_gradetracker\Activity::checkExists($unitMod->getCourseModID(), $params['qualID'], $unit->getID(), $crit->id, false)) {
                                 if ($check && !is_null($check->partid)) {
                                     $obj->partsLinked[$crit->id] = $check->partid;
                                 }
@@ -967,13 +967,13 @@ switch ($action) {
 
     case 'get_mod_hook_activity':
 
-        $course = new \GT\Course($params['courseID']);
+        $course = new \block_gradetracker\Course($params['courseID']);
         $activity = $course->getActivity($params['cmID']);
 
         $criteriaArray = array();
 
         // The unit's criteria.
-        $unit = new \GT\Unit($params['unitID']);
+        $unit = new \block_gradetracker\Unit($params['unitID']);
         if ($unit) {
             $criteria = $unit->sortCriteria(false, true);
             if ($criteria) {
@@ -1004,14 +1004,14 @@ switch ($action) {
 
         global $GTEXE, $User;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
         $GTEXE->QUAL_STRUCTURE_MIN_LOAD = true;
         $GTEXE->QUAL_BUILD_MIN_LOAD = true;
         $GTEXE->QUAL_MIN_LOAD = true;
         $GTEXE->UNIT_MIN_LOAD = true;
         $GTEXE->UNIT_NO_SORT = true;
 
-        $qualification = new \GT\Qualification\DataQualification($params['qualid']);
+        $qualification = new \block_gradetracker\Qualification\DataQualification($params['qualid']);
         if ($qualification->isValid() && !$qualification->isDeleted()) {
 
             $structure = $qualification->getStructure();
@@ -1034,7 +1034,7 @@ switch ($action) {
             $usedFieldNames['unit'] = array();
             $usedFieldNames['crit'] = array();
 
-            $TPL = new \GT\Template();
+            $TPL = new \block_gradetracker\Template();
             $TPL->set('qualification', $qualification);
             $TPL->set('studentsReport', $studentsReport);
             $TPL->set('unitsReport', $unitsReport);
@@ -1058,7 +1058,7 @@ switch ($action) {
 
         $result = array();
 
-        $qual = new \GT\Qualification($params['qualID']);
+        $qual = new \block_gradetracker\Qualification($params['qualID']);
         $unit = ($qual->isValid()) ? $qual->getUnit($params['unitID']) : false;
         $criterion = ($unit && $unit->isValid()) ? $unit->getCriterion($params['critID']) : false;
         if ($qual->isValid() && $unit && $unit->isValid() && $criterion && $criterion->isValid()) {
@@ -1068,11 +1068,11 @@ switch ($action) {
             $result['criterion'] = $criterion->getName();
             $result['links'] = array();
 
-            $courseModules = \GT\Activity::getCourseModulesLinkedToUnit($params['qualID'], $params['unitID'], $params['critID']);
+            $courseModules = \block_gradetracker\Activity::getCourseModulesLinkedToUnit($params['qualID'], $params['unitID'], $params['critID']);
 
             if ($courseModules) {
                 foreach ($courseModules as $courseModID) {
-                    $mod = \GT\ModuleLink::getModuleLinkFromCourseModule($courseModID);
+                    $mod = \block_gradetracker\ModuleLink::getModuleLinkFromCourseModule($courseModID);
                     $obj = new \stdClass();
                     $obj->cmid = $courseModID;
                     $obj->name = $mod->getRecordName();
@@ -1104,11 +1104,11 @@ switch ($action) {
         $Report = false;
 
         if ($params['report'] == 'CP') {
-            $Report = new \GT\Reports\CriteriaProgressReport();
+            $Report = new \block_gradetracker\Reports\CriteriaProgressReport();
         } else if ($params['report'] == 'PCP') {
-            $Report = new \GT\Reports\PassCriteriaProgressReport();
+            $Report = new \block_gradetracker\Reports\PassCriteriaProgressReport();
         } else if ($params['report'] == 'PCS') {
-            $Report = new \GT\Reports\PassCriteriaSummaryReport();
+            $Report = new \block_gradetracker\Reports\PassCriteriaSummaryReport();
         }
 
         if ($Report) {
@@ -1121,7 +1121,7 @@ switch ($action) {
 
     case 'get_rule_form':
 
-        $TPL = new \GT\Template();
+        $TPL = new \block_gradetracker\Template();
         foreach ($params as $param => $val) {
             $TPL->set($param, $val);
         }
@@ -1133,7 +1133,7 @@ switch ($action) {
 
     case 'get_rule_fx_panel':
 
-        $TPL = new \GT\Template();
+        $TPL = new \block_gradetracker\Template();
         if ($params) {
             foreach ($params as $param => $val) {
                 $TPL->set($param, $val);
@@ -1151,7 +1151,7 @@ switch ($action) {
 
     case 'get_rule_fx_element_options':
 
-        $RuleVerifier = new \GT\RuleVerifier();
+        $RuleVerifier = new \block_gradetracker\RuleVerifier();
         $fromType = (isset($params['fromType']) && $params['fromType'] != '') ? $params['fromType'] : null;
         $fromVal = (isset($params['fromVal']) && $params['fromVal'] != '') ? $params['fromVal'] : null;
         $options = array();
@@ -1185,14 +1185,14 @@ switch ($action) {
 
     case 'get_rule_fx_links':
 
-        $RuleVerifier = new \GT\RuleVerifier();
+        $RuleVerifier = new \block_gradetracker\RuleVerifier();
         echo json_encode( $RuleVerifier->getPossibleNextStages($params) );
 
     break;
 
     case 'get_rule_set_template':
 
-        $TPL = new \GT\Template();
+        $TPL = new \block_gradetracker\Template();
         foreach ($params as $param => $val) {
             $TPL->set($param, $val);
         }
@@ -1206,12 +1206,12 @@ switch ($action) {
 
         $return = array('units' => array(), 'order' => array());
 
-        $qual = new \GT\Qualification($params['qualID']);
+        $qual = new \block_gradetracker\Qualification($params['qualID']);
         if ($qual->isValid()) {
 
             $units = $qual->getUnits();
 
-            $sort = new \GT\Sorter();
+            $sort = new \block_gradetracker\Sorter();
             $sort->sortUnits($units);
 
             if ($units) {
@@ -1232,7 +1232,7 @@ switch ($action) {
 
         $return = array('ass' => array(), 'order' => array());
 
-        $qual = new \GT\Qualification($params['qualID']);
+        $qual = new \block_gradetracker\Qualification($params['qualID']);
         if ($qual->isValid()) {
 
             $assessments = $qual->getAssessments();
@@ -1254,11 +1254,11 @@ switch ($action) {
 
         $return = array('criteria' => array(), 'order' => array());
 
-        $unit = new \GT\Unit($params['unitID']);
+        $unit = new \block_gradetracker\Unit($params['unitID']);
         if ($unit->isValid()) {
 
             $criteria = $unit->loadCriteriaIntoFlatArray();
-            $sort = new \GT\Sorter();
+            $sort = new \block_gradetracker\Sorter();
             $structure = $unit->getStructure();
             $customOrder = $structure->getCustomOrder('criteria');
 

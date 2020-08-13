@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT\bc_dashboard;
+namespace block_gradetracker\bc_dashboard;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -43,7 +43,7 @@ class listofquals extends \block_bc_dashboard\Report\Element {
 
     public function call(&$results) {
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
         $GTEXE->min();
 
         $alias = $this->getAliasName();
@@ -54,7 +54,7 @@ class listofquals extends \block_bc_dashboard\Report\Element {
                 $array = array();
 
                 // Get their list of quals
-                $user = new \GT\User($row['id']);
+                $user = new \block_gradetracker\User($row['id']);
                 $quals = $user->getQualifications("STUDENT");
                 if ($quals) {
                     foreach ($quals as $qual) {

@@ -23,7 +23,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -33,7 +33,7 @@ class Automation {
 
         global $DB;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         // Get the role assignment from this enrolment
         $roleAssignment = \gt_get_user_role_from_context($data['courseID'], $data['contextLevel'], $data['userID']);
@@ -54,7 +54,7 @@ class Automation {
         }
 
         // Load user into User object
-        $user = new \GT\User($data['userID']);
+        $user = new \block_gradetracker\User($data['userID']);
 
         // Get STUDENT role names and STAFF role names
         $shortnames = array(
@@ -87,7 +87,7 @@ class Automation {
             // If we are using the auto enrol to units setting
             if ($GT->getSetting('use_auto_enrol_units') == 1) {
 
-                $Qual = new \GT\Qualification($qual->qualid);
+                $Qual = new \block_gradetracker\Qualification($qual->qualid);
 
                 $units = $Qual->getUnits();
                 foreach ($units as $unit) {
@@ -107,14 +107,14 @@ class Automation {
 
         global $DB;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         $quals = $DB->get_records("bcgt_course_quals", array("courseid" => $data['courseID']));
         if (!$quals) {
             return true;
         }
 
-        $user = new \GT\User($data['userID']);
+        $user = new \block_gradetracker\User($data['userID']);
 
         foreach ($quals as $qual) {
 
@@ -126,7 +126,7 @@ class Automation {
             // if we have the auto unenrol from units setting
             if ($GT->getSetting('use_auto_unenrol_units') == 1) {
 
-                $Qual = new \GT\Qualification($qual->qualid);
+                $Qual = new \block_gradetracker\Qualification($qual->qualid);
 
                 $units = $Qual->getUnits();
                 foreach ($units as $unit) {

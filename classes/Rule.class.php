@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -140,9 +140,9 @@ class RuleSet {
 
     /**
      * Add a Rule to the array
-     * @param \GT\Rule $rule
+     * @param \block_gradetracker\Rule $rule
      */
-    public function addRule(\GT\Rule $rule) {
+    public function addRule(\block_gradetracker\Rule $rule) {
 
         if ($rule->isValid()) {
 
@@ -173,7 +173,7 @@ class RuleSet {
         $rules = $DB->get_records("bcgt_qual_structure_rules", array("setid" => $this->id), "id");
         if ($rules) {
             foreach ($rules as $rule) {
-                $ruleObj = new \GT\Rule($rule->id);
+                $ruleObj = new \block_gradetracker\Rule($rule->id);
                 $this->addRule($ruleObj);
             }
         }
@@ -213,7 +213,7 @@ class RuleSet {
 
     /**
      * Save the rule set
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function save() {
@@ -310,7 +310,7 @@ class RuleSet {
         }
 
         // Get the QualStructure of the qualification to see if there are any rules for this event
-        $qualification = new \GT\Qualification($params['qID']);
+        $qualification = new \block_gradetracker\Qualification($params['qID']);
         if (!$qualification->isValid()) {
             \gt_debug("Error: Invalid Qualification");
             return false;
@@ -349,7 +349,7 @@ class RuleSet {
 
     /**
      * Get a Qual Structure's RuleSet by its name
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualStructureID
      * @param type $name
      * @return type
@@ -359,13 +359,13 @@ class RuleSet {
         global $DB;
 
         $record = $DB->get_record("bcgt_qual_structure_rule_set", array("qualstructureid" => $qualStructureID, "name" => $name), "id");
-        return ($record) ? new \GT\RuleSet($record->id) : false;
+        return ($record) ? new \block_gradetracker\RuleSet($record->id) : false;
 
     }
 
     /**
      * Update references to old ruleset id to new id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $oldID
      * @param type $newID
      * @return type
@@ -562,7 +562,7 @@ class Rule {
      * Add a step to the array of steps
      * @param type $step
      */
-    public function addStep(\GT\RuleStep $step) {
+    public function addStep(\block_gradetracker\RuleStep $step) {
         if ($step->getID()) {
             if ($this->steps) {
                 foreach ($this->steps as $key => $stp) {
@@ -591,7 +591,7 @@ class Rule {
         $steps = $DB->get_records("bcgt_qual_structure_rule_stp", array("ruleid" => $this->id));
         if ($steps) {
             foreach ($steps as $step) {
-                $stepObj = new \GT\RuleStep($step->id);
+                $stepObj = new \block_gradetracker\RuleStep($step->id);
                 $this->addStep($stepObj);
             }
         }
@@ -775,7 +775,7 @@ class Rule {
      */
     public static function getComparisons() {
 
-        $rule = new \GT\Rule();
+        $rule = new \block_gradetracker\Rule();
         return $rule->getAllOperators();
 
     }
@@ -867,19 +867,19 @@ class Rule {
     /**
      * Get the RUleObject_ object of a given type
      * @param type $obj
-     * @return \GT\RuleObject_Criterion|\GT\RuleObject_Unit|boolean|\GT\RuleObject_Qual
+     * @return \block_gradetracker\RuleObject_Criterion|\block_gradetracker\RuleObject_Unit|boolean|\block_gradetracker\RuleObject_Qual
      */
     public static function getObject($obj) {
 
         switch ($obj) {
             case 'qual':
-                return new \GT\RuleObject_Qual();
+                return new \block_gradetracker\RuleObject_Qual();
                 break;
             case 'unit':
-                return new \GT\RuleObject_Unit();
+                return new \block_gradetracker\RuleObject_Unit();
                 break;
             case 'criterion':
-                return new \GT\RuleObject_Criterion();
+                return new \block_gradetracker\RuleObject_Criterion();
                 break;
             default:
                 return false;
@@ -1015,9 +1015,9 @@ class RuleStep {
 
     /**
      * Add a condition to the array for this step
-     * @param \GT\RuleStepCondition $condition
+     * @param \block_gradetracker\RuleStepCondition $condition
      */
-    public function addCondition(\GT\RuleStepCondition $condition) {
+    public function addCondition(\block_gradetracker\RuleStepCondition $condition) {
         $this->conditions[] = $condition;
     }
 
@@ -1031,9 +1031,9 @@ class RuleStep {
 
     /**
      * Add an action to the array for this step
-     * @param \GT\RuleStepAction $action
+     * @param \block_gradetracker\RuleStepAction $action
      */
-    public function addAction(\GT\RuleStepAction $action) {
+    public function addAction(\block_gradetracker\RuleStepAction $action) {
         $this->actions[] = $action;
     }
 
@@ -1056,7 +1056,7 @@ class RuleStep {
         $lines = explode("\n", $str);
         if ($lines) {
             foreach ($lines as $line) {
-                $return[] = \GT\RuleStepCondition::createFromString($line);
+                $return[] = \block_gradetracker\RuleStepCondition::createFromString($line);
             }
         }
 
@@ -1076,7 +1076,7 @@ class RuleStep {
         $lines = explode("\n", $str);
         if ($lines) {
             foreach ($lines as $line) {
-                $return[] = \GT\RuleStepAction::createFromString($line, $convert);
+                $return[] = \block_gradetracker\RuleStepAction::createFromString($line, $convert);
             }
         }
 
@@ -1257,7 +1257,7 @@ class RuleStepCondition {
                 $split = array_values($split);
 
                 // Check to see if object exists
-                $object = \GT\Rule::getObject($obj);
+                $object = \block_gradetracker\Rule::getObject($obj);
                 if (!$object) {
                     \gt_debug("Error: Invalid RuleObject - {$obj}");
                     return false;
@@ -1295,7 +1295,7 @@ class RuleStepCondition {
                 $split = array_values($split);
 
                 // Check to see if object exists
-                $object = \GT\Rule::getObject($obj);
+                $object = \block_gradetracker\Rule::getObject($obj);
                 if (!$object) {
                     \gt_debug("Error: Invalid RuleObject - {$obj}");
                     return false;
@@ -1388,12 +1388,12 @@ class RuleStepCondition {
             $v2Class = (is_object($v2)) ? get_class($v2) : false;
 
             // If v1 is an Award object, use it's award name
-            if ( in_array($v1Class, array('GT\CriteriaAward', 'GT\UnitAward')) ) {
+            if ( in_array($v1Class, array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward')) ) {
                 $v1 = $v1->getName();
             }
 
             // If v2 is an Award object, use it's award name
-            if ( in_array($v2Class, array('GT\CriteriaAward', 'GT\UnitAward')) ) {
+            if ( in_array($v2Class, array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward')) ) {
                 $v2 = $v2->getName();
             }
 
@@ -1484,12 +1484,12 @@ class RuleStepCondition {
             $v2Class = (is_object($v2)) ? get_class($v2) : false;
 
             // If v1 is an Award object, use it's award name
-            if ( in_array($v1Class, array('GT\CriteriaAward', 'GT\UnitAward')) ) {
+            if ( in_array($v1Class, array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward')) ) {
                 $v1 = $v1->getName();
             }
 
             // If v2 is an Award object, use it's award name
-            if ( in_array($v2Class, array('GT\CriteriaAward', 'GT\UnitAward')) ) {
+            if ( in_array($v2Class, array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward')) ) {
                 $v2 = $v2->getName();
             }
 
@@ -1534,7 +1534,7 @@ class RuleStepCondition {
             foreach ($value as $key => $val) {
 
                 // Check class of object
-                if (!is_object($val) || !in_array(get_class($val), array('GT\CriteriaAward', 'GT\UnitAward'))) {
+                if (!is_object($val) || !in_array(get_class($val), array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward'))) {
                     \gt_debug("Error: Value[{$key}] is either not an object or not a valid CriteriaAward or UnitAward object");
                     return false;
                 }
@@ -1549,7 +1549,7 @@ class RuleStepCondition {
         } else {
 
             // Check it's the right type of object
-            if (!is_object($value) || !in_array(get_class($value), array('GT\CriteriaAward', 'GT\UnitAward'))) {
+            if (!is_object($value) || !in_array(get_class($value), array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward'))) {
                 \gt_debug("Error: Value is either not an object or not a valid CriteriaAward or UnitAward object");
                 return false;
             }
@@ -1580,7 +1580,7 @@ class RuleStepCondition {
             foreach ($value as $val) {
 
                 // Check class of object
-                if (!is_object($val) || !in_array(get_class($val), array('GT\CriteriaAward', 'GT\UnitAward'))) {
+                if (!is_object($val) || !in_array(get_class($val), array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward'))) {
                     \gt_debug("Error: Value is either not an object or not a valid CriteriaAward or UnitAward object");
                     return false;
                 }
@@ -1595,7 +1595,7 @@ class RuleStepCondition {
         } else {
 
             // Check it's the right type of object
-            if (!is_object($value) || !in_array(get_class($value), array('GT\CriteriaAward', 'GT\UnitAward'))) {
+            if (!is_object($value) || !in_array(get_class($value), array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward'))) {
                 \gt_debug("Error: Value is either not an object or not a valid CriteriaAward or UnitAward object");
                 return false;
             }
@@ -1674,7 +1674,7 @@ class RuleStepCondition {
     /**
      * Create condition from string
      * @param type $str
-     * @return \GT\RuleStepCondition
+     * @return \block_gradetracker\RuleStepCondition
      */
     public static function createFromString($str) {
 
@@ -1800,7 +1800,7 @@ class RuleStepAction {
         \gt_debug("Split v1 into object: {$obj} and parts: " . print_r($split, true));
 
         // Check to see if object exists
-        $object = \GT\Rule::getObject($obj);
+        $object = \block_gradetracker\Rule::getObject($obj);
         if (!$object) {
             \gt_debug("Error: Invalid RuleObject found on v1 - {$obj}");
             return false;
@@ -1841,7 +1841,7 @@ class RuleStepAction {
                 \gt_debug("Split v2 into object: {$obj} and parts: " . print_r($split, true));
 
                 // Check to see if object exists
-                $object = \GT\Rule::getObject($obj);
+                $object = \block_gradetracker\Rule::getObject($obj);
                 if (!$object) {
                     \gt_debug("Error: Invalid RuleObject found on v2 - {$obj}");
                     return false;
@@ -1915,7 +1915,7 @@ class RuleStepAction {
             // If v2 is an object, it must be a CriteriaAward or UnitAward
             if (is_object($v2)) {
                 $v2Class = get_class($v2);
-                if (!in_array($v2Class, array('GT\CriteriaAward', 'GT\UnitAward'))) {
+                if (!in_array($v2Class, array('block_gradetracker\CriteriaAward', 'block_gradetracker\UnitAward'))) {
                     \gt_debug("Error: v2 is an object of an invalid class - {$v2Class}");
                     return false;
                 }
@@ -2045,7 +2045,7 @@ class RuleStepAction {
             $newStr = $str;
         }
 
-        $action = new \GT\RuleStepAction();
+        $action = new \block_gradetracker\RuleStepAction();
         $action->setAction($newStr);
         return $action;
 
@@ -2124,7 +2124,7 @@ abstract class RuleObject {
 
         // Student
         if (isset($this->params['sID'])) {
-            $this->student = new \GT\User($this->params['sID']);
+            $this->student = new \block_gradetracker\User($this->params['sID']);
         }
 
         // Qual
@@ -2132,11 +2132,11 @@ abstract class RuleObject {
 
             // If there is a student, load a UserQual
             if ($this->student && $this->student->isOnQual($this->params['qID'], "STUDENT")) {
-                $this->qual = new \GT\Qualification\UserQualification($this->params['qID']);
+                $this->qual = new \block_gradetracker\Qualification\UserQualification($this->params['qID']);
                 $this->qual->loadStudent($this->student);
             } else {
                 // Else just load a normal qual object
-                $this->qual = new \GT\Qualification($this->params['qID']);
+                $this->qual = new \block_gradetracker\Qualification($this->params['qID']);
             }
 
         }
@@ -2183,7 +2183,7 @@ class RuleObject_Qual extends RuleObject {
 
         // Filters
         if ($args) {
-            $filter = new \GT\Filter();
+            $filter = new \block_gradetracker\Filter();
             $filters['field'] = $args[1];
             $filters['conjunction'] = $args[0];
 
@@ -2198,7 +2198,7 @@ class RuleObject_Qual extends RuleObject {
 
         if ($units) {
             foreach ($units as $unit) {
-                $obj = new \GT\RuleObject_Unit();
+                $obj = new \block_gradetracker\RuleObject_Unit();
                 $obj->setParams($this->params);
                 $obj->setUnitObject($unit);
                 $return[] = $obj;
@@ -2248,7 +2248,7 @@ class RuleObject_Unit extends RuleObject {
         $criteria = $this->unitObject->loadCriteriaIntoFlatArray();
         $filters = array();
 
-        $filter = new \GT\Filter();
+        $filter = new \block_gradetracker\Filter();
 
         // Filters
         if ($args && isset($args[0]) && isset($args[1])) {
@@ -2271,7 +2271,7 @@ class RuleObject_Unit extends RuleObject {
 
         if ($criteria) {
             foreach ($criteria as $criterion) {
-                $obj = new \GT\RuleObject_Criterion();
+                $obj = new \block_gradetracker\RuleObject_Criterion();
                 $obj->setParams($this->params);
                 $obj->setCriterionObject($criterion);
                 $return[] = $obj;
@@ -2313,9 +2313,9 @@ class RuleObject_Unit extends RuleObject {
 
     /**
      * Set criterion award
-     * @param \GT\UnitAward $award
+     * @param \block_gradetracker\UnitAward $award
      */
-    public function setAward(\GT\UnitAward $award) {
+    public function setAward(\block_gradetracker\UnitAward $award) {
 
         // If it already has this award, don't bother actually doing it - waste of processing
         if ($this->unitObject->getUserAward() && $this->unitObject->getUserAward()->getID() == $award->getID()) {
@@ -2436,9 +2436,9 @@ class RuleObject_Criterion extends RuleObject {
 
     /**
      * Set criterion award
-     * @param \GT\CriteriaAward $award
+     * @param \block_gradetracker\CriteriaAward $award
      */
-    public function setAward(\GT\CriteriaAward $award) {
+    public function setAward(\block_gradetracker\CriteriaAward $award) {
 
         // If it already has this award, don't bother actually doing it - waste of processing
         if ($this->criterionObject->getUserAward() && $this->criterionObject->getUserAward()->getID() == $award->getID()) {
@@ -2487,7 +2487,7 @@ class RuleVerifier
         $return = array();
 
         if (is_null($fromType)) {
-            $return = \GT\RuleObject::getAllObjects();
+            $return = \block_gradetracker\RuleObject::getAllObjects();
         }
 
         return $return;
@@ -2500,7 +2500,7 @@ class RuleVerifier
 
         if ($fromType == 'object') {
 
-            $class = "\GT\RuleObject_" . ucfirst($fromVal);
+            $class = "\block_gradetracker\RuleObject_" . ucfirst($fromVal);
             if (class_exists($class)) {
                 $return = $class::$methods;
                 $return = array_map( function($v) use ($fromVal) {
@@ -2516,13 +2516,13 @@ class RuleVerifier
             $object = $explode[0];
             $method = $explode[1];
 
-            $class = "\GT\RuleObject_" . ucfirst($object);
+            $class = "\block_gradetracker\RuleObject_" . ucfirst($object);
             if (class_exists($class)) {
 
                 $method = \gt_find_element_in_array($class::$methods, 'name', $method);
                 if ($method && $method['return'] == 'object') {
 
-                    $returnClass = "\GT\RuleObject_" . ucfirst($method['object']);
+                    $returnClass = "\block_gradetracker\RuleObject_" . ucfirst($method['object']);
                     $return = $returnClass::$methods;
                     $return = array_map( function($v) use ($method) {
                         $v['longName'] = $method['object'] . '.' . $v['name'];
@@ -2569,7 +2569,7 @@ class RuleVerifier
             $object = $explode[0];
             $method = $explode[1];
 
-            $class = "\GT\RuleObject_" . ucfirst($object);
+            $class = "\block_gradetracker\RuleObject_" . ucfirst($object);
             if (class_exists($class)) {
 
                 $methods = $class::$methods;
@@ -2586,7 +2586,7 @@ class RuleVerifier
                     // Uf the method returns any other objects it can have methods added on to it
                     if ($method['return'] == 'object') {
 
-                        $returnClass = "\GT\RuleObject_" . ucfirst($method['object']);
+                        $returnClass = "\block_gradetracker\RuleObject_" . ucfirst($method['object']);
                         if (class_exists($returnClass)) {
 
                             $methods = $returnClass::$methods;
@@ -2625,7 +2625,7 @@ class RuleVerifier
         $object = $explode[0];
         $method = $explode[1];
 
-        $class = "\GT\RuleObject_" . ucfirst($object);
+        $class = "\block_gradetracker\RuleObject_" . ucfirst($object);
         if (class_exists($class)) {
 
             $methods = $class::$methods;
@@ -2638,8 +2638,8 @@ class RuleVerifier
 
         }
 
-        $return['conjunctions'] = \GT\Filter::getAllFilters();
-        $return['fields'] = ($returnObject) ? \GT\Filter::getFilterableFields($returnObject) : array();
+        $return['conjunctions'] = \block_gradetracker\Filter::getAllFilters();
+        $return['fields'] = ($returnObject) ? \block_gradetracker\Filter::getFilterableFields($returnObject) : array();
 
         return $return;
 

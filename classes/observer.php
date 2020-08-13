@@ -37,7 +37,7 @@ class block_gradetracker_observer {
 
         global $DB;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         // If both settings are false, don't waste our time doing anything
         if ($GT->getSetting('use_auto_enrol_quals') != 1 && $GT->getSetting('use_auto_enrol_units') != 1) {
@@ -52,7 +52,7 @@ class block_gradetracker_observer {
             $array['contextLevel'] = $data->contextlevel;
             $array['userID'] = $data->relateduserid;
 
-            return \GT\Automation::enrol($array);
+            return \block_gradetracker\Automation::enrol($array);
 
         }
 
@@ -67,7 +67,7 @@ class block_gradetracker_observer {
 
         global $DB;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         // If both settings are false, don't waste our time doing anything
         if ($GT->getSetting('use_auto_unenrol_quals') != 1 && $GT->getSetting('use_auto_unenrol_units') != 1) {
@@ -82,7 +82,7 @@ class block_gradetracker_observer {
             $array['contextLevel'] = $data->contextlevel;
             $array['userID'] = $data->relateduserid;
 
-            return \GT\Automation::unenrol($array);
+            return \block_gradetracker\Automation::unenrol($array);
 
         }
 
@@ -92,7 +92,7 @@ class block_gradetracker_observer {
 
         global $DB;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         // If both settings are false, don't waste our time doing anything
         if ($GT->getSetting('use_auto_unenrol_quals') != 1 && $GT->getSetting('use_auto_unenrol_units') != 1) {
@@ -115,10 +115,10 @@ class block_gradetracker_observer {
 
             // Enrolment activated
             if ($record->status == 0) {
-                return \GT\Automation::enrol($array);
+                return \block_gradetracker\Automation::enrol($array);
             } else if ($record->status == 1) {
                 // Suspended
-                return \GT\Automation::unenrol($array);
+                return \block_gradetracker\Automation::unenrol($array);
             }
 
         }

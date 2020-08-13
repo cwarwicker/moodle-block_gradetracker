@@ -46,7 +46,7 @@ class clean_up extends \core\task\scheduled_task {
 
         global $DB;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         // Clean up logs from the db
         $keepFor = $GT->getSetting('keep_logs_for');
@@ -71,7 +71,7 @@ class clean_up extends \core\task\scheduled_task {
 
         // Clean up tmp files
         mtrace("Cleaning up tmp files from [dataroot]/gradetracker");
-        $result = \GT\GradeTracker::gc();
+        $result = \block_gradetracker\GradeTracker::gc();
         mtrace("Deleted {$result} tmp files");
 
     }

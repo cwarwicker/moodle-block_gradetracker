@@ -94,7 +94,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
                             continue;
                         }
 
-                        $user = new \GT\User($submission->userid);
+                        $user = new \block_gradetracker\User($submission->userid);
 
                         // Set the id of the actual activity into the ModuleLink object
                         $modLink->setRecordID($submission->$submissionModField);
@@ -123,7 +123,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
                         }
 
                         // Get the links from this activity to criteria
-                        $activityLinks = \GT\Activity::findLinks($submission->cmid, $partID);
+                        $activityLinks = \block_gradetracker\Activity::findLinks($submission->cmid, $partID);
                         if ($activityLinks) {
 
                             foreach ($activityLinks as $activityLink) {
@@ -131,7 +131,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
                                 // Is the user actually attached to this?
                                 if ($user->isOnQualUnit($activityLink->getQualID(), $activityLink->getUnitID(), "STUDENT")) {
 
-                                    $unit = (array_key_exists($activityLink->getUnitID(), $unitArray)) ? $unitArray[$activityLink->getUnitID()] : new \GT\Unit\UserUnit($activityLink->getUnitID());
+                                    $unit = (array_key_exists($activityLink->getUnitID(), $unitArray)) ? $unitArray[$activityLink->getUnitID()] : new \block_gradetracker\Unit\UserUnit($activityLink->getUnitID());
                                     $unitArray[$activityLink->getUnitID()] = $unit;
 
                                     if ($unit) {
@@ -183,7 +183,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
 
         global $GT;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         $now = time();
         $unitArray = array();
@@ -219,11 +219,11 @@ class update_grids_from_activities extends \core\task\scheduled_task {
 
                                 // Get the course and the coursemodule record from this activity
                                 $courseID = $activity->$modCourseField;
-                                $course = new \GT\Course($courseID);
+                                $course = new \block_gradetracker\Course($courseID);
                                 $courseModule = $course->getCourseModule($modLink->getModID(), $activity->id);
 
                                 // Get the activities linked to this coursemodule
-                                $activityLinks = \GT\Activity::findLinks($courseModule->id, $part->id);
+                                $activityLinks = \block_gradetracker\Activity::findLinks($courseModule->id, $part->id);
 
                                 $this->process_missing_activity_links($activityLinks, $modLink, $course, $courseModule, $activity, $unitArray);
 
@@ -245,12 +245,12 @@ class update_grids_from_activities extends \core\task\scheduled_task {
 
                             // Get the course and the coursemodule record from this activity
                             $courseID = $activity->$modCourseField;
-                            $course = new \GT\Course($courseID);
+                            $course = new \block_gradetracker\Course($courseID);
                             $courseModule = $course->getCourseModule($modLink->getModID(), $activity->id);
 
                             if ($courseModule) {
                                 // Get the activities linked to this coursemodule
-                                $activityLinks = \GT\Activity::findLinks($courseModule->id);
+                                $activityLinks = \block_gradetracker\Activity::findLinks($courseModule->id);
                                 $this->process_missing_activity_links($activityLinks, $modLink, $course, $courseModule, $activity, $unitArray);
                             }
 
@@ -293,8 +293,8 @@ class update_grids_from_activities extends \core\task\scheduled_task {
             if ($users) {
                 foreach ($users as $user) {
 
-                    // Convert the user back to a \GT\User object after the filter
-                    $user = new \GT\User($user->id);
+                    // Convert the user back to a \block_gradetracker\User object after the filter
+                    $user = new \block_gradetracker\User($user->id);
 
                     $submission = $this->find_user_submission($modLink, $activity->id, $user->id);
 
@@ -308,7 +308,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
                             // Is the user actually attached to this?
                             if ($user->isOnQualUnit($activityLink->getQualID(), $activityLink->getUnitID(), "STUDENT")) {
 
-                                $unit = (array_key_exists($activityLink->getUnitID(), $unitArray)) ? $unitArray[$activityLink->getUnitID()] : new \GT\Unit\UserUnit($activityLink->getUnitID());
+                                $unit = (array_key_exists($activityLink->getUnitID(), $unitArray)) ? $unitArray[$activityLink->getUnitID()] : new \block_gradetracker\Unit\UserUnit($activityLink->getUnitID());
                                 $unitArray[$activityLink->getUnitID()] = $unit;
 
                                 if ($unit) {
@@ -425,7 +425,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
     private function update_criterion_value($criterion, $value) {
 
         // Find the relevant value from the grading structure
-        $gradingStructure = new \GT\CriteriaAwardStructure($criterion->getGradingStructureID());
+        $gradingStructure = new \block_gradetracker\CriteriaAwardStructure($criterion->getGradingStructureID());
         $award = $gradingStructure->findAwardBySpecialValue($value);
         if (!$award) {
             $this->trace("Could not find a criteria award on this grading structure with specialval {$value}");
@@ -532,12 +532,12 @@ class update_grids_from_activities extends \core\task\scheduled_task {
 
         // Debugging log
         \gt_create_data_directory('log/task');
-        $file = \GT\GradeTracker::dataroot() . '/log/task/update_grids_from_activities_' . date('Hi') . '.log';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/log/task/update_grids_from_activities_' . date('Hi') . '.log';
         \gt_trace($file, "Beginning process...");
 
         $this->trace("Process beginning");
 
-        $modLinks = \GT\ModuleLink::getEnabledModLinks();
+        $modLinks = \block_gradetracker\ModuleLink::getEnabledModLinks();
         if (!$modLinks) {
             $this->trace("Process ended prematurely - No module links configured");
             return false;
@@ -547,7 +547,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
         $this->process_submissions($modLinks);
 
         // Clear any records
-        \GT\ModuleLink::clearModRecords($modLinks);
+        \block_gradetracker\ModuleLink::clearModRecords($modLinks);
 
         // Find all missing submissions since it was last run, to update to WNS
         $this->process_missing_submissions($modLinks);

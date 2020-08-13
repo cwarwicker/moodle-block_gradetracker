@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -145,7 +145,7 @@ class SubType {
 
         $qual_builds = $DB->get_records("bcgt_qual_builds", array("subtypeid" => $this->id, "deleted" => 0));
         foreach ($qual_builds as $build) {
-            $qual_build = new \GT\QualificationBuild($build->id);
+            $qual_build = new \block_gradetracker\QualificationBuild($build->id);
             $qual_build->delete();
         }
 
@@ -244,7 +244,7 @@ class SubType {
         $return = array();
         if ($records) {
             foreach ($records as $record) {
-                $return[] = new \GT\SubType($record->id);
+                $return[] = new \block_gradetracker\SubType($record->id);
             }
         }
 
@@ -255,7 +255,7 @@ class SubType {
 
     /**
      * Find a level by its name
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $name
      * @return type
      */
@@ -264,7 +264,7 @@ class SubType {
         global $DB;
 
         $record = $DB->get_record("bcgt_qual_subtypes", array("name" => $name, "deleted" => 0));
-        return ($record) ? new \GT\SubType($record->id) : false;
+        return ($record) ? new \block_gradetracker\SubType($record->id) : false;
 
     }
 

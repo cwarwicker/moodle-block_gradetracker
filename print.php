@@ -46,9 +46,9 @@ $settings['activitycnt'] = 0;
 $settings['percentage'] = false;
 $settings['iv'] = false;
 
-$GT = new \GT\GradeTracker();
-$TPL = new \GT\Template();
-$User = new \GT\User($USER->id);
+$GT = new \block_gradetracker\GradeTracker();
+$TPL = new \block_gradetracker\Template();
+$User = new \block_gradetracker\User($USER->id);
 
 // Set print variable so we can show/hide things in template files accordingly
 $TPL->set("print", true);
@@ -58,12 +58,12 @@ switch ($type) {
     case 'student':
 
         $qualID = required_param('qualID', PARAM_INT);
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
-        $Student = new \GT\User($id);
+        $Student = new \block_gradetracker\User($id);
         if (!$Student->isValid()) {
             print_error('invaliduser', 'block_gradetracker');
         }
@@ -86,7 +86,7 @@ switch ($type) {
 
         $page = optional_param('page', 1, PARAM_INT);
         $qualID = required_param('qualID', PARAM_INT);
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
@@ -107,7 +107,7 @@ switch ($type) {
         }
 
 
-        $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
         if (!$QualStructure->isEnabled()) {
@@ -159,7 +159,7 @@ switch ($type) {
         $canSeeWeightings = false;
         $hasWeightings = false;
 
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
@@ -175,7 +175,7 @@ switch ($type) {
         }
 
         // If the qualification has no units, display the assessment grid instead
-        $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
         if (!$QualStructure->isEnabled()) {
@@ -193,7 +193,7 @@ switch ($type) {
                 $hasWeightings = true;
                 $canSeeWeightings = \gt_has_capability('block/gradetracker:see_weighting_percentiles');
 
-                $TPL->set("weightingPercentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
+                $TPL->set("weightingPercentiles", \block_gradetracker\Setting::getSetting('qual_weighting_percentiles'));
 
             }
 
@@ -328,6 +328,6 @@ $TPL->set("GT", $GT)
 try {
     $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/print.html' );
     $TPL->display();
-} catch (\GT\GTException $e) {
+} catch (\block_gradetracker\GTException $e) {
     echo $e->getException();
 }

@@ -28,32 +28,32 @@ $elements = array(
 
     'avggcse' => array(
         'file' => '/blocks/gradetracker/classes/bc_dashboard/avggcse.php',
-        'class' => '\GT\bc_dashboard\avggcse',
+        'class' => '\block_gradetracker\bc_dashboard\avggcse',
     ),
 
     'grade' => array(
         'file' => '/blocks/gradetracker/classes/bc_dashboard/grade.php',
-        'class' => '\GT\bc_dashboard\grade',
+        'class' => '\block_gradetracker\bc_dashboard\grade',
     ),
 
     'listofquals' => array(
         'file' => '/blocks/gradetracker/classes/bc_dashboard/listofquals.php',
-        'class' => '\GT\bc_dashboard\listofquals',
+        'class' => '\block_gradetracker\bc_dashboard\listofquals',
     ),
 
     'numberofqoe' => array(
         'file' => '/blocks/gradetracker/classes/bc_dashboard/numberofqoe.php',
-        'class' => '\GT\bc_dashboard\numberofqoe',
+        'class' => '\block_gradetracker\bc_dashboard\numberofqoe',
     ),
 
     'award' => array(
         'file' => '/blocks/gradetracker/classes/bc_dashboard/award.php',
-        'class' => '\GT\bc_dashboard\award',
+        'class' => '\block_gradetracker\bc_dashboard\award',
     ),
 
     'valueadded' => array(
         'file' => '/blocks/gradetracker/classes/bc_dashboard/valueadded.php',
-        'class' => '\GT\bc_dashboard\valueadded',
+        'class' => '\block_gradetracker\bc_dashboard\valueadded',
     ),
 
 

@@ -221,7 +221,7 @@
                 <tr>
                     <th><?php echo $string['qualification'] ?></th>
                     <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
-                        <th style="background-color:<?php echo \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $i ?></th>
+                        <th style="background-color:<?php echo \block_gradetracker\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $i ?></th>
                     <?php endfor; ?>
                 </tr>
                 <?php foreach($allQualifications as $qual): ?>
@@ -229,7 +229,7 @@
                         <tr>
                             <td class='gt_qual_name'><?php echo $qual->getDisplayName() ?></td>
                             <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
-                                <td style="background-color:<?php echo \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $qual->getAttribute('coefficient_'.$i) ?></td>
+                                <td style="background-color:<?php echo \block_gradetracker\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $qual->getAttribute('coefficient_'.$i) ?></td>
                             <?php endfor; ?>
                         </tr>
                     <?php endif; ?>
@@ -427,7 +427,7 @@
                                 <?php if ($hasWeightings && \gt_has_capability('block/gradetracker:see_weighting_percentiles')): ?>
 
                                     <?php if($percentile = $qual->getUserAssessmentWeightingPercentile(null, 'summary')): ?>
-                                        <td class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                                        <td class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
                                             <?php echo $percentile->percentile ?>
                                         </td>
                                     <?php else: ?>
@@ -438,7 +438,7 @@
                                     <?php if ($Qualification->isFeatureEnabledByName('cetagrades')): ?>
 
                                         <?php if($percentile = $qual->getUserAssessmentCetaWeightingPercentile(null, 'summary')): ?>
-                                            <td class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
+                                            <td class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($percentile->percentile)) ?>;">
                                                 <?php echo $percentile->percentile ?>
                                             </td>
                                         <?php else: ?>

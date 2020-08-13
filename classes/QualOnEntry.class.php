@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -122,7 +122,7 @@ class QualOnEntry {
 
     /**
      * Save user's record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function save() {
@@ -156,7 +156,7 @@ class QualOnEntry {
 
     /**
      * Get a user's record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $userID
      * @param type $subjectID
      * @return type
@@ -166,7 +166,7 @@ class QualOnEntry {
         global $DB;
 
         $record = $DB->get_record("bcgt_user_qoe", array("userid" => $userID, "qoesubjectid" => $subjectID));
-        return ($record) ? new \GT\QualOnEntry($record->id) : false;
+        return ($record) ? new \block_gradetracker\QualOnEntry($record->id) : false;
 
     }
 
@@ -196,7 +196,7 @@ class QualOnEntry {
 
     /**
      * Get all the QoE subjects
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function getAllSubjects() {
@@ -208,7 +208,7 @@ class QualOnEntry {
 
     /**
      * Get a QoE subject record id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $subject
      * @return type
      */
@@ -231,7 +231,7 @@ class QualOnEntry {
 
     /**
      * Save a subject record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $id
      * @param type $name
      * @return type
@@ -255,7 +255,7 @@ class QualOnEntry {
 
     /**
      * Delete subjects that we haven't saved
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $idArray
      */
     public static function deleteSubjectsNotSaved($idArray) {
@@ -275,7 +275,7 @@ class QualOnEntry {
 
     /**
      * Create a QoE grade record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $grade
      * @return type
@@ -292,7 +292,7 @@ class QualOnEntry {
 
     /**
      * Get all the QoE types
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function getAllTypes() {
@@ -322,7 +322,7 @@ class QualOnEntry {
 
     /**
      * Save a type record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $id
      * @param type $name
      * @return type
@@ -348,7 +348,7 @@ class QualOnEntry {
 
     /**
      * Create a QOE type record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $name
      * @param type $type
      * @param int $level
@@ -370,7 +370,7 @@ class QualOnEntry {
 
     /**
      * Delete types that we haven't saved
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $idArray
      */
     public static function deleteTypesNotSaved($idArray) {
@@ -393,7 +393,7 @@ class QualOnEntry {
 
     /**
      * Get all the QoE grades
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function getAllGrades() {
@@ -406,7 +406,7 @@ class QualOnEntry {
 
     /**
      * Get a QoE grade record id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $grade
      * @return type
@@ -421,7 +421,7 @@ class QualOnEntry {
 
     /**
      * Save a grade record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $id
      * @param type $name
      * @return type
@@ -449,7 +449,7 @@ class QualOnEntry {
 
     /**
      * Create a QoE grade record
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $grade
      * @return type
@@ -470,7 +470,7 @@ class QualOnEntry {
 
     /**
      * Delete grades that we haven't saved
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $idArray
      */
     public static function deleteGradesNotSaved($idArray) {
@@ -490,7 +490,7 @@ class QualOnEntry {
 
     /**
      * Delete the QoE data for a user
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $userID
      * @return type
      */

@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -116,7 +116,7 @@ class Course {
     public function getCategory() {
 
         if (!$this->courseCategory) {
-            $this->courseCategory = new \GT\CourseCategory($this->category);
+            $this->courseCategory = new \block_gradetracker\CourseCategory($this->category);
         }
 
         return $this->courseCategory;
@@ -257,7 +257,7 @@ class Course {
 
     /**
      * Load qualifications on this course from the DB
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param bool $children DO we want to get them off any child courses as well?
      */
     private function loadCourseQualifications($children = false) {
@@ -269,7 +269,7 @@ class Course {
         $records = $DB->get_records("bcgt_course_quals", array("courseid" => $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\Qualification\UserQualification($record->qualid);
+                $obj = new \block_gradetracker\Qualification\UserQualification($record->qualid);
                 $structure = $obj->getStructure();
                 if ($obj->isValid() && !$obj->isDeleted() && $structure->isEnabled()) {
                     $this->quals[$obj->getID()] = $obj;
@@ -285,7 +285,7 @@ class Course {
                     $records = $DB->get_records("bcgt_course_quals", array("courseid" => $child->id));
                     if ($records) {
                         foreach ($records as $record) {
-                            $obj = new \GT\Qualification\UserQualification($record->qualid);
+                            $obj = new \block_gradetracker\Qualification\UserQualification($record->qualid);
                             if ($obj->isValid() && !$obj->isDeleted()) {
                                 $this->quals[$obj->getID()] = $obj;
                             }
@@ -297,7 +297,7 @@ class Course {
         }
 
         // Order them
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortQualifications($this->quals);
 
     }
@@ -344,9 +344,9 @@ class Course {
 
     /**
      * Get the students on this course, on any role as defined in our student role setting
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @global type $GT
-     * @return \GT\User
+     * @return \block_gradetracker\User
      */
     public function getStudents($direct = false, $reload = false) {
 
@@ -390,7 +390,7 @@ class Course {
 
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\User($record->id);
+                $obj = new \block_gradetracker\User($record->id);
                 if ($obj->isValid()) {
                     $return[$obj->id] = $obj;
                 }
@@ -412,9 +412,9 @@ class Course {
 
 
     /** Get the students on this course, on any role as defined in our student role setting
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @global type $GT
-     * @return \GT\User
+     * @return \block_gradetracker\User
      */
     public function getStaff($reload = false) {
 
@@ -453,7 +453,7 @@ class Course {
 
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\User($record->id);
+                $obj = new \block_gradetracker\User($record->id);
                 if ($obj->isValid()) {
                     $return[$obj->id] = $obj;
                 }
@@ -525,7 +525,7 @@ class Course {
 
     /**
      * Load the child courses of this course and any of its children, recursively
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $courseID
      * @param type $courses
      * @param bool $recursion Use recursion to get lower levels?
@@ -545,7 +545,7 @@ class Course {
 
             if ($childCourses) {
                 foreach ($childCourses as $child) {
-                    $obj = new \GT\Course($child->id);
+                    $obj = new \block_gradetracker\Course($child->id);
                     if ($obj->isValid()) {
 
                         // Add to array
@@ -573,7 +573,7 @@ class Course {
 
             if ($childCourses) {
                 foreach ($childCourses as $child) {
-                    $obj = new \GT\Course($child->id);
+                    $obj = new \block_gradetracker\Course($child->id);
                     if ($obj->isValid()) {
 
                         // Add to array
@@ -599,7 +599,7 @@ class Course {
 
     /**
      * Load the parent courses of this course and any of its parents, recursively
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $courseID
      * @param type $courses
      * @return type
@@ -618,7 +618,7 @@ class Course {
 
             if ($parentCourses) {
                 foreach ($parentCourses as $parent) {
-                    $obj = new \GT\Course($parent->id);
+                    $obj = new \block_gradetracker\Course($parent->id);
                     if ($obj->isValid()) {
 
                         // Add to array
@@ -646,7 +646,7 @@ class Course {
 
             if ($parentCourses) {
                 foreach ($parentCourses as $parent) {
-                    $obj = new \GT\Course($parent->id);
+                    $obj = new \block_gradetracker\Course($parent->id);
                     if ($obj->isValid()) {
 
                         // Add to array
@@ -669,8 +669,8 @@ class Course {
 
     /**
      * Save the user unit form
-     * @global \GT\type $DB
-     * @global \GT\type $MSGS
+     * @global \block_gradetracker\type $DB
+     * @global \block_gradetracker\type $MSGS
      */
     public function saveFormUserUnits() {
 
@@ -698,7 +698,7 @@ class Course {
 
                         if ($users) {
                             foreach ($users as $userID) {
-                                $user = new \GT\User($userID);
+                                $user = new \block_gradetracker\User($userID);
                                 if ($user->isValid()) {
                                     $user->addToQualUnit($qualID, $unitID, "STUDENT");
                                 }
@@ -729,7 +729,7 @@ class Course {
 
                         if ($users) {
                             foreach ($users as $userID) {
-                                $user = new \GT\User($userID);
+                                $user = new \block_gradetracker\User($userID);
                                 if ($user->isValid()) {
                                     $user->addToQualUnit($qualID, $unitID, "STAFF");
                                 }
@@ -746,11 +746,11 @@ class Course {
         $MSGS['success'] = get_string('userunitssaved', 'block_gradetracker');
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS;
         $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $this->id);
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
 
@@ -758,7 +758,7 @@ class Course {
 
     /**
      * Remove any user qualification links we didn't tick this time
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $users
      * @param type $role
      */
@@ -821,8 +821,8 @@ class Course {
 
     /**
      * Save the user qualification form
-     * @global \GT\type $DB
-     * @global \GT\type $MSGS
+     * @global \block_gradetracker\type $DB
+     * @global \block_gradetracker\type $MSGS
      */
     public function saveFormUserQuals() {
 
@@ -847,7 +847,7 @@ class Course {
 
                     foreach ($users as $userID) {
 
-                        $user = new \GT\User($userID);
+                        $user = new \block_gradetracker\User($userID);
                         if ($user->isValid()) {
                             $user->addToQual($qualID, "STUDENT");
                         }
@@ -876,7 +876,7 @@ class Course {
 
                     foreach ($users as $userID) {
 
-                        $user = new \GT\User($userID);
+                        $user = new \block_gradetracker\User($userID);
                         if ($user->isValid()) {
                             $user->addToQual($qualID, "STAFF");
                         }
@@ -894,11 +894,11 @@ class Course {
         $MSGS['success'] = get_string('userqualssaved', 'block_gradetracker');
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS;
         $Log->afterjson = $_POST; // This usage of $_POST is just to store submitted data in a log.
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $this->id);
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
 
@@ -906,7 +906,7 @@ class Course {
 
     /**
      * Remove any user qualification links we didn't tick this time
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $users
      */
     private function removeOldUserQuals($users, $role) {
@@ -957,7 +957,7 @@ class Course {
 
                     if ($removed) {
                         foreach ($removed as $userID) {
-                            $user = new \GT\User($userID);
+                            $user = new \block_gradetracker\User($userID);
                             $user->removeFromQual($qualID, $role);
                         }
                     }
@@ -972,7 +972,7 @@ class Course {
 
     /**
      * Add a link between this course and a given qualID
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @return boolean
      */
@@ -988,21 +988,21 @@ class Course {
             $ins->qualid = $qualID;
             $course_qual = $DB->insert_record("bcgt_course_quals", $ins);
 
-            $GT = new \GT\GradeTracker();
+            $GT = new \block_gradetracker\GradeTracker();
 
             if ($GT->getSetting('use_auto_enrol_quals') == 1) {
 
                 $students = $this->getStudents();
 
                 foreach ($students as $student) {
-                    $GT_User = new \GT\User($student->id);
+                    $GT_User = new \block_gradetracker\User($student->id);
                     $GT_User->addToQual($qualID, "STUDENT");
                 }
 
                 $staffs = $this->getStaff();
 
                 foreach ($staffs as $staff) {
-                    $GT_User = new \GT\User($staff->id);
+                    $GT_User = new \block_gradetracker\User($staff->id);
                     $GT_User->addToQual($qualID, "STAFF");
                 }
 
@@ -1010,13 +1010,13 @@ class Course {
 
             if ($GT->getSetting('use_auto_enrol_units') == 1) {
 
-                $Qual = new \GT\Qualification($qualID);
+                $Qual = new \block_gradetracker\Qualification($qualID);
                 $units = $Qual->getUnits();
 
                 $students = $this->getStudents();
 
                 foreach ($students as $student) {
-                    $GT_User = new \GT\User($student->id);
+                    $GT_User = new \block_gradetracker\User($student->id);
 
                     foreach ($units as $unit) {
                         $GT_User->addToQualUnit($qualID, $unit->getID(), "STUDENT");
@@ -1026,7 +1026,7 @@ class Course {
                 $staffs = $this->getStaff();
 
                 foreach ($staffs as $staff) {
-                    $GT_User = new \GT\User($staff->id);
+                    $GT_User = new \block_gradetracker\User($staff->id);
 
                     foreach ($units as $unit) {
                         $GT_User->addToQualUnit($qualID, $unit->getID(), "STAFF");
@@ -1044,7 +1044,7 @@ class Course {
 
     /**
      * Save the course quals form
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @global type $MSGS
      */
     public function saveFormCourseQuals() {
@@ -1066,11 +1066,11 @@ class Course {
         $MSGS['success'] = get_string('coursequalssaved', 'block_gradetracker');
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS;
         $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $this->id);
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
 
@@ -1079,7 +1079,7 @@ class Course {
     /**
      * Remove links to course quals that we didn't submit this time
      * Also if student is not linked to the qual on any other course, remove their qual link as well
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     private function removeOldCourseQuals($qualIDs) {
 
@@ -1112,7 +1112,7 @@ class Course {
     /**
      * Get an array of activities on the course, which can be linked up to the gradetracker (which have been
      * setup in the mod linking)
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function getSupportedActivities() {
 
@@ -1126,7 +1126,7 @@ class Course {
 
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\ModuleLink($record->linkid);
+                $obj = new \block_gradetracker\ModuleLink($record->linkid);
                 $obj->setRecordID($record->instance);
                 $obj->setCourseModID($record->id);
                 $return[] = $obj;
@@ -1144,9 +1144,9 @@ class Course {
 
     /**
      * Get specific activity on this course
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
-     * @return boolean|\GT\ModuleLink
+     * @return boolean|\block_gradetracker\ModuleLink
      */
     public function getActivity($cmID) {
 
@@ -1159,7 +1159,7 @@ class Course {
 
         if ($record) {
 
-            $obj = new \GT\ModuleLink($record->linkid);
+            $obj = new \block_gradetracker\ModuleLink($record->linkid);
             $obj->setRecordID($record->instance);
             $obj->setCourseModID($record->id);
             return $obj;
@@ -1172,7 +1172,7 @@ class Course {
 
     /**
      * Get a course module, based on the module type and instance id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $moduleID
      * @param type $instanceID
      * @return type
@@ -1189,7 +1189,7 @@ class Course {
      * Search for courses
      * @global type $DB
      * @param type $params
-     * @return \GT\Course
+     * @return \block_gradetracker\Course
      */
     public static function search($params = false) {
 
@@ -1237,7 +1237,7 @@ class Course {
         $records = $DB->get_records_sql($sql, $sqlParams, 0, $limit);
         if ($records) {
             foreach ($records as $record) {
-                $course = new \GT\Course($record->id);
+                $course = new \block_gradetracker\Course($record->id);
                 if ($course->isValid()) {
 
                     $return[$course->id] = $course;
@@ -1266,7 +1266,7 @@ class Course {
 
         // Order them again as parent courses will have messed up order
         if (isset($params['hasQual']) && $params['hasQual'] == true) {
-            $Sorter = new \GT\Sorter();
+            $Sorter = new \block_gradetracker\Sorter();
             $Sorter->sortCourses($return);
         }
 
@@ -1297,7 +1297,7 @@ class Course {
      */
     public static function getNameById($cID) {
 
-        $obj = new \GT\Course($cID);
+        $obj = new \block_gradetracker\Course($cID);
         return ($obj->isValid()) ? $obj->getName() : false;
 
     }
@@ -1317,7 +1317,7 @@ class Course {
         }
 
         if ($result) {
-            $course = new \GT\Course($result->id);
+            $course = new \block_gradetracker\Course($result->id);
             return $course;
         }
 
@@ -1327,7 +1327,7 @@ class Course {
 
     /**
      * Count all non-deleted & active (confirmed) users
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function countCourses() {

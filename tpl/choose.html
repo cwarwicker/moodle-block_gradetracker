@@ -172,7 +172,7 @@
 
                                     <?php if ($cID > 0): ?>
                                         <h3 class="gt_form_heading">
-                                            <a href="<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $cID ?>"><?php echo \GT\Course::getNameById($cID) ?></a>
+                                            <a href="<?php echo $CFG->wwwroot ?>/course/view.php?id=<?php echo $cID ?>"><?php echo \block_gradetracker\Course::getNameById($cID) ?></a>
                                         </h3>
                                     <?php endif; ?>
 
@@ -180,7 +180,7 @@
 
                                         <?php foreach($quals as $qID => $rows): ?>
 
-                                            <h4 class="gt_form_heading <?php echo (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?php echo \GT\Qualification::getNameByID($qID) ?></h4>
+                                            <h4 class="gt_form_heading <?php echo (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?php echo \block_gradetracker\Qualification::getNameByID($qID) ?></h4>
 
                                             <?php if ($rows): ?>
 
@@ -208,7 +208,7 @@
                                                                 <?php endif; ?>
                                                             </td>
 
-                                                            <?php if (\GT\Qualification::hasAssessments($qID)): ?>
+                                                            <?php if (\block_gradetracker\Qualification::hasAssessments($qID)): ?>
                                                                 <td>
                                                                     <?php if($User->canAccessQual($qID, 'STAFF')): ?>
                                                                         <a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/grid.php?type=student&id=<?php echo $row->id ?>&qualID=<?php echo $qID ?>&courseID=<?php echo $courseID ?>&ass=1" target="_blank"><?php echo $string['assessmentgrid'] ?></a>
@@ -246,14 +246,14 @@
                                 <?php foreach($results as $cID => $quals): ?>
 
                                     <?php if ($cID > 0): ?>
-                                        <h3 class="gt_form_heading"><?php echo \GT\Course::getNameById($cID) ?></h3>
+                                        <h3 class="gt_form_heading"><?php echo \block_gradetracker\Course::getNameById($cID) ?></h3>
                                     <?php endif; ?>
 
                                     <?php if ($quals): ?>
 
                                         <?php foreach($quals as $qID => $units): ?>
 
-                                            <h4 class="gt_form_heading <?php echo (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?php echo \GT\Qualification::getNameByID($qID) ?></h4>
+                                            <h4 class="gt_form_heading <?php echo (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?php echo \block_gradetracker\Qualification::getNameByID($qID) ?></h4>
 
                                             <?php if ($units): ?>
 
@@ -310,14 +310,14 @@
                                 <?php foreach($results as $cID => $quals): ?>
 
                                     <?php if ($cID > 0): ?>
-                                        <h3 class="gt_form_heading"><?php echo \GT\Course::getNameById($cID) ?></h3>
+                                        <h3 class="gt_form_heading"><?php echo \block_gradetracker\Course::getNameById($cID) ?></h3>
                                     <?php endif; ?>
 
                                     <?php if ($quals): ?>
 
                                         <?php foreach($quals as $qID => $qual): ?>
 
-                                            <h4 class="gt_form_heading <?php echo (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?php echo \GT\Qualification::getNameByID($qID) ?></h4>
+                                            <h4 class="gt_form_heading <?php echo (!$User->isOnQual($qID, 'STAFF')) ? 'gt_no_access' : ''; ?>"><?php echo \block_gradetracker\Qualification::getNameByID($qID) ?></h4>
 
                                                 <table class="gt_filter_results">
 

@@ -79,7 +79,7 @@ class elbp_gradetracker extends Plugin {
 
         $TPL = new \ELBP\Template();
 
-        $user = new \GT\User($this->student->id);
+        $user = new \block_gradetracker\User($this->student->id);
 
         $quals = $user->getQualifications("STUDENT");
 
@@ -105,7 +105,7 @@ class elbp_gradetracker extends Plugin {
 
         $TPL = new \ELBP\Template();
 
-        $user = new \GT\User($this->student->id);
+        $user = new \block_gradetracker\User($this->student->id);
 
         $quals = $user->getQualifications("STUDENT");
 
@@ -163,7 +163,7 @@ class elbp_gradetracker extends Plugin {
     public function ajax($action, $params, $ELBP) {
         global $DB, $USER, $GT;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         switch ($action) {
 
@@ -180,7 +180,7 @@ class elbp_gradetracker extends Plugin {
                     return false;
                 }
 
-                $TPL = new \GT\Template();
+                $TPL = new \block_gradetracker\Template();
                 $TPL->set("obj", $this)
                     ->set("access", $access);
 
@@ -203,11 +203,11 @@ class elbp_gradetracker extends Plugin {
 
     private function loadTracker($qualID, $TPL) {
 
-        $UserQualification = new \GT\Qualification\UserQualification($qualID);
+        $UserQualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if ($UserQualification->isValid()) {
 
             $params = array(
-                'student' => new \GT\User($this->student->id),
+                'student' => new \block_gradetracker\User($this->student->id),
                 'TPL' => $TPL,
                 'courseID' => ($this->course) ? $this->course->id : 0,
                 'access' => 'v'
@@ -265,7 +265,7 @@ class elbp_gradetracker extends Plugin {
 
         $array = array();
 
-        $Student = new \GT\User($this->student->id);
+        $Student = new \block_gradetracker\User($this->student->id);
         $records = $Student->getAllUserGrades($type, array('courseID' => $courseID));
 
         if ($records) {
@@ -273,7 +273,7 @@ class elbp_gradetracker extends Plugin {
             foreach ($records as $record) {
 
                 $qual = (isset($record['record']->qualid))
-                    ? new \GT\Qualification($record['record']->qualid)
+                    ? new \block_gradetracker\Qualification($record['record']->qualid)
                     : false;
 
                 // Make sure the qualification is valid and the student is still on the qual
@@ -344,7 +344,7 @@ class elbp_gradetracker extends Plugin {
             return false;
         }
 
-        $Student = new \GT\User($this->student->id);
+        $Student = new \block_gradetracker\User($this->student->id);
 
         $quals = $Student->getQualifications("STUDENT");
 

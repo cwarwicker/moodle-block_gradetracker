@@ -44,7 +44,7 @@ if (!$settings['data']) {
 // However, let's sanitise it anyway.
 $settings['data'] = gt_sanitise_path($settings['data']);
 
-$contents = file_get_contents( \GT\GradeTracker::dataroot() . '/tmp/data/' . $settings['data'] . '.data' );
+$contents = file_get_contents( \block_gradetracker\GradeTracker::dataroot() . '/tmp/data/' . $settings['data'] . '.data' );
 if ($contents) {
     $data = unserialize($contents);
     if ($data) {
@@ -69,13 +69,13 @@ if ($contents) {
 
                 switch ($settings['context']) {
                     case 'qual':
-                        $obj = new \GT\Qualification($row->{$settings['field']});
+                        $obj = new \block_gradetracker\Qualification($row->{$settings['field']});
                         if ($obj->isValid()) {
                             echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=quals&section=edit&id={$row->{$settings['field']}}' target='_blank'>[{$obj->getID()}] ".$obj->getDisplayName() . "</a><br>";
                         }
                         break;
                     case 'unit':
-                        $obj = new \GT\Unit($row->{$settings['field']});
+                        $obj = new \block_gradetracker\Unit($row->{$settings['field']});
                         if ($obj->isValid()) {
                             echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/config.php?view=units&section=edit&id={$row->{$settings['field']}}' target='_blank'>[{$obj->getID()}] ".$obj->getDisplayName() . "</a><br>";
                         }

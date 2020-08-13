@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 require_once($CFG->dirroot . '/lib/excellib.class.php');
 
@@ -31,7 +31,7 @@ class DataExport {
 
     /**
      * Select all the QoE records to export
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getUsersQoe() {
@@ -57,7 +57,7 @@ class DataExport {
 
     /**
      * Select all the QoE score records to export
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getUsersAverageGCSE() {
@@ -72,7 +72,7 @@ class DataExport {
 
     /**
      * Select all the Target Grade records to export
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getUsersTg($options = array()) {
@@ -145,7 +145,7 @@ class DataExport {
 
     /**
      * Select all the aspirational grades to export
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getUsersAg() {
@@ -174,7 +174,7 @@ class DataExport {
 
     /**
      * Select all the CETA grades to export
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getUsersCg() {
@@ -207,7 +207,7 @@ class DataExport {
 
     /**
      * Select all the weighting coefficients to export
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getWCoe() {
@@ -302,7 +302,7 @@ class DataExport {
 
     /**
      * Download the target grade records in a CSV
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @param type $all_users_tg
      */
     public function downloadUsersTg($all_users_tg, $options) {
@@ -340,7 +340,7 @@ class DataExport {
 
     /**
      * Download the aspirational grades in a CSV
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @param type $all_users_ag
      */
     public function downloadUsersAg($all_users_ag) {
@@ -366,7 +366,7 @@ class DataExport {
 
     /**
      * Download the CETA grades in a CSV
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @param type $all_users_cg
      */
     public function downloadUsersCg($all_users_cg) {
@@ -408,7 +408,7 @@ class DataExport {
 
     /**
      * Download the weighting coefficients in a CSV
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @param type $all_wcoe
      */
     public function downloadWCoe($all_wcoe) {
@@ -434,7 +434,7 @@ class DataExport {
 
     /**
      * Download the assessment grades in a CSV
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @param type $data
      * @param type $names
      */
@@ -445,7 +445,7 @@ class DataExport {
             global $CFG;
 
             $file = fopen("{$CFG->dataroot}/gt_assgrades.csv", "w");
-            $headers = \GT\CSV\Template::$headersAssGrades;
+            $headers = \block_gradetracker\CSV\Template::$headersAssGrades;
 
             if ($names) {
                 $headers[] = 'First Name';
@@ -496,7 +496,7 @@ class DataExport {
             global $CFG;
 
             $file = fopen("{$CFG->dataroot}/gt_avggcse.csv", "w");
-            $headers = \GT\CSV\Template::$headersAvgGCSE;
+            $headers = \block_gradetracker\CSV\Template::$headersAvgGCSE;
             fputcsv($file, $headers);
 
             foreach ($data as $row) {

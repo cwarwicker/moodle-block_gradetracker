@@ -23,7 +23,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -67,7 +67,7 @@ class Execution
     public static function getInstance() {
 
         if (null === static::$instance) {
-            static::$instance = new \GT\Execution();
+            static::$instance = new \block_gradetracker\Execution();
         }
 
         return static::$instance;

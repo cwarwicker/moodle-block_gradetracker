@@ -30,7 +30,7 @@ function xmldb_block_gradetracker_install() {
 
     global $CFG, $DB;
 
-    $GT = new \GT\GradeTracker();
+    $GT = new \block_gradetracker\GradeTracker();
     $GT->install();
 
 }

@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -39,7 +39,7 @@ class Event {
         $this->event = $event;
         $this->params = $params;
 
-        $this->addListener( new \GT\RuleSet() );
+        $this->addListener( new \block_gradetracker\RuleSet() );
 
     }
 

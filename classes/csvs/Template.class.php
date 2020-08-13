@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT\CSV;
+namespace block_gradetracker\CSV;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -123,7 +123,7 @@ class Template {
      */
     public static function generateTemplateTargetGradesCSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/targetgrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/targetgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -149,7 +149,7 @@ class Template {
      */
     public static function generateTemplateAspirationalGradesCSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/aspirationalgrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/aspirationalgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -170,7 +170,7 @@ class Template {
 
     public static function generateTemplateCetaGradesCSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/cetagrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/cetagrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -196,7 +196,7 @@ class Template {
      */
     public static function generateTemplateQoECSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/qoe.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/qoe.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -222,7 +222,7 @@ class Template {
      */
     public static function generateTemplateWCoeCSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/wcoe.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/wcoe.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -248,7 +248,7 @@ class Template {
      */
     public static function generateTemplateAvgGCSECSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/avggcse.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/avggcse.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -274,7 +274,7 @@ class Template {
      */
     public static function generateTemplateAssGradesCSV($reload = false) {
 
-        $file = \GT\GradeTracker::dataroot() . '/csv/templates/assgrades.csv';
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/templates/assgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return

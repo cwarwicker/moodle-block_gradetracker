@@ -46,9 +46,9 @@ if (!confirm_sesskey($sesskey)) {
 $action = optional_param('action', false, PARAM_TEXT);
 $params = df_optional_param_array_recursive('params', false, PARAM_TEXT);
 
-$GT = new \GT\GradeTracker();
-$TPL = new \GT\Template();
-$User = new \GT\User($USER->id);
+$GT = new \block_gradetracker\GradeTracker();
+$TPL = new \block_gradetracker\Template();
+$User = new \block_gradetracker\User($USER->id);
 
 \gt_debug("Called update.php: " . print_r($_POST, true)); // This usage of $_POST is to store submitted data in a debugging log.
 
@@ -86,7 +86,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -122,12 +122,12 @@ switch($action) {
                 $award = reset($awards);
             } else {
                 // If we unticked it
-                $award = new \GT\CriteriaAward(0);
+                $award = new \block_gradetracker\CriteriaAward(0);
             }
 
         } else if ($value !== false) {
             // Using a select menu to send a value id instead
-            $award = new \GT\CriteriaAward($value);
+            $award = new \block_gradetracker\CriteriaAward($value);
         }
 
         // Do we have the permissions to edit this unit?
@@ -210,7 +210,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -224,7 +224,7 @@ switch($action) {
         }
 
         // Make sure the Assessment is valid
-        $Assessment = new \GT\Assessment($assessmentID);
+        $Assessment = new \block_gradetracker\Assessment($assessmentID);
         if (!$Assessment->isValid()) {
             exit;
         }
@@ -234,14 +234,14 @@ switch($action) {
         // If we're using a grading structure, check the award is valid
         if ($gradingMethod != 'numeric') {
             if ($type == 'grade') {
-                $award = new \GT\CriteriaAward($value);
+                $award = new \block_gradetracker\CriteriaAward($value);
                 // If we specified an actual value, then check if that value is valid
                 // Otherwise we passed through an invalid value in the first place, so must be setting to null
                 if ($value > 0 && !$award->isValid()) {
                     exit;
                 }
             } else if ($type == 'ceta') {
-                $award = new \GT\QualificationAward($value);
+                $award = new \block_gradetracker\QualificationAward($value);
                 // Same as above
                 if ($value > 0 && !$award->isValid()) {
                     exit;
@@ -297,7 +297,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -311,12 +311,12 @@ switch($action) {
         }
 
         // Make sure the Assessment is valid
-        $Assessment = new \GT\Assessment($assessmentID);
+        $Assessment = new \block_gradetracker\Assessment($assessmentID);
         if (!$Assessment->isValid()) {
             exit;
         }
 
-        $Field = new \GT\FormElement($fieldID);
+        $Field = new \block_gradetracker\FormElement($fieldID);
         if (!$Field->isValid()) {
             exit;
         }
@@ -349,7 +349,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -373,7 +373,7 @@ switch($action) {
             exit;
         }
 
-        $award = new \GT\UnitAward($value);
+        $award = new \block_gradetracker\UnitAward($value);
         $unit->setUserAward($award);
         $unit->saveUser();
 
@@ -426,7 +426,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -488,7 +488,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -544,7 +544,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -603,7 +603,7 @@ switch($action) {
                 }
 
                 // Load the UserQualification object and load the specified user into it
-                $Qualification = new \GT\Qualification\UserQualification($qualID);
+                $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
                 $Qualification->loadStudent($studentID);
 
                 // Make sure Qual & Student are valid
@@ -660,7 +660,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -718,7 +718,7 @@ switch($action) {
                 }
 
                 // Load the UserQualification object and load the specified user into it
-                $Qualification = new \GT\Qualification\UserQualification($qualID);
+                $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
                 $Qualification->loadStudent($studentID);
 
                 // Make sure Qual & Student are valid
@@ -786,7 +786,7 @@ switch($action) {
                 }
 
                 // Load the UserQualification object and load the specified user into it
-                $Qualification = new \GT\Qualification\UserQualification($qualID);
+                $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
 
                 // Make sure Qual
                 if (!$Qualification->isValid()) {
@@ -812,7 +812,7 @@ switch($action) {
                     exit;
                 }
 
-                $award = new \GT\CriteriaAward($valueID);
+                $award = new \block_gradetracker\CriteriaAward($valueID);
 
                 foreach ($students as $student) {
                     $Qualification->loadStudent($student);
@@ -861,7 +861,7 @@ switch($action) {
         }
 
         // Load the UserQualification object and load the specified user into it
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         $Qualification->loadStudent($studentID);
 
         // Make sure Qual & Student are valid
@@ -948,7 +948,7 @@ switch($action) {
 
     case 'update_user_grade':
 
-        $student = new \GT\User($params['sID']);
+        $student = new \block_gradetracker\User($params['sID']);
         if (!$student->isValid()) {
             exit;
         }
@@ -967,7 +967,7 @@ switch($action) {
             exit;
         }
 
-        $award = new \GT\QualificationAward($params['awardID']);
+        $award = new \block_gradetracker\QualificationAward($params['awardID']);
 
         // Set target grade
         $student->setUserGrade($params['type'], $params['awardID'], array('qualID' => $params['qID']));
@@ -990,7 +990,7 @@ switch($action) {
             exit;
         }
 
-        $student = new \GT\User($params['studentID']);
+        $student = new \block_gradetracker\User($params['studentID']);
         if (!$student->isValid()) {
             exit;
         }
@@ -1011,7 +1011,7 @@ switch($action) {
                 }
 
                 // Get qual and load student into it
-                $qual = new \GT\Qualification\UserQualification($params['qualID']);
+                $qual = new \block_gradetracker\Qualification\UserQualification($params['qualID']);
                 if (!$qual->isValid() || !$qual->loadStudent($params['studentID'])) {
                     exit;
                 }
@@ -1072,7 +1072,7 @@ switch($action) {
             exit;
         }
 
-        $file = \GT\GradeTracker::dataroot() . "/debug/{$USER->id}.txt";
+        $file = \block_gradetracker\GradeTracker::dataroot() . "/debug/{$USER->id}.txt";
         if (file_exists($file)) {
             file_put_contents($file, '');
         }
@@ -1089,7 +1089,7 @@ switch($action) {
             exit;
         }
 
-        $Site = new \GT\Site();
+        $Site = new \block_gradetracker\Site();
         $Site->load($params);
         $result = $Site->submit();
 

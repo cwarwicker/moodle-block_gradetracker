@@ -24,7 +24,7 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
@@ -108,7 +108,7 @@ abstract class Criterion {
     }
 
     public function getUnit() {
-        $unit = new \GT\Unit($this->unitID);
+        $unit = new \block_gradetracker\Unit($this->unitID);
         return ($unit->isValid()) ? $unit : false;
     }
 
@@ -118,7 +118,7 @@ abstract class Criterion {
             return false;
         }
 
-        $unit = new \GT\Unit\UserUnit($this->unitID);
+        $unit = new \block_gradetracker\Unit\UserUnit($this->unitID);
         if ($unit->isValid()) {
             $unit->setQualID($this->qualID);
             $unit->setQualStructureID($this->qualStructureID);
@@ -191,7 +191,7 @@ abstract class Criterion {
     }
 
     public function getQualification() {
-        $qual = new \GT\Qualification($this->qualID);
+        $qual = new \block_gradetracker\Qualification($this->qualID);
         return ($qual->isValid()) ? $qual : false;
     }
 
@@ -257,15 +257,15 @@ abstract class Criterion {
     }
 
     public function getUserLastUpdateBy() {
-        return new \GT\User($this->userLastUpdateBy);
+        return new \block_gradetracker\User($this->userLastUpdateBy);
     }
 
-    public function setUserAward(\GT\CriteriaAward $award) {
+    public function setUserAward(\block_gradetracker\CriteriaAward $award) {
         $this->userAward = $award;
     }
 
     public function setUserAwardID($id) {
-        $this->userAward = new \GT\CriteriaAward($id);
+        $this->userAward = new \block_gradetracker\CriteriaAward($id);
     }
 
     public function setUserAwardDate($date) {
@@ -308,7 +308,7 @@ abstract class Criterion {
     /**
      * Set the dynamic number of the parent, to be later converted to an actual ID
      * @param type $num
-     * @return \GT\Criterion
+     * @return \block_gradetracker\Criterion
      */
     public function setParentNumber($num) {
         $this->parentNumber = $num;
@@ -326,7 +326,7 @@ abstract class Criterion {
     /**
      * Set the dynamic number of the criterion from the unit form
      * @param type $num
-     * @return \GT\Criterion
+     * @return \block_gradetracker\Criterion
      */
     public function setDynamicNumber($num) {
         $this->dynamicNumber = $num;
@@ -372,7 +372,7 @@ abstract class Criterion {
     public function getGradingStructure() {
 
         if ($this->gradingStructure === false) {
-            $this->gradingStructure = new \GT\CriteriaAwardStructure($this->getGradingStructureID());
+            $this->gradingStructure = new \block_gradetracker\CriteriaAwardStructure($this->getGradingStructureID());
         }
 
         return $this->gradingStructure;
@@ -485,7 +485,7 @@ abstract class Criterion {
         }
 
         // Sort the children
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortCriteria($this->children);
 
     }
@@ -522,7 +522,7 @@ abstract class Criterion {
 
     /**
      * Load a student into the userunit object
-     * @param \GT\User $student
+     * @param \block_gradetracker\User $student
      */
     public function loadStudent($student) {
 
@@ -530,7 +530,7 @@ abstract class Criterion {
         $this->clearStudent();
 
         // Might be a User object we passed in
-        if ($student instanceof \GT\User) {
+        if ($student instanceof \block_gradetracker\User) {
 
             if ($student->isValid()) {
                 $this->student = $student;
@@ -539,7 +539,7 @@ abstract class Criterion {
         } else {
 
             // Or might be just an ID
-            $user = new \GT\User($student);
+            $user = new \block_gradetracker\User($student);
             if ($user->isValid()) {
                 $this->student = $user;
             }
@@ -556,7 +556,7 @@ abstract class Criterion {
             if ($record) {
 
                 $this->userCriteriaRowID = $record->id;
-                $this->userAward = new \GT\CriteriaAward($record->awardid);
+                $this->userAward = new \block_gradetracker\CriteriaAward($record->awardid);
                 $this->userAwardDate = $record->awarddate;
                 $this->userComments = $record->comments;
                 $this->userCustomValue = $record->customvalue;
@@ -566,7 +566,7 @@ abstract class Criterion {
                 $this->userLastUpdateBy = $record->lastupdateby;
 
             } else {
-                $this->userAward = new \GT\CriteriaAward(0);
+                $this->userAward = new \block_gradetracker\CriteriaAward(0);
             }
 
         }
@@ -621,7 +621,7 @@ abstract class Criterion {
 
     /**
      * Check if this criterion has any activity links
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function hasActivityLink($qualID) {
@@ -633,7 +633,7 @@ abstract class Criterion {
 
     /**
      * Check if this criterion has any activity links
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getActivityLinks($qualID) {
@@ -704,7 +704,7 @@ abstract class Criterion {
      */
     public function getPossibleValues($metOnly = false) {
 
-        $GradingStructure = new \GT\CriteriaAwardStructure($this->gradingStructureID);
+        $GradingStructure = new \block_gradetracker\CriteriaAwardStructure($this->gradingStructureID);
         if (!$GradingStructure->isValid()) {
             return false;
         }
@@ -715,7 +715,7 @@ abstract class Criterion {
 
     /**
      * Load all attributes of this criterion
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function loadAttributes() {
 
@@ -794,7 +794,7 @@ abstract class Criterion {
 
     /**
      * Update/Set an attribute for this criterion
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $value
      * @param type $userID
@@ -808,9 +808,9 @@ abstract class Criterion {
 
         // ------------ Logging Info
         if (!is_null($userID)) {
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
             $Log->beforejson = array(
                 $attribute => ($check) ? $check->value : null
             );
@@ -840,10 +840,10 @@ abstract class Criterion {
             );
 
             $Log->attributes = array(
-                    \GT\Log::GT_LOG_ATT_QUALID => $this->qualID,
-                    \GT\Log::GT_LOG_ATT_UNITID => $this->unitID,
-                    \GT\Log::GT_LOG_ATT_CRITID => $this->id,
-                    \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                    \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualID,
+                    \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->unitID,
+                    \block_gradetracker\Log::GT_LOG_ATT_CRITID => $this->id,
+                    \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
                 );
 
             $Log->save();
@@ -862,7 +862,7 @@ abstract class Criterion {
      */
     public function hasNoErrors($parent = false) {
 
-        $QualStructure = new \GT\QualificationStructure($this->qualStructureID);
+        $QualStructure = new \block_gradetracker\QualificationStructure($this->qualStructureID);
         if (!$QualStructure->isValid()) {
             $this->errors[] = sprintf( get_string('errors:crit:structure', 'block_gradetracker'), $this->name );
         }
@@ -900,7 +900,7 @@ abstract class Criterion {
         }
 
         // Now make sure we haven't gone over the maximum number of sub criteria
-        $levelObj = new \GT\QualificationStructureLevel($this->type);
+        $levelObj = new \block_gradetracker\QualificationStructureLevel($this->type);
         if (!$levelObj->isValid()) {
             $this->errors[] = sprintf( get_string('errors:crit:level', 'block_gradetracker'), $this->name );
         }
@@ -924,7 +924,7 @@ abstract class Criterion {
         }
 
         // Check grading type
-        $GradingTypes = \GT\CriteriaAward::getSupportedGradingTypes();
+        $GradingTypes = \block_gradetracker\CriteriaAward::getSupportedGradingTypes();
         if (!in_array($this->getAttribute('gradingtype'), $GradingTypes)) {
             $this->errors[] = sprintf( get_string('errors:crit:gradingtype', 'block_gradetracker'), $this->name );
         }
@@ -967,7 +967,7 @@ abstract class Criterion {
 
     /**
      * Save the criterion
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function save() {
@@ -1013,7 +1013,7 @@ abstract class Criterion {
 
     /**
      * Save changes to the user's criteria
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @global type $USER
      * @param boolean $saveOnly Only do the saving, not the auto calculations or rules or anything like that
      * @return boolean
@@ -1023,9 +1023,9 @@ abstract class Criterion {
         global $DB, $USER;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_CRIT;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_CRIT;
         $Log->beforejson = array(
             'awardid' => ($this->_userRow) ? $this->_userRow->awardid : null,
             'awarddate' => ($this->_userRow) ? $this->_userRow->awarddate : null,
@@ -1074,7 +1074,7 @@ abstract class Criterion {
         // So we do it if no parents, that way if it's just a singular criterion with no parents it does it
         // Otherwise it keeps autocalculating through until the top level, with no parents and does it then
         if ( (!$parents && !$noEvent) || $noEvent === 'force' ) {
-            $Event = new \GT\Event( GT_EVENT_CRIT_UPDATE, array(
+            $Event = new \block_gradetracker\Event( GT_EVENT_CRIT_UPDATE, array(
                 'sID' => $this->student->id,
                 'qID' => $this->qualID,
                 'uID' => $this->unitID,
@@ -1113,10 +1113,10 @@ abstract class Criterion {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualID,
-                \GT\Log::GT_LOG_ATT_UNITID => $this->unitID,
-                \GT\Log::GT_LOG_ATT_CRITID => $this->id,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualID,
+                \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->unitID,
+                \block_gradetracker\Log::GT_LOG_ATT_CRITID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -1146,7 +1146,7 @@ abstract class Criterion {
             return false;
         }
 
-        $filter = new \GT\Filter();
+        $filter = new \block_gradetracker\Filter();
         $children = $filter->filterCriteriaNotReadOnly($children);
 
         $userAward = false;
@@ -1177,7 +1177,7 @@ abstract class Criterion {
             return false;
         }
 
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortCriteriaValues($possibleAwardArray, 'asc');
 
         $maxPoints = $gradingStructure->getMaxPoints();
@@ -1578,9 +1578,9 @@ abstract class Criterion {
 
     /**
      * Load the correct Criterion object for this criterion, based on its type
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $id
-     * @return boolean|\GT\Criteria\StandardCriterion
+     * @return boolean|\block_gradetracker\Criteria\StandardCriterion
      */
     public static function load($id = false, $type = false, $forceTypeChange = false) {
 
@@ -1616,15 +1616,15 @@ abstract class Criterion {
         switch ($type) {
 
             case 'Standard':
-                return new \GT\Criteria\StandardCriterion($id);
+                return new \block_gradetracker\Criteria\StandardCriterion($id);
             break;
 
             case 'Numeric':
-                return new \GT\Criteria\NumericCriterion($id);
+                return new \block_gradetracker\Criteria\NumericCriterion($id);
             break;
 
             case 'Ranged':
-                return new \GT\Criteria\RangedCriterion($id);
+                return new \block_gradetracker\Criteria\RangedCriterion($id);
             break;
 
         }
@@ -1636,7 +1636,7 @@ abstract class Criterion {
 
     /**
      * Count non-deleted criteria in system
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function countCriteria() {

@@ -24,11 +24,11 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Criteria;
+namespace block_gradetracker\Criteria;
 
 defined('MOODLE_INTERNAL') or die();
 
-class RangedCriterion extends \GT\Criterion {
+class RangedCriterion extends \block_gradetracker\Criterion {
 
     /**
      * Construct the object
@@ -81,7 +81,7 @@ class RangedCriterion extends \GT\Criterion {
         parent::hasNoErrors($parent);
 
         // Check grading structure - Can be blank - This will mean a readonly criterion
-        $QualStructure = new \GT\QualificationStructure($this->qualStructureID);
+        $QualStructure = new \block_gradetracker\QualificationStructure($this->qualStructureID);
         $GradingStructures = $QualStructure->getCriteriaGradingStructures();
 
         // Ranged criteria cannot be readonly
@@ -106,7 +106,7 @@ class RangedCriterion extends \GT\Criterion {
             foreach ($criterion['ranges'] as $rNum => $range) {
 
                 $id = (isset($range['id'])) ? $range['id'] : false;
-                $subObj = new \GT\Criteria\RangedCriterion($id);
+                $subObj = new \block_gradetracker\Criteria\RangedCriterion($id);
                 $subObj->setQualStructureID($this->qualStructureID);
                 $subObj->setType($this->type);
                 $subObj->setName($range['name']);
@@ -125,7 +125,7 @@ class RangedCriterion extends \GT\Criterion {
                     foreach ($range['criteria'] as $sRNum => $rangeCriterion) {
 
                         $id = (isset($rangeCriterion['id'])) ? $rangeCriterion['id'] : false;
-                        $subSubObj = new \GT\Criteria\RangedCriterion($id);
+                        $subSubObj = new \block_gradetracker\Criteria\RangedCriterion($id);
                         $subSubObj->setQualStructureID($this->qualStructureID);
                         $subSubObj->setType($this->type);
                         $subSubObj->setName($rangeCriterion['name']);
@@ -205,7 +205,7 @@ class RangedCriterion extends \GT\Criterion {
                         $chk = ($userValue == $value->getID()) ? 'checked' : '';
                         $output .= "<input class='gt_criterion_checkbox' observationNum='{$observationNum}' type='checkbox' value='{$value->getID()}' {$chk} />";
                     } else {
-                        $userValueObj = new \GT\CriteriaAward($userValue);
+                        $userValueObj = new \block_gradetracker\CriteriaAward($userValue);
                         $valueName = ($observationNum) ? $userValueObj->getShortName() : $userValueObj->getName();
                         $output .= ($userValueObj->isValid()) ? $valueName : '-';
                     }
@@ -259,7 +259,7 @@ class RangedCriterion extends \GT\Criterion {
 
                     if ($parent) {
                         $userValueID = $this->getCriterionObservationValue($observationNum);
-                        $userValue = new \GT\CriteriaAward($userValueID);
+                        $userValue = new \block_gradetracker\CriteriaAward($userValueID);
                         $valueName = ($observationNum) ? $userValue->getShortName() : $userValue->getName();
                         $output .= ($userValue->isValid()) ? $valueName : '-';
                     } else {
@@ -460,7 +460,7 @@ class RangedCriterion extends \GT\Criterion {
 
     /**
      * Get the maximum number of observations used by this range for this user
-     * @global \GT\Criteria\type $DB
+     * @global \block_gradetracker\Criteria\type $DB
      * @return type
      */
     private function getMaxObservations() {
@@ -493,7 +493,7 @@ class RangedCriterion extends \GT\Criterion {
 
         global $OUTPUT;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         $qualification = $this->getQualification();
         $unit = $this->getUnit();
@@ -615,7 +615,7 @@ class RangedCriterion extends \GT\Criterion {
 
     /**
      * Get the crit observation value
-     * @global \GT\Criteria\type $DB
+     * @global \block_gradetracker\Criteria\type $DB
      * @param type $obNum
      * @return boolean
      */
@@ -634,7 +634,7 @@ class RangedCriterion extends \GT\Criterion {
 
     /**
      * Get the crit observation value
-     * @global \GT\Criteria\type $DB
+     * @global \block_gradetracker\Criteria\type $DB
      * @param type $obNum
      * @return boolean
      */
@@ -653,7 +653,7 @@ class RangedCriterion extends \GT\Criterion {
 
     /**
      * Set value for observation criterion
-     * @global \GT\Criteria\type $DB
+     * @global \block_gradetracker\Criteria\type $DB
      * @param type $obNum
      * @param type $value
      * @param type $date
@@ -670,9 +670,9 @@ class RangedCriterion extends \GT\Criterion {
         $record = $DB->get_record("bcgt_user_ranges", array("userid" => $this->student->id, "critid" => $this->id, "obnum" => $obNum));
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE;
         $Log->beforejson = array(
             'observationnumber' => $obNum,
             'value' => ($record) ? $record->value : null,
@@ -703,11 +703,11 @@ class RangedCriterion extends \GT\Criterion {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualID,
-                \GT\Log::GT_LOG_ATT_UNITID => $this->unitID,
-                \GT\Log::GT_LOG_ATT_CRITID => $this->id,
-                \GT\Log::GT_LOG_ATT_RANGEID => $rangeID,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualID,
+                \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->unitID,
+                \block_gradetracker\Log::GT_LOG_ATT_CRITID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_RANGEID => $rangeID,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -747,7 +747,7 @@ class RangedCriterion extends \GT\Criterion {
     }
 
     public function save() {
-        $type = \GT\QualificationStructureLevel::getByName("Ranged Criteria");
+        $type = \block_gradetracker\QualificationStructureLevel::getByName("Ranged Criteria");
         $this->type = $type->getID();
         parent::save();
     }

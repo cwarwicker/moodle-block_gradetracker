@@ -34,7 +34,7 @@
                                     <option value=""></option>
                                     <?php if ($allMods): ?>
                                         <?php foreach($allMods as $mod): ?>
-                                            <option value="<?php echo $mod->id ?>" <?php echo ($Mod->getModName() == $mod->name) ? 'selected' : ''; ?> class="<?php echo (in_array($mod->name, \GT\ModuleLink::getSupportedMods())) ? 'gt_mod_supported' : '' ?>" ><?php echo $mod->name ?> <?php echo (in_array($mod->name, \GT\ModuleLink::getSupportedMods())) ? '&#10004;' : '' ?></option>
+                                            <option value="<?php echo $mod->id ?>" <?php echo ($Mod->getModName() == $mod->name) ? 'selected' : ''; ?> class="<?php echo (in_array($mod->name, \block_gradetracker\ModuleLink::getSupportedMods())) ? 'gt_mod_supported' : '' ?>" ><?php echo $mod->name ?> <?php echo (in_array($mod->name, \block_gradetracker\ModuleLink::getSupportedMods())) ? '&#10004;' : '' ?></option>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </select>

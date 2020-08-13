@@ -26,9 +26,9 @@ require_once('../../config.php');
 require_once('lib.php');
 require_login();
 
-$GT = new \GT\GradeTracker();
-$User = new \GT\User($USER->id);
-$TPL = new \GT\Template();
+$GT = new \block_gradetracker\GradeTracker();
+$User = new \block_gradetracker\User($USER->id);
+$TPL = new \block_gradetracker\Template();
 $MSGS = array();
 $TPL->set("GT", $GT);
 $TPL->set("User", $User);
@@ -73,12 +73,12 @@ switch ($type) {
         $TPL->set('isAssessmentView', $ass);
 
         $qualID = required_param('qualID', PARAM_INT);
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
-        $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
         if (!$QualStructure->isEnabled()) {
@@ -90,7 +90,7 @@ switch ($type) {
             case 'student':
 
                 $studentID = required_param('studentID', PARAM_INT);
-                $Student = new \GT\User($studentID);
+                $Student = new \block_gradetracker\User($studentID);
                 if (!$Student->isValid()) {
                     print_error('invaliduser', 'block_gradetracker');
                 }
@@ -117,7 +117,7 @@ switch ($type) {
                     $Qualification->import();
                 } else if ($submission['submit_sheet']) {
 
-                    $DataImport = new \GT\DataImport($_FILES['sheet']);
+                    $DataImport = new \block_gradetracker\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->setStudentID($studentID);
                     $DataImport->checkFileStudentDataSheet();
@@ -160,7 +160,7 @@ switch ($type) {
                     $Unit->import();
                 } else if ($submission['submit_sheet']) {
 
-                    $DataImport = new \GT\DataImport($_FILES['sheet']);
+                    $DataImport = new \block_gradetracker\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->setUnitID($unitID);
                     $DataImport->checkFileUnitDataSheet();
@@ -196,7 +196,7 @@ switch ($type) {
                 if ($submission['confirm']) {
                     $Qualification->importClass();
                 } else if ($submission['submit_sheet']) {
-                    $DataImport = new \GT\DataImport($_FILES['sheet']);
+                    $DataImport = new \block_gradetracker\DataImport($_FILES['sheet']);
                     $DataImport->setQualID($qualID);
                     $DataImport->checkFileClassDataSheet();
                     if ($DataImport->getErrors()) {

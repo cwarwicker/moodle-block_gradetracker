@@ -32,8 +32,8 @@ $type = required_param('type', PARAM_TEXT);
 $subtype = optional_param('subtype', ' ', PARAM_TEXT);
 $ass = optional_param('ass', false, PARAM_INT);
 
-$GT = new \GT\GradeTracker();
-$User = new \GT\User($USER->id);
+$GT = new \block_gradetracker\GradeTracker();
+$User = new \block_gradetracker\User($USER->id);
 
 switch ($type) {
 
@@ -43,13 +43,13 @@ switch ($type) {
         $grid = required_param('grid', PARAM_TEXT);
 
         $qualID = required_param('qualID', PARAM_INT);
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
 
-        $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
         if (!$QualStructure->isEnabled()) {
@@ -61,7 +61,7 @@ switch ($type) {
             case 'student':
 
                 $studentID = required_param('studentID', PARAM_INT);
-                $Student = new \GT\User($studentID);
+                $Student = new \block_gradetracker\User($studentID);
                 if (!$Student->isValid()) {
                     print_error('invaliduser', 'block_gradetracker');
                 }
@@ -142,7 +142,7 @@ switch ($type) {
 
             case 'qoe':
 
-                $export = new \GT\DataExport;
+                $export = new \block_gradetracker\DataExport;
                 $all_users_qoe = $export->getUsersQoe();
                 $export->downloadUsersQoe($all_users_qoe);
 
@@ -150,7 +150,7 @@ switch ($type) {
 
             case 'avggcse':
 
-                $export = new \GT\DataExport;
+                $export = new \block_gradetracker\DataExport;
                 $all_users_qoe = $export->getUsersAverageGCSE();
                 $export->downloadUsersAverageGCSE($all_users_qoe);
 
@@ -161,7 +161,7 @@ switch ($type) {
                 $options = df_optional_param_array_recursive('options', false, PARAM_TEXT);
                 $options = ($options) ? array_keys($options) : array();
 
-                $export = new \GT\DataExport;
+                $export = new \block_gradetracker\DataExport;
                 $all_users_tg = $export->getUsersTg($options);
                 $export->downloadUsersTg($all_users_tg, $options);
 
@@ -169,21 +169,21 @@ switch ($type) {
 
             case 'ag':
 
-                $export = new \GT\DataExport;
+                $export = new \block_gradetracker\DataExport;
                 $all_users_ag = $export->getUsersAg();
                 $export->downloadUsersAg($all_users_ag);
 
                 break;
             case 'ceta':
 
-                $export = new \GT\DataExport;
+                $export = new \block_gradetracker\DataExport;
                 $all_users_cg = $export->getUsersCg();
                 $export->downloadUsersCg($all_users_cg);
 
                 break;
             case 'wcoe':
 
-                $export = new \GT\DataExport;
+                $export = new \block_gradetracker\DataExport;
                 $all_wcoe = $export->getWCoe();
                 $export->downloadWCoe($all_wcoe);
 
@@ -203,7 +203,7 @@ switch ($type) {
 
                 $names = (bool)$settings['include_names'];
 
-                $export = new \GT\DataExport();
+                $export = new \block_gradetracker\DataExport();
                 $data = $export->getUsersAssGrades($settings['assID']);
                 $export->downloadUsersAssGrades($data, $names);
 
@@ -226,7 +226,7 @@ switch ($type) {
 
             case 'unit':
 
-                $unit = new \GT\Unit($id);
+                $unit = new \block_gradetracker\Unit($id);
                 if (!$unit->isValid()) {
                     print_error('norecord', 'block_gradetracker');
                 }
@@ -242,7 +242,7 @@ switch ($type) {
     case 'sql':
         if ($User->hasCapability('block/gradetracker:run_sql_report')) {
             $id = required_param('id', PARAM_INT);
-            $export = new \GT\DataExport();
+            $export = new \block_gradetracker\DataExport();
             $export->downloadSQLReport($id);
         } else {
             print_error('invalidaccess', 'block_gradetracker');

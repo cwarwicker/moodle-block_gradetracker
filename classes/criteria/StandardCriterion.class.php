@@ -25,11 +25,11 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Criteria;
+namespace block_gradetracker\Criteria;
 
 defined('MOODLE_INTERNAL') or die();
 
-class StandardCriterion extends \GT\Criterion {
+class StandardCriterion extends \block_gradetracker\Criterion {
 
     /**
      * Construct the object
@@ -383,7 +383,7 @@ class StandardCriterion extends \GT\Criterion {
         // For the standard criteria
 
         // Check grading structure - Can be blank - This will mean a readonly criterion
-        $QualStructure = new \GT\QualificationStructure($this->qualStructureID);
+        $QualStructure = new \block_gradetracker\QualificationStructure($this->qualStructureID);
         $GradingStructures = $QualStructure->getCriteriaGradingStructures();
 
         if (!array_key_exists($this->gradingStructureID, $GradingStructures) && ctype_digit($this->gradingStructureID) && $this->gradingStructureID > 0) {
@@ -395,7 +395,7 @@ class StandardCriterion extends \GT\Criterion {
     }
 
     public function save() {
-        $type = \GT\QualificationStructureLevel::getByName("Standard Criteria");
+        $type = \block_gradetracker\QualificationStructureLevel::getByName("Standard Criteria");
         $this->type = $type->getID();
         parent::save();
     }

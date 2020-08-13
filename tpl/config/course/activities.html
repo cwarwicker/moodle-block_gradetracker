@@ -261,7 +261,7 @@
                                         <td><a href="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/config.php?view=course&id=<?php echo $Course->id ?>&section=activities&page=add&qualid=<?php echo $qual->getID() ?>&unitid=<?php echo $unit->getID() ?>"><img src="<?php echo $CFG->wwwroot ?>/blocks/gradetracker/pix/icons/plus.png" alt="add" /></a></td>
                                         <td class="gt_left"><?php echo $unit->getDisplayName() ?></td>
                                         <td>
-                                            <?php foreach((array)\GT\ModuleLink::getModulesOnUnit($qual->getID(), $unit->getID(), $Course->id) as $unitMod): ?>
+                                            <?php foreach((array)\block_gradetracker\ModuleLink::getModulesOnUnit($qual->getID(), $unit->getID(), $Course->id) as $unitMod): ?>
 
                                                 <?php if ($unitMod->getRecordParts()): ?>
 

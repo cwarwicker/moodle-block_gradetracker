@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -60,7 +60,7 @@ class QualificationWeighting {
                 $score = 1;
             } else {
                 //then its a 9
-                $score = \GT\Setting::getSetting('qual_weighting_percentiles');
+                $score = \block_gradetracker\Setting::getSetting('qual_weighting_percentiles');
             }
 
             $obj->percentile = $score;
@@ -169,7 +169,7 @@ class QualificationWeighting {
             return $record->attribute;
         } else {
             // If no weightings for the qual, check the qual build for defaults
-            $build = \GT\Qualification::getBuildFromQualID($qualID);
+            $build = \block_gradetracker\Qualification::getBuildFromQualID($qualID);
             if ($build) {
                 $records = $DB->get_records_sql("SELECT *
                                          FROM {bcgt_settings}
@@ -194,7 +194,7 @@ class QualificationWeighting {
      */
     public static function getPercentileColour($p) {
 
-        $colour = \GT\Setting::getSetting('weighting_percentile_color_'.$p);
+        $colour = \block_gradetracker\Setting::getSetting('weighting_percentile_color_'.$p);
         return ($colour !== false && $colour != '') ? $colour : '#000000';
 
     }

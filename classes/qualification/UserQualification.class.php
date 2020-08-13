@@ -23,7 +23,7 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Qualification;
+namespace block_gradetracker\Qualification;
 
 use local_df_hub\excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') or die();
 
 require_once('Qualification.class.php');
 
-class UserQualification extends \GT\Qualification {
+class UserQualification extends \block_gradetracker\Qualification {
 
     protected $student = false;
     protected $course = false;
@@ -80,7 +80,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Load student into the UserQualification object
-     * @param mixed $studentID Can be an ID or a \GT\User object
+     * @param mixed $studentID Can be an ID or a \block_gradetracker\User object
      */
     public function loadStudent($studentID) {
 
@@ -88,7 +88,7 @@ class UserQualification extends \GT\Qualification {
         $this->clearStudent();
 
         // Might be a User object we passed in
-        if ($studentID instanceof \GT\User) {
+        if ($studentID instanceof \block_gradetracker\User) {
 
             if ($studentID->isValid()) {
                 $this->student = $studentID;
@@ -97,7 +97,7 @@ class UserQualification extends \GT\Qualification {
         } else {
 
             // Or might be just an ID
-            $user = new \GT\User($studentID);
+            $user = new \block_gradetracker\User($studentID);
             if ($user->isValid()) {
                 $this->student = $user;
             }
@@ -121,8 +121,8 @@ class UserQualification extends \GT\Qualification {
      */
     public function loadCourse($course) {
 
-        // Might be \GT\Course object
-        if ($course instanceof \GT\Course) {
+        // Might be \block_gradetracker\Course object
+        if ($course instanceof \block_gradetracker\Course) {
 
             if ($course->isValid()) {
                 $this->course = $course;
@@ -132,7 +132,7 @@ class UserQualification extends \GT\Qualification {
             $this->course = $course;
         } else if (is_numeric($course)) {
 
-            $course = new \GT\Course($course);
+            $course = new \block_gradetracker\Course($course);
             if ($course->isValid()) {
                 $this->course = $course;
             }
@@ -148,7 +148,7 @@ class UserQualification extends \GT\Qualification {
         $records = $DB->get_records("bcgt_user_qual_awards", array("userid" => $this->student->id, "qualid" => $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $award = new \GT\QualificationAward($record->awardid, $record->type);
+                $award = new \block_gradetracker\QualificationAward($record->awardid, $record->type);
                 if ($award->isValid()) {
                     $this->userAwards[$record->type] = $award;
                 }
@@ -248,11 +248,11 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Get the weighting percentile for the current FA grade
-     * @param \GT\Assessment $assessment The assessment to use
+     * @param \block_gradetracker\Assessment $assessment The assessment to use
      * @param type $from This will normally be false, but in the summary at the top of the grid it will pass through 'summary'. Eventually this gets the "current" assessment, but only if it is enabled in the summary
      * @return mixed
      */
-    public function getUserAssessmentWeightingPercentile(\GT\Assessment $assessment = null, $from = false) {
+    public function getUserAssessmentWeightingPercentile(\block_gradetracker\Assessment $assessment = null, $from = false) {
 
         // Defaults
         $assessmentUCAS = false;
@@ -268,7 +268,7 @@ class UserQualification extends \GT\Qualification {
 
         // Find the Qualification Award with the same name as this Assessment grade and get the UCAS points of it
         if ($assessmentGrade) {
-            $assessmentAward = \GT\QualificationAward::findAwardByName($this->getBuildID(), $assessmentGrade->getName());
+            $assessmentAward = \block_gradetracker\QualificationAward::findAwardByName($this->getBuildID(), $assessmentGrade->getName());
             if ($assessmentAward) {
                 $assessmentUCAS = $assessmentAward->getUcas();
             }
@@ -291,7 +291,7 @@ class UserQualification extends \GT\Qualification {
             // Get the multiplier for this build
             $multiplier = $this->getBuild()->getAttribute('build_default_weighting_multiplier');
 
-            $QualWeighting = new \GT\QualificationWeighting();
+            $QualWeighting = new \block_gradetracker\QualificationWeighting();
             return $QualWeighting->calculateWeightingPercentile($targetUCAS, $assessmentUCAS, $multiplier, $this->id);
 
         }
@@ -303,7 +303,7 @@ class UserQualification extends \GT\Qualification {
     /**
      * Get the weighting percentile for the current FA grade
      */
-    public function getUserAssessmentCetaWeightingPercentile(\GT\Assessment $assessment = null, $from = false) {
+    public function getUserAssessmentCetaWeightingPercentile(\block_gradetracker\Assessment $assessment = null, $from = false) {
 
         // Does this qualification use cetas?
         if (!$this->isFeatureEnabledByName('cetagrades')) {
@@ -338,7 +338,7 @@ class UserQualification extends \GT\Qualification {
             // Get the multiplier for this build
             $multiplier = $this->getBuild()->getAttribute('build_default_weighting_multiplier');
 
-            $QualWeighting = new \GT\QualificationWeighting();
+            $QualWeighting = new \block_gradetracker\QualificationWeighting();
             return $QualWeighting->calculateWeightingPercentile($targetUCAS, $assessmentUCAS, $multiplier, $this->id);
 
         }
@@ -349,19 +349,19 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Load the units on this qualification - This time loading them as UserUnit objects
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function loadUnits() {
 
         global $DB;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         $this->units = array();
         $qualUnits = $DB->get_records("bcgt_qual_units", array("qualid" => $this->id));
         if ($qualUnits) {
             foreach ($qualUnits as $qualUnit) {
-                $unit = new \GT\Unit\UserUnit($qualUnit->unitid);
+                $unit = new \block_gradetracker\Unit\UserUnit($qualUnit->unitid);
                 if ($unit->isValid()) {
                     $unit->setQualID($this->id);
                     $unit->setQualStructureID($this->getStructureID());
@@ -380,9 +380,9 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Get just one unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $unitID
-     * @return \GT\Unit|boolean
+     * @return \block_gradetracker\Unit|boolean
      */
     public function getOneUnit($unitID) {
 
@@ -401,7 +401,7 @@ class UserQualification extends \GT\Qualification {
         $qualUnit = $DB->get_record("bcgt_qual_units", array("qualid" => $this->id, "unitid" => $unitID));
         if ($qualUnit) {
 
-            $unit = new \GT\Unit\UserUnit($qualUnit->unitid);
+            $unit = new \block_gradetracker\Unit\UserUnit($qualUnit->unitid);
             if ($unit->isValid()) {
                 $unit->setQualID($this->id);
                 $unit->setQualStructureID($this->getStructureID());
@@ -661,7 +661,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Get the latest assessment on this qualification, loaded with the student's data
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param bool $from We might be coming from the summary, and only want to include those enabled for summary
      * @return boolean
      */
@@ -713,7 +713,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Get the latest awarded ceta on this student's qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function getUserLatestAssessmentCetaWithAward() {
@@ -753,7 +753,7 @@ class UserQualification extends \GT\Qualification {
 
      /**
       * Get the latest grade on this student's qualification
-      * @global \GT\type $DB
+      * @global \block_gradetracker\type $DB
       * @return boolean
       */
     public function getUserLatestAssessmentGradeWithAward() {
@@ -785,7 +785,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Get the points associated with a unit award on this qual
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $awardID
      * @return type
      */
@@ -819,7 +819,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Calculate the student's predicted awards for this qual
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function calculatePredictedAwards() {
@@ -984,13 +984,13 @@ class UserQualification extends \GT\Qualification {
                     }
                 } else {
                     // Reset to blank
-                    $blank = new \GT\QualificationAward();
+                    $blank = new \block_gradetracker\QualificationAward();
                     $this->saveUserAward($blank, "average");
                     \gt_debug("Could not find predicted grade by points ({$overallPoints})");
                 }
 
             } else if ($this->isFeatureEnabledByName('predictedgrades')) {
-                $blank = new \GT\QualificationAward();
+                $blank = new \block_gradetracker\QualificationAward();
                 $this->saveUserAward($blank, "average");
             }
 
@@ -1044,7 +1044,7 @@ class UserQualification extends \GT\Qualification {
                 return false;
             }
 
-            $Sorter = new \GT\Sorter();
+            $Sorter = new \block_gradetracker\Sorter();
             $Sorter->sortQualAwards($possibleAwardArray, 'asc');
 
             $minRank = $this->getBuild()->getMinRank();
@@ -1303,7 +1303,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Delete a user award
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
      * @return boolean
      */
@@ -1321,12 +1321,12 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Save a user qual award
-     * @global \GT\type $DB
-     * @param \GT\QualificationAward $award
+     * @global \block_gradetracker\type $DB
+     * @param \block_gradetracker\QualificationAward $award
      * @param type $type
      * @return boolean
      */
-    private function saveUserAward(\GT\QualificationAward $award, $type) {
+    private function saveUserAward(\block_gradetracker\QualificationAward $award, $type) {
 
         global $DB;
 
@@ -1352,17 +1352,17 @@ class UserQualification extends \GT\Qualification {
         }
 
         // ------------ Logging
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_AWARD;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_AWARD;
         $Log->afterjson = array(
             'type' => $type,
             'gradeID' => ($award) ? $award->getID() : null,
             'grade' => ($award) ? $award->getName() : null,
         );
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->id,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
         $Log->save();
         // ------------ Logging
@@ -1373,11 +1373,11 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Get the student grid
-     * @global \GT\Qualification\type $CFG
-     * @global \GT\User $User
-     * @global \GT\Qualification\type $USER
+     * @global \block_gradetracker\Qualification\type $CFG
+     * @global \block_gradetracker\User $User
+     * @global \block_gradetracker\Qualification\type $USER
      * @param type $method
-     * @param \GT\Template $params
+     * @param \block_gradetracker\Template $params
      * @return boolean
      */
     public function getStudentGrid( $method, $params ) {
@@ -1385,19 +1385,19 @@ class UserQualification extends \GT\Qualification {
         global $CFG, $User;
 
         $ass = optional_param('ass', false, PARAM_INT);
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
 
         $isExternalUser = false;
         $external = (isset($params['external']) && $params['external']) ? true : false;
         $externalSession = (isset($params['extSsn'])) ? $params['extSsn'] : false;
 
         if (!isset($params['TPL'])) {
-            $params['TPL'] = new \GT\Template();
+            $params['TPL'] = new \block_gradetracker\Template();
         }
 
         if (!isset($User)) {
             $userID = \gt_get_external_gt_user_id($params['extSsn']);
-            $User = new \GT\User($userID);
+            $User = new \block_gradetracker\User($userID);
         }
 
         // Are we using external access?
@@ -1431,7 +1431,7 @@ class UserQualification extends \GT\Qualification {
         }
 
         // If the qualification has no units, display the assessment grid instead
-        $QualStructure = new \GT\QualificationStructure( $this->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
 
         // Is disabled
         if (!$QualStructure->isEnabled()) {
@@ -1460,10 +1460,10 @@ class UserQualification extends \GT\Qualification {
         if ($this->getBuild()->hasQualWeightings()) {
 
             $hasWeightings = true;
-            $params['TPL']->set("weightingPercentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
+            $params['TPL']->set("weightingPercentiles", \block_gradetracker\Setting::getSetting('qual_weighting_percentiles'));
 
             // Order them by name
-            $Sorter = new \GT\Sorter();
+            $Sorter = new \block_gradetracker\Sorter();
             $Sorter->sortQualificationsByName($allQualifications);
 
             // Then move the chosen qual to the top so that is first
@@ -1503,7 +1503,7 @@ class UserQualification extends \GT\Qualification {
         // Other Options/Settings
         $params['TPL']->set("gridFile", $gridFile);
         $params['TPL']->set("assessmentView", $assessmentView);
-        $params['TPL']->set('showUCAS', \GT\Setting::getSetting('student_grid_show_ucas'));
+        $params['TPL']->set('showUCAS', \block_gradetracker\Setting::getSetting('student_grid_show_ucas'));
 
         if (isset($params['print']) && $params['print']) {
             $params['TPL']->set("print", true);
@@ -1515,7 +1515,7 @@ class UserQualification extends \GT\Qualification {
             return true;
         } else if ($method == 'return') {
 
-            $GT = new \GT\GradeTracker();
+            $GT = new \block_gradetracker\GradeTracker();
 
             $params['TPL']->set("GT", $GT)
                 ->set("User", $User)
@@ -1529,7 +1529,7 @@ class UserQualification extends \GT\Qualification {
             try {
                 $params['TPL']->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/student.html' );
                 return $params['TPL']->getOutput();
-            } catch (\GT\GTException $e) {
+            } catch (\block_gradetracker\GTException $e) {
                 return $e->getException();
             }
 
@@ -1541,8 +1541,8 @@ class UserQualification extends \GT\Qualification {
     /**
      * Get the data for the student grid
      * Can be called externally, e.g. Parent Portal, ELBP, etc...
-     * @global \GT\Qualification\type $CFG
-     * @global \GT\Qualification\type $USER
+     * @global \block_gradetracker\Qualification\type $CFG
+     * @global \block_gradetracker\Qualification\type $USER
      * @param type $params
      * @return type
      */
@@ -1551,8 +1551,8 @@ class UserQualification extends \GT\Qualification {
         global $CFG, $User;
 
         // Prepare all the variables we will need in the templates
-        $GT = new \GT\GradeTracker();
-        $TPL = new \GT\Template();
+        $GT = new \block_gradetracker\GradeTracker();
+        $TPL = new \block_gradetracker\Template();
 
         $isExternalUser = false;
         $external = (isset($params['external']) && $params['external']) ? true : false;
@@ -1565,7 +1565,7 @@ class UserQualification extends \GT\Qualification {
 
         if (!isset($User)) {
             $userID = \gt_get_external_gt_user_id($params['extSsn']);
-            $User = new \GT\User($userID);
+            $User = new \block_gradetracker\User($userID);
         }
 
         // Are we using external access?
@@ -1609,7 +1609,7 @@ class UserQualification extends \GT\Qualification {
              return \gt_error_alert_box( get_string('invalidrecord', 'block_gradetracker') );
         }
 
-        $QualStructure = new \GT\QualificationStructure($this->getStructureID());
+        $QualStructure = new \block_gradetracker\QualificationStructure($this->getStructureID());
         if (!$QualStructure->isValid()) {
              return \gt_error_alert_box( get_string('invalidqual', 'block_gradetracker') );
         }
@@ -1643,7 +1643,7 @@ class UserQualification extends \GT\Qualification {
                 });
 
                 // Order them by name
-                $Sorter = new \GT\Sorter();
+                $Sorter = new \block_gradetracker\Sorter();
                 $Sorter->sortQualificationsByName($Qualifications);
 
                 // Then move the chosen qual to the top so that is first
@@ -1662,11 +1662,11 @@ class UserQualification extends \GT\Qualification {
                 $hasWeightings = true;
                 $canSeeWeightings = \gt_has_capability('block/gradetracker:see_weighting_percentiles');
 
-                $TPL->set("weightingPercentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
+                $TPL->set("weightingPercentiles", \block_gradetracker\Setting::getSetting('qual_weighting_percentiles'));
 
             }
 
-            $allAssessments = \GT\Assessment::getAllAssessmentsOnQuals($Qualifications);
+            $allAssessments = \block_gradetracker\Assessment::getAllAssessmentsOnQuals($Qualifications);
 
             $TPL->set("Qualifications", $Qualifications);
             $TPL->set("allAssessments", $allAssessments);
@@ -1718,7 +1718,7 @@ class UserQualification extends \GT\Qualification {
         try {
              $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/student/'.$file.'.html' );
              return $TPL->getOutput();
-        } catch (\GT\GTException $e) {
+        } catch (\block_gradetracker\GTException $e) {
              return $e->getException();
         }
 
@@ -1726,8 +1726,8 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Import a class grid
-     * @global \GT\Qualification\type $CFG
-     * @global \GT\Qualification\type $MSGS
+     * @global \block_gradetracker\Qualification\type $CFG
+     * @global \block_gradetracker\Qualification\type $MSGS
      * @param string $file
      * @return boolean
      */
@@ -1746,11 +1746,11 @@ class UserQualification extends \GT\Qualification {
         $assessmentView = $settings['ass'];
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_CLASS_GRID;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_CLASS_GRID;
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->id
             );
 
         $Log->save();
@@ -1762,7 +1762,7 @@ class UserQualification extends \GT\Qualification {
                 print_error('errors:missingparams', 'block_gradetracker');
             }
 
-            $file = \GT\GradeTracker::dataroot() . '/tmp/C_' . $settings['qualID'] . '_' . $settings['now'] . '.xlsx';
+            $file = \block_gradetracker\GradeTracker::dataroot() . '/tmp/C_' . $settings['qualID'] . '_' . $settings['now'] . '.xlsx';
 
         }
 
@@ -1852,8 +1852,8 @@ class UserQualification extends \GT\Qualification {
                             break;
                         }
 
-                        $student = new \GT\User($studentID);
-                        $studentQual = new \GT\Qualification\UserQualification($this->id);
+                        $student = new \block_gradetracker\User($studentID);
+                        $studentQual = new \block_gradetracker\Qualification\UserQualification($this->id);
 
                         if (!$student->isValid() || !$studentQual->isValid() || !$student->isOnQual($this->id, "STUDENT") || !$studentQual->loadStudent($studentID)) {
                             $studName = ($student->isValid()) ? $student->getDisplayName() : $objWorksheet->getCell("A".$row)->getCalculatedValue();
@@ -1869,7 +1869,7 @@ class UserQualification extends \GT\Qualification {
 
                         // Work out the merged cell that has the assessment ID in, based on
                         // which cell we are in now and the colspan of the parent
-                        $assessment = \GT\DataImport::findAssessmentParentColumn($assessmentsArray, $col);
+                        $assessment = \block_gradetracker\DataImport::findAssessmentParentColumn($assessmentsArray, $col);
                         if (!$assessment) {
                             $output .= "[{$row}] " . get_string('import:datasheet:process:error:ass', 'block_gradetracker' ) . '<br>';
                             continue;
@@ -1917,7 +1917,7 @@ class UserQualification extends \GT\Qualification {
                                 $grade = $GradingStructure->getAwardByShortName($cellValue);
                                 // If they supplied an invalid award, it will just be set to nothing
                                 if (is_null($grade) || !$grade) {
-                                    $grade = new \GT\CriteriaAward();
+                                    $grade = new \block_gradetracker\CriteriaAward();
                                 }
                                 $studentAssessment->setUserGrade($grade);
                             }
@@ -1947,7 +1947,7 @@ class UserQualification extends \GT\Qualification {
                             $QualBuild = $studentQual->getBuild();
                             $award = $QualBuild->getAwardByName($cellValue);
                             if (is_null($award) || !$award) {
-                                $award = new \GT\QualificationAward();
+                                $award = new \block_gradetracker\QualificationAward();
                             }
 
                             $studentAssessment->setUserCeta($award);
@@ -1956,7 +1956,7 @@ class UserQualification extends \GT\Qualification {
 
                             // Custom Form Field
                             $fieldID = (isset($matches[1])) ? $matches[1] : false;
-                            $field = new \GT\FormElement($fieldID);
+                            $field = new \block_gradetracker\FormElement($fieldID);
                             $studentAssessment->setUserCustomFieldValue($fieldID, $cellValue);
                             $column = $field->getName();
 
@@ -2024,7 +2024,7 @@ class UserQualification extends \GT\Qualification {
                 }
 
                 $eventCriteria = array();
-                $naValueObj = new \GT\CriteriaAward();
+                $naValueObj = new \block_gradetracker\CriteriaAward();
 
                 // Loop through rows to get students
                 for ($row = 2; $row <= $lastRow; $row++) {
@@ -2045,7 +2045,7 @@ class UserQualification extends \GT\Qualification {
                                 break;
                             }
 
-                            $student = new \GT\User($studentID);
+                            $student = new \block_gradetracker\User($studentID);
                             if (!$student->isValid()) {
                                 $output .= "[{$row}] " . get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                                 break;
@@ -2156,7 +2156,7 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Import the student grid
-     * @global \GT\Qualification\type $CFG
+     * @global \block_gradetracker\Qualification\type $CFG
      * @global type $MSGS
      * @param string $file
      * @return boolean
@@ -2181,12 +2181,12 @@ class UserQualification extends \GT\Qualification {
         $assessmentView = $settings['ass'];
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_STUDENT_GRID;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_STUDENT_GRID;
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->id,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -2198,7 +2198,7 @@ class UserQualification extends \GT\Qualification {
                 print_error('errors:missingparams', 'block_gradetracker');
             }
 
-            $file = \GT\GradeTracker::dataroot() . '/tmp/' . $settings['qualID'] . '_' . $settings['studentID'] . '_' . $settings['now'] . '.xlsx';
+            $file = \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $settings['qualID'] . '_' . $settings['studentID'] . '_' . $settings['now'] . '.xlsx';
 
         }
 
@@ -2283,7 +2283,7 @@ class UserQualification extends \GT\Qualification {
                             break;
                         }
 
-                        $studentQual = new \GT\Qualification\UserQualification($qualID);
+                        $studentQual = new \block_gradetracker\Qualification\UserQualification($qualID);
 
                         if (!$studentQual->isValid() || !$this->getStudent()->isOnQual($this->id, "STUDENT") || !$studentQual->loadStudent($this->getStudentID())) {
                             $output .= "[{$row}] " . sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() ) . '<br>';
@@ -2299,7 +2299,7 @@ class UserQualification extends \GT\Qualification {
 
                         // Work out the merged cell that has the assessment ID in, based on
                         // which cell we are in now and the colspan of the parent
-                        $assessment = \GT\DataImport::findAssessmentParentColumn($assessmentsArray, $col);
+                        $assessment = \block_gradetracker\DataImport::findAssessmentParentColumn($assessmentsArray, $col);
                         if (!$assessment) {
                             $output .= "[{$row}] " . get_string('import:datasheet:process:error:ass', 'block_gradetracker' ) . '<br>';
                             continue;
@@ -2347,7 +2347,7 @@ class UserQualification extends \GT\Qualification {
                                 $grade = $GradingStructure->getAwardByShortName($cellValue);
                                 // If they supplied an invalid award, it will just be set to nothing
                                 if (is_null($grade) || !$grade) {
-                                    $grade = new \GT\CriteriaAward();
+                                    $grade = new \block_gradetracker\CriteriaAward();
                                 }
                                 $studentAssessment->setUserGrade($grade);
                             }
@@ -2377,7 +2377,7 @@ class UserQualification extends \GT\Qualification {
                             $QualBuild = $studentQual->getBuild();
                             $award = $QualBuild->getAwardByName($cellValue);
                             if (is_null($award) || !$award) {
-                                $award = new \GT\QualificationAward();
+                                $award = new \block_gradetracker\QualificationAward();
                             }
 
                             $studentAssessment->setUserCeta($award);
@@ -2386,7 +2386,7 @@ class UserQualification extends \GT\Qualification {
 
                             // Custom Form Field
                             $fieldID = (isset($matches[1])) ? $matches[1] : false;
-                            $field = new \GT\FormElement($fieldID);
+                            $field = new \block_gradetracker\FormElement($fieldID);
                             $studentAssessment->setUserCustomFieldValue($fieldID, $cellValue);
                             $column = $field->getName();
 
@@ -2430,7 +2430,7 @@ class UserQualification extends \GT\Qualification {
             }
 
             $unitArray = array();
-            $naValueObj = new \GT\CriteriaAward();
+            $naValueObj = new \block_gradetracker\CriteriaAward();
             $runEvents = array();
 
             $cnt = 0;
@@ -2630,7 +2630,7 @@ class UserQualification extends \GT\Qualification {
                 });
 
                 // Order them by name
-                $Sorter = new \GT\Sorter();
+                $Sorter = new \block_gradetracker\Sorter();
                 $Sorter->sortQualificationsByName($qualifications);
 
                 // Then move the chosen qual to the top so that is first
@@ -2642,7 +2642,7 @@ class UserQualification extends \GT\Qualification {
 
             }
 
-            $assessments = \GT\Assessment::getAllAssessmentsOnQuals($qualifications);
+            $assessments = \block_gradetracker\Assessment::getAllAssessmentsOnQuals($qualifications);
 
             // Headers
             foreach ($sheets as $sheet) {
@@ -3004,8 +3004,8 @@ class UserQualification extends \GT\Qualification {
 
     /**
      * Export the class grid
-     * @global \GT\Qualification\type $CFG
-     * @global \GT\Qualification\type $USER
+     * @global \block_gradetracker\Qualification\type $CFG
+     * @global \block_gradetracker\Qualification\type $USER
      */
     public function exportClass($assessmentView = false) {
 

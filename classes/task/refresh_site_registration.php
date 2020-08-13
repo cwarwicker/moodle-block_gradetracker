@@ -42,7 +42,7 @@ class refresh_site_registration extends \core\task\scheduled_task {
 
         mtrace("Attempting to update site registration");
 
-        $Site = new \GT\Site();
+        $Site = new \block_gradetracker\Site();
         $result = $Site->cron();
         mtrace("Result: " . $result);
 

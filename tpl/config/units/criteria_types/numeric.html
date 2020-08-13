@@ -99,7 +99,7 @@
                             <td class="gt_sub_criterion_points_cell">
                               <?php if (!$criterion->hasChildrenOfType('Range')): ?>
                                   <select name="unit_criteria[<?php echo $dynamicNum ?>][subcriteria][<?php echo $subDynamicNumber ?>][points]">
-                                      <?php for($i = 0; $i <= \GT\Criteria\NumericCriterion::getMaxPoints(); $i++): ?>
+                                      <?php for($i = 0; $i <= \block_gradetracker\Criteria\NumericCriterion::getMaxPoints(); $i++): ?>
                                           <option value="<?php echo $i ?>" <?php echo ($child->getAttribute('maxpoints') == $i) ? 'selected' : ''; ?> ><?php echo $i ?></option>
                                       <?php endfor; ?>
                                   </select>
@@ -113,7 +113,7 @@
                                         <?php $obDynamicNumber++ ?>
                                         <td class="gt_observation_points_cell gt_criterion_observation_<?php echo $dynamicNum ?>_<?php echo $obDynamicNumber ?> gt_criterion_sub_criterion_<?php echo $dynamicNum ?>_<?php echo $subDynamicNumber ?>" cnum="<?php echo $subDynamicNumber ?>" obnum="?= $obDynamicNumber ?>">
                                             <select name="unit_criteria[<?php echo $dynamicNum ?>][points][<?php echo $subDynamicNumber ?>|<?php echo $obDynamicNumber ?>]">
-                                                <?php for($i = 0; $i <= \GT\Criteria\NumericCriterion::getMaxPoints(); $i++): ?>
+                                                <?php for($i = 0; $i <= \block_gradetracker\Criteria\NumericCriterion::getMaxPoints(); $i++): ?>
                                                     <option value="<?php echo $i ?>" <?php echo ($criterion->getAttribute('maxpoints_'.$child->getID().'_'.$observation->getID()) == $i) ? 'selected' : ''; ?> ><?php echo $i ?></option>
                                                 <?php endfor; ?>
                                             </select>

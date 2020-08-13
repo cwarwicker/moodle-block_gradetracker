@@ -22,7 +22,7 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -101,7 +101,7 @@ class CriteriaAward {
     }
 
     public function getGradingStructure() {
-        return new \GT\CriteriaAwardStructure($this->getGradingStructureID());
+        return new \block_gradetracker\CriteriaAwardStructure($this->getGradingStructureID());
     }
 
     public function getName() {
@@ -181,7 +181,7 @@ class CriteriaAward {
         }
 
         // Otherwise
-        if (!is_null($this->img) && strlen($this->img) > 0 && file_exists( \GT\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img )) {
+        if (!is_null($this->img) && strlen($this->img) > 0 && file_exists( \block_gradetracker\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img )) {
             return $CFG->wwwroot . '/blocks/gradetracker/download.php?f=' . gt_get_data_path_code( 'img/awards/' . $this->gradingStructureID . '/' . $this->img );
         } else if ($this->img === false) {
             return $CFG->wwwroot . '/blocks/gradetracker/pix/symbols/default/na.png';
@@ -196,7 +196,7 @@ class CriteriaAward {
      * @return type
      */
     public function getImagePath() {
-        return \GT\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img;
+        return \block_gradetracker\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img;
     }
 
     public function getSpecialVal() {
@@ -287,14 +287,14 @@ class CriteriaAward {
 
         // Check icon is valid image
         if (isset($this->imgFile) && $this->imgFile['size'] > 0) {
-            $Upload = new \GT\Upload();
+            $Upload = new \block_gradetracker\Upload();
             $Upload->setFile($this->imgFile);
             $Upload->setMimeTypes( array('image/png', 'image/jpeg', 'image/bmp', 'image/gif') );
             $Upload->setUploadDir("tmp");
             $result = $Upload->doUpload();
             if ($result['success'] === true) {
                 $this->iconTmp = $Upload->getFileName();
-                \gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
+                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
             } else {
                 $this->errors[] = $result['error'] . ' - ' . $this->name;
             }
@@ -302,8 +302,8 @@ class CriteriaAward {
         } else if (isset($this->imgData) && strlen($this->imgData) > 0) {
             // If we are importing XML, the image will be a data string.
             // Make dataroot tmp directory
-            if (!is_dir(\GT\GradeTracker::dataroot() . '/tmp/')) {
-                $result = mkdir(\GT\GradeTracker::dataroot() . '/tmp/', $CFG->directorypermissions);
+            if (!is_dir(\block_gradetracker\GradeTracker::dataroot() . '/tmp/')) {
+                $result = mkdir(\block_gradetracker\GradeTracker::dataroot() . '/tmp/', $CFG->directorypermissions);
             }
 
             $ext = \gt_get_image_ext_from_base64($this->imgData);
@@ -312,13 +312,13 @@ class CriteriaAward {
 
             // Check if this already exists (it may do, as in GCSE A* will be changed to A by this preg_replace
             // and then it will conflict with the A grade image
-            while ( file_exists(\GT\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp) ) {
+            while ( file_exists(\block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp) ) {
                 $this->iconTmp = 'import-icon-' . time() . '-' . $name . '_.' . $ext;
             }
 
-            $result = \gt_save_base64_image($this->imgData, \GT\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp);
+            $result = \gt_save_base64_image($this->imgData, \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp);
             if ($result) {
-                \gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
+                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
             } else {
                 $this->errors[] = get_string('errors:save:file', 'block_gradetracker') . ' - ' . $this->name;
             }
@@ -356,11 +356,11 @@ class CriteriaAward {
         if (isset($this->iconTmp)) {
 
             // Move from tmp to qual structure directory
-            if (\gt_save_file(\GT\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp, 'img/awards/' . $this->gradingStructureID, $this->iconTmp, false)) {
+            if (\gt_save_file(\block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp, 'img/awards/' . $this->gradingStructureID, $this->iconTmp, false)) {
 
                 $this->img = $this->iconTmp;
                 $obj->img = $this->img;
-                \gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img );
+                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img );
                 unset($this->iconTmp);
 
             }
@@ -385,7 +385,7 @@ class CriteriaAward {
 
     /**
      * Delete the criteria award
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function delete() {

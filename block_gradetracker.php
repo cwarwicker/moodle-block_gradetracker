@@ -32,7 +32,7 @@ class block_gradetracker extends block_base {
 
         global $CFG;
 
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
         $this->title = get_string('pluginname', 'block_gradetracker');
         $this->www = $CFG->wwwroot . '/blocks/gradetracker/';
         $this->imgdir = $CFG->wwwroot . '/blocks/gradetracker/pix/';
@@ -45,13 +45,13 @@ class block_gradetracker extends block_base {
         global $COURSE, $USER;
 
         $context = context_course::instance($COURSE->id);
-        $course = new \GT\Course($COURSE->id);
+        $course = new \block_gradetracker\Course($COURSE->id);
 
         if ($this->content !== null || !$USER || is_guest($context, $USER)) {
             return $this->content;
         }
 
-        $User = new \GT\User($USER->id);
+        $User = new \block_gradetracker\User($USER->id);
 
         $this->content = new stdClass;
         $this->content->text = "";

@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -69,7 +69,7 @@ class UnitAwardStructure {
     public function isValid() {
 
         // Check the qual structure hasn't been deleted
-        $qualStructure = new \GT\QualificationStructure($this->qualStructureID);
+        $qualStructure = new \block_gradetracker\QualificationStructure($this->qualStructureID);
         return ($this->id !== false && !$this->isDeleted() && $qualStructure->isValid() && !$qualStructure->isDeleted());
     }
 
@@ -141,7 +141,7 @@ class UnitAwardStructure {
         $records = $DB->get_records("bcgt_unit_awards", array("gradingstructureid" => $this->id), "id");
         if ($records) {
             foreach ($records as $record) {
-                $this->awards[$record->id] = new \GT\UnitAward($record->id);
+                $this->awards[$record->id] = new \block_gradetracker\UnitAward($record->id);
             }
         }
 
@@ -163,9 +163,9 @@ class UnitAwardStructure {
 
     /**
      * Add an award to the structure
-     * @param \GT\UnitAward $award
+     * @param \block_gradetracker\UnitAward $award
      */
-    public function addAward(\GT\UnitAward $award) {
+    public function addAward(\block_gradetracker\UnitAward $award) {
 
         if ($award->isValid()) {
             $this->awards[$award->getID()] = $award;
@@ -347,7 +347,7 @@ class UnitAwardStructure {
 
     /**
      * Save unit points records
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $unitPoints
      */
     public function saveUnitPoints($unitPoints) {
@@ -398,7 +398,7 @@ class UnitAwardStructure {
 
     /**
      * Wipe them all for this qual structure
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     private function wipeUnitPoints() {
 
@@ -409,7 +409,7 @@ class UnitAwardStructure {
 
     /**
      * Get the defined points for a given level and award on this structure
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $levelID
      * @param type $awardID
      * @return type
@@ -429,7 +429,7 @@ class UnitAwardStructure {
 
     /**
      * Get all the unit points for this unit grading structure
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getAllUnitPoints() {
@@ -442,7 +442,7 @@ class UnitAwardStructure {
 
     /**
      * Delete any awards that were on the grading structure before but not submitted this time
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function deleteRemovedAwards() {
 
@@ -478,7 +478,7 @@ class UnitAwardStructure {
 
     /**
      * Delete the unit grading structure
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function delete() {
@@ -553,7 +553,7 @@ class UnitAwardStructure {
 
     /**
      * Enable or Disable the grading structure, based on whichever it currently is
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function toggleEnabled() {
 
@@ -599,7 +599,7 @@ class UnitAwardStructure {
         if ($gradeIDs) {
             foreach ($gradeIDs as $key => $id) {
 
-                $award = new \GT\UnitAward($id);
+                $award = new \block_gradetracker\UnitAward($id);
                 $award->setGradingStructureID( $this->id );
                 $award->setName( $settings['grade_names'][$key] );
                 $award->setShortName( $settings['grade_shortnames'][$key] );

@@ -41,11 +41,11 @@ $title = get_string('grid', 'block_gradetracker');
 $gridFile = 'grid';
 
 
-$GT = new \GT\GradeTracker();
-$TPL = new \GT\Template();
-$User = new \GT\User($USER->id);
-$Log = new \GT\Log();
-$Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
+$GT = new \block_gradetracker\GradeTracker();
+$TPL = new \block_gradetracker\Template();
+$User = new \block_gradetracker\User($USER->id);
+$Log = new \block_gradetracker\Log();
+$Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
 
 switch ($type) {
 
@@ -57,12 +57,12 @@ switch ($type) {
         }
 
         $qualID = required_param('qualID', PARAM_INT);
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
 
-        $Student = new \GT\User($id);
+        $Student = new \block_gradetracker\User($id);
         if (!$Student->isValid()) {
             print_error('invaliduser', 'block_gradetracker');
         }
@@ -79,9 +79,9 @@ switch ($type) {
         $title = get_string('studentgrid', 'block_gradetracker') . ' - ' . $Student->getDisplayName() . ' - ' . $Qualification->getDisplayName();
 
         // Log info
-        $Log->details = \GT\Log::GT_LOG_DETAILS_VIEWED_STUDENT_GRID;
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $Qualification->getID())
-            ->addAttribute(\GT\Log::GT_LOG_ATT_STUDID, $Student->id);
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_VIEWED_STUDENT_GRID;
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $Qualification->getID())
+            ->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_STUDID, $Student->id);
 
 
 
@@ -97,7 +97,7 @@ switch ($type) {
         $view = optional_param('view', false, PARAM_TEXT);
         $page = optional_param('page', 1, PARAM_INT);
         $qualID = required_param('qualID', PARAM_INT);
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
@@ -118,7 +118,7 @@ switch ($type) {
         }
 
         // Is disabled
-        $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $Qualification->getStructureID() );
         if (!$QualStructure->isEnabled()) {
             print_error('structureisdisabled', 'block_gradetracker');
         }
@@ -144,7 +144,7 @@ switch ($type) {
         if ($courseID > 0) {
 
             $Qualification->loadCourse($courseID);
-            $Course = new \GT\Course($courseID);
+            $Course = new \block_gradetracker\Course($courseID);
             $TPL->set("Course", $Course);
 
             if ($groupID > 0) {
@@ -166,9 +166,9 @@ switch ($type) {
         $title = get_string('unitgrid', 'block_gradetracker') . ' - ' . $Unit->getDisplayName() . ' - ' . $Qualification->getDisplayName();
 
         // Log info
-        $Log->details = \GT\Log::GT_LOG_DETAILS_VIEWED_UNIT_GRID;
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $Qualification->getID())
-            ->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $Unit->getID());
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_VIEWED_UNIT_GRID;
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $Qualification->getID())
+            ->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_UNITID, $Unit->getID());
 
         break;
 
@@ -184,7 +184,7 @@ switch ($type) {
         $page = optional_param('page', 1, PARAM_INT);
         $qualID = required_param('id', PARAM_INT);
 
-        $Qualification = new \GT\Qualification\UserQualification($qualID);
+        $Qualification = new \block_gradetracker\Qualification\UserQualification($qualID);
         if (!$Qualification->isValid()) {
             print_error('norecord', 'block_gradetracker');
         }
@@ -200,7 +200,7 @@ switch ($type) {
         }
 
         // If the qualification has no units, display the assessment grid instead
-        $QualStructure = new \GT\QualificationStructure( $Qualification->getStructureID() );
+        $QualStructure = new \block_gradetracker\QualificationStructure( $Qualification->getStructureID() );
 
         // Is disabled
         if (!$QualStructure->isEnabled()) {
@@ -216,13 +216,13 @@ switch ($type) {
         $hasWeightings = false;
         if ($Qualification->getBuild()->hasQualWeightings()) {
             $hasWeightings = true;
-            $TPL->set("weightingPercentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
+            $TPL->set("weightingPercentiles", \block_gradetracker\Setting::getSetting('qual_weighting_percentiles'));
         }
 
         if ($courseID > 0) {
 
             $Qualification->loadCourse($courseID);
-            $Course = new \GT\Course($courseID);
+            $Course = new \block_gradetracker\Course($courseID);
             $TPL->set("Course", $Course);
 
             if ($groupID > 0) {
@@ -263,8 +263,8 @@ switch ($type) {
         $title = get_string('classgrid', 'block_gradetracker') . ' - ' . $Qualification->getDisplayName();
 
         // Log info
-        $Log->details = \GT\Log::GT_LOG_DETAILS_VIEWED_CLASS_GRID;
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $Qualification->getID());
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_VIEWED_CLASS_GRID;
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $Qualification->getID());
 
         break;
 
@@ -300,7 +300,7 @@ $data = array(
 );
 
 // Call the amd module
-$PAGE->requires->js_call_amd("block_gradetracker/grids", 'init', \GT\Output::initAMD('grid', null, $data));
+$PAGE->requires->js_call_amd("block_gradetracker/grids", 'init', \block_gradetracker\Output::initAMD('grid', null, $data));
 
 // Which link can we see in the breadcrumbs?
 if ( gt_has_capability('block/gradetracker:configure') ) {
@@ -327,7 +327,7 @@ $TPL->set("GT", $GT)
 try {
     $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/grids/'.$type.'.html' );
     $TPL->display();
-} catch (\GT\GTException $e) {
+} catch (\block_gradetracker\GTException $e) {
     echo $e->getException();
 }
 

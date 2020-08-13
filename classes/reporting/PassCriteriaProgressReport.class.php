@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT\Reports;
+namespace block_gradetracker\Reports;
 
 use local_df_hub\excel;
 
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') or die();
 
 require_once('Report.class.php');
 
-class PassCriteriaProgressReport extends \GT\Reports\Report {
+class PassCriteriaProgressReport extends \block_gradetracker\Reports\Report {
 
     protected $name = 'PASS_CRIT_PROGRESS';
 
@@ -37,14 +37,14 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
 
         global $CFG, $USER;
 
-        $User = new \GT\User($USER->id);
+        $User = new \block_gradetracker\User($USER->id);
         $params = (isset($params['params'])) ? $params['params'] : false;
 
         // Make sure qual structure has been passed through
         $qualStructure = false;
         $structureID = $this->extractParam("structureID", $params);
         if ($structureID != 'all') {
-            $qualStructure = new \GT\QualificationStructure($structureID);
+            $qualStructure = new \block_gradetracker\QualificationStructure($structureID);
             if (!$qualStructure->isValid()) {
                 gt_ajax_progress(false, array(
                     'error' => get_string('blockbcgtdata:err:invalidqualstructure', 'block_gradetracker')
@@ -86,7 +86,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
         $formats['totals'] = $objPHPExcel->add_format(['bg_color' => '#B1A0C7', 'color' => '#ffffff']);
         $formats['max'] = $objPHPExcel->add_format(['bg_color' => '#948A54', 'color' => '#ffffff']);
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
         $GTEXE->COURSE_CAT_MIN_LOAD = true;
         $GTEXE->QUAL_MIN_LOAD = true;
 
@@ -101,7 +101,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
         if ($cats) {
             foreach ($cats as $catID) {
 
-                $Cat = new \GT\CourseCategory($catID);
+                $Cat = new \block_gradetracker\CourseCategory($catID);
                 $Cat->convertCoursesToFlatArray();
                 $Cat->filterOutCoursesWithoutQualifications();
                 $catArray[$catID] = $Cat;
@@ -255,7 +255,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
                                     $method = 'all';
                                 }
 
-                                $dataQualification = new \GT\Qualification\DataQualification($qual->getID());
+                                $dataQualification = new \block_gradetracker\Qualification\DataQualification($qual->getID());
                                 $data = $dataQualification->getQualificationReportStudents(false, $view, false, $shortCriteriaNames, $course->id, $specificAwards);
 
                                 if ($data) {
@@ -341,7 +341,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
                                     foreach ($data as $student) {
 
                                         // Student object
-                                        $studentObj = new \GT\User($student->id);
+                                        $studentObj = new \block_gradetracker\User($student->id);
 
                                         // Weighted variables for counting
                                         $studentWeightingMax = 0;
@@ -703,7 +703,7 @@ class PassCriteriaProgressReport extends \GT\Reports\Report {
 
         // End the Spreadsheet generation and save it
         \gt_create_data_directory('reports');
-        $file = \GT\GradeTracker::dataroot() . '/reports/' . $filename;
+        $file = \block_gradetracker\GradeTracker::dataroot() . '/reports/' . $filename;
         $objPHPExcel->save($file);
 
         $download = \gt_create_data_path_code($file);

@@ -22,7 +22,7 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Reports;
+namespace block_gradetracker\Reports;
 
 defined('MOODLE_INTERNAL') or die();
 

@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -170,7 +170,7 @@ class User {
         }
 
         // First check that the user is valid
-        $theUser = new \GT\User($userID);
+        $theUser = new \block_gradetracker\User($userID);
         if (!$theUser->isValid()) {
             return false;
         }
@@ -217,7 +217,7 @@ class User {
 
     /**
      * Load the user's qualifications
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $role
      */
     private function loadQualifications($role) {
@@ -229,7 +229,7 @@ class User {
         $records = $DB->get_records("bcgt_user_quals", array("userid" => $this->id, "role" => $role));
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\Qualification\UserQualification($record->qualid);
+                $obj = new \block_gradetracker\Qualification\UserQualification($record->qualid);
                 $structure = $obj->getStructure();
                 if ($obj->isValid() && !$obj->isDeleted() && $structure->isEnabled()) {
                     $obj->loadStudent($this->id);
@@ -239,7 +239,7 @@ class User {
         }
 
         // Order by type, level, subtype, name
-        $Sort = new \GT\Sorter();
+        $Sort = new \block_gradetracker\Sorter();
 
         foreach ($this->quals as $role => $quals) {
             $Sort->sortQualifications($this->quals[$role]);
@@ -250,7 +250,7 @@ class User {
 
     /**
      * Is a user on the given course as one of the roles defined for either STUDENT or STAFF
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @global type $GT
      * @param type $courseID
      * @param type $role
@@ -306,8 +306,8 @@ class User {
 
     /**
      * Check if the staff member is enrolled at the category level instead
-     * @global \GT\type $DB
-     * @global \GT\type $GT
+     * @global \block_gradetracker\type $DB
+     * @global \block_gradetracker\type $GT
      * @param type $catID
      * @return boolean
      */
@@ -366,8 +366,8 @@ class User {
 
     /**
      * Load the user's courses where they are either STUDENT or STAFF
-     * @global \GT\type $DB
-     * @global \GT\type $GT
+     * @global \block_gradetracker\type $DB
+     * @global \block_gradetracker\type $GT
      * @param type $role
      * @return boolean
      */
@@ -376,7 +376,7 @@ class User {
         global $DB, $GT;
 
         if (!$GT) {
-            $GT = new \GT\GradeTracker();
+            $GT = new \block_gradetracker\GradeTracker();
         }
 
         $this->courses[$role] = array();
@@ -417,7 +417,7 @@ class User {
 
             foreach ($records as $record) {
 
-                $obj = new \GT\Course($record->id);
+                $obj = new \block_gradetracker\Course($record->id);
 
                 if ($obj->isValid()) {
 
@@ -436,7 +436,7 @@ class User {
 
     /**
      * Check if this user is linked to a given qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @return type
      */
@@ -456,7 +456,7 @@ class User {
 
     /**
      * Check if this user is taking a specific unit on a given qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $unitID
      * @param type $role
@@ -503,7 +503,7 @@ class User {
 
     /**
      * Remove the user from the qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $role
      */
@@ -547,7 +547,7 @@ class User {
 
     /**
      * Remove the user from the unit on a qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $unitID
      * @param type $role
@@ -567,7 +567,7 @@ class User {
 
     /**
      * Get a user grade, e.g. Target, Aspirational, Ceta, etc...
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
      * @param type $params
      * @return boolean
@@ -599,7 +599,7 @@ class User {
                 $award = $DB->get_record("bcgt_qual_build_awards", array("id" => $record->grade));
                 if ($award) {
                     if ($returnGradeObject) {
-                        return new \GT\QualificationAward($award->id);
+                        return new \block_gradetracker\QualificationAward($award->id);
                     } else {
                         return ($return && isset($award->$return)) ? $award->$return : $award->name;
                     }
@@ -616,9 +616,9 @@ class User {
 
     /**
      * Get all the user's qual awards of a certain type, e.g. average, min, max, final
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
-     * @return \GT\QualificationAward
+     * @return \block_gradetracker\QualificationAward
      */
     public function getAllUserAwards($type) {
 
@@ -644,7 +644,7 @@ class User {
                     if (!is_null($record->qualid) && is_numeric($record->awardid)) {
                         $award = $DB->get_record("bcgt_qual_build_awards", array("id" => $record->awardid));
                         if ($award) {
-                            $obj = new \GT\QualificationAward($award->id);
+                            $obj = new \block_gradetracker\QualificationAward($award->id);
                             if ($obj->isValid()) {
                                 $arr['grade'] = $obj;
                                 $return[] = $arr;
@@ -664,7 +664,7 @@ class User {
     /**
      * Get multiple grade records for a student and type
      * e.g. get all their target grades for any qual they are on, in an array
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
      * @param type $params
      * @return type
@@ -703,7 +703,7 @@ class User {
                     if (!is_null($record->qualid) && is_numeric($record->grade)) {
                         $award = $DB->get_record("bcgt_qual_build_awards", array("id" => $record->grade));
                         if ($award) {
-                            $obj = new \GT\QualificationAward($award->id);
+                            $obj = new \block_gradetracker\QualificationAward($award->id);
                             if ($obj->isValid()) {
                                 $arr['grade'] = $obj;
                                 $return[] = $arr;
@@ -722,7 +722,7 @@ class User {
 
     /**
      * Clear user grade from DB (done before recalculating)
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
      * @param type $params
      * @return type
@@ -738,7 +738,7 @@ class User {
 
     /**
      * Set a user's grade, e.g. target, ceta, aspirational, etc..
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
      * @param type $grade
      * @param type $params
@@ -766,9 +766,9 @@ class User {
         $record = $DB->get_record_sql($sql, $sqlParams);
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = (isset($AUTOUPDATE) && $AUTOUPDATE === true) ? \GT\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_GRADE : \GT\Log::GT_LOG_DETAILS_UPDATED_USER_GRADE;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = (isset($AUTOUPDATE) && $AUTOUPDATE === true) ? \block_gradetracker\Log::GT_LOG_DETAILS_AUTO_UPDATED_USER_GRADE : \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_GRADE;
         $Log->beforejson = array(
             'type' => $type,
             'grade' => ($record) ? $record->grade : null
@@ -797,9 +797,9 @@ class User {
         );
 
         $Log->attributes = array(
-            \GT\Log::GT_LOG_ATT_QUALID => (isset($params['qualID'])) ? $params['qualID'] : null,
-            \GT\Log::GT_LOG_ATT_COURSEID => (isset($params['courseID'])) ? $params['courseID'] : null,
-            \GT\Log::GT_LOG_ATT_STUDID => $this->id
+            \block_gradetracker\Log::GT_LOG_ATT_QUALID => (isset($params['qualID'])) ? $params['qualID'] : null,
+            \block_gradetracker\Log::GT_LOG_ATT_COURSEID => (isset($params['courseID'])) ? $params['courseID'] : null,
+            \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->id
         );
 
         $Log->save();
@@ -811,8 +811,8 @@ class User {
 
     /**
      * Get user's qoe
-     * @global \GT\type $DB
-     * @return \GT\QualOnEntry
+     * @global \block_gradetracker\type $DB
+     * @return \block_gradetracker\QualOnEntry
      */
     public function getQualsOnEntry() {
 
@@ -823,7 +823,7 @@ class User {
         $records = $DB->get_records("bcgt_user_qoe", array("userid" => $this->id), "id");
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\QualOnEntry($record->id);
+                $obj = new \block_gradetracker\QualOnEntry($record->id);
                 if ($obj->isValid()) {
                     $return[] = $obj;
                 }
@@ -912,7 +912,7 @@ class User {
 
     /**
      * Get the user's avg gcse score
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getAverageGCSEScore() {
@@ -925,7 +925,7 @@ class User {
 
     /**
      * Set the user's avg gcse score
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $score
      * @return type
      */
@@ -961,7 +961,7 @@ class User {
 
         if ($this->isOnQual($qualID, "STUDENT")) {
 
-            $qual = new \GT\Qualification\UserQualification($qualID);
+            $qual = new \block_gradetracker\Qualification\UserQualification($qualID);
 
             \gt_debug("Calculating target grade for {$this->getName()} on {$qual->getDisplayName()}");
 
@@ -1016,7 +1016,7 @@ class User {
 
         if ($this->isOnQual($qualID, "STUDENT")) {
 
-            $qual = new \GT\Qualification\UserQualification($qualID);
+            $qual = new \block_gradetracker\Qualification\UserQualification($qualID);
 
             \gt_debug("Calculating weighted target grade for {$this->getName()} on {$qual->getDisplayName()}");
 
@@ -1043,7 +1043,7 @@ class User {
             }
 
             // Which method of calculation are we using?
-            $method = \GT\Setting::getSetting('weighted_target_method');
+            $method = \block_gradetracker\Setting::getSetting('weighted_target_method');
 
             \gt_debug("Using weighting calculation method: {$method}");
 
@@ -1069,10 +1069,10 @@ class User {
                 // Calculating by multiplying the UCAS points of the Target Grade by the qualification coefficient
 
                 // Are we using a Constant to artificially inflate the grade?
-                $constantsEnabled = \GT\Setting::getSetting('weighting_constants_enabled');
+                $constantsEnabled = \block_gradetracker\Setting::getSetting('weighting_constants_enabled');
 
                 // Are we weighting the grade UP or DOWN?
-                $direction = \GT\Setting::getSetting('weighted_target_direction');
+                $direction = \block_gradetracker\Setting::getSetting('weighted_target_direction');
                 if ($direction != 'UP' && $direction != 'DOWN') {
                     \gt_debug("Invalid direction ({$direction}). Should be either UP or DOWN");
                     return false;
@@ -1134,7 +1134,7 @@ class User {
 
         if ($this->isOnQual($qualID, "STUDENT")) {
 
-            $qual = new \GT\Qualification\UserQualification($qualID);
+            $qual = new \block_gradetracker\Qualification\UserQualification($qualID);
 
             \gt_debug("Calculating aspirational grade for {$this->getName()} on {$qual->getDisplayName()}");
 
@@ -1152,7 +1152,7 @@ class User {
 
                 \gt_debug("Using 'diff' configuration setting: {$diff}");
 
-                $targetGrade = new \GT\QualificationAward( $this->getUserGrade('target', array('qualID' => $qual->getID()), 'id') );
+                $targetGrade = new \block_gradetracker\QualificationAward( $this->getUserGrade('target', array('qualID' => $qual->getID()), 'id') );
                 if ($targetGrade && $targetGrade->isValid()) {
 
                     \gt_debug("Found Target grade ({$targetGrade->getName()}), incrementing rank by +({$diff})");
@@ -1198,7 +1198,7 @@ class User {
      */
     public function getQualAward($qualID) {
 
-        $qual = new \GT\Qualification\UserQualification($qualID);
+        $qual = new \block_gradetracker\Qualification\UserQualification($qualID);
         $qual->loadStudent($this->id);
         return $qual->getUserPredictedOrFinalAward();
 
@@ -1209,13 +1209,13 @@ class User {
         global $DB;
 
         $record = $DB->get_record("user", array("username" => $username), "id");
-        return ($record) ? new \GT\User($record->id) : false;
+        return ($record) ? new \block_gradetracker\User($record->id) : false;
 
     }
 
     public function getActiveUnitCredits($qualID) {
 
-        $qual = new \GT\Qualification\UserQualification($qualID);
+        $qual = new \block_gradetracker\Qualification\UserQualification($qualID);
         $qual->loadStudent($this->id);
         $units = $qual->getUnits();
 
@@ -1250,7 +1250,7 @@ class User {
 
     /**
      * Count all non-deleted & active (confirmed) users
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function countUsers() {

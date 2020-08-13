@@ -23,7 +23,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 
@@ -117,11 +117,11 @@ class Assessment {
     }
 
     public function getUserGrade() {
-        return ($this->userGrade instanceof \GT\CriteriaAward) ? $this->userGrade : new \GT\CriteriaAward();
+        return ($this->userGrade instanceof \block_gradetracker\CriteriaAward) ? $this->userGrade : new \block_gradetracker\CriteriaAward();
     }
 
     public function getUserCeta() {
-        return ($this->userCeta instanceof \GT\QualificationAward) ? $this->userCeta : new \GT\QualificationAward();
+        return ($this->userCeta instanceof \block_gradetracker\QualificationAward) ? $this->userCeta : new \block_gradetracker\QualificationAward();
     }
 
     public function getUserComments() {
@@ -137,7 +137,7 @@ class Assessment {
     }
 
     public function getUserLastUpdateBy() {
-        return new \GT\User($this->userLastUpdateBy);
+        return new \block_gradetracker\User($this->userLastUpdateBy);
     }
 
     public function getUserScore() {
@@ -217,7 +217,7 @@ class Assessment {
     /**
      * Load a student into the assessment
      * The qualification must be loaded first, otherwise we don't know which qualificationid to use
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $studentID
      * @return boolean
      */
@@ -228,7 +228,7 @@ class Assessment {
         $this->clearStudent();
 
         // If we've already loaded this student, don't do it again
-        if ($this->student && ( (is_numeric($studentID) && $this->student->id == $studentID) || $studentID instanceof \GT\User && $this->student->id == $studentID->id )) {
+        if ($this->student && ( (is_numeric($studentID) && $this->student->id == $studentID) || $studentID instanceof \block_gradetracker\User && $this->student->id == $studentID->id )) {
             return true;
         }
 
@@ -236,10 +236,10 @@ class Assessment {
             return false;
         }
 
-        if ($studentID instanceof \GT\User) {
+        if ($studentID instanceof \block_gradetracker\User) {
             $student = $studentID;
         } else {
-            $student = new \GT\User($studentID);
+            $student = new \block_gradetracker\User($studentID);
         }
 
         if ($student->isValid()) {
@@ -252,8 +252,8 @@ class Assessment {
             if ($record) {
 
                 $this->userAssessmentRowID = $record->id;
-                $this->userGrade = new \GT\CriteriaAward($record->grade);
-                $this->userCeta = new \GT\QualificationAward($record->ceta);
+                $this->userGrade = new \block_gradetracker\CriteriaAward($record->grade);
+                $this->userCeta = new \block_gradetracker\QualificationAward($record->ceta);
                 $this->userComments = $record->comments;
                 $this->userLastUpdate = $record->lastupdate;
                 $this->userLastUpdateBy = $record->lastupdateby;
@@ -269,17 +269,17 @@ class Assessment {
 
     /**
      * Load the qualification into the assessment
-     * @param \GT\Qualification $qual
+     * @param \block_gradetracker\Qualification $qual
      */
-    public function setQualification(\GT\Qualification $qual) {
+    public function setQualification(\block_gradetracker\Qualification $qual) {
         $this->qualification = $qual;
     }
 
-    public function setUserGrade(\GT\CriteriaAward $award) {
+    public function setUserGrade(\block_gradetracker\CriteriaAward $award) {
         $this->userGrade = $award;
     }
 
-    public function setUserCeta(\GT\QualificationAward $award) {
+    public function setUserCeta(\block_gradetracker\QualificationAward $award) {
         $this->userCeta = $award;
     }
 
@@ -356,7 +356,7 @@ class Assessment {
 
         // First check for one from this build
         if ($gradingStructureIDBuild && (int)$gradingStructureIDBuild > 0) {
-            $GradingStructure = new \GT\CriteriaAwardStructure($gradingStructureIDBuild);
+            $GradingStructure = new \block_gradetracker\CriteriaAwardStructure($gradingStructureIDBuild);
             if (!$GradingStructure->isValid() || !$GradingStructure->isEnabled() || $GradingStructure->isDeleted()) {
                 $GradingStructure = false;
             }
@@ -364,7 +364,7 @@ class Assessment {
 
         // Didn't find one for this build, so check one for this structure
         if (!$GradingStructure && $gradingStructureIDStructure && (int)$gradingStructureIDStructure > 0) {
-            $GradingStructure = new \GT\CriteriaAwardStructure($gradingStructureIDStructure);
+            $GradingStructure = new \block_gradetracker\CriteriaAwardStructure($gradingStructureIDStructure);
             if (!$GradingStructure->isValid() || !$GradingStructure->isEnabled() || $GradingStructure->isDeleted()) {
                 $GradingStructure = false;
             }
@@ -498,7 +498,7 @@ class Assessment {
 
     /**
      * Get the cell for the assessment's CETA column
-     * @global \GT\type $User
+     * @global \block_gradetracker\type $User
      * @param string $access
      * @return boolean
      */
@@ -773,7 +773,7 @@ class Assessment {
     /**
      * Get the cell for the assessment comments
      * @global type $CFG
-     * @global \GT\type $User
+     * @global \block_gradetracker\type $User
      * @param type $access
      * @param type $studentID
      * @return boolean
@@ -830,8 +830,8 @@ class Assessment {
 
     /**
      * Get the grid cell for a custom assessment field
-     * @global \GT\type $CFG
-     * @global \GT\type $User
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $User
      * @param type $field
      * @param type $access
      * @param type $studentID
@@ -1105,7 +1105,7 @@ class Assessment {
 
     /**
      * Get an assessment setting
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $setting
      * @return type
      */
@@ -1120,7 +1120,7 @@ class Assessment {
 
     /**
      * Get a user's attribute for this assessment on a particular qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $qualID
      * @param type $studentID
@@ -1152,7 +1152,7 @@ class Assessment {
 
     /**
      * Update a user's attribute for this assessment
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $value
      * @param type $qualID
@@ -1167,9 +1167,9 @@ class Assessment {
 
         $current = $this->getAttribute($attribute, $qualID, $studentID);
 
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
         $Log->beforejson = array(
             $attribute => ($current) ? $current : null
         );
@@ -1213,9 +1213,9 @@ class Assessment {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualification->getID(),
-                \GT\Log::GT_LOG_ATT_ASSID => $this->id,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualification->getID(),
+                \block_gradetracker\Log::GT_LOG_ATT_ASSID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -1227,7 +1227,7 @@ class Assessment {
 
     /**
      * Delete a user's attribute from the assessment
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $qualID
      * @param type $studentID
@@ -1254,9 +1254,9 @@ class Assessment {
 
         // --------- Log Info
         if (!is_null($studentID)) {
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_ATT;
 
             $check = $this->getAttribute($attribute, $qualID, $studentID);
             $Log->beforejson = array(
@@ -1271,9 +1271,9 @@ class Assessment {
 
             // ----------- Log the action
             $Log->attributes = array(
-                    \GT\Log::GT_LOG_ATT_QUALID => $qualID,
-                    \GT\Log::GT_LOG_ATT_ASSID => $this->id,
-                    \GT\Log::GT_LOG_ATT_STUDID => $studentID
+                    \block_gradetracker\Log::GT_LOG_ATT_QUALID => $qualID,
+                    \block_gradetracker\Log::GT_LOG_ATT_ASSID => $this->id,
+                    \block_gradetracker\Log::GT_LOG_ATT_STUDID => $studentID
                 );
 
             $Log->afterjson = array(
@@ -1291,7 +1291,7 @@ class Assessment {
 
     /**
      * Update an assessment setting
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $setting
      * @param type $value
      * @return type
@@ -1338,7 +1338,7 @@ class Assessment {
 
     /**
      * Save the user
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function saveUser() {
@@ -1346,9 +1346,9 @@ class Assessment {
         global $DB, $USER;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_ASS;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_ASS;
         $Log->beforejson = array(
             'grade' => ($this->_userRow) ? $this->_userRow->grade : null,
             'ceta' => ($this->_userRow) ? $this->_userRow->ceta : null,
@@ -1399,9 +1399,9 @@ class Assessment {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualification->getID(),
-                \GT\Log::GT_LOG_ATT_ASSID => $this->id,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualification->getID(),
+                \block_gradetracker\Log::GT_LOG_ATT_ASSID => $this->id,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -1438,7 +1438,7 @@ class Assessment {
 
             foreach ($this->qualIDs as $qualID) {
 
-                $qual = new \GT\Qualification($qualID);
+                $qual = new \block_gradetracker\Qualification($qualID);
                 $structure = $qual->getStructure();
                 $build = $qual->getBuild();
 
@@ -1467,7 +1467,7 @@ class Assessment {
 
     /**
      * Save the assessment
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function save() {
@@ -1553,7 +1553,7 @@ class Assessment {
 
     /**
      *
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function delete() {
@@ -1676,9 +1676,9 @@ class Assessment {
 
     /**
      * Get all assessments, or all assessments of a particular type
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
-     * @return \GT\Assessment
+     * @return \block_gradetracker\Assessment
      */
     public static function getAllAssessments($type = false) {
 
@@ -1693,7 +1693,7 @@ class Assessment {
         $return = array();
         if ($records) {
             foreach ($records as $record) {
-                $return[] = new \GT\Assessment($record->id);
+                $return[] = new \block_gradetracker\Assessment($record->id);
             }
         }
 
@@ -1746,7 +1746,7 @@ class Assessment {
         }
 
         // Sort them by date
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortAssessmentsByDate($return);
 
         return $return;
@@ -1755,18 +1755,18 @@ class Assessment {
 
     /**
      * Get the custom form fields defined for the assessment grid
-     * @return \GT\FormElement
+     * @return \block_gradetracker\FormElement
      */
     public static function getCustomFormFields() {
 
         $fields = array();
-        $fieldIDs = \GT\Setting::getSetting('assessment_grid_custom_form_elements');
+        $fieldIDs = \block_gradetracker\Setting::getSetting('assessment_grid_custom_form_elements');
 
         if (!empty($fieldIDs)) {
             $fieldIDs = explode(",", $fieldIDs);
             if ($fieldIDs) {
                 foreach ($fieldIDs as $fieldID) {
-                    $element = new \GT\FormElement($fieldID);
+                    $element = new \block_gradetracker\FormElement($fieldID);
                     $fields[$fieldID] = $element;
                 }
             }

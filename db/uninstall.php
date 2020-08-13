@@ -30,7 +30,7 @@ function xmldb_block_gradetracker_uninstall() {
 
     global $CFG, $DB;
 
-    $GT = new \GT\GradeTracker();
+    $GT = new \block_gradetracker\GradeTracker();
     $GT->uninstall();
 
 }

@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -122,7 +122,7 @@ class DataImport {
 
         // Compare headers
         $headerRow = fgetcsv($fh);
-        $headers = \GT\CSV\Template::$headersQOE;
+        $headers = \block_gradetracker\CSV\Template::$headersQOE;
 
         if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
@@ -158,14 +158,14 @@ class DataImport {
             $this->stripQoENames($subject);
 
             // Check valid user
-            $user = \GT\User::byUsername($username);
+            $user = \block_gradetracker\User::byUsername($username);
             if (!$user || !$user->isValid()) {
 
                 // If we want to insert them
                 if (isset($options['ins_users'])) {
 
                     if ($obj = \create_user_record($username, 'password')) {
-                        $user = new \GT\User($obj->id);
+                        $user = new \block_gradetracker\User($obj->id);
                         $this->output .= "[{$i}] " . sprintf( get_string('import:createduser', 'block_gradetracker'), $username, 'password' ) . "<br>";
                     } else {
                         $this->output .= "[{$i}] ERR: " . get_string('errors:import:createuser', 'block_gradetracker') . " - {$username}<br>";
@@ -187,7 +187,7 @@ class DataImport {
             if (isset($options['wipe_user_data']) && !in_array($user->id, $wipedUsersArray)) {
 
                 // Wipe their data
-                \GT\QualOnEntry::deleteUsersData($user->id);
+                \block_gradetracker\QualOnEntry::deleteUsersData($user->id);
 
                 // Output message
                 $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:wipeduserdata', 'block_gradetracker'), $username ) . "<br>";
@@ -198,11 +198,11 @@ class DataImport {
             }
 
             // Subject
-            $subjectID = \GT\QualOnEntry::getSubject($subject);
+            $subjectID = \block_gradetracker\QualOnEntry::getSubject($subject);
             if (!$subjectID) {
 
                 if (isset($options['ins_subjects'])) {
-                    $subjectID = \GT\QualOnEntry::createSubject($subject);
+                    $subjectID = \block_gradetracker\QualOnEntry::createSubject($subject);
                     $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:createdsubject', 'block_gradetracker'), $subject ) . "<br>";
                 } else {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:qoe:invalidsubject', 'block_gradetracker'), $subject) . "<br>";
@@ -213,11 +213,11 @@ class DataImport {
             }
 
             // Qual type
-            $qualID = \GT\QualOnEntry::getQual($qual, $level);
+            $qualID = \block_gradetracker\QualOnEntry::getQual($qual, $level);
             if (!$qualID) {
 
                 if (isset($options['ins_quals'])) {
-                    $qualID = \GT\QualOnEntry::createQual($qual, $level);
+                    $qualID = \block_gradetracker\QualOnEntry::createQual($qual, $level);
                     $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:createdqual', 'block_gradetracker'), $qual, $level ) . "<br>";
                 } else {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:qoe:invalidqual', 'block_gradetracker'), $qual, $level) . "<br>";
@@ -228,11 +228,11 @@ class DataImport {
             }
 
             // Grade
-            $gradeID = \GT\QualOnEntry::getGrade($qualID, $grade);
+            $gradeID = \block_gradetracker\QualOnEntry::getGrade($qualID, $grade);
             if (!$gradeID) {
 
                 if (isset($options['ins_grades'])) {
-                    $gradeID = \GT\QualOnEntry::createGrade($qualID, $grade);
+                    $gradeID = \block_gradetracker\QualOnEntry::createGrade($qualID, $grade);
                     $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:createdgrade', 'block_gradetracker'), $grade, $qual, $level) . "<br>";
                 } else {
                     $this->output .= "[{$i}] ERR: " . sprintf( get_string('errors:import:qoe:invalidgrade', 'block_gradetracker'), $grade, $qual, $level) . "<br>";
@@ -243,13 +243,13 @@ class DataImport {
             }
 
             // Now the student's record
-            $record = \GT\QualOnEntry::getRecord($user->id, $subjectID);
+            $record = \block_gradetracker\QualOnEntry::getRecord($user->id, $subjectID);
             if ($record) {
                 $record->setGradeID($gradeID);
                 $record->setYear($year);
                 $record->save();
             } else {
-                $record = new \GT\QualOnEntry();
+                $record = new \block_gradetracker\QualOnEntry();
                 $record->setUserID($user->id);
                 $record->setGradeID($gradeID);
                 $record->setSubjectID($subjectID);
@@ -330,9 +330,9 @@ class DataImport {
         $this->errCnt = $err;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_QOE;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_QOE;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
@@ -380,7 +380,7 @@ class DataImport {
 
         // Compare headers
         $headerRow = fgetcsv($fh);
-        $headers = \GT\CSV\Template::$headersAvgGCSE;
+        $headers = \block_gradetracker\CSV\Template::$headersAvgGCSE;
 
         if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
@@ -407,14 +407,14 @@ class DataImport {
             $avgGcse = $row[1];
 
             // Check valid user
-            $user = \GT\User::byUsername($username);
+            $user = \block_gradetracker\User::byUsername($username);
             if (!$user || !$user->isValid()) {
 
                 // If we want to insert them
                 if (isset($options['ins_users'])) {
 
                     if ($obj = \create_user_record($username, 'password')) {
-                        $user = new \GT\User($obj->id);
+                        $user = new \block_gradetracker\User($obj->id);
                         $this->output .= "[{$i}] " . sprintf( get_string('import:createduser', 'block_gradetracker'), $username, 'password' ) . "<br>";
                     } else {
                         $this->output .= "[{$i}] ERR: " . get_string('errors:import:createuser', 'block_gradetracker') . " - {$username}<br>";
@@ -434,7 +434,7 @@ class DataImport {
             if (isset($options['wipe_user_data'])) {
 
                 // Wipe their data
-                \GT\QualOnEntry::deleteUsersData($user->id);
+                \block_gradetracker\QualOnEntry::deleteUsersData($user->id);
 
                 // Output message
                 $this->output .= "[{$i}] " . sprintf( get_string('import:qoe:wipeduserdata', 'block_gradetracker'), $username ) . "<br>";
@@ -519,9 +519,9 @@ class DataImport {
         $this->errCnt = $err;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
@@ -574,7 +574,7 @@ class DataImport {
 
         // Compare headers
         $headerRow = fgetcsv($fh);
-        $headers = \GT\CSV\Template::$headersTargetGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersTargetGrades;
 
         if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
@@ -606,7 +606,7 @@ class DataImport {
             $avgGcse = $row[6];
 
             // Check valid user
-            $user = \GT\User::byUsername($username);
+            $user = \block_gradetracker\User::byUsername($username);
             if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
@@ -614,7 +614,7 @@ class DataImport {
             }
 
             // Check valid qual
-            $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
+            $qual = \block_gradetracker\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
             if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
@@ -711,9 +711,9 @@ class DataImport {
         $this->errCnt = $err;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
@@ -765,7 +765,7 @@ class DataImport {
 
         // Compare headers
         $headerRow = fgetcsv($fh);
-        $headers = \GT\CSV\Template::$headersAspirationalGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersAspirationalGrades;
 
         if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
@@ -796,7 +796,7 @@ class DataImport {
             $aspGrade = $row[5];
 
             // Check valid user
-            $user = \GT\User::byUsername($username);
+            $user = \block_gradetracker\User::byUsername($username);
             if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
@@ -804,7 +804,7 @@ class DataImport {
             }
 
             // Check valid qual
-            $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
+            $qual = \block_gradetracker\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
             if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
@@ -844,9 +844,9 @@ class DataImport {
         $this->errCnt = $err;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
@@ -896,7 +896,7 @@ class DataImport {
 
         // Compare headers
         $headerRow = fgetcsv($fh);
-        $headers = \GT\CSV\Template::$headersCetaGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersCetaGrades;
 
         if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
@@ -927,7 +927,7 @@ class DataImport {
             $course = $row[6];
 
             // Check valid user
-            $user = \GT\User::byUsername($username);
+            $user = \block_gradetracker\User::byUsername($username);
             if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
@@ -937,7 +937,7 @@ class DataImport {
             // if the qual info submitted is not empty.
             if (!empty($qualFamily) && !empty($qualLevel) && !empty($qualSubType) && !empty($qualName) && !empty($username)) {
                 // Check valid qual
-                $qual = \GT\Qualification::retrieve($qualFamily, $qualLevel, $qualSubType, $qualName);
+                $qual = \block_gradetracker\Qualification::retrieve($qualFamily, $qualLevel, $qualSubType, $qualName);
                 if (!$qual || !$qual->isValid()) {
                     $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualFamily} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                     $err++;
@@ -968,9 +968,9 @@ class DataImport {
             } else if (!empty($username) && !empty($course)) {
 
                 if ($byCourseMethod == 'importcourseshortname') {
-                    $coursecheck = \GT\Course::retrieve('shortname', $course);
+                    $coursecheck = \block_gradetracker\Course::retrieve('shortname', $course);
                 } else if ($byCourseMethod == 'importcourseid') {
-                    $coursecheck = \GT\Course::retrieve('id', $course);
+                    $coursecheck = \block_gradetracker\Course::retrieve('id', $course);
                 }
 
                 if ($coursecheck && $coursecheck->isValid()) {
@@ -1006,9 +1006,9 @@ class DataImport {
         $this->errCnt = $err;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
@@ -1054,7 +1054,7 @@ class DataImport {
 
         // Compare headers
         $headerRow = fgetcsv($fh);
-        $headers = \GT\CSV\Template::$headersWCoe;
+        $headers = \block_gradetracker\CSV\Template::$headersWCoe;
 
         if ($headerRow !== $headers) {
             $this->errors[] = sprintf( get_string('errors:import:headers', 'block_gradetracker'), implode(', ', $headers), implode(', ', $headerRow) );
@@ -1083,7 +1083,7 @@ class DataImport {
             $value = $row[5];
 
             // Check valid qual
-            $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
+            $qual = \block_gradetracker\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
             if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
@@ -1117,7 +1117,7 @@ class DataImport {
             $value = $row[5];
 
             // Check valid qual
-            $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
+            $qual = \block_gradetracker\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
             if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
@@ -1135,9 +1135,9 @@ class DataImport {
         }
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
@@ -1189,7 +1189,7 @@ class DataImport {
         $headerRow = fgetcsv($fh);
 
         // Get the default header to compare against
-        $headers = \GT\CSV\Template::$headersAssGrades;
+        $headers = \block_gradetracker\CSV\Template::$headersAssGrades;
 
         // Duplicate that into another variable for some reason
         $headersWithCommentCol = $headers;
@@ -1206,7 +1206,7 @@ class DataImport {
         $isUsingCommentsCol = (in_array('Comments', $headerRow));
 
         // Check assessment is valid
-        $Assessment = new \GT\Assessment($assessmentID);
+        $Assessment = new \block_gradetracker\Assessment($assessmentID);
         if (!$Assessment->isValid()) {
             $this->errors[] = get_string('invalidassessment', 'block_gradetracker');
             return false;
@@ -1238,7 +1238,7 @@ class DataImport {
             $comments = ($isUsingCommentsCol) ? $row[8] : null;
 
             // Check valid user
-            $user = \GT\User::byUsername($username);
+            $user = \block_gradetracker\User::byUsername($username);
             if (!$user || !$user->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invaliduser', 'block_gradetracker') . " - {$username}<br>";
                 $err++;
@@ -1246,7 +1246,7 @@ class DataImport {
             }
 
             // Check valid qual
-            $qual = \GT\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
+            $qual = \block_gradetracker\Qualification::retrieve($qualType, $qualLevel, $qualSubType, $qualName);
             if (!$qual || !$qual->isValid()) {
                 $this->output .= "[{$i}] ERR: " . get_string('errors:import:invalidqual', 'block_gradetracker') . " - {$qualType} | {$qualLevel} | {$qualSubType} | {$qualName}<br>";
                 $err++;
@@ -1269,7 +1269,7 @@ class DataImport {
             }
 
             // Check grade is valid (if set)
-            $gradeObj = new \GT\CriteriaAward();
+            $gradeObj = new \block_gradetracker\CriteriaAward();
             if ($grade) {
                 $GradingStructure = $qualAssessment->getQualificationAssessmentGradingStructure();
                 $gradeObj = ($GradingStructure && $GradingStructure->isValid()) ? $GradingStructure->getAwardByShortName($grade) : false;
@@ -1281,7 +1281,7 @@ class DataImport {
             }
 
             // Check CETA is valid (if set)
-            $cetaObj = new \GT\QualificationAward();
+            $cetaObj = new \block_gradetracker\QualificationAward();
             if ($ceta) {
                 $QualBuild = $qual->getBuild();
                 $cetaObj = $QualBuild->getAwardByName($ceta);
@@ -1316,14 +1316,14 @@ class DataImport {
         $this->errCnt = $err;
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
             'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
         );
-        $Log->addAttribute(\GT\Log::GT_LOG_ATT_ASSID, $Assessment->getID());
+        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_ASSID, $Assessment->getID());
         $Log->save();
         // ------------ Logging Info
 
@@ -1334,8 +1334,8 @@ class DataImport {
 
     /**
      * Check the student data sheet to make sure we can import it
-     * @global \GT\type $CFG
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $DB
      * @global array $MSGS
      * @return boolean
      */
@@ -1385,9 +1385,9 @@ class DataImport {
         // Generate an overview of the spreadsheet so we can see what has changed
         $output = "";
         $now = time();
-        $student = new \GT\User($this->getStudentID());
+        $student = new \block_gradetracker\User($this->getStudentID());
 
-        $qualification = new \GT\Qualification\UserQualification($this->getQualID());
+        $qualification = new \block_gradetracker\Qualification\UserQualification($this->getQualID());
         if (!$qualification->isValid()) {
             $this->errors[] = get_string('invalidqual', 'block_gradetracker');
             return false;
@@ -1495,15 +1495,15 @@ class DataImport {
 
                 foreach ($updates as $update) {
 
-                    $qual = new \GT\Qualification($update->qualid);
-                    $assessment = new \GT\Assessment($update->assessmentid);
-                    $updateBy = new \GT\User($update->lastupdateby);
+                    $qual = new \block_gradetracker\Qualification($update->qualid);
+                    $assessment = new \block_gradetracker\Assessment($update->assessmentid);
+                    $updateBy = new \block_gradetracker\User($update->lastupdateby);
 
                     // Grade
-                    $grade = new \GT\CriteriaAward($update->grade);
+                    $grade = new \block_gradetracker\CriteriaAward($update->grade);
 
                     // Ceta
-                    $ceta = new \GT\QualificationAward($update->ceta);
+                    $ceta = new \block_gradetracker\QualificationAward($update->ceta);
 
                     $gradeValue = $grade->getShortName();
                     if ($assessment->getSetting('grading_method') == 'numeric') {
@@ -1615,7 +1615,7 @@ class DataImport {
                     if ($col == 'A') {
 
                         $qualID = (int)$cellValue;
-                        $studentQual = new \GT\Qualification\UserQualification($qualID);
+                        $studentQual = new \block_gradetracker\Qualification\UserQualification($qualID);
 
                         if (!$studentQual->isValid() || !$studentQual->loadStudent($this->getStudentID())) {
                             $this->errors[] = sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
@@ -1712,7 +1712,7 @@ class DataImport {
                             // Custom Form Field
 
                             $fieldID = (isset($matches[1])) ? $matches[1] : false;
-                            $field = new \GT\FormElement($fieldID);
+                            $field = new \block_gradetracker\FormElement($fieldID);
 
                             // Check the current value of this custom field
                             $currentCustomField = $studentAssessment->getCustomFieldValue($field, 'v', false);
@@ -1794,7 +1794,7 @@ class DataImport {
                     if ($col == 'A') {
 
                         $qualID = (int)$cellValue;
-                        $studentQual = new \GT\Qualification\UserQualification($qualID);
+                        $studentQual = new \block_gradetracker\Qualification\UserQualification($qualID);
 
                         if (!$studentQual->isValid() || !$studentQual->loadStudent($this->getStudentID())) {
                             $this->errors[] = sprintf( get_string('import:datasheet:process:error:qual', 'block_gradetracker'), $objWorksheet->getCell("B".$row)->getCalculatedValue() );
@@ -1906,9 +1906,9 @@ class DataImport {
                         continue;
                     }
 
-                    $updateBy = new \GT\User($update->lastupdateby);
+                    $updateBy = new \block_gradetracker\User($update->lastupdateby);
 
-                    $value = new \GT\CriteriaAward($update->awardid);
+                    $value = new \block_gradetracker\CriteriaAward($update->awardid);
                     $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$unit->getDisplayName()} ({$criterion->getName()})", $value->getName(), \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
 
                 }
@@ -2268,7 +2268,7 @@ class DataImport {
         $now = time();
         $output = "";
 
-        $qualification = new \GT\Qualification\UserQualification($this->getQualID());
+        $qualification = new \block_gradetracker\Qualification\UserQualification($this->getQualID());
         if (!$qualification->isValid()) {
             $this->errors[] = get_string('invalidqual', 'block_gradetracker');
             return false;
@@ -2337,10 +2337,10 @@ class DataImport {
                     continue;
                 }
 
-                $updateBy = new \GT\User($update->lastupdateby);
-                $student = new \GT\User($update->userid);
+                $updateBy = new \block_gradetracker\User($update->lastupdateby);
+                $student = new \block_gradetracker\User($update->userid);
 
-                $value = new \GT\CriteriaAward($update->awardid);
+                $value = new \block_gradetracker\CriteriaAward($update->awardid);
                 $output .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$student->getDisplayName()} ({$criterion->getName()})", $value->getName(), $value->getShortName(), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
 
             }
@@ -2437,7 +2437,7 @@ class DataImport {
                         break;
                     }
 
-                    $student = new \GT\User($studentID);
+                    $student = new \block_gradetracker\User($studentID);
                     if (!$student->isValid()) {
                         $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                         break;
@@ -2589,7 +2589,7 @@ class DataImport {
                         break;
                     }
 
-                    $student = new \GT\User($studentID);
+                    $student = new \block_gradetracker\User($studentID);
                     if (!$student->isValid()) {
                         $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                         break;
@@ -2666,8 +2666,8 @@ class DataImport {
 
     /**
      * Check the student data sheet to make sure we can import it
-     * @global \GT\type $CFG
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $DB
      * @global array $MSGS
      * @return boolean
      */
@@ -2718,7 +2718,7 @@ class DataImport {
         $output = "";
         $now = time();
 
-        $qualification = new \GT\Qualification\UserQualification($this->getQualID());
+        $qualification = new \block_gradetracker\Qualification\UserQualification($this->getQualID());
         if (!$qualification->isValid()) {
             $this->errors[] = get_string('invalidqual', 'block_gradetracker');
             return false;
@@ -2835,15 +2835,15 @@ class DataImport {
 
                 foreach ($updates as $update) {
 
-                    $student = new \GT\User($update->userid);
-                    $assessment = new \GT\Assessment($update->assessmentid);
-                    $updateBy = new \GT\User($update->lastupdateby);
+                    $student = new \block_gradetracker\User($update->userid);
+                    $assessment = new \block_gradetracker\Assessment($update->assessmentid);
+                    $updateBy = new \block_gradetracker\User($update->lastupdateby);
 
                     // Grade
-                    $grade = new \GT\CriteriaAward($update->grade);
+                    $grade = new \block_gradetracker\CriteriaAward($update->grade);
 
                     // Ceta
-                    $ceta = new \GT\QualificationAward($update->ceta);
+                    $ceta = new \block_gradetracker\QualificationAward($update->ceta);
 
                     $gradeValue = $grade->getShortName();
                     if ($assessment->getSetting('grading_method') == 'numeric') {
@@ -2954,7 +2954,7 @@ class DataImport {
                             break;
                         }
 
-                        $student = new \GT\User($studentID);
+                        $student = new \block_gradetracker\User($studentID);
                         if (!$student->isValid()) {
                             $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                             break;
@@ -3057,7 +3057,7 @@ class DataImport {
                         } else if (preg_match("/^\[([0-9]+)\]/", $column, $matches)) {
                             // Custom Form Field
                             $fieldID = (isset($matches[1])) ? $matches[1] : false;
-                            $field = new \GT\FormElement($fieldID);
+                            $field = new \block_gradetracker\FormElement($fieldID);
 
                             // Check the current value of this custom field
                             $currentCustomField = $studentAssessment->getCustomFieldValue($field, 'v', false);
@@ -3142,7 +3142,7 @@ class DataImport {
                             break;
                         }
 
-                        $student = new \GT\User($studentID);
+                        $student = new \block_gradetracker\User($studentID);
                         if (!$student->isValid()) {
                             $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                             break;
@@ -3281,10 +3281,10 @@ class DataImport {
                             continue;
                         }
 
-                        $stud = new \GT\User($update->userid);
-                        $updateBy = new \GT\User($update->lastupdateby);
+                        $stud = new \block_gradetracker\User($update->userid);
+                        $updateBy = new \block_gradetracker\User($update->lastupdateby);
 
-                        $value = new \GT\CriteriaAward($update->awardid);
+                        $value = new \block_gradetracker\CriteriaAward($update->awardid);
                         $uOutput .= sprintf( get_string('aupdatedtobbycatd', 'block_gradetracker'), "{$stud->getDisplayName()} ({$criterion->getName()})", $value->getName(), \gt_html($update->comments), $updateBy->getDisplayName(), date('d-m-Y, H:i', $update->lastupdate)) . "<br>";
 
                     }
@@ -3337,7 +3337,7 @@ class DataImport {
                                 break;
                             }
 
-                            $student = new \GT\User($studentID);
+                            $student = new \block_gradetracker\User($studentID);
                             if (!$student->isValid()) {
                                 $this->errors[] = get_string('invaliduser', 'block_gradetracker') . ' - ' . "[{$studentID}] " . $objWorksheet->getCell("B".$row)->getCalculatedValue() . " " . $objWorksheet->getCell("C" . $row)->getCalculatedValue() . " (".$objWorksheet->getCell("D" . $row)->getCalculatedValue().")";
                                 break;

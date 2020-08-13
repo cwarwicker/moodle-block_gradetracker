@@ -26,7 +26,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -66,7 +66,7 @@ class UnitBuild {
 
     /**
      * Update an attribute
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $value
      */
@@ -91,7 +91,7 @@ class UnitBuild {
 
     /**
      * Get all default values for this build
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function getAllDefaultValues() {
@@ -115,11 +115,11 @@ class UnitBuild {
      * Load the structure id and level id into the object
      * @param type $structureID
      * @param type $levelID
-     * @return \GT\UnitBuild
+     * @return \block_gradetracker\UnitBuild
      */
     public static function load($structureID, $levelID) {
 
-        $obj = new \GT\UnitBuild();
+        $obj = new \block_gradetracker\UnitBuild();
         $obj->setStructureID($structureID);
         $obj->setLevelID($levelID);
         return $obj;

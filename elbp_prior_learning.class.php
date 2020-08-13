@@ -60,7 +60,7 @@ class elbp_prior_learning extends Plugin {
 
         $TPL->set("obj", $this);
 
-        $user = new \GT\User($this->student->id);
+        $user = new \block_gradetracker\User($this->student->id);
 
         $TPL->set("prior", $user->getQualsOnEntry());
         $TPL->set("avgScore", $user->getAverageGCSEScore());
@@ -80,7 +80,7 @@ class elbp_prior_learning extends Plugin {
 
         $TPL = new \ELBP\Template();
 
-        $user = new \GT\User($this->student->id);
+        $user = new \block_gradetracker\User($this->student->id);
 
         $TPL->set("prior", $user->getQualsOnEntry());
         $TPL->set("avgScore", $user->getAverageGCSEScore());
@@ -141,7 +141,7 @@ class elbp_prior_learning extends Plugin {
         // Load student
         $this->loadStudent($obj->student->id);
 
-        $user = new \GT\User($this->student->id);
+        $user = new \block_gradetracker\User($this->student->id);
 
         $prior = $user->getQualsOnEntry();
 
@@ -169,7 +169,7 @@ class elbp_prior_learning extends Plugin {
         // Load student
         $this->loadStudent($obj->student->id);
 
-        $user = new \GT\User($this->student->id);
+        $user = new \block_gradetracker\User($this->student->id);
 
         $prior = $user->getQualsOnEntry();
 

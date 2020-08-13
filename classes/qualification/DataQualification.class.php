@@ -22,17 +22,17 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Qualification;
+namespace block_gradetracker\Qualification;
 
 defined('MOODLE_INTERNAL') or die();
 
 require_once('Qualification.class.php');
 
-class DataQualification extends \GT\Qualification {
+class DataQualification extends \block_gradetracker\Qualification {
 
     /**
      * Build the SQL query to get a full report on all the students on this qualification
-     * @global \GT\Qualification\type $DB
+     * @global \block_gradetracker\Qualification\type $DB
      * @param type $unitAwards
      * @param type $view
      * @param type $criteriaNames
@@ -350,7 +350,7 @@ class DataQualification extends \GT\Qualification {
     /**
      * Build the SQL query to get the full report on all the units on this qual
      * @global type $CFG
-     * @global \GT\Qualification\type $DB
+     * @global \block_gradetracker\Qualification\type $DB
      * @param type $unitAwards
      * @return type
      */
@@ -451,7 +451,7 @@ class DataQualification extends \GT\Qualification {
 
     /**
      * Count number of criteria on this qualification with this grading structure that this student has achieved
-     * @global \GT\Qualification\type $DB
+     * @global \block_gradetracker\Qualification\type $DB
      * @param type $gradingStructureID
      * @param type $studentID
      * @return type

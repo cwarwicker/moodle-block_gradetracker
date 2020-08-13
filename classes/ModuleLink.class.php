@@ -23,7 +23,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -417,7 +417,7 @@ class ModuleLink {
     /**
      * Get the parts of this record instance, if it has any
      * e.g. turnitintool has parts stored in turnitintool_parts
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function getRecordParts() {
         return $this->recordParts;
@@ -516,7 +516,7 @@ class ModuleLink {
 
     /**
      * Delete the mod link and any activities linked to it
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function delete() {
 
@@ -539,7 +539,7 @@ class ModuleLink {
 
         if ($refs) {
             foreach ($refs as $ref) {
-                $activity = new \GT\Activity($ref->id);
+                $activity = new \block_gradetracker\Activity($ref->id);
                 $activity->remove();
             }
         }
@@ -551,10 +551,10 @@ class ModuleLink {
     public function getQualsOnModule($partID = null) {
 
         $return = array();
-        $quals = \GT\Activity::getQualsLinkedToCourseModule($this->courseModID, $partID);
+        $quals = \block_gradetracker\Activity::getQualsLinkedToCourseModule($this->courseModID, $partID);
         if ($quals) {
             foreach ($quals as $qualID) {
-                $qual = new \GT\Qualification($qualID);
+                $qual = new \block_gradetracker\Qualification($qualID);
                 if ($qual->isValid()) {
                     $return[] = $qual;
                 }
@@ -568,10 +568,10 @@ class ModuleLink {
     public function getUnitsOnModule($qualID = false) {
 
         $return = array();
-        $unitIDs = \GT\Activity::getUnitsLinkedToCourseModule($this->courseModID, $qualID);
+        $unitIDs = \block_gradetracker\Activity::getUnitsLinkedToCourseModule($this->courseModID, $qualID);
         if ($unitIDs) {
             foreach ($unitIDs as $unitID) {
-                $unit = new \GT\Unit($unitID);
+                $unit = new \block_gradetracker\Unit($unitID);
                 if ($unit->isValid()) {
                     $return[] = $unit;
                 }
@@ -589,24 +589,24 @@ class ModuleLink {
      */
     public function countCriteriaOnModule($qualID = false, $unit = false, $partID = null) {
 
-        $critIDs = \GT\Activity::getCriteriaLinkedToCourseModule($this->courseModID, $partID, $qualID);
+        $critIDs = \block_gradetracker\Activity::getCriteriaLinkedToCourseModule($this->courseModID, $partID, $qualID);
         return count($critIDs);
 
     }
 
     /**
      * Get list of modules attached to qual unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $unitID
-     * @return \GT\ModuleLink
+     * @return \block_gradetracker\ModuleLink
      */
     public static function getModulesOnUnit($qualID, $unitID, $courseID = false) {
 
         global $DB;
 
         $return = array();
-        $cmIDs = \GT\Activity::getCourseModulesLinkedToUnit($qualID, $unitID);
+        $cmIDs = \block_gradetracker\Activity::getCourseModulesLinkedToUnit($qualID, $unitID);
 
         if ($cmIDs) {
 
@@ -624,7 +624,7 @@ class ModuleLink {
                             }
                         }
 
-                        $mod = new \GT\ModuleLink($modLink->id);
+                        $mod = new \block_gradetracker\ModuleLink($modLink->id);
                         $mod->setRecordID($courseMod->instance);
                         $mod->setCourseModID($courseMod->id);
                         $return[$courseMod->id] = $mod;
@@ -648,7 +648,7 @@ class ModuleLink {
     public function getCriteriaOnModule($qualID, $unit, $partID = null) {
 
         $return = array();
-        $critIDs = \GT\Activity::getCriteriaLinkedToCourseModule($this->courseModID, $partID, $qualID, $unit->getID());
+        $critIDs = \block_gradetracker\Activity::getCriteriaLinkedToCourseModule($this->courseModID, $partID, $qualID, $unit->getID());
         if ($critIDs) {
             foreach ($critIDs as $critID) {
                 $criterion = $unit->getCriterion($critID);
@@ -664,7 +664,7 @@ class ModuleLink {
 
     /**
      * Count the number of activity refs that use this module
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function countActivityRefs() {
@@ -738,8 +738,8 @@ class ModuleLink {
 
     /**
      * Get mod links which are enabled
-     * @global \GT\type $DB
-     * @return \GT\ModuleLink
+     * @global \block_gradetracker\type $DB
+     * @return \block_gradetracker\ModuleLink
      */
     public static function getEnabledModLinks() {
 
@@ -749,7 +749,7 @@ class ModuleLink {
         $records = $DB->get_records("bcgt_mods", array("enabled" => 1, "deleted" => 0), "modid ASC", "id");
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\ModuleLink($record->id);
+                $obj = new \block_gradetracker\ModuleLink($record->id);
                 $return[] = $obj;
             }
         }
@@ -760,7 +760,7 @@ class ModuleLink {
 
     /**
      * Get all the mods installed in Moodle
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function getAllInstalledMods() {
@@ -800,7 +800,7 @@ class ModuleLink {
 
     /**
      * Get a bcgt_mod ModuleLink based on a courseModuleID
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -808,12 +808,12 @@ class ModuleLink {
 
         global $DB;
 
-        $modID = \GT\Activity::getActivityModuleFromCourseModule($cmID);
+        $modID = \block_gradetracker\Activity::getActivityModuleFromCourseModule($cmID);
         $check = $DB->get_record("bcgt_mods", array("modid" => $modID), "id");
         if ($check) {
-            $moduleLink = new \GT\ModuleLink($check->id);
+            $moduleLink = new \block_gradetracker\ModuleLink($check->id);
             if ($moduleLink->isValid()) {
-                $instance = \GT\Activity::getActivityInstanceFromCourseModule($cmID);
+                $instance = \block_gradetracker\Activity::getActivityInstanceFromCourseModule($cmID);
                 $moduleLink->setRecordID($instance);
                 $moduleLink->setCourseModID($cmID);
                 return $moduleLink;
@@ -826,7 +826,7 @@ class ModuleLink {
 
     /**
      * Get course module record from id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -839,9 +839,9 @@ class ModuleLink {
 
     /**
      * Get the ModuleLink object by the name of the module
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $name
-     * @return boolean|\GT\ModuleLink
+     * @return boolean|\block_gradetracker\ModuleLink
      */
     public static function getByModName($name) {
 
@@ -851,7 +851,7 @@ class ModuleLink {
         if ($mod) {
             $record = $DB->get_record("bcgt_mods", array("modid" => $mod->id), "id");
             if ($record) {
-                return new \GT\ModuleLink($record->id);
+                return new \block_gradetracker\ModuleLink($record->id);
             }
         }
 

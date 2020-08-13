@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -255,7 +255,7 @@ class Sorter {
             return false;
         }
 
-        // Sorting \GT\Unit objects
+        // Sorting \block_gradetracker\Unit objects
         if ($objects) {
 
             uasort($units, function($a, $b) {
@@ -290,7 +290,7 @@ class Sorter {
             return false;
         }
 
-        // Sorting \GT\Unit objects
+        // Sorting \block_gradetracker\Unit objects
         if ($objects) {
 
             uasort($units, function($a, $b) {
@@ -318,7 +318,7 @@ class Sorter {
         // Explode order string into array
         $order = explode(",", $order);
 
-        // Sorting \GT\Unit objects
+        // Sorting \block_gradetracker\Unit objects
         if ($objects) {
             $this->customUnitsUASort($units, $order, $objects);
         }

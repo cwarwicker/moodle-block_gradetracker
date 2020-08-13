@@ -83,11 +83,11 @@
                                                                                     <select name="gt_criteria[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][<?php echo $criterion->getID() ?>]">
                                                                                         <option value="0"></option>
                                                                                         <?php foreach($moduleActivity->getRecordParts() as $part): ?>
-                                                                                            <option value="<?php echo $part->id ?>" <?php echo (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID(), $part->id)) ? 'selected' : ''; ?> ><?php echo $part->name ?></option>
+                                                                                            <option value="<?php echo $part->id ?>" <?php echo (\block_gradetracker\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID(), $part->id)) ? 'selected' : ''; ?> ><?php echo $part->name ?></option>
                                                                                         <?php endforeach; ?>
                                                                                     </select>
                                                                                 <?php else: ?>
-                                                                                    <input type='checkbox' name='gt_criteria[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][<?php echo $criterion->getID() ?>]' <?php echo ( (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID())) ? 'checked' : '' )  ?> />
+                                                                                    <input type='checkbox' name='gt_criteria[<?php echo $qual->getID() ?>][<?php echo $unit->getID() ?>][<?php echo $criterion->getID() ?>]' <?php echo ( (\block_gradetracker\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID())) ? 'checked' : '' )  ?> />
                                                                                 <?php endif; ?>
                                                                             </td>
                                                                         <?php endforeach; ?>
@@ -197,11 +197,11 @@
                                                                 <select name="gt_criteria[<?php echo $activity->getCourseModID() ?>][<?php echo $crit->getID() ?>]">
                                                                     <option value="0"></option>
                                                                     <?php foreach($activity->getRecordParts() as $part): ?>
-                                                                        <option value="<?php echo $part->id ?>" <?php echo (\GT\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID(), $part->id)) ? 'selected' : ''; ?> ><?php echo $part->name ?></option>
+                                                                        <option value="<?php echo $part->id ?>" <?php echo (\block_gradetracker\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID(), $part->id)) ? 'selected' : ''; ?> ><?php echo $part->name ?></option>
                                                                     <?php endforeach; ?>
                                                                 </select>
                                                             <?php else: ?>
-                                                                <input type="checkbox" name="gt_criteria[<?php echo $activity->getCourseModID() ?>][<?php echo $crit->getID() ?>]" <?php echo (\GT\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID())) ? 'checked' : ''; ?> >
+                                                                <input type="checkbox" name="gt_criteria[<?php echo $activity->getCourseModID() ?>][<?php echo $crit->getID() ?>]" <?php echo (\block_gradetracker\Activity::checkExists($activity->getCourseModID(), $qual->getID(), $unit->getID(), $crit->getID())) ? 'checked' : ''; ?> >
                                                             <?php endif; ?>
                                                         </td>
                                                     <?php endforeach; ?>

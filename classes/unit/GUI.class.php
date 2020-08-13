@@ -22,13 +22,13 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Unit;
+namespace block_gradetracker\Unit;
 
 defined('MOODLE_INTERNAL') or die();
 
 require_once('Unit.class.php');
 
-class GUI extends \GT\Unit {
+class GUI extends \block_gradetracker\Unit {
 
     private $tpl;
 
@@ -43,11 +43,11 @@ class GUI extends \GT\Unit {
 
         // Load the builds based on the structure selected
         $structureID = $this->getStructureID();
-        $Structure = new \GT\QualificationStructure($structureID);
+        $Structure = new \block_gradetracker\QualificationStructure($structureID);
         if ($Structure->isValid()) {
 
             // Levels
-            $levels = \GT\Level::getAllStructureLevels($structureID);
+            $levels = \block_gradetracker\Level::getAllStructureLevels($structureID);
             $this->tpl->set("levels", $levels);
 
             // Unit Grading Structures
@@ -83,7 +83,7 @@ class GUI extends \GT\Unit {
         }
 
         $this->tpl->set("Structure", $Structure);
-        $this->tpl->set("structures", \GT\QualificationStructure::getAllStructures());
+        $this->tpl->set("structures", \block_gradetracker\QualificationStructure::getAllStructures());
 
     }
 
@@ -161,8 +161,8 @@ class GUI extends \GT\Unit {
         if (isset($this->searchParams)) {
             $this->tpl->set("searchParams", $this->searchParams);
         }
-        $this->tpl->set("structures", \GT\QualificationStructure::getAllStructures());
-        $this->tpl->set("allLevels", \GT\Level::getAllLevels());
+        $this->tpl->set("structures", \block_gradetracker\QualificationStructure::getAllStructures());
+        $this->tpl->set("allLevels", \block_gradetracker\Level::getAllLevels());
 
     }
 

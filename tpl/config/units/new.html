@@ -207,7 +207,7 @@
 
                                                 <td>
                                                     <select id='gt_change_criterion_type' critNum='<?php echo $dynamicNum ?>' name='unit_criteria[<?php echo $dynamicNum ?>][type]'>
-                                                        <?php foreach(\GT\Criterion::getSupportedTypes() as $type): ?>
+                                                        <?php foreach(\block_gradetracker\Criterion::getSupportedTypes() as $type): ?>
                                                             <?php if ($Structure->isLevelEnabled($type->id)): ?>
                                                                 <option value='<?php echo $type->id ?>' <?php echo ($criterion->getType() == $type->id) ? 'selected' : ''; ?> ><?php echo $type->type ?></option>
                                                             <?php endif; ?>
@@ -217,7 +217,7 @@
 
                                                 <td id='gt_criterion_options_cell_<?php echo $dynamicNum ?>' class='gt_criterion_options_cell'>
                                                     <?php foreach((array)$criterion->getFormOptions() as $opt): ?>
-                                                        <?php $formElement = \GT\FormElement::create($opt); ?>
+                                                        <?php $formElement = \block_gradetracker\FormElement::create($opt); ?>
                                                         <small><?php echo $opt->label ?></small><br>
                                                         <?php echo $formElement->display( array('name' => 'unit_criteria['.$dynamicNum.'][options]') ) ?>
                                                         <br>
@@ -254,7 +254,7 @@
 
                                                 <td>
                                                     <select name='unit_criteria[<?php echo $dynamicNum ?>][gradingtype]'>
-                                                        <?php foreach( \GT\CriteriaAward::getSupportedGradingTypes() as $type): ?>
+                                                        <?php foreach( \block_gradetracker\CriteriaAward::getSupportedGradingTypes() as $type): ?>
                                                             <option value='<?php echo $type ?>' <?php echo ($criterion->getAttribute('gradingtype') == $type) ? 'selected' : ''; ?> ><?php echo $type ?></option>
                                                         <?php endforeach; ?>
                                                     </select>

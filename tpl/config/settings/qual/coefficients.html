@@ -31,7 +31,7 @@
                 </tr>
                 <tr>
                     <?php for($col = 1; $col <= $percentiles; $col++): ?>
-                        <th id="gt_bg_col_<?php echo $col ?>" class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
+                        <th id="gt_bg_col_<?php echo $col ?>" class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
                     <?php endfor; ?>
                 </tr>
             </table>
@@ -43,7 +43,7 @@
                 <tr>
                     <th></th>
                     <?php for($col = 1; $col <= $percentiles; $col++): ?>
-                        <th id="gt_bg_col_<?php echo $col ?>" class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
+                        <th id="gt_bg_col_<?php echo $col ?>" class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
                     <?php endfor; ?>
                 </tr>
                 <tr>
@@ -58,7 +58,7 @@
                     <td><?php echo $string['default'] ?></td>
                     <?php for($col = 1; $col <= $percentiles; $col++): ?>
                         <td>
-                            <input type="radio" name="default_percentile" value="<?php echo $col ?>" <?php echo (\GT\Setting::getSetting('default_weighting_percentile') == $col) ? 'checked' : '' ?> />
+                            <input type="radio" name="default_percentile" value="<?php echo $col ?>" <?php echo (\block_gradetracker\Setting::getSetting('default_weighting_percentile') == $col) ? 'checked' : '' ?> />
                         </td>
                     <?php endfor; ?>
                 </tr>
@@ -90,7 +90,7 @@
                             <tr>
                                 <th><?php echo $string['qualbuild'] ?></th>
                                 <?php for($col = 1; $col <= $percentiles; $col++): ?>
-                                    <th class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
+                                    <th class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
                                 <?php endfor; ?>
                             </tr>
 
@@ -136,7 +136,7 @@
                             <tr>
                                 <th><?php echo $string['qualification'] ?></th>
                                 <?php for($col = 1; $col <= $percentiles; $col++): ?>
-                                    <th class="gt_percentile" style="background-color:<?php echo (\GT\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
+                                    <th class="gt_percentile" style="background-color:<?php echo (\block_gradetracker\QualificationWeighting::getPercentileColour($col)) ?>;"><?php echo $col ?></th>
                                 <?php endfor; ?>
                             </tr>
 

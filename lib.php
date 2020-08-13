@@ -124,7 +124,7 @@ function gt_debug($info) {
     // Create directory if it doersn't exist
     \gt_create_data_directory("debug");
 
-    $file = fopen( \GT\GradeTracker::dataroot() . "/debug/{$USER->id}.txt" , 'a');
+    $file = fopen( \block_gradetracker\GradeTracker::dataroot() . "/debug/{$USER->id}.txt" , 'a');
     if ($file) {
         fwrite($file, "[".date('d-m-Y H:i:s')."] " . $info . "\n");
         fclose($file);
@@ -157,7 +157,7 @@ function gt_stop($debug) {
  */
 function gt_has_capability($cap, $access = false, $thisContext = false, $user = false) {
 
-    $GT = new \GT\GradeTracker();
+    $GT = new \block_gradetracker\GradeTracker();
 
     // if we want to check a specific course context then use that
     if ($thisContext) {
@@ -216,7 +216,7 @@ function gt_has_capability($cap, $access = false, $thisContext = false, $user = 
 function gt_has_user_capability($cap, $userID) {
     global $GT;
     if (!isset($GT)) {
-        $GT = new \GT\GradeTracker();
+        $GT = new \block_gradetracker\GradeTracker();
     }
     $contexts = $GT->getUserContexts($userID);
     return gt_has_capability($cap, $contexts);
@@ -379,9 +379,9 @@ function gt_create_data_directory($dir) {
     global $CFG;
 
     // Check for main plugin directory
-    if (!is_dir( \GT\GradeTracker::dataroot() )) {
+    if (!is_dir( \block_gradetracker\GradeTracker::dataroot() )) {
         if (is_writeable($CFG->dataroot)) {
-            if (!mkdir(\GT\GradeTracker::dataroot(), 0755, true)) {
+            if (!mkdir(\block_gradetracker\GradeTracker::dataroot(), 0755, true)) {
                 return false;
             }
         } else {
@@ -390,9 +390,9 @@ function gt_create_data_directory($dir) {
     }
 
     // Now try and make the actual dir we want
-    if (!is_dir( \GT\GradeTracker::dataroot() . '/' . $dir )) {
-        if (is_writeable(\GT\GradeTracker::dataroot())) {
-            if (!mkdir(\GT\GradeTracker::dataroot() . '/' . $dir, 0755, true)) {
+    if (!is_dir( \block_gradetracker\GradeTracker::dataroot() . '/' . $dir )) {
+        if (is_writeable(\block_gradetracker\GradeTracker::dataroot())) {
+            if (!mkdir(\block_gradetracker\GradeTracker::dataroot() . '/' . $dir, 0755, true)) {
                 return false;
             }
         } else {
@@ -418,7 +418,7 @@ function gt_create_data_path_code($path) {
     global $DB;
 
     // Strip the dataroot from the beginning.
-    $path = str_replace(\GT\GradeTracker::dataroot(), '', $path);
+    $path = str_replace(\block_gradetracker\GradeTracker::dataroot(), '', $path);
     if (strpos($path, DIRECTORY_SEPARATOR) === 0) {
         $path = ltrim($path, DIRECTORY_SEPARATOR);
     }
@@ -478,7 +478,7 @@ function gt_save_file_contents($data, $file) {
     \gt_create_data_directory("tmp/data");
 
     $file = gt_sanitise_path($file);
-    $path = \GT\GradeTracker::dataroot() . "/tmp/data/{$file}";
+    $path = \block_gradetracker\GradeTracker::dataroot() . "/tmp/data/{$file}";
 
     $file = fopen( $path , 'a');
     if ($file) {
@@ -529,9 +529,9 @@ function gt_save_file($file, $path, $name, $new = true) {
     }
 
     if ($new) {
-        return move_uploaded_file($file, \GT\GradeTracker::dataroot() . '/' . $path . '/' . $name);
+        return move_uploaded_file($file, \block_gradetracker\GradeTracker::dataroot() . '/' . $path . '/' . $name);
     } else {
-        return rename($file, \GT\GradeTracker::dataroot() . '/' . $path . '/' . $name);
+        return rename($file, \block_gradetracker\GradeTracker::dataroot() . '/' . $path . '/' . $name);
     }
 
 }
@@ -986,7 +986,7 @@ function gt_display_debug_section() {
         echo "</td>";
         echo "</a>";
         echo "<td>";
-        echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/download.php?f=".\gt_create_data_path_code( \GT\GradeTracker::dataroot() . '/debug/'.$USER->id.'.txt' )."&t=".time()."' class='gt_refresh_url_time' target='_blank' title='".get_string('viewlogs', 'block_gradetracker')."'>";
+        echo "<a href='{$CFG->wwwroot}/blocks/gradetracker/download.php?f=".\gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/debug/'.$USER->id.'.txt' )."&t=".time()."' class='gt_refresh_url_time' target='_blank' title='".get_string('viewlogs', 'block_gradetracker')."'>";
         echo "<img src='{$CFG->wwwroot}/blocks/gradetracker/pix/page_white_text.png' alt='".get_string('viewlogs', 'block_gradetracker')."' />";
         echo "</a>";
         echo "</td>";
@@ -1012,7 +1012,7 @@ function gt_display_debug_section() {
  */
 function gt_get_overriden_settings() {
 
-    $file = \GT\GradeTracker::dataroot() . '/settings.json';
+    $file = \block_gradetracker\GradeTracker::dataroot() . '/settings.json';
     if (file_exists($file)) {
         $content = file_get_contents($file);
         return serialize( json_decode($content) );
@@ -1122,7 +1122,7 @@ function gt_auto_enrol($data) {
 
     global $DB;
 
-    $GT = new \GT\GradeTracker();
+    $GT = new \block_gradetracker\GradeTracker();
 
     if ($GT->getSetting('use_auto_enrol_quals') == 1) {
 
@@ -1141,7 +1141,7 @@ function gt_auto_enrol($data) {
             return true;
         }
 
-        $GT_User = new \GT\User($data->userid);
+        $GT_User = new \block_gradetracker\User($data->userid);
 
         foreach ($quals as $qual) {
             $user_role = ($role->roleid < 5 ? "STAFF" : "STUDENT");
@@ -1174,12 +1174,12 @@ function gt_auto_enrol($data) {
         }
 
         if (!$GT_User) {
-            $GT_User = new \GT\User($data->userid);
+            $GT_User = new \block_gradetracker\User($data->userid);
         }
 
         foreach ($quals as $qual) {
 
-            $Qual = new \GT\Qualification($qual->qualid);
+            $Qual = new \block_gradetracker\Qualification($qual->qualid);
             $units = $Qual->getUnits();
 
             $user_role = ($role->roleid < 5 ? "STAFF" : "STUDENT");
@@ -1198,7 +1198,7 @@ function gt_auto_unenrol($data) {
 
     global $DB;
 
-    $GT = new \GT\GradeTracker();
+    $GT = new \block_gradetracker\GradeTracker();
 
     if ($GT->getSetting('use_auto_unenrol_quals') == 1) {
 
@@ -1207,7 +1207,7 @@ function gt_auto_unenrol($data) {
             return true;
         }
 
-        $GT_User = new \GT\User($data->userid);
+        $GT_User = new \block_gradetracker\User($data->userid);
 
         foreach ($quals as $qual) {
             $GT_User->removeFromQual($qual->qualid);
@@ -1224,12 +1224,12 @@ function gt_auto_unenrol($data) {
         }
 
         if (!$GT_User) {
-            $GT_User = new \GT\User($data->userid);
+            $GT_User = new \block_gradetracker\User($data->userid);
         }
 
         foreach ($quals as $qual) {
 
-            $Qual = new \GT\Qualification($qual->qualid);
+            $Qual = new \block_gradetracker\Qualification($qual->qualid);
             $units = $Qual->getUnits();
 
             foreach ($units as $unit) {
@@ -1394,7 +1394,7 @@ function gt_can_user_access_activity($cmID, $userID) {
     global $DB;
 
     // Get the course module record
-    $cm = \GT\ModuleLink::getCourseModule($cmID);
+    $cm = \block_gradetracker\ModuleLink::getCourseModule($cmID);
 
     // Get the modinfo for the course this course module is on
     $modinfo = get_fast_modinfo($cm->course);

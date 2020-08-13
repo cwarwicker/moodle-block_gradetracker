@@ -270,7 +270,7 @@
                     <?php if ($unitsReport): ?>
                         <?php foreach($unitsReport as $row): ?>
                         <tr>
-                            <td><?php echo \GT\Unit::name($row->id); ?></td>
+                            <td><?php echo \block_gradetracker\Unit::name($row->id); ?></td>
                             <td><?php echo (int)$row->studsawardedunit ?> / <?php echo (int)$row->studsonunit ?></td>
                             <?php foreach($awards as $award): ?>
                                 <?php $fieldName = 'unitawardcnt_'.\gt_make_db_field_safe($award, $usedFieldNames['unit']); ?>

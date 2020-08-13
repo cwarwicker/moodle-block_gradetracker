@@ -23,13 +23,13 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Qualification;
+namespace block_gradetracker\Qualification;
 
 defined('MOODLE_INTERNAL') or die();
 
 require_once('Qualification.class.php');
 
-class GUI extends \GT\Qualification {
+class GUI extends \block_gradetracker\Qualification {
 
     private $tpl;
 
@@ -100,18 +100,18 @@ class GUI extends \GT\Qualification {
 
         // Load the builds based on the structure selected
         $structureID = $this->getStructureID();
-        $Structure = new \GT\QualificationStructure($structureID);
+        $Structure = new \block_gradetracker\QualificationStructure($structureID);
         if ($Structure->isValid()) {
-            $builds = \GT\QualificationBuild::getAllBuilds($structureID);
+            $builds = \block_gradetracker\QualificationBuild::getAllBuilds($structureID);
             $this->tpl->set("builds", $builds);
         } else {
             $Structure = false;
         }
 
         $this->tpl->set("Structure", $Structure);
-        $this->tpl->set("structures", \GT\QualificationStructure::getAllStructures());
-        $this->tpl->set("allLevels", \GT\Level::getAllLevels());
-        $this->tpl->set("allSubTypes", \GT\SubType::getAllSubTypes());
+        $this->tpl->set("structures", \block_gradetracker\QualificationStructure::getAllStructures());
+        $this->tpl->set("allLevels", \block_gradetracker\Level::getAllLevels());
+        $this->tpl->set("allSubTypes", \block_gradetracker\SubType::getAllSubTypes());
         $this->tpl->set("allCats", \core_course_category::make_categories_list());
 
         // Load units and courses
@@ -119,7 +119,7 @@ class GUI extends \GT\Qualification {
         $this->getCourses();
 
         // Sort the units by level for the select menus
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortUnitsByLevel($this->units);
 
     }
@@ -130,9 +130,9 @@ class GUI extends \GT\Qualification {
     public function displayFormSearchQualifications() {
 
         $structureID = (isset($this->searchParams['structureID'])) ? $this->searchParams['structureID'] : false;
-        $Structure = new \GT\QualificationStructure($structureID);
+        $Structure = new \block_gradetracker\QualificationStructure($structureID);
         if ($Structure->isValid()) {
-            $builds = \GT\QualificationBuild::getAllBuilds($structureID);
+            $builds = \block_gradetracker\QualificationBuild::getAllBuilds($structureID);
             $this->tpl->set("builds", $builds);
         } else {
             $Structure = false;
@@ -143,15 +143,15 @@ class GUI extends \GT\Qualification {
         if (isset($this->searchParams)) {
             $this->tpl->set("searchParams", $this->searchParams);
         }
-        $this->tpl->set("structures", \GT\QualificationStructure::getAllStructures());
-        $this->tpl->set("allLevels", \GT\Level::getAllLevels());
-        $this->tpl->set("allSubTypes", \GT\SubType::getAllSubTypes());
+        $this->tpl->set("structures", \block_gradetracker\QualificationStructure::getAllStructures());
+        $this->tpl->set("allLevels", \block_gradetracker\Level::getAllLevels());
+        $this->tpl->set("allSubTypes", \block_gradetracker\SubType::getAllSubTypes());
 
     }
 
     /**
      * Search for qualifications
-     * @global \GT\Qualification\type $MSGS
+     * @global \block_gradetracker\Qualification\type $MSGS
      */
     public function submitFormSearch($deleted = false) {
 

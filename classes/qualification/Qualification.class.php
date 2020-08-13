@@ -24,7 +24,7 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -53,7 +53,7 @@ class Qualification {
 
         global $DB;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         $this->hash = \gt_rand_str(5);
 
@@ -133,7 +133,7 @@ class Qualification {
         }
 
         // CHeck if we have a custom display name first
-        $QualStructure = new \GT\QualificationStructure($this->getStructureID());
+        $QualStructure = new \block_gradetracker\QualificationStructure($this->getStructureID());
         if ( ($format = $QualStructure->getCustomDisplayNameFormat()) ) {
 
             $level = $this->getBuild()->getLevel();
@@ -200,7 +200,7 @@ class Qualification {
         if (!isset($this->build)) {
 
             $this->build = false;
-            $build = new \GT\QualificationBuild($this->buildID);
+            $build = new \block_gradetracker\QualificationBuild($this->buildID);
             $this->build = $build;
 
         }
@@ -263,28 +263,28 @@ class Qualification {
 
     public function getStructure() {
 
-        $structure = new \GT\QualificationStructure($this->getStructureID());
+        $structure = new \block_gradetracker\QualificationStructure($this->getStructureID());
         return $structure;
     }
 
     /**
      * Get the structure name
-     * @return \GT\QualificationStructure
+     * @return \block_gradetracker\QualificationStructure
      */
     public function getStructureName() {
 
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getDisplayName() : false;
 
     }
 
     /**
      * Get the structure name
-     * @return \GT\QualificationStructure
+     * @return \block_gradetracker\QualificationStructure
      */
     public function getStructureExactName() {
 
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         return ($structure->isValid()) ? $structure->getName() : false;
 
     }
@@ -342,9 +342,9 @@ class Qualification {
 
     /**
      * Get just one unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $unitID
-     * @return \GT\Unit|boolean
+     * @return \block_gradetracker\Unit|boolean
      */
     public function getOneUnit($unitID) {
 
@@ -358,7 +358,7 @@ class Qualification {
         // Otherwise get it out of the database and load it into the units array
         $qualUnit = $DB->get_record("bcgt_qual_units", array("qualid" => $this->id, "unitid" => $unitID));
         if ($qualUnit) {
-            $unit = new \GT\Unit($qualUnit->unitid);
+            $unit = new \block_gradetracker\Unit($qualUnit->unitid);
             if ($unit->isValid()) {
                 $unit->setQualStructureID($this->getStructureID());
                 $this->units[$unit->getID()] = $unit;
@@ -411,19 +411,19 @@ class Qualification {
 
     /**
      * Load the units on this qualification
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function loadUnits() {
 
         global $DB;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         $this->units = array();
         $qualUnits = $DB->get_records("bcgt_qual_units", array("qualid" => $this->id));
         if ($qualUnits) {
             foreach ($qualUnits as $qualUnit) {
-                $unit = new \GT\Unit($qualUnit->unitid);
+                $unit = new \block_gradetracker\Unit($qualUnit->unitid);
                 if ($unit->isValid() && !$unit->isDeleted()) {
                     $unit->setQualStructureID($this->getStructureID());
                     $this->units[$unit->getID()] = $unit;
@@ -440,7 +440,7 @@ class Qualification {
 
     protected function sortUnits() {
 
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $structure = $this->getStructure();
 
         $customOrder = $structure->getCustomOrder('units');
@@ -506,7 +506,7 @@ class Qualification {
 
     /**
      * Load users on this qualification, of specific role
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $role
      * @param int $courseID If this is set, then the user must also be enrolled on this course in this role
      */
@@ -573,7 +573,7 @@ class Qualification {
         $params[] = $role;
 
         // Page - If we are looking at a class grid
-        $limit = \GT\Setting::getSetting('class_grid_paging');
+        $limit = \block_gradetracker\Setting::getSetting('class_grid_paging');
         if ($limit <= 0) {
             $limit = false;
         }
@@ -589,13 +589,13 @@ class Qualification {
 
         if ($records) {
             foreach ($records as $record) {
-                $user = new \GT\User($record->id);
+                $user = new \block_gradetracker\User($record->id);
                 $return[] = $user;
             }
         }
 
         // Sort them
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortUsers($return);
 
         // Store in array
@@ -636,8 +636,8 @@ class Qualification {
 
     /**
      * Load courses that are linked to this qualification
-     * @global \GT\type $DB
-     * @return \GT\Course
+     * @global \block_gradetracker\type $DB
+     * @return \block_gradetracker\Course
      */
     public function loadCourses() {
 
@@ -646,7 +646,7 @@ class Qualification {
         $records = $DB->get_records("bcgt_course_quals", array("qualid" => $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $course = new \GT\Course($record->courseid);
+                $course = new \block_gradetracker\Course($record->courseid);
                 if ($course->isValid()) {
                     $this->courses[$course->id] = $course;
                 }
@@ -680,8 +680,8 @@ class Qualification {
 
     /**
      * Load courses that are linked to this qualification
-     * @global \GT\type $DB
-     * @return \GT\Course
+     * @global \block_gradetracker\type $DB
+     * @return \block_gradetracker\Course
      */
     public function loadGroups($courseID) {
 
@@ -831,8 +831,8 @@ class Qualification {
     /**
      * Load any Assessments linked to this qual
      * By this we mean the Formal Assessments, or whatever they have been called in the system
-     * @global \GT\type $DB
-     * @return \GT\Assessment
+     * @global \block_gradetracker\type $DB
+     * @return \block_gradetracker\Assessment
      */
     protected function loadAssessments() {
 
@@ -844,7 +844,7 @@ class Qualification {
         $records = $DB->get_records("bcgt_assessment_quals", array("qualid" => $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $assessment = new \GT\Assessment($record->assessmentid);
+                $assessment = new \block_gradetracker\Assessment($record->assessmentid);
                 if ($assessment->isValid()) {
                     $assessment->setQualification($this);
 
@@ -860,7 +860,7 @@ class Qualification {
         }
 
         // Sort them by date
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortAssessmentsByDate($return);
 
         $this->assessments = $return;
@@ -886,7 +886,7 @@ class Qualification {
         }
 
         // Ensure they are sorted by date
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortAssessmentsByDate($assessments);
 
         // Reverse the order, so they are in DESC date order
@@ -965,7 +965,7 @@ class Qualification {
         // Load these ones
         if ($unitIDs) {
             foreach ($unitIDs as $unitID) {
-                $unit = new \GT\Unit($unitID);
+                $unit = new \block_gradetracker\Unit($unitID);
                 if ($unit->isValid()) {
                     $this->units[$unit->getID()] = $unit;
                 }
@@ -994,7 +994,7 @@ class Qualification {
         // Load these ones
         if ($courseIDs) {
             foreach ($courseIDs as $courseID) {
-                $course = new \GT\Course($courseID);
+                $course = new \block_gradetracker\Course($courseID);
                 if ($course->isValid()) {
                     $this->courses[$course->id] = $course;
                 }
@@ -1006,7 +1006,7 @@ class Qualification {
     /**
      * Take the values from the Qualification form and load them into the FormElement objects
      * @param type $array
-     * @return \GT\Qualification
+     * @return \block_gradetracker\Qualification
      */
     public function setCustomElementValues($array) {
 
@@ -1091,7 +1091,7 @@ class Qualification {
     public function loadCustomFormElements() {
 
         // Get the possible elements for the qualification form
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         $elements = $structure->getCustomFormElements('qualification');
 
         // Get the saved
@@ -1145,7 +1145,7 @@ class Qualification {
 
         }
 
-        $Sorter = new \GT\Sorter();
+        $Sorter = new \block_gradetracker\Sorter();
         $Sorter->sortCriteriaValues($values);
 
         return $values;
@@ -1213,7 +1213,7 @@ class Qualification {
                             switch( get_class($criterion) ) {
 
                                 // Standard criterion
-                                case 'GT\Criteria\StandardCriterion':
+                                case 'block_gradetracker\Criteria\StandardCriterion':
 
                                     // If only 1 level of sub criteria, add them in
                                     // Though if this top level criterion has the setting "force popup" don't show the sub criteria in the grid table
@@ -1230,12 +1230,12 @@ class Qualification {
                                 break;
 
                                 // Numeric criterion - Only top level go in the header
-                                case 'GT\Criteria\NumericCriterion':
+                                case 'block_gradetracker\Criteria\NumericCriterion':
 
                                 break;
 
                                 // Ranged criterion - Only top level go in the header
-                                case 'GT\Criteria\RangedCriterion':
+                                case 'block_gradetracker\Criteria\RangedCriterion':
 
                                 break;
 
@@ -1251,8 +1251,8 @@ class Qualification {
 
         }
 
-        $Sorter = new \GT\Sorter();
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $Sorter = new \block_gradetracker\Sorter();
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         $customOrder = $structure->getCustomOrder('criteria');
         if ($customOrder) {
             $Sorter->sortCriteriaCustom($names, $customOrder, false, true);
@@ -1299,7 +1299,7 @@ class Qualification {
             return $this->featuresEnabled[$name];
         }
 
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         if (!$structure->isValid()) {
             return false;
         }
@@ -1321,7 +1321,7 @@ class Qualification {
             return $this->levelsEnabled[$name];
         }
 
-        $structure = new \GT\QualificationStructure( $this->getStructureID() );
+        $structure = new \block_gradetracker\QualificationStructure( $this->getStructureID() );
         if (!$structure->isValid()) {
             return false;
         }
@@ -1333,14 +1333,14 @@ class Qualification {
 
     /**
      * Check to make sure there are no errors with the qualification before saving
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public function hasNoErrors() {
 
         global $DB;
 
-        $Structure = new \GT\QualificationStructure( $this->structureID );
+        $Structure = new \block_gradetracker\QualificationStructure( $this->structureID );
 
         // Check build is valid
         if (!$this->getBuild()->isValid()) {
@@ -1431,7 +1431,7 @@ class Qualification {
         global $CFG;
 
         // create new qualificaiton object
-        $newqual = new \GT\Qualification();
+        $newqual = new \block_gradetracker\Qualification();
         $newqual->setBuildID($this->buildID);
         $newqual->setName($this->name." (copy)");
 
@@ -1506,7 +1506,7 @@ class Qualification {
 
     /**
      * Save the qual unit links
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function saveQualUnits() {
 
@@ -1542,7 +1542,7 @@ class Qualification {
 
     /**
      * Save the qual course links
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     private function saveQualCourses() {
 
@@ -1552,7 +1552,7 @@ class Qualification {
         if ($this->courses) {
             foreach ($this->courses as $course) {
 
-                $Course = new \GT\Course($course->id);
+                $Course = new \block_gradetracker\Course($course->id);
                 $Course->addCourseQual($this->id);
 
             }
@@ -1576,7 +1576,7 @@ class Qualification {
 
     /**
      * Remove students who are attached to the qual, but not any of its courses
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      */
     public function removeStudentsNotOnQualCourse() {
 
@@ -1605,7 +1605,7 @@ class Qualification {
         $records = $DB->get_records_sql($sql, array($this->id, CONTEXT_COURSE, $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\User($record->id);
+                $obj = new \block_gradetracker\User($record->id);
                 $obj->removeFromQual($this->id);
             }
         }
@@ -1615,7 +1615,7 @@ class Qualification {
     /**
      * Get the weighting percentile for the current FA grade
      */
-    public function getClassAssessmentWeightingPercentile(\GT\Assessment $assessment, array $students) {
+    public function getClassAssessmentWeightingPercentile(\block_gradetracker\Assessment $assessment, array $students) {
 
         if (!$assessment) {
             return false;
@@ -1637,7 +1637,7 @@ class Qualification {
                 $assessmentAward = false;
                 $assessmentGrade = $assessment->getUserGrade();
                 if ($assessmentGrade) {
-                    $assessmentAward = \GT\QualificationAward::findAwardByName($this->getBuildID(), $assessmentGrade->getName());
+                    $assessmentAward = \block_gradetracker\QualificationAward::findAwardByName($this->getBuildID(), $assessmentGrade->getName());
                 }
 
                 // Get the user's target grade
@@ -1660,7 +1660,7 @@ class Qualification {
             // Get the multiplier for this build
             $multiplier = $this->getBuild()->getAttribute('build_default_weighting_multiplier');
 
-            $QualWeighting = new \GT\QualificationWeighting();
+            $QualWeighting = new \block_gradetracker\QualificationWeighting();
             return $QualWeighting->calculateWeightingPercentile($targetUCAS, $assessmentUCAS, $multiplier, $this->id, $userCnt);
 
         }
@@ -1673,7 +1673,7 @@ class Qualification {
     /**
      * Get the weighting percentile for the current FA grade
      */
-    public function getClassAssessmentCetaWeightingPercentile(\GT\Assessment $assessment, array $students) {
+    public function getClassAssessmentCetaWeightingPercentile(\block_gradetracker\Assessment $assessment, array $students) {
 
         if (!$assessment) {
             return false;
@@ -1714,7 +1714,7 @@ class Qualification {
             // Get the multiplier for this build
             $multiplier = $this->getBuild()->getAttribute('build_default_weighting_multiplier');
 
-            $QualWeighting = new \GT\QualificationWeighting();
+            $QualWeighting = new \block_gradetracker\QualificationWeighting();
             return $QualWeighting->calculateWeightingPercentile($targetUCAS, $assessmentUCAS, $multiplier, $this->id, $userCnt);
 
         }
@@ -1726,7 +1726,7 @@ class Qualification {
 
     /**
      * Get a qualification attribute
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $attribute
      * @param type $userID
      * @return type
@@ -1783,7 +1783,7 @@ class Qualification {
     public function getWeightingCoefficient() {
 
         // Which percentile are we using?
-        $default = \GT\Setting::getSetting('default_weighting_percentile');
+        $default = \block_gradetracker\Setting::getSetting('default_weighting_percentile');
         if (!$default) {
             \gt_debug("No default percentile defined in the configuration settings");
             return false;
@@ -1807,7 +1807,7 @@ class Qualification {
      * @return type
      */
     public function getSystemSetting($setting, $userID = null) {
-        return \GT\Setting::getSetting($setting, $userID);
+        return \block_gradetracker\Setting::getSetting($setting, $userID);
     }
 
     /**
@@ -1823,7 +1823,7 @@ class Qualification {
 
     /**
      * Search for qualifications, based on params supplied
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $params
      * @return type
      */
@@ -1891,7 +1891,7 @@ class Qualification {
         $records = $DB->get_records_sql($sql, $sqlParams);
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\Qualification($record->id);
+                $obj = new \block_gradetracker\Qualification($record->id);
                 if ($obj->isValid()) {
 
                     $ok = true;
@@ -1925,7 +1925,7 @@ class Qualification {
      */
     public static function getNameByID($qID, $name=false) {
 
-        $qual = new \GT\Qualification($qID);
+        $qual = new \block_gradetracker\Qualification($qID);
         if ($name) {
             return ($qual->isValid()) ? $qual->getName() : false;
         }
@@ -1935,7 +1935,7 @@ class Qualification {
 
     /**
      * Retrieve a qual by its type, level, subtype and name (used in importing data)
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $type
      * @param type $level
      * @param type $subType
@@ -1959,7 +1959,7 @@ class Qualification {
                 AND q.name = ?";
 
         $record = $DB->get_record_sql($sql, array($type, $level, $subType, $name));
-        return ($record) ? new \GT\Qualification($record->id) : false;
+        return ($record) ? new \block_gradetracker\Qualification($record->id) : false;
 
     }
 
@@ -1970,16 +1970,16 @@ class Qualification {
      */
     public static function hasAssessments($qID) {
 
-        $qual = new \GT\Qualification($qID);
+        $qual = new \block_gradetracker\Qualification($qID);
         return $qual->getAssessments();
 
     }
 
     /**
      * Get a QualBuild from the qualification id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
-     * @return boolean|\GT\QualificationBuild
+     * @return boolean|\block_gradetracker\QualificationBuild
      */
     public static function getBuildFromQualID($qualID) {
 
@@ -1987,7 +1987,7 @@ class Qualification {
 
         $record = $DB->get_record("bcgt_qualifications", array("id" => $qualID));
         if ($record) {
-            return new \GT\QualificationBuild($record->buildid);
+            return new \block_gradetracker\QualificationBuild($record->buildid);
         }
 
         return false;
@@ -1996,9 +1996,9 @@ class Qualification {
 
     /**
      * Get a QualStructure from the qualification id
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
-     * @return boolean|\GT\QualificationStructure
+     * @return boolean|\block_gradetracker\QualificationStructure
      */
     public static function getStructureFromQualID($qualID) {
 
@@ -2006,9 +2006,9 @@ class Qualification {
 
         $record = $DB->get_record("bcgt_qualifications", array("id" => $qualID));
         if ($record) {
-            $qualBuild = new \GT\QualificationBuild($record->buildid);
+            $qualBuild = new \block_gradetracker\QualificationBuild($record->buildid);
             if ($qualBuild->isValid()) {
-                return new \GT\QualificationStructure($qualBuild->getStructureID());
+                return new \block_gradetracker\QualificationStructure($qualBuild->getStructureID());
             }
         }
 
@@ -2018,7 +2018,7 @@ class Qualification {
 
     /**
      * Count non-deleted qualifications in the system
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return type
      */
     public static function countQuals() {

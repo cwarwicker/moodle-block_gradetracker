@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -155,7 +155,7 @@ class Log
                     }
                 }
 
-                $this->user = new \GT\User($this->userid);
+                $this->user = new \block_gradetracker\User($this->userid);
 
             }
 
@@ -168,7 +168,7 @@ class Log
      * Add an attribute to the array
      * @param type $name
      * @param type $value
-     * @return \GT\Log
+     * @return \block_gradetracker\Log
      */
     public function addAttribute($name, $value) {
         $this->attributes[$name] = $value;
@@ -248,37 +248,37 @@ class Log
 
         if ($att == self::GT_LOG_ATT_ASSID) {
 
-            $ass = new \GT\Assessment($val);
+            $ass = new \block_gradetracker\Assessment($val);
             return ($ass->isValid()) ? $ass->getName() : '-';
 
         } else if ($att == self::GT_LOG_ATT_COURSEID) {
 
-            $course = new \GT\Course($val);
+            $course = new \block_gradetracker\Course($val);
             return ($course->isValid()) ? \gt_html($course->getName()) : '-';
 
         } else if ($att == self::GT_LOG_ATT_CRITID) {
 
-            $crit = \GT\Criterion::load($val);
+            $crit = \block_gradetracker\Criterion::load($val);
             return ($crit && $crit->isValid()) ? \gt_html($crit->getName()) : '-';
 
         } else if ($att == self::GT_LOG_ATT_QUALID) {
 
-            $qual = new \GT\Qualification($val);
+            $qual = new \block_gradetracker\Qualification($val);
             return ($qual->isValid()) ? $qual->getDisplayName() : '-';
 
         } else if ($att == self::GT_LOG_ATT_RANGEID) {
 
-            $crit = \GT\Criterion::load($val);
+            $crit = \block_gradetracker\Criterion::load($val);
             return ($crit && $crit->isValid()) ? $crit->getName() : '-';
 
         } else if ($att == self::GT_LOG_ATT_STUDID) {
 
-            $student = new \GT\User($val);
+            $student = new \block_gradetracker\User($val);
             return $student->getDisplayName();
 
         } else if ($att == self::GT_LOG_ATT_UNITID) {
 
-            $unit = new \GT\Unit($val);
+            $unit = new \block_gradetracker\Unit($val);
             return ($unit->isValid()) ? $unit->getDisplayName() : '-';
 
         } else {
@@ -290,9 +290,9 @@ class Log
 
     /**
      * Get the most n recent logs
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $limit
-     * @return \GT\Log
+     * @return \block_gradetracker\Log
      */
     public static function getRecentLogs($limit = 20) {
 
@@ -303,7 +303,7 @@ class Log
         $records = $DB->get_records("bcgt_logs", array(), "id DESC", "id", 0, $limit);
         if ($records) {
             foreach ($records as $record) {
-                $return[] = new \GT\Log($record->id);
+                $return[] = new \block_gradetracker\Log($record->id);
             }
         }
 
@@ -313,7 +313,7 @@ class Log
 
     /**
      * Search for logs
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $params
      * @return type
      */
@@ -382,7 +382,7 @@ class Log
 
                 // If it's a student, need to get the id
                 if ($att == 'STUDENTID') {
-                    $usr = \GT\User::byUsername($val);
+                    $usr = \block_gradetracker\User::byUsername($val);
                     if (!$usr) {
                         continue;
                     }
@@ -392,7 +392,7 @@ class Log
                     continue;
                 } else if ($att == 'COURSENAME') {
                     // if we are using a course shortname, need to convert that to an id
-                    $crs = \GT\Course::retrieve('shortname', $val);
+                    $crs = \block_gradetracker\Course::retrieve('shortname', $val);
                     if (!$crs) {
                         continue;
                     }
@@ -411,7 +411,7 @@ class Log
         $records = $DB->get_records_sql($fullSQL, $sqlParams);
         if ($records) {
             foreach ($records as $record) {
-                $log = new \GT\Log($record->id);
+                $log = new \block_gradetracker\Log($record->id);
                 if ($log->id) {
                     $return[$log->id] = $log->toCSV();
                 }

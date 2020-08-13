@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -86,7 +86,7 @@ class QualificationStructureLevel {
 
     /**
      * Get a qual structure level by its name
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $name
      * @return type
      */
@@ -95,7 +95,7 @@ class QualificationStructureLevel {
         global $DB;
 
         $record = $DB->get_record("bcgt_qual_structure_levels", array("name" => $name), "id");
-        return ($record) ? new \GT\QualificationStructureLevel($record->id) : false;
+        return ($record) ? new \block_gradetracker\QualificationStructureLevel($record->id) : false;
 
     }
 

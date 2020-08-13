@@ -38,7 +38,7 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0) {
         // ======================== Install data ======================== //
 
         // Qualification Structure Features
-        $features = \GT\QualificationStructure::_features();
+        $features = \block_gradetracker\QualificationStructure::_features();
         if ($features) {
             foreach ($features as $feature) {
 
@@ -55,7 +55,7 @@ function xmldb_block_gradetracker_upgrade($oldversion = 0) {
         }
 
         // Qualification Structure Levels
-        $levels = \GT\QualificationStructure::_levels();
+        $levels = \block_gradetracker\QualificationStructure::_levels();
         if ($levels) {
             foreach ($levels as $level => $minMax) {
 

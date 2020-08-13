@@ -24,11 +24,11 @@
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT\Criteria;
+namespace block_gradetracker\Criteria;
 
 defined('MOODLE_INTERNAL') or die();
 
-class NumericCriterion extends \GT\Criterion {
+class NumericCriterion extends \block_gradetracker\Criterion {
 
     const DEFAULT_MAX_POINTS = 3;
 
@@ -111,7 +111,7 @@ class NumericCriterion extends \GT\Criterion {
         }
 
         // Check grading structure - Can be blank - This will mean a readonly criterion
-        $QualStructure = new \GT\QualificationStructure($this->qualStructureID);
+        $QualStructure = new \block_gradetracker\QualificationStructure($this->qualStructureID);
         $GradingStructures = $QualStructure->getCriteriaGradingStructures();
 
         // Numeric criteria cannot be readonly
@@ -145,7 +145,7 @@ class NumericCriterion extends \GT\Criterion {
             foreach ($criterion['subcriteria'] as $subDNum => $sub) {
 
                 $id = (isset($sub['id'])) ? $sub['id'] : false;
-                $subObj = new \GT\Criteria\NumericCriterion($id);
+                $subObj = new \block_gradetracker\Criteria\NumericCriterion($id);
                 $subObj->setQualStructureID($this->qualStructureID);
                 $subObj->setType($this->type);
                 $subObj->setName($sub['name']);
@@ -168,7 +168,7 @@ class NumericCriterion extends \GT\Criterion {
             foreach ($criterion['observation'] as $obNum => $observation) {
 
                 $id = (isset($observation['id'])) ? $observation['id'] : false;
-                $subObj = new \GT\Criteria\NumericCriterion($id);
+                $subObj = new \block_gradetracker\Criteria\NumericCriterion($id);
                 $subObj->setQualStructureID($this->qualStructureID);
                 $subObj->setType($this->type);
                 $subObj->setName($observation['name']);
@@ -766,7 +766,7 @@ class NumericCriterion extends \GT\Criterion {
         $return = array();
 
         // Met values
-        $GradingStructure = new \GT\CriteriaAwardStructure($this->gradingStructureID);
+        $GradingStructure = new \block_gradetracker\CriteriaAwardStructure($this->gradingStructureID);
         $awards = $GradingStructure->getAwards(true);
 
         if ($awards) {
@@ -815,7 +815,7 @@ class NumericCriterion extends \GT\Criterion {
             $avg = round( ($points / $cntRanges), 1 );
 
             // Grading structure of the overall criterion
-            $grading = new \GT\CriteriaAwardStructure($this->getGradingStructureID());
+            $grading = new \block_gradetracker\CriteriaAwardStructure($this->getGradingStructureID());
             $possibleAwards = $grading->getAwards(true);
 
             // Loop through them and see if we have one with point ranges
@@ -936,7 +936,7 @@ class NumericCriterion extends \GT\Criterion {
 
     /**
      * Get the value assigned to a range criterion
-     * @global \GT\Criteria\type $DB
+     * @global \block_gradetracker\Criteria\type $DB
      * @param type $rangeID
      * @param type $critID
      * @return type
@@ -971,7 +971,7 @@ class NumericCriterion extends \GT\Criterion {
 
     /**
      * Set the value for a range criterion
-     * @global \GT\Criteria\type $DB
+     * @global \block_gradetracker\Criteria\type $DB
      * @param type $rangeID
      * @param type $critID
      * @param type $value
@@ -988,9 +988,9 @@ class NumericCriterion extends \GT\Criterion {
         $record = $DB->get_record("bcgt_user_ranges", array("userid" => $this->student->id, "rangeid" => $rangeID, "critid" => $critID));
 
         // ------------ Logging Info
-        $Log = new \GT\Log();
-        $Log->context = \GT\Log::GT_LOG_CONTEXT_GRID;
-        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE;
+        $Log = new \block_gradetracker\Log();
+        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_GRID;
+        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_USER_RANGE;
         $Log->beforejson = array(
             'value' => ($record) ? $record->value : null
         );
@@ -1014,11 +1014,11 @@ class NumericCriterion extends \GT\Criterion {
         );
 
         $Log->attributes = array(
-                \GT\Log::GT_LOG_ATT_QUALID => $this->qualID,
-                \GT\Log::GT_LOG_ATT_UNITID => $this->unitID,
-                \GT\Log::GT_LOG_ATT_CRITID => $critID,
-                \GT\Log::GT_LOG_ATT_RANGEID => $rangeID,
-                \GT\Log::GT_LOG_ATT_STUDID => $this->student->id
+                \block_gradetracker\Log::GT_LOG_ATT_QUALID => $this->qualID,
+                \block_gradetracker\Log::GT_LOG_ATT_UNITID => $this->unitID,
+                \block_gradetracker\Log::GT_LOG_ATT_CRITID => $critID,
+                \block_gradetracker\Log::GT_LOG_ATT_RANGEID => $rangeID,
+                \block_gradetracker\Log::GT_LOG_ATT_STUDID => $this->student->id
             );
 
         $Log->save();
@@ -1064,7 +1064,7 @@ class NumericCriterion extends \GT\Criterion {
     }
 
     public function save() {
-        $type = \GT\QualificationStructureLevel::getByName("Numeric Criteria");
+        $type = \block_gradetracker\QualificationStructureLevel::getByName("Numeric Criteria");
         $this->type = $type->getID();
         parent::save();
     }

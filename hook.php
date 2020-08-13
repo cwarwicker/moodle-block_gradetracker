@@ -44,7 +44,7 @@ function gt_mod_hook(&$mform, $cm = false) {
     $cmID = optional_param('update', false, PARAM_INT);
     $ModuleLink = false;
     if ($add) {
-        $ModuleLink = \GT\ModuleLink::getByModName($add);
+        $ModuleLink = \block_gradetracker\ModuleLink::getByModName($add);
     }
 
     // Bring javascript in
@@ -52,8 +52,8 @@ function gt_mod_hook(&$mform, $cm = false) {
     $PAGE->requires->js( '/blocks/gradetracker/js/mod.js', true );
     $PAGE->requires->js_init_call("gt_mod_hook_bindings", null, true);
 
-    $GT = new \GT\GradeTracker();
-    $Course = new \GT\Course($COURSE->id);
+    $GT = new \block_gradetracker\GradeTracker();
+    $Course = new \block_gradetracker\Course($COURSE->id);
     $activity = $Course->getActivity($cmID);
     $quals = $Course->getCourseQualifications(true);
 
@@ -79,7 +79,7 @@ function gt_mod_hook(&$mform, $cm = false) {
                 // If the qual doesn't have any units, don't do anything
                 if ($qual->isLevelEnabled("Units") && $qual->getUnits()) {
 
-                    $unitsLinked = \GT\Activity::getUnitsLinkedToCourseModule($cmID, $qual->getID());
+                    $unitsLinked = \block_gradetracker\Activity::getUnitsLinkedToCourseModule($cmID, $qual->getID());
 
                     $output .= "<b>{$qual->getDisplayName()}</b><br>";
                     $output .= "<select id='gt_mod_hook_{$qual->getID()}_units_select' class='gt_mod_hook_units' qualID='{$qual->getID()}'>";
@@ -100,7 +100,7 @@ function gt_mod_hook(&$mform, $cm = false) {
                     // Ones that are already linked
                     if ($unitsLinked) {
                         foreach ($unitsLinked as $unitID) {
-                            $unit = new \GT\Unit($unitID);
+                            $unit = new \block_gradetracker\Unit($unitID);
                             $criteria = $unit->sortCriteria(false, true);
 
                             $output .= "<div id='gt_hooked_unit_{$qual->getID()}_{$unit->getID()}' class='gt_hooked_unit'>";
@@ -123,12 +123,12 @@ function gt_mod_hook(&$mform, $cm = false) {
                                         $output .= "<td><select name='gt_criteria[{$qual->getID()}][{$unit->getID()}][{$criterion->getID()}]'>";
                                         $output .= "<option value='0'></option>";
                                         foreach ($activity->getRecordParts() as $part) {
-                                            $sel = (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID(), $part->id)) ? 'selected' : '';
+                                            $sel = (\block_gradetracker\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID(), $part->id)) ? 'selected' : '';
                                             $output .= "<option value='{$part->id}' {$sel}>{$part->name}</option>";
                                         }
                                         $output .= "</select></td>";
                                     } else {
-                                        $chk = (\GT\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID())) ? 'checked' : '';
+                                        $chk = (\block_gradetracker\Activity::checkExists($cmID, $qual->getID(), $unit->getID(), $criterion->getID())) ? 'checked' : '';
                                         $output .= "<td><input type='checkbox' name='gt_criteria[{$qual->getID()}][{$unit->getID()}][{$criterion->getID()}]' {$chk} /></td>";
                                     }
                                 }
@@ -187,7 +187,7 @@ function gt_mod_hook_process($mod, $course) {
                     // If the value is greater than 0, try and create a link to it
                     if ( (is_numeric($value) && $value > 0) || !is_numeric($value) ) {
 
-                        $activity = new \GT\Activity();
+                        $activity = new \block_gradetracker\Activity();
                         $activity->setCourseModuleID($modID);
                         $activity->setQualID($qualID);
                         $activity->setUnitID($unitID);
@@ -206,12 +206,12 @@ function gt_mod_hook_process($mod, $course) {
                 }
 
                 // ------------ Logging Info
-                $Log = new \GT\Log();
-                $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-                $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS;
+                $Log = new \block_gradetracker\Log();
+                $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+                $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS;
                 $Log->afterjson = array($modID => $criteria);
-                $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $qualID)
-                    ->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $unitID);
+                $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $qualID)
+                    ->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_UNITID, $unitID);
                 $Log->save();
                 // ------------ Logging Info
 
@@ -222,6 +222,6 @@ function gt_mod_hook_process($mod, $course) {
     }
 
     // Now remove any that are currently linked to this course module that were not submitted in the form
-    \GT\Activity::removeNonSubmittedLinks($modID, $criteriaArray);
+    \block_gradetracker\Activity::removeNonSubmittedLinks($modID, $criteriaArray);
 
 }

@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -111,9 +111,9 @@ class StatisticsBarChartOutput implements StatisticsOutput
         $output .= "<dt class='gt_c'>{$this->title}</dt>";
         foreach ($data as $group => $records) {
 
-            $st = new \GT\Statistics();
+            $st = new \block_gradetracker\Statistics();
             $st->setRecords($records);
-            $str = $st->output( new \GT\StatisticsDataFileOutput() );
+            $str = $st->output( new \block_gradetracker\StatisticsDataFileOutput() );
 
             $cnt = count($records);
             $percent = round(($cnt / $total) * 100, 1);
@@ -177,7 +177,7 @@ class Statistics {
     }
 
 
-    public function output(\GT\StatisticsOutput $output, $key = false) {
+    public function output(\block_gradetracker\StatisticsOutput $output, $key = false) {
         return ($key) ? $output->output($this->records[$key]) : $output->output($this->records);
     }
 
@@ -186,7 +186,7 @@ class Statistics {
      * Get a list of qualifications from the system that are either Active (attached to a course) or Inactive
      * @global type $DB
      * @param type $status
-     * @return \GT\Statistics|boolean
+     * @return \block_gradetracker\Statistics|boolean
      */
     public static function getQualifications($status) {
 
@@ -198,7 +198,7 @@ class Statistics {
 
         $statusSQL = ($status == 'active') ? 'IS NOT NULL' : 'IS NULL';
 
-        $obj = new \GT\Statistics();
+        $obj = new \block_gradetracker\Statistics();
 
         $records = $DB->get_records_sql("SELECT DISTINCT CONCAT(s.id, '_', q.id) as id, s.name, q.id as qualid, q.name as qualname
                                         FROM {bcgt_qual_structures} s
@@ -216,9 +216,9 @@ class Statistics {
 
     /**
      * Get a list of qualifications from the system that either have the Correct or Incorrect amount of credits
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $status
-     * @return \GT\Statistics|boolean
+     * @return \block_gradetracker\Statistics|boolean
      */
     public static function getQualificationsByCredits($status) {
 
@@ -230,7 +230,7 @@ class Statistics {
 
         $statusSQL = ($status == 'correct') ? "AND (ba.value > 0 AND cc.credits = ba.value)" : "AND (ba.value > 0 AND cc.credits < ba.value)";
 
-        $obj = new \GT\Statistics();
+        $obj = new \block_gradetracker\Statistics();
 
         $records = $DB->get_records_sql("SELECT DISTINCT CONCAT(s.id, '_', q.id) as id, s.name, q.id as qualid, q.name as qualname, ba.value as defaultcredits, cc.credits
                                         FROM {bcgt_qual_structures} s
@@ -257,9 +257,9 @@ class Statistics {
 
     /**
      * Get a list of units from the system that are either Active (attached to a qualification) or Inactive
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $status
-     * @return \GT\Statistics|boolean
+     * @return \block_gradetracker\Statistics|boolean
      */
     public static function getUnits($status) {
 
@@ -271,7 +271,7 @@ class Statistics {
 
         $statusSQL = ($status == 'active') ? 'IS NOT NULL' : 'IS NULL';
 
-        $obj = new \GT\Statistics();
+        $obj = new \block_gradetracker\Statistics();
 
         $records = $DB->get_records_sql("SELECT DISTINCT CONCAT(s.id, '_', u.id) as id, s.name, u.id as unitid, u.name as unitname
                                          FROM {bcgt_qual_structures} s

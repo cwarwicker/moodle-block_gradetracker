@@ -21,7 +21,7 @@
  * @version     2.0
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -40,7 +40,7 @@ class CourseCategory {
 
         global $DB;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
 
         $record = $DB->get_record("course_categories", array("id" => $id));
         if ($record) {
@@ -75,7 +75,7 @@ class CourseCategory {
         $records = $DB->get_records("course_categories", array("parent" => $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $this->children[$record->id] = new \GT\CourseCategory($record->id);
+                $this->children[$record->id] = new \block_gradetracker\CourseCategory($record->id);
             }
         }
 
@@ -106,13 +106,13 @@ class CourseCategory {
         $records = $DB->get_records("course", array("category" => $this->id));
         if ($records) {
             foreach ($records as $record) {
-                $course = new \GT\Course($record->id);
+                $course = new \block_gradetracker\Course($record->id);
                 $this->courses[$record->id] = $course;
             }
         }
 
         // Order courses
-        $Sort = new \GT\Sorter();
+        $Sort = new \block_gradetracker\Sorter();
         $Sort->sortCourses($this->courses);
 
         return $this->courses;
@@ -169,7 +169,7 @@ class CourseCategory {
         }
 
         // Order courses
-        $Sort = new \GT\Sorter();
+        $Sort = new \block_gradetracker\Sorter();
         $Sort->sortCourses($return);
 
         $this->courses = $return;
@@ -199,7 +199,7 @@ class CourseCategory {
     }
 
     public function getParent() {
-        return new \GT\CourseCategory($this->parent);
+        return new \block_gradetracker\CourseCategory($this->parent);
     }
 
 
@@ -240,7 +240,7 @@ class CourseCategory {
 
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\User($record->id);
+                $obj = new \block_gradetracker\User($record->id);
                 if ($obj->isValid()) {
                     $return[$obj->id] = $obj;
                 }
@@ -249,7 +249,7 @@ class CourseCategory {
 
         // Are there parent categories above this we want to check?
         if ($this->hasParent()) {
-            $parent = new \GT\CourseCategory($this->parent);
+            $parent = new \block_gradetracker\CourseCategory($this->parent);
             $return = $return + $parent->getStaff();
         }
 

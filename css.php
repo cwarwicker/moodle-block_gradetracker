@@ -30,7 +30,7 @@ header('Content-Type: text/css', true);
 header("X-Content-Type-Options: nosniff"); // for IE
 header('Cache-Control: no-cache');
 
-$GT = new \GT\GradeTracker();
+$GT = new \block_gradetracker\GradeTracker();
 
 $css = $GT->getSetting('custom_css');
 $css = trim($css);

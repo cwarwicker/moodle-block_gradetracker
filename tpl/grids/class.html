@@ -31,7 +31,7 @@
                         <?php if (isset($Course) && ($groups = $Course->getGroups())): ?>
                             <?php if ($groups['parent']): ?>
                                 <?php foreach($groups['parent'] as $pID => $parentGroups): ?>
-                                    <optgroup label="<?php echo \GT\Course::getNameById($pID) ?>">
+                                    <optgroup label="<?php echo \block_gradetracker\Course::getNameById($pID) ?>">
                                         <?php foreach($parentGroups as $group): ?>
                                             <option value="<?php echo $group->id ?>" <?php echo ($groupID == $group->id) ? 'selected' : '' ?> ><?php echo $group->name ?> (<?php echo $group->usercnt ?>)</option>
                                         <?php endforeach; ?>
@@ -49,7 +49,7 @@
 
                             <?php if ($groups['child']): ?>
                                 <?php foreach($groups['child'] as $cID => $childGroups): ?>
-                                    <optgroup label="<?php echo \GT\Course::getNameById($cID) ?>">
+                                    <optgroup label="<?php echo \block_gradetracker\Course::getNameById($cID) ?>">
                                         <?php foreach($childGroups as $group): ?>
                                             <option value="<?php echo $group->id ?>" <?php echo ($groupID == $group->id) ? 'selected' : '' ?> ><?php echo $group->name ?> (<?php echo $group->usercnt ?>)</option>
                                         <?php endforeach; ?>
@@ -187,13 +187,13 @@
                 <tr>
                     <th><?php echo $string['qualification'] ?></th>
                     <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
-                        <th style="background-color:<?php echo \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $i ?></th>
+                        <th style="background-color:<?php echo \block_gradetracker\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $i ?></th>
                     <?php endfor; ?>
                 </tr>
                 <tr>
                     <td class='gt_qual_name'><?php echo $Qualification->getDisplayName() ?></td>
                     <?php for ($i = 1; $i <= $weightingPercentiles; $i++): ?>
-                        <td style="background-color:<?php echo \GT\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $Qualification->getAttribute('coefficient_'.$i) ?></td>
+                        <td style="background-color:<?php echo \block_gradetracker\Setting::getSetting('weighting_percentile_color_'.$i) ?>;"><?php echo $Qualification->getAttribute('coefficient_'.$i) ?></td>
                     <?php endfor; ?>
                 </tr>
             </table>

@@ -47,7 +47,7 @@ $course = false;
 $context = context_course::instance(SITEID);
 
 if ($cID) {
-    $course = new \GT\Course($cID);
+    $course = new \block_gradetracker\Course($cID);
     if (!$course->isValid()) {
         print_error( get_string('invalidcourseid') );
     }
@@ -63,9 +63,9 @@ if (!gt_has_capability('block/gradetracker:view_'.$type.'_grids')) {
 
 $results = null;
 
-$GT = new \GT\GradeTracker();
-$TPL = new \GT\Template();
-$User = new \GT\User($USER->id);
+$GT = new \block_gradetracker\GradeTracker();
+$TPL = new \block_gradetracker\Template();
+$User = new \block_gradetracker\User($USER->id);
 
 $searchQualification = false;
 $searchCourse = false;
@@ -78,7 +78,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
 
     // If searching by all Qualifications
     if ($searchAllQID > 0) {
-        $searchQualification = new \GT\Qualification($searchAllQID);
+        $searchQualification = new \block_gradetracker\Qualification($searchAllQID);
         if (!$searchQualification->isValid()) {
             $searchQualification = false;
         }
@@ -86,7 +86,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
 
     // If searching by all Courses
     if ($searchAllCID > 0) {
-        $searchCourse = new \GT\Course($searchAllCID);
+        $searchCourse = new \block_gradetracker\Course($searchAllCID);
         if (!$searchCourse->isValid()) {
             $searchCourse = false;
         }
@@ -98,7 +98,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
 
     // Selecting one of My Quals
     if ($myQualID > 0) {
-        $searchQualification = new \GT\Qualification($myQualID);
+        $searchQualification = new \block_gradetracker\Qualification($myQualID);
         if (!$searchQualification->isValid() || !$User->isOnQual($myQualID, "STAFF")) {
             $searchQualification = false;
         }
@@ -106,7 +106,7 @@ if ($User->hasCapability('block/gradetracker:view_all_quals') && $submission['su
 
     // Selecting one of My Courses
     if ($myCourseID > 0) {
-        $searchCourse = new \GT\Course($myCourseID);
+        $searchCourse = new \block_gradetracker\Course($myCourseID);
         if (!$searchCourse->isValid()) {
             $searchCourse = false;
         }
@@ -315,7 +315,7 @@ $PAGE->set_title( $SITE->shortname . ': ' . $GT->getPluginTitle() . ': ' . get_s
 
 echo $OUTPUT->header();
 
-$GTEXE = \GT\Execution::getInstance();
+$GTEXE = \block_gradetracker\Execution::getInstance();
 $GTEXE->min();
 
 $TPL->set("GT", $GT)
@@ -324,14 +324,14 @@ $TPL->set("GT", $GT)
     ->set("results", $results);
 
 if ($User->hasCapability('block/gradetracker:view_all_quals')) {
-    $TPL->set("allQuals", \GT\Qualification::getAllQualifications( true ));
-    $TPL->set("allCourses", \GT\Course::getAllCoursesWithQuals());
+    $TPL->set("allQuals", \block_gradetracker\Qualification::getAllQualifications( true ));
+    $TPL->set("allCourses", \block_gradetracker\Course::getAllCoursesWithQuals());
 }
 
 try {
     $TPL->load( $CFG->dirroot . '/blocks/gradetracker/tpl/choose.html' );
     $TPL->display();
-} catch (\GT\GTException $e) {
+} catch (\block_gradetracker\GTException $e) {
     echo $e->getException();
 }
 

@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -152,7 +152,7 @@ class Activity {
 
     /**
      * Remove an activity ref
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @return boolean
      */
     public function remove() {
@@ -205,7 +205,7 @@ class Activity {
 
     /**
      * Get the qual ids linked to a course module
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -233,7 +233,7 @@ class Activity {
 
     /**
      * Get the unit ids linked to a course module and qual
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @param type $qualID
      * @return type
@@ -256,7 +256,7 @@ class Activity {
 
         // Using objects
         if ($objects) {
-            $qual = new \GT\Qualification($qualID);
+            $qual = new \block_gradetracker\Qualification($qualID);
         }
 
         if ($records) {
@@ -275,7 +275,7 @@ class Activity {
 
     /**
      * Get the crit ids linked to a course module and qual and unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @param type $qualID
      * @return type
@@ -289,13 +289,13 @@ class Activity {
         }
 
         if ($objects) {
-            // if we passed through a \GT\Unit object instead of an ID, put that into the $unit variable
+            // if we passed through a \block_gradetracker\Unit object instead of an ID, put that into the $unit variable
             // then set the $unitID variable to the id of the object
-            if ($unitID instanceof \GT\Unit) {
+            if ($unitID instanceof \block_gradetracker\Unit) {
                 $unit = $unitID;
                 $unitID = $unit->getID();
             } else {
-                $unit = new \GT\Unit($unitID);
+                $unit = new \block_gradetracker\Unit($unitID);
             }
         }
 
@@ -335,7 +335,7 @@ class Activity {
 
         // If using objects, sort them
         if ($objects) {
-            $sort = new \GT\Sorter();
+            $sort = new \block_gradetracker\Sorter();
             $sort->sortCriteria($return, true);
         }
 
@@ -345,7 +345,7 @@ class Activity {
 
     /**
      * Get distinct list of course modules attached to qual unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $qualID
      * @param type $unitID
      * @return type
@@ -374,7 +374,7 @@ class Activity {
 
     /**
      * Find all links on a course module
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -405,7 +405,7 @@ class Activity {
 
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\Activity($record->id);
+                $obj = new \block_gradetracker\Activity($record->id);
                 $return[] = $obj;
             }
         }
@@ -416,7 +416,7 @@ class Activity {
 
     /**
      * Find all links on a qual unit
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -428,7 +428,7 @@ class Activity {
         $records = $DB->get_records("bcgt_activity_refs", array("qualid" => $qualID, "unitid" => $unitID, "deleted" => 0));
         if ($records) {
             foreach ($records as $record) {
-                $obj = new \GT\Activity($record->id);
+                $obj = new \block_gradetracker\Activity($record->id);
                 $return[] = $obj;
             }
         }
@@ -471,7 +471,7 @@ class Activity {
         $records = $DB->get_records("bcgt_activity_refs", array("qualid" => $qualID, "unitid" => $unitID, "deleted" => 0));
         if ($records) {
             foreach ($records as $record) {
-                $link = new \GT\Activity($record->id);
+                $link = new \block_gradetracker\Activity($record->id);
                 if (!in_array($link->getCritID(), $submitted[$link->getCourseModuleID()])) {
                     $cm = $DB->get_record("course_modules", array("id" => $link->getCourseModuleID()));
                     if ($cm && $cm->course == $courseID) {
@@ -485,7 +485,7 @@ class Activity {
 
     /**
      * Given a course module id, get the id of the actual activity instance
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -500,7 +500,7 @@ class Activity {
 
     /**
      * Given a course module id, get the id of the actual activity instance
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -513,7 +513,7 @@ class Activity {
 
     /**
      * Given a course module id, get the id of the actual activity instance
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
      * @return type
      */
@@ -526,16 +526,16 @@ class Activity {
 
     /**
      * Get the Course object from a course module ID
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $DB
      * @param type $cmID
-     * @return boolean|\GT\Course
+     * @return boolean|\block_gradetracker\Course
      */
     public static function getCourseFromCourseModule($cmID) {
 
         global $DB;
         $cm = self::getActivityFromCourseModule($cmID);
         if ($cm) {
-            return new \GT\Course($cm->course);
+            return new \block_gradetracker\Course($cm->course);
         }
 
         return false;

@@ -22,15 +22,15 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
 class Output {
 
     public function initAMD_structures_grade() {
-        $values = \GT\CriteriaAward::getSupportedSpecialVals();
-        return \GT\CriteriaAward::getSupportedSpecialVals();
+        $values = \block_gradetracker\CriteriaAward::getSupportedSpecialVals();
+        return \block_gradetracker\CriteriaAward::getSupportedSpecialVals();
     }
 
     public function initAMD_units() {
@@ -45,7 +45,7 @@ class Output {
         } else {
 
             $id = optional_param('id', false, PARAM_INT);
-            $unit = new \GT\Unit\GUI($id);
+            $unit = new \block_gradetracker\Unit\GUI($id);
 
         }
 
@@ -53,13 +53,13 @@ class Output {
         if ($unit) {
 
             $structureID = $unit->getStructureID();
-            $Structure = new \GT\QualificationStructure($structureID);
+            $Structure = new \block_gradetracker\QualificationStructure($structureID);
 
             $gradingStructures = $Structure->getCriteriaGradingStructures(true);
 
-            $return['maxNumericPoints'] = \GT\Criteria\NumericCriterion::getMaxPoints();
-            $return['supportedTypes'] = \GT\Criterion::getSupportedTypes();
-            $return['gradingTypes'] = \GT\CriteriaAward::getSupportedGradingTypes();
+            $return['maxNumericPoints'] = \block_gradetracker\Criteria\NumericCriterion::getMaxPoints();
+            $return['supportedTypes'] = \block_gradetracker\Criterion::getSupportedTypes();
+            $return['gradingTypes'] = \block_gradetracker\CriteriaAward::getSupportedGradingTypes();
             $return['gradingStructures'] = array();
             foreach ($gradingStructures as $grading) {
                 $return['gradingStructures'][] = array('id' => $grading->getID(), 'name' => $grading->getName());
@@ -79,7 +79,7 @@ class Output {
             // We need to get an array of the criteria and the values, for the Mass Update section
             $data['massUpdate'] = array();
 
-            $GTEXE = \GT\Execution::getInstance();
+            $GTEXE = \block_gradetracker\Execution::getInstance();
             $GTEXE->min();
 
             $unit = new Unit($data['id']);

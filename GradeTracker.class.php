@@ -22,7 +22,7 @@
  * @author      Conn Warwicker <conn@cmrwarwicker.com>
  */
 
-namespace GT;
+namespace block_gradetracker;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -79,8 +79,8 @@ class GradeTracker {
 
     /**
      * Install the gradetracker plugin
-     * @global \GT\type $CFG
-     * @global \GT\type $DB
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $DB
      */
     public function install() {
 
@@ -103,7 +103,7 @@ class GradeTracker {
         // Hard-Coded Installs
         //
         // Qualification Structure Features
-        $features = \GT\QualificationStructure::_features();
+        $features = \block_gradetracker\QualificationStructure::_features();
         if ($features) {
             foreach ($features as $feature) {
 
@@ -121,7 +121,7 @@ class GradeTracker {
         }
 
         // Qualification Structure Levels
-        $levels = \GT\QualificationStructure::_levels();
+        $levels = \block_gradetracker\QualificationStructure::_levels();
         if ($levels) {
             foreach ($levels as $level => $minMax) {
 
@@ -276,7 +276,7 @@ class GradeTracker {
 
         if ($files) {
             foreach ($files as $file) {
-                $output = \GT\QualificationStructure::importXML($installDir.'/structures/qual/'.$file);
+                $output = \block_gradetracker\QualificationStructure::importXML($installDir.'/structures/qual/'.$file);
                 mtrace( $output['output'], "\n<br>" );
                 if ($output['errors']) {
                     if (is_array($output['errors'][0])) {
@@ -301,7 +301,7 @@ class GradeTracker {
 
         if ($files) {
             foreach ($files as $file) {
-                $output = \GT\QualificationBuild::importXML($installDir.'/structures/build/'.$file, true);
+                $output = \block_gradetracker\QualificationBuild::importXML($installDir.'/structures/build/'.$file, true);
                 mtrace( $output['output'] , "\n<br>");
                 if ($output['errors']) {
                     if (is_array($output['errors'][0])) {
@@ -372,67 +372,67 @@ class GradeTracker {
         // ======================== Insert Default Settings ======================== //
 
         // General Settings
-        \GT\Setting::updateSetting('plugin_title', 'Grade Tracker');
-        \GT\Setting::updateSetting('theme_layout', 'base');
-        \GT\Setting::updateSetting('use_gt_jqueryui', '1');
-        \GT\Setting::updateSetting('student_role_shortnames', 'student');
-        \GT\Setting::updateSetting('staff_role_shortnames', 'editingteacher,teacher');
-        \GT\Setting::updateSetting('course_name_format', '[%sn%] %fn%');
-        \GT\Setting::updateSetting('use_auto_enrol_quals', '1');
-        \GT\Setting::updateSetting('use_auto_enrol_units', '1');
-        \GT\Setting::updateSetting('use_auto_unenrol_quals', '1');
-        \GT\Setting::updateSetting('use_auto_unenrol_units', '1');
+        \block_gradetracker\Setting::updateSetting('plugin_title', 'Grade Tracker');
+        \block_gradetracker\Setting::updateSetting('theme_layout', 'base');
+        \block_gradetracker\Setting::updateSetting('use_gt_jqueryui', '1');
+        \block_gradetracker\Setting::updateSetting('student_role_shortnames', 'student');
+        \block_gradetracker\Setting::updateSetting('staff_role_shortnames', 'editingteacher,teacher');
+        \block_gradetracker\Setting::updateSetting('course_name_format', '[%sn%] %fn%');
+        \block_gradetracker\Setting::updateSetting('use_auto_enrol_quals', '1');
+        \block_gradetracker\Setting::updateSetting('use_auto_enrol_units', '1');
+        \block_gradetracker\Setting::updateSetting('use_auto_unenrol_quals', '1');
+        \block_gradetracker\Setting::updateSetting('use_auto_unenrol_units', '1');
 
         // Qual Settings
 
         // Weighting Coefficients
-        \GT\Setting::updateSetting('qual_weighting_percentiles', '9');
-        \GT\Setting::updateSetting('weighting_percentile_color_1', '#c21014');
-        \GT\Setting::updateSetting('weighting_percentile_color_2', '#f21318');
-        \GT\Setting::updateSetting('weighting_percentile_color_3', '#ee6063');
-        \GT\Setting::updateSetting('weighting_percentile_color_4', '#6e6e6e');
-        \GT\Setting::updateSetting('weighting_percentile_color_5', '#252525');
-        \GT\Setting::updateSetting('weighting_percentile_color_6', '#6e6e6e');
-        \GT\Setting::updateSetting('weighting_percentile_color_7', '#72a9fc');
-        \GT\Setting::updateSetting('weighting_percentile_color_8', '#2047ff');
-        \GT\Setting::updateSetting('weighting_percentile_color_9', '#123798');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_1', '100');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_2', '90');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_3', '75');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_4', '60');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_5', '40');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_6', '25');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_7', '10');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_8', '0');
-        \GT\Setting::updateSetting('weighting_percentile_percentage_9', '1');
-        \GT\Setting::updateSetting('default_weighting_percentile', '3');
+        \block_gradetracker\Setting::updateSetting('qual_weighting_percentiles', '9');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_1', '#c21014');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_2', '#f21318');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_3', '#ee6063');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_4', '#6e6e6e');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_5', '#252525');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_6', '#6e6e6e');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_7', '#72a9fc');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_8', '#2047ff');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_9', '#123798');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_1', '100');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_2', '90');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_3', '75');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_4', '60');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_5', '40');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_6', '25');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_7', '10');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_8', '0');
+        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_9', '1');
+        \block_gradetracker\Setting::updateSetting('default_weighting_percentile', '3');
 
         // Weighting Constants
-        \GT\Setting::updateSetting('weighting_constants_enabled', '0'); # Should enable this if they want it
-        \GT\Setting::updateSetting('weighting_direction', 'UP');
+        \block_gradetracker\Setting::updateSetting('weighting_constants_enabled', '0'); # Should enable this if they want it
+        \block_gradetracker\Setting::updateSetting('weighting_direction', 'UP');
 
         // Unit Settings
 
         // Criteria Settings
 
         // Grid Settings
-        \GT\Setting::updateSetting('enable_grid_logs', '0');
-        \GT\Setting::updateSetting('grid_fixed_links', '0');
-        \GT\Setting::updateSetting('assessment_grid_show_quals_one_page', '1');
-        \GT\Setting::updateSetting('unit_grid_paging', '15');
-        \GT\Setting::updateSetting('class_grid_paging', '15');
+        \block_gradetracker\Setting::updateSetting('enable_grid_logs', '0');
+        \block_gradetracker\Setting::updateSetting('grid_fixed_links', '0');
+        \block_gradetracker\Setting::updateSetting('assessment_grid_show_quals_one_page', '1');
+        \block_gradetracker\Setting::updateSetting('unit_grid_paging', '15');
+        \block_gradetracker\Setting::updateSetting('class_grid_paging', '15');
 
         // User Settings
-        \GT\Setting::updateSetting('student_columns', 'username,name');
+        \block_gradetracker\Setting::updateSetting('student_columns', 'username,name');
 
         // Grade Settings
-        \GT\Setting::updateSetting('pred_grade_min_units', '3');
-        \GT\Setting::updateSetting('asp_grade_diff', '1');
-        \GT\Setting::updateSetting('weighted_target_method', 'ucas');
-        \GT\Setting::updateSetting('weighted_target_direction', 'UP');
+        \block_gradetracker\Setting::updateSetting('pred_grade_min_units', '3');
+        \block_gradetracker\Setting::updateSetting('asp_grade_diff', '1');
+        \block_gradetracker\Setting::updateSetting('weighted_target_method', 'ucas');
+        \block_gradetracker\Setting::updateSetting('weighted_target_direction', 'UP');
 
         // Assessment Settings
-        \GT\Setting::updateSetting('use_assessments_comments', '1');
+        \block_gradetracker\Setting::updateSetting('use_assessments_comments', '1');
 
         mtrace('Inserted default configuration settings', "\n<br>");
 
@@ -492,7 +492,7 @@ class GradeTracker {
      * Get the title of the plugin
      */
     public function getPluginTitle() {
-        $setting = \GT\Setting::getSetting("plugin_title");
+        $setting = \block_gradetracker\Setting::getSetting("plugin_title");
         return ($setting) ? format_text($setting, FORMAT_PLAIN) : get_string('pluginname', 'block_gradetracker');
     }
 
@@ -501,7 +501,7 @@ class GradeTracker {
      * @return type
      */
     public function getTheme() {
-        $setting = \GT\Setting::getSetting("theme");
+        $setting = \block_gradetracker\Setting::getSetting("theme");
         return ($setting) ? $setting : 'default';
     }
 
@@ -511,7 +511,7 @@ class GradeTracker {
      */
     public function getMoodleThemeLayout() {
 
-        $setting = \GT\Setting::getSetting("theme_layout");
+        $setting = \block_gradetracker\Setting::getSetting("theme_layout");
         return ($setting) ? $setting : 'base';
 
     }
@@ -522,7 +522,7 @@ class GradeTracker {
      */
     public function getReportingCategories() {
 
-        $setting = \GT\Setting::getSetting("reporting_categories");
+        $setting = \block_gradetracker\Setting::getSetting("reporting_categories");
         $cats = explode(",", $setting);
 
         $return = array();
@@ -546,7 +546,7 @@ class GradeTracker {
 
         global $CFG;
 
-        $setting = \GT\Setting::getSetting("institution_logo");
+        $setting = \block_gradetracker\Setting::getSetting("institution_logo");
         if ($setting) {
             $code = gt_get_data_path_code($CFG->dataroot . '/gradetracker/img/' . $setting);
             if ($code) {
@@ -563,7 +563,7 @@ class GradeTracker {
      * @return type
      */
     public function getCourseNameFormat() {
-        $setting = \GT\Setting::getSetting("course_name_format");
+        $setting = \block_gradetracker\Setting::getSetting("course_name_format");
         return ($setting && strlen($setting) > 0) ? ($setting) : "[%sn%] %fn%";
     }
 
@@ -574,7 +574,7 @@ class GradeTracker {
     public function getStudentRoles() {
 
         $return = array();
-        $roles = \GT\Setting::getSetting("student_role_shortnames");
+        $roles = \block_gradetracker\Setting::getSetting("student_role_shortnames");
 
         if ($roles) {
             $shortnames = explode(",", $roles);
@@ -600,7 +600,7 @@ class GradeTracker {
     public function getStaffRoles() {
 
         $return = array();
-        $roles = \GT\Setting::getSetting("staff_role_shortnames");
+        $roles = \block_gradetracker\Setting::getSetting("staff_role_shortnames");
 
         if ($roles) {
 
@@ -661,11 +661,11 @@ class GradeTracker {
      * @return type
      */
     public function updateSetting($setting, $value, $userID = null) {
-        return \GT\Setting::updateSetting($setting, $value, $userID);
+        return \block_gradetracker\Setting::updateSetting($setting, $value, $userID);
     }
 
     public function getSetting($setting, $userID = null) {
-        return \GT\Setting::getSetting($setting, $userID);
+        return \block_gradetracker\Setting::getSetting($setting, $userID);
     }
 
     /**
@@ -725,13 +725,13 @@ class GradeTracker {
             return false;
         }
 
-        $User = new \GT\User($USER->id);
+        $User = new \block_gradetracker\User($USER->id);
         $id = optional_param('id', false, PARAM_INT);
 
         if (isset($VARS['TPL'])) {
             $TPL = $VARS['TPL'];
         } else {
-            $TPL = new \GT\Template();
+            $TPL = new \block_gradetracker\Template();
         }
 
         $TPL->set("GT", $this)
@@ -752,15 +752,15 @@ class GradeTracker {
                     $TPL->set("site", $site);
 
                     // Qual Structures
-                    $structures = \GT\QualificationStructure::getAllStructures();
+                    $structures = \block_gradetracker\QualificationStructure::getAllStructures();
                     $TPL->set("structures", $structures);
 
                     // Stats
-                    $TPL->set("countUsers", \GT\User::countUsers());
-                    $TPL->set("countCourses", \GT\Course::countCourses());
+                    $TPL->set("countUsers", \block_gradetracker\User::countUsers());
+                    $TPL->set("countCourses", \block_gradetracker\Course::countCourses());
 
                     // Logs
-                    $TPL->set("logs", \GT\Log::getRecentLogs(15));
+                    $TPL->set("logs", \block_gradetracker\Log::getRecentLogs(15));
 
                     // Scheduled Task
                     $TPL->set("task", \core\task\manager::get_scheduled_task('\block_gradetracker\task\refresh_site_registration'));
@@ -847,7 +847,7 @@ class GradeTracker {
             $TPL->load($file);
             $TPL->display();
 
-        } catch (\GT\GTException $e) {
+        } catch (\block_gradetracker\GTException $e) {
             echo $e->getException();
         }
 
@@ -873,24 +873,24 @@ class GradeTracker {
         } else if ($section == 'qual') {
 
             // Qual builds
-            $TPL->set("builds", \GT\QualificationBuild::getAllBuilds());
+            $TPL->set("builds", \block_gradetracker\QualificationBuild::getAllBuilds());
 
             if ($page == 'coefficients') {
-                $TPL->set("percentiles", \GT\Setting::getSetting('qual_weighting_percentiles'));
-                $TPL->set("qualifications", \GT\Qualification::getAllQualifications());
+                $TPL->set("percentiles", \block_gradetracker\Setting::getSetting('qual_weighting_percentiles'));
+                $TPL->set("qualifications", \block_gradetracker\Qualification::getAllQualifications());
             }
 
         } else if ($section == 'user') {
             $cols = $this->getSetting('student_columns');
             $TPL->set("cols", explode(",", $cols));
         } else if ($section == 'assessments') {
-            $fields = \GT\Assessment::getCustomFormFields();
+            $fields = \block_gradetracker\Assessment::getCustomFormFields();
             $TPL->set("fields", $fields);
             $TPL->set("cntCustomFormElements", 0);
         } else if ($section == 'reporting') {
             $TPL->set("categories", \core_course_category::make_categories_list());
             $TPL->set("reportingCats", $this->getReportingCategories());
-            $TPL->set("structures", \GT\QualificationStructure::getAllStructures());
+            $TPL->set("structures", \block_gradetracker\QualificationStructure::getAllStructures());
         }
 
     }
@@ -913,7 +913,7 @@ class GradeTracker {
             if ( $page == 'new' || $page == 'edit' ) {
 
                 $page = 'new';
-                $Structure = new \GT\QualificationStructure($id);
+                $Structure = new \block_gradetracker\QualificationStructure($id);
 
                 // If we've submitted post data, that object will be in VARS to use instead of a blank object
                 if (isset($VARS['qualStructure'])) {
@@ -921,32 +921,32 @@ class GradeTracker {
                 }
 
             } else if ($page == 'delete') {
-                $Structure = new \GT\QualificationStructure($id);
+                $Structure = new \block_gradetracker\QualificationStructure($id);
             } else {
                 // Overview page.
-                $TPL->set("qualStructures", \GT\QualificationStructure::getAllStructures());
+                $TPL->set("qualStructures", \block_gradetracker\QualificationStructure::getAllStructures());
             }
 
             // Existing structures
-            $TPL->set("possibleLevels", \GT\QualificationStructure::getPossibleStructureLevels());
-            $TPL->set("possibleFeatures", \GT\QualificationStructure::getPossibleStructureFeatures());
+            $TPL->set("possibleLevels", \block_gradetracker\QualificationStructure::getPossibleStructureLevels());
+            $TPL->set("possibleFeatures", \block_gradetracker\QualificationStructure::getPossibleStructureFeatures());
             $TPL->set("Structure", $Structure);
             $TPL->set("cntCustomFormElements", 0);
             $TPL->set("cntRules", 0);
 
         } else if ($section == 'builds') {
 
-            $TPL->set("builds", \GT\QualificationBuild::getAllBuilds());
+            $TPL->set("builds", \block_gradetracker\QualificationBuild::getAllBuilds());
 
-            $Build = new \GT\QualificationBuild($id);
+            $Build = new \block_gradetracker\QualificationBuild($id);
 
             if ($page == 'new' || $page == 'edit') {
 
                 $page = 'new';
 
-                $TPL->set("qualStructures", \GT\QualificationStructure::getAllStructures());
-                $TPL->set("qualLevels", \GT\Level::getAllLevels());
-                $TPL->set("qualSubTypes", \GT\SubType::getAllSubTypes());
+                $TPL->set("qualStructures", \block_gradetracker\QualificationStructure::getAllStructures());
+                $TPL->set("qualLevels", \block_gradetracker\Level::getAllLevels());
+                $TPL->set("qualSubTypes", \block_gradetracker\SubType::getAllSubTypes());
 
                 if (isset($VARS['qualBuild'])) {
                     $Build = $VARS['qualBuild'];
@@ -954,7 +954,7 @@ class GradeTracker {
 
             } else if ($page == 'defaults') {
 
-                $TPL->set("Structure", new \GT\QualificationStructure($Build->getStructureID()));
+                $TPL->set("Structure", new \block_gradetracker\QualificationStructure($Build->getStructureID()));
 
             }
 
@@ -974,7 +974,7 @@ class GradeTracker {
             // If Build specified
             if ($buildID) {
                 $id = false; // Reset the QualStructure id to false
-                $build = new \GT\QualificationBuild($buildID);
+                $build = new \block_gradetracker\QualificationBuild($buildID);
                 if ($build->isValid()) {
                     $id = $build->getStructureID();
                     $TPL->set("Build", $build);
@@ -983,28 +983,28 @@ class GradeTracker {
 
             // View the editing page
             if ($page == 'edit' && $id) {
-                $Structure = new \GT\QualificationStructure($id);
+                $Structure = new \block_gradetracker\QualificationStructure($id);
                 $TPL->set("Structure", $Structure);
             } else if ($page == 'new_unit' && $id) {
 
-                $Structure = new \GT\QualificationStructure($id);
+                $Structure = new \block_gradetracker\QualificationStructure($id);
                 $TPL->set("Structure", $Structure);
 
                 if (isset($VARS['UnitGradingStructure'])) {
                     $TPL->set("UnitAwardStructure", $VARS['UnitGradingStructure']);
                 } else {
-                    $TPL->set("UnitAwardStructure", new \GT\UnitAwardStructure());
+                    $TPL->set("UnitAwardStructure", new \block_gradetracker\UnitAwardStructure());
                 }
 
             } else if ($page == 'new_criteria' && $id) {
 
-                $Structure = new \GT\QualificationStructure($id);
+                $Structure = new \block_gradetracker\QualificationStructure($id);
                 $TPL->set("Structure", $Structure);
 
                 if (isset($VARS['CriteriaAwardStructure'])) {
                     $TPL->set("CriteriaAwardStructure", $VARS['CriteriaAwardStructure']);
                 } else {
-                    $TPL->set("CriteriaAwardStructure", new \GT\CriteriaAwardStructure());
+                    $TPL->set("CriteriaAwardStructure", new \block_gradetracker\CriteriaAwardStructure());
                 }
 
             } else if ($page == 'edit_unit' && $id) {
@@ -1014,13 +1014,13 @@ class GradeTracker {
                 if (isset($VARS['UnitGradingStructure'])) {
                     $UnitAwardStructure = $VARS['UnitGradingStructure'];
                 } else {
-                    $UnitAwardStructure = new \GT\UnitAwardStructure($id);
+                    $UnitAwardStructure = new \block_gradetracker\UnitAwardStructure($id);
                 }
 
                 $TPL->set("UnitAwardStructure", $UnitAwardStructure);
 
                 if ($UnitAwardStructure->isValid()) {
-                    $Structure = new \GT\QualificationStructure($UnitAwardStructure->getQualStructureID());
+                    $Structure = new \block_gradetracker\QualificationStructure($UnitAwardStructure->getQualStructureID());
                     $TPL->set("Structure", $Structure);
                     $TPL->set("buildLevels", $Structure->getAllBuildLevels());
                     $TPL->set("builds", $Structure->getAllBuilds());
@@ -1033,7 +1033,7 @@ class GradeTracker {
                 if (isset($VARS['CriteriaAwardStructure'])) {
                     $CriteriaAwardStructure = $VARS['CriteriaAwardStructure'];
                 } else {
-                    $CriteriaAwardStructure = new \GT\CriteriaAwardStructure($id);
+                    $CriteriaAwardStructure = new \block_gradetracker\CriteriaAwardStructure($id);
                 }
 
                 $TPL->set("CriteriaAwardStructure", $CriteriaAwardStructure);
@@ -1041,23 +1041,23 @@ class GradeTracker {
                 if ($CriteriaAwardStructure->isValid()) {
 
                     // Qual Structure
-                    $TPL->set("Structure", new \GT\QualificationStructure($CriteriaAwardStructure->getQualStructureID()));
+                    $TPL->set("Structure", new \block_gradetracker\QualificationStructure($CriteriaAwardStructure->getQualStructureID()));
 
                     // Qual Build
                     if ($CriteriaAwardStructure->getQualBuildID()) {
-                        $TPL->set("Build", new \GT\QualificationBuild($CriteriaAwardStructure->getQualBuildID()));
+                        $TPL->set("Build", new \block_gradetracker\QualificationBuild($CriteriaAwardStructure->getQualBuildID()));
                     }
 
                 }
 
             } else if ($page == 'delete_unit' && $id) {
 
-                $UnitAwardStructure = new \GT\UnitAwardStructure($id);
+                $UnitAwardStructure = new \block_gradetracker\UnitAwardStructure($id);
                 $TPL->set("UnitAwardStructure", $UnitAwardStructure);
 
             } else if ($page == 'delete_criteria' && $id) {
 
-                $CriteriaAwardStructure = new \GT\CriteriaAwardStructure($id);
+                $CriteriaAwardStructure = new \block_gradetracker\CriteriaAwardStructure($id);
                 $TPL->set("CriteriaAwardStructure", $CriteriaAwardStructure);
 
             }
@@ -1069,29 +1069,29 @@ class GradeTracker {
                 $TPL->set("Object", $Structure);
             }
 
-            $TPL->set("qualStructures", \GT\QualificationStructure::getAllStructures());
+            $TPL->set("qualStructures", \block_gradetracker\QualificationStructure::getAllStructures());
             $TPL->set("type", $type);
             $TPL->set("cntAwards", 0);
 
         } else if ($section == 'levels') {
 
-            $levels = \GT\Level::getAllLevels();
+            $levels = \block_gradetracker\Level::getAllLevels();
             $TPL->set("levels", $levels);
 
             if ($page == 'new' || $page == 'edit') {
 
-                $Level = new \GT\Level($id);
+                $Level = new \block_gradetracker\Level($id);
                 $page = 'new';
                 $TPL->set("Level", $Level);
 
             } else if ($page == 'delete') {
-                $Level = new \GT\Level($id);
+                $Level = new \block_gradetracker\Level($id);
                 $TPL->set("Level", $Level);
             }
 
         } else if ($section == 'subtypes') {
 
-            $subTypes = \GT\SubType::getAllSubTypes();
+            $subTypes = \block_gradetracker\SubType::getAllSubTypes();
             $TPL->set("subTypes", $subTypes);
 
             if ($page == 'new' || $page == 'edit') {
@@ -1101,21 +1101,21 @@ class GradeTracker {
                 if (isset($VARS['SubType'])) {
                     $subType = $VARS['SubType'];
                 } else {
-                    $subType = new \GT\SubType($id);
+                    $subType = new \block_gradetracker\SubType($id);
                 }
 
                 $TPL->set("SubType", $subType);
 
             } else if ($page == 'delete') {
-                $subType = new \GT\SubType($id);
+                $subType = new \block_gradetracker\SubType($id);
                 $TPL->set("SubType", $subType);
             }
 
         } else if ($section == 'qoe') {
 
-            $TPL->set("allSubjects", \GT\QualOnEntry::getAllSubjects());
-            $TPL->set("allTypes", \GT\QualOnEntry::getAllTypes());
-            $TPL->set("allGrades", \GT\QualOnEntry::getAllGrades());
+            $TPL->set("allSubjects", \block_gradetracker\QualOnEntry::getAllSubjects());
+            $TPL->set("allTypes", \block_gradetracker\QualOnEntry::getAllTypes());
+            $TPL->set("allGrades", \block_gradetracker\QualOnEntry::getAllGrades());
 
         }
     }
@@ -1139,10 +1139,10 @@ class GradeTracker {
         if ($section == 'overview') {
 
             $stats = array();
-            $stats['active'] = \GT\Statistics::getQualifications('active');
-            $stats['inactive'] = \GT\Statistics::getQualifications('inactive');
-            $stats['correctcredits'] = \GT\Statistics::getQualificationsByCredits('correct');
-            $stats['incorrectcredits'] = \GT\Statistics::getQualificationsByCredits('incorrect');
+            $stats['active'] = \block_gradetracker\Statistics::getQualifications('active');
+            $stats['inactive'] = \block_gradetracker\Statistics::getQualifications('inactive');
+            $stats['correctcredits'] = \block_gradetracker\Statistics::getQualificationsByCredits('correct');
+            $stats['incorrectcredits'] = \block_gradetracker\Statistics::getQualificationsByCredits('incorrect');
 
             $TPL->set("stats", $stats);
 
@@ -1151,7 +1151,7 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Qualification\GUI($id);
+                $GUI = new \block_gradetracker\Qualification\GUI($id);
             }
 
             $GUI->loadTemplate($TPL);
@@ -1163,7 +1163,7 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Qualification\GUI($id);
+                $GUI = new \block_gradetracker\Qualification\GUI($id);
             }
 
             $GUI->loadTemplate($TPL);
@@ -1175,9 +1175,9 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Qualification\GUI($id);
+                $GUI = new \block_gradetracker\Qualification\GUI($id);
             }
-            $qualification = new \GT\Qualification($id);
+            $qualification = new \block_gradetracker\Qualification($id);
             $TPL->set("qualification", $qualification);
             $GUI->loadTemplate($TPL);
         } else if ($section == 'copy') {
@@ -1185,9 +1185,9 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Qualification\GUI($id);
+                $GUI = new \block_gradetracker\Qualification\GUI($id);
             }
-            $copyQual = new \GT\Qualification($id);
+            $copyQual = new \block_gradetracker\Qualification($id);
             $TPL->set("copyQual", $copyQual);
             $GUI->loadTemplate($TPL);
         }
@@ -1215,8 +1215,8 @@ class GradeTracker {
         if ($section == 'overview') {
 
             $stats = array();
-            $stats['active'] = \GT\Statistics::getUnits('active');
-            $stats['inactive'] = \GT\Statistics::getUnits('inactive');
+            $stats['active'] = \block_gradetracker\Statistics::getUnits('active');
+            $stats['inactive'] = \block_gradetracker\Statistics::getUnits('inactive');
 
             $TPL->set("stats", $stats);
 
@@ -1225,7 +1225,7 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Unit\GUI($id);
+                $GUI = new \block_gradetracker\Unit\GUI($id);
                 $VARS['GUI'] = $GUI;
             }
 
@@ -1238,7 +1238,7 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Unit\GUI($id);
+                $GUI = new \block_gradetracker\Unit\GUI($id);
             }
 
             $GUI->loadTemplate($TPL);
@@ -1248,18 +1248,18 @@ class GradeTracker {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Unit\GUI($id);
+                $GUI = new \block_gradetracker\Unit\GUI($id);
             }
-            $unit = new \GT\Unit($id);
+            $unit = new \block_gradetracker\Unit($id);
             $TPL->set("unit", $unit);
             $GUI->loadTemplate($TPL);
         } else if ($section == 'copy') {
             if (isset($VARS['GUI'])) {
                 $GUI = $VARS['GUI'];
             } else {
-                $GUI = new \GT\Unit\GUI($id);
+                $GUI = new \block_gradetracker\Unit\GUI($id);
             }
-            $copyUnit = new \GT\Unit($id);
+            $copyUnit = new \block_gradetracker\Unit($id);
             $TPL->set("copyUnit", $copyUnit);
             $GUI->loadTemplate($TPL);
         }
@@ -1277,14 +1277,14 @@ class GradeTracker {
 
         global $USER, $PAGE;
 
-        $User = new \GT\User($USER->id);
+        $User = new \block_gradetracker\User($USER->id);
 
         if ($section == 'search') {
             $TPL->set("categories", \core_course_category::make_categories_list());
         } else if ($section == 'my') {
             $TPL->set("courses", $User->getCourses("STAFF"));
         } else {
-            $course = new \GT\Course($id);
+            $course = new \block_gradetracker\Course($id);
             $TPL->set("Course", $course);
             if (!$course->isValid()) {
                 print_error('invalidcourse', 'block_gradetracker');
@@ -1305,10 +1305,10 @@ class GradeTracker {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
-                $TPL->set("allStructures", \GT\QualificationStructure::getAllStructures());
-                $TPL->set("allLevels", \GT\Level::getAllLevels());
-                $TPL->set("allSubTypes", \GT\SubType::getAllSubTypes());
-                $QualPicker = new \GT\FormElement();
+                $TPL->set("allStructures", \block_gradetracker\QualificationStructure::getAllStructures());
+                $TPL->set("allLevels", \block_gradetracker\Level::getAllLevels());
+                $TPL->set("allSubTypes", \block_gradetracker\SubType::getAllSubTypes());
+                $QualPicker = new \block_gradetracker\FormElement();
                 $QualPicker->setType('QUALPICKER');
                 $QualPicker->setValue( $course->getCourseQualifications() );
                 $TPL->set("QualPicker", $QualPicker);
@@ -1321,12 +1321,12 @@ class GradeTracker {
             } else if ($section == 'userunits') {
 
                 global $GTEXE;
-                $GTEXE = \GT\Execution::getInstance();
+                $GTEXE = \block_gradetracker\Execution::getInstance();
                 $GTEXE->QUAL_STRUCTURE_MIN_LOAD = true;
                 $GTEXE->QUAL_BUILD_MIN_LOAD = true;
                 $GTEXE->QUAL_MIN_LOAD = true;
                 $GTEXE->UNIT_MIN_LOAD = true;
-                $GTEXE->STUDENT_LOAD_LEVEL = \GT\Execution::STUD_LOAD_LEVEL_UNIT;
+                $GTEXE->STUDENT_LOAD_LEVEL = \block_gradetracker\Execution::STUD_LOAD_LEVEL_UNIT;
 
             } else if ($section == 'activities') {
 
@@ -1335,7 +1335,7 @@ class GradeTracker {
                     print_error('invalidaccess', 'block_gradetracker');
                 }
 
-                $modLinks = \GT\ModuleLink::getEnabledModLinks();
+                $modLinks = \block_gradetracker\ModuleLink::getEnabledModLinks();
                 $courseQuals = $course->getCourseQualifications(true);
                 $TPL->set("courseQuals", $courseQuals);
                 $TPL->set("modLinks", $modLinks);
@@ -1356,13 +1356,13 @@ class GradeTracker {
                         }
                         $TPL->set("cmID", $cmID);
 
-                        $moduleActivity = \GT\ModuleLink::getModuleLinkFromCourseModule($cmID);
+                        $moduleActivity = \block_gradetracker\ModuleLink::getModuleLinkFromCourseModule($cmID);
                         $TPL->set("moduleActivity", $moduleActivity);
 
                         $unitsLinked = array();
                         if ($courseQuals) {
                             foreach ($courseQuals as $courseQual) {
-                                $unitsLinked[$courseQual->getID()] = \GT\Activity::getUnitsLinkedToCourseModule($cmID, $courseQual->getID(), true);
+                                $unitsLinked[$courseQual->getID()] = \block_gradetracker\Activity::getUnitsLinkedToCourseModule($cmID, $courseQual->getID(), true);
                             }
                         }
 
@@ -1371,14 +1371,14 @@ class GradeTracker {
 
                     } else {
                         // If qual & unit are valid, we clicked on a unit and want to add assignments to it
-                        $qual = new \GT\Qualification($qID);
+                        $qual = new \block_gradetracker\Qualification($qID);
                         $unit = $qual->getUnit($uID);
                         if (!$unit) {
                             print_error( 'invalidunit', 'block_gradetracker');
                         }
                         $criteria = $unit->sortCriteria(false, true);
 
-                        $qualUnitActivities = \GT\ModuleLink::getModulesOnUnit($qual->getID(), $unit->getID(), $course->id);
+                        $qualUnitActivities = \block_gradetracker\ModuleLink::getModulesOnUnit($qual->getID(), $unit->getID(), $course->id);
 
                         $TPL->set("qual", $qual);
                         $TPL->set("unit", $unit);
@@ -1399,11 +1399,11 @@ class GradeTracker {
                     $uID = optional_param('unitid', false, PARAM_INT);
                     $part = optional_param('part', null, PARAM_INT);
 
-                    $moduleLink = \GT\ModuleLink::getModuleLinkFromCourseModule($cmID);
+                    $moduleLink = \block_gradetracker\ModuleLink::getModuleLinkFromCourseModule($cmID);
 
-                    $qual = new \GT\Qualification($qID);
+                    $qual = new \block_gradetracker\Qualification($qID);
                     if ($uID) {
-                        $unit = new \GT\Unit($uID);
+                        $unit = new \block_gradetracker\Unit($uID);
                         $unitArray = array( $unit );
                         $TPL->set("unit", $unit);
                     } else {
@@ -1433,12 +1433,12 @@ class GradeTracker {
             case 'tg':
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
-                $quals = \GT\Qualification::getAllQualifications();
+                $quals = \block_gradetracker\Qualification::getAllQualifications();
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateTargetGradesCSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleTargetGradesCSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateTargetGradesCSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleTargetGradesCSV($reload));
 
-                $QualPicker = new \GT\FormElement();
+                $QualPicker = new \block_gradetracker\FormElement();
                 $QualPicker->setType('QUALPICKER');
                 $TPL->set("QualPicker", $QualPicker);
 
@@ -1448,8 +1448,8 @@ class GradeTracker {
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateQoECSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleQoECSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateQoECSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleQoECSV($reload));
 
                 break;
 
@@ -1457,8 +1457,8 @@ class GradeTracker {
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateAvgGCSECSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleAvgGCSECSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateAvgGCSECSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleAvgGCSECSV($reload));
 
                 break;
 
@@ -1466,8 +1466,8 @@ class GradeTracker {
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateAspirationalGradesCSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleAspirationalGradesCSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateAspirationalGradesCSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleAspirationalGradesCSV($reload));
 
                 break;
 
@@ -1475,8 +1475,8 @@ class GradeTracker {
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateCetaGradesCSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleCetaGradesCSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateCetaGradesCSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleCetaGradesCSV($reload));
 
                 break;
 
@@ -1484,18 +1484,18 @@ class GradeTracker {
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateWCoeCSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleWCoeCSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateWCoeCSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleWCoeCSV($reload));
 
                 break;
 
             case 'ass':
 
                 $reload = optional_param('reload', false, PARAM_BOOL);
-                $assessments = \GT\Assessment::getAllAssessments();
+                $assessments = \block_gradetracker\Assessment::getAllAssessments();
 
-                $TPL->set("templateFile", \GT\CSV\Template::generateTemplateAssGradesCSV($reload));
-                $TPL->set("exampleFile", \GT\CSV\Example::generateExampleAssGradesCSV($reload));
+                $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateAssGradesCSV($reload));
+                $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleAssGradesCSV($reload));
                 $TPL->set("assessments", $assessments);
 
                 break;
@@ -1527,13 +1527,13 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Mod = (isset($VARS['Mod'])) ? $VARS['Mod'] : new \GT\ModuleLink($id);
+            $Mod = (isset($VARS['Mod'])) ? $VARS['Mod'] : new \block_gradetracker\ModuleLink($id);
             $TPL->set("Mod", $Mod);
-            $TPL->set("allMods", \GT\ModuleLink::getAllInstalledMods());
+            $TPL->set("allMods", \block_gradetracker\ModuleLink::getAllInstalledMods());
 
         }
 
-        $TPL->set("mods", \GT\ModuleLink::getEnabledModLinks());
+        $TPL->set("mods", \block_gradetracker\ModuleLink::getEnabledModLinks());
     }
 
 
@@ -1555,25 +1555,25 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Assessment = (isset($VARS['Assessment'])) ? $VARS['Assessment'] : new \GT\Assessment($id);
+            $Assessment = (isset($VARS['Assessment'])) ? $VARS['Assessment'] : new \block_gradetracker\Assessment($id);
             $TPL->set("Assessment", $Assessment);
-            $TPL->set("allTypes", \GT\Assessment::getAllTypes());
+            $TPL->set("allTypes", \block_gradetracker\Assessment::getAllTypes());
 
             $quals = $Assessment->getQuals();
 
-            $QualPicker = new \GT\FormElement();
+            $QualPicker = new \block_gradetracker\FormElement();
             $QualPicker->setType('QUALPICKER');
             $QualPicker->setValue( $quals );
             $TPL->set("QualPicker", $QualPicker);
 
-            $formFields = \GT\Assessment::getCustomFormFields();
+            $formFields = \block_gradetracker\Assessment::getCustomFormFields();
             $TPL->set("formFields", $formFields);
 
             // Get distinct list of qualification structures attached to this assessment
             $qualStructures = array();
             if ($quals) {
                 foreach ($quals as $qualID) {
-                    $qualStructure = \GT\Qualification::getStructureFromQualID($qualID);
+                    $qualStructure = \block_gradetracker\Qualification::getStructureFromQualID($qualID);
                     if ($qualStructure) {
                         $qualStructures[$qualStructure->getID()] = $qualStructure;
                     }
@@ -1585,7 +1585,7 @@ class GradeTracker {
             $qualBuilds = array();
             if ($quals) {
                 foreach ($quals as $qualID) {
-                    $qualBuild = \GT\Qualification::getBuildFromQualID($qualID);
+                    $qualBuild = \block_gradetracker\Qualification::getBuildFromQualID($qualID);
                     if ($qualBuild) {
                         $qualBuilds[$qualBuild->getID()] = $qualBuild;
                     }
@@ -1601,12 +1601,12 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Assessment = (isset($VARS['Assessment'])) ? $VARS['Assessment'] : new \GT\Assessment($id);
+            $Assessment = (isset($VARS['Assessment'])) ? $VARS['Assessment'] : new \block_gradetracker\Assessment($id);
             $TPL->set("Assessment", $Assessment);
 
         } else {
 
-            $TPL->set("allAssessments", \GT\Assessment::getAllAssessments());
+            $TPL->set("allAssessments", \block_gradetracker\Assessment::getAllAssessments());
 
         }
     }
@@ -1619,9 +1619,9 @@ class GradeTracker {
     public function displayConfigTestsTG($TPL) {
         $reload = optional_param('reload', false, PARAM_BOOL);
 
-        $TPL->set("templateFile", \GT\CSV\Template::generateTemplateTargetGradesCSV($reload));
-        $TPL->set("exampleFile", \GT\CSV\Example::generateExampleTargetGradesCSV($reload));
-        $TPL->set("allQuals", \GT\Qualification::getAllQualifications());
+        $TPL->set("templateFile", \block_gradetracker\CSV\Template::generateTemplateTargetGradesCSV($reload));
+        $TPL->set("exampleFile", \block_gradetracker\CSV\Example::generateExampleTargetGradesCSV($reload));
+        $TPL->set("allQuals", \block_gradetracker\Qualification::getAllQualifications());
     }
 
 
@@ -1645,45 +1645,45 @@ class GradeTracker {
             // Criteria Progress report
             if ($page == 'critprog') {
 
-                $Report = new \GT\Reports\CriteriaProgressReport();
-                $structures = \GT\QualificationStructure::getStructuresBySetting('custom_dashboard_view', 'view-criteria-short');
+                $Report = new \block_gradetracker\Reports\CriteriaProgressReport();
+                $structures = \block_gradetracker\QualificationStructure::getStructuresBySetting('custom_dashboard_view', 'view-criteria-short');
 
                 $TPL->set("structures", $structures);
                 $TPL->set("categories", $this->getReportingCategories());
-                $TPL->set("awardNames", \GT\CriteriaAward::getDistinctNamesNonMet());
+                $TPL->set("awardNames", \block_gradetracker\CriteriaAward::getDistinctNamesNonMet());
                 $TPL->set("Report", $Report);
 
             } else if ($page == 'passprog') {
 
-                $Report = new \GT\Reports\PassCriteriaProgressReport();
-                $structures = \GT\QualificationStructure::getStructuresBySetting('reporting_pass_criteria_method', true);
+                $Report = new \block_gradetracker\Reports\PassCriteriaProgressReport();
+                $structures = \block_gradetracker\QualificationStructure::getStructuresBySetting('reporting_pass_criteria_method', true);
 
                 $TPL->set("structures", $structures);
                 $TPL->set("categories", $this->getReportingCategories());
-                $TPL->set("awardNames", \GT\CriteriaAward::getDistinctNamesNonMet());
+                $TPL->set("awardNames", \block_gradetracker\CriteriaAward::getDistinctNamesNonMet());
                 $TPL->set("Report", $Report);
 
             } else if ($page == 'passsummary') {
 
-                $Report = new \GT\Reports\PassCriteriaSummaryReport();
-                $structures = \GT\QualificationStructure::getStructuresBySetting('reporting_pass_criteria_method', true);
+                $Report = new \block_gradetracker\Reports\PassCriteriaSummaryReport();
+                $structures = \block_gradetracker\QualificationStructure::getStructuresBySetting('reporting_pass_criteria_method', true);
 
                 $TPL->set("structures", $structures);
                 $TPL->set("categories", $this->getReportingCategories());
                 $TPL->set("Report", $Report);
-                $TPL->set("awardNames", \GT\CriteriaAward::getDistinctNamesNonMet());
+                $TPL->set("awardNames", \block_gradetracker\CriteriaAward::getDistinctNamesNonMet());
 
             }
 
         } else if ($section == 'logs') {
 
-            $GTEXE = \GT\Execution::getInstance();
+            $GTEXE = \block_gradetracker\Execution::getInstance();
             $GTEXE->min();
 
-            $TPL->set("reflectionClass", new \ReflectionClass("\GT\Log"));
-            $TPL->set("allQuals", \GT\Qualification::getAllQualifications(true));
-            $TPL->set("allUnits", \GT\Unit::getAllUnits(false));
-            $TPL->set("allCourses", \GT\Course::getAllCoursesWithQuals());
+            $TPL->set("reflectionClass", new \ReflectionClass("\block_gradetracker\Log"));
+            $TPL->set("allQuals", \block_gradetracker\Qualification::getAllQualifications(true));
+            $TPL->set("allUnits", \block_gradetracker\Unit::getAllUnits(false));
+            $TPL->set("allCourses", \block_gradetracker\Course::getAllCoursesWithQuals());
 
         }
 
@@ -1714,9 +1714,9 @@ class GradeTracker {
 
                     // ------------ Logging Info
                     $detail = 'GT_LOG_DETAILS_UPDATED_PLUGIN_'.strtoupper($section).'_SETTINGS';
-                    $Log = new \GT\Log();
-                    $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-                    $Log->details = constant('\GT\Log::' . $detail);
+                    $Log = new \block_gradetracker\Log();
+                    $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+                    $Log->details = constant('\block_gradetracker\Log::' . $detail);
                     $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
                     $Log->save();
                     // ------------ Logging Info
@@ -1821,8 +1821,8 @@ class GradeTracker {
 
     /**
      * Save the Quals on Entry forms
-     * @global \GT\type $CFG
-     * @global \GT\type $MSGS
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $MSGS
      */
     private function saveConfigQOE() {
 
@@ -1862,7 +1862,7 @@ class GradeTracker {
                     $idArray[] = $id;
 
                     // Save the record
-                    $result = \GT\QualOnEntry::saveSubject($id, $name);
+                    $result = \block_gradetracker\QualOnEntry::saveSubject($id, $name);
                     if (is_numeric($result)) {
                         $idArray[] = $result;
                     }
@@ -1872,7 +1872,7 @@ class GradeTracker {
             }
 
             // Remove any we didn't save this time, as we must have deleted them on the form
-            \GT\QualOnEntry::deleteSubjectsNotSaved($idArray);
+            \block_gradetracker\QualOnEntry::deleteSubjectsNotSaved($idArray);
             $MSGS['success'] = get_string('qoesubjectssaved', 'block_gradetracker');
 
         } else if ($submission['save_types']) {
@@ -1899,7 +1899,7 @@ class GradeTracker {
                     $idArray[] = $id;
 
                     // Save the record
-                    $result = \GT\QualOnEntry::saveType($id, $name, $lvl, $weight);
+                    $result = \block_gradetracker\QualOnEntry::saveType($id, $name, $lvl, $weight);
                     if (is_numeric($result)) {
                         $idArray[] = $result;
                     }
@@ -1909,7 +1909,7 @@ class GradeTracker {
             }
 
             // Remove any we didn't save this time, as we must have deleted them on the form
-            \GT\QualOnEntry::deleteTypesNotSaved($idArray);
+            \block_gradetracker\QualOnEntry::deleteTypesNotSaved($idArray);
             $MSGS['success'] = get_string('qoetypessaved', 'block_gradetracker');
 
         } else if ($submission['save_grades']) {
@@ -1937,7 +1937,7 @@ class GradeTracker {
                     $idArray[] = $id;
 
                     // Save the record
-                    $result = \GT\QualOnEntry::saveGrade($id, $type, $name, $points, $weight);
+                    $result = \block_gradetracker\QualOnEntry::saveGrade($id, $type, $name, $points, $weight);
                     if (is_numeric($result)) {
                         $idArray[] = $result;
                     }
@@ -1947,16 +1947,16 @@ class GradeTracker {
             }
 
             // Remove any we didn't save this time, as we must have deleted them on the form
-            \GT\QualOnEntry::deleteGradesNotSaved($idArray);
+            \block_gradetracker\QualOnEntry::deleteGradesNotSaved($idArray);
             $MSGS['success'] = get_string('qoegradessaved', 'block_gradetracker');
 
         }
 
         if (!isset($MSGS['errors'])) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE;
             $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
@@ -1966,9 +1966,9 @@ class GradeTracker {
 
     /**
      * Save assessment configuration
-     * @global \GT\type $CFG
-     * @global \GT\type $MSGS
-     * @global \GT\type $VARS
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $MSGS
+     * @global \block_gradetracker\type $VARS
      * @global type $USER
      * @param type $section
      * @param type $page
@@ -1977,7 +1977,7 @@ class GradeTracker {
 
         global $CFG, $MSGS, $VARS, $USER;
 
-        $User = new \GT\User($USER->id);
+        $User = new \block_gradetracker\User($USER->id);
 
         // New/Edit module link
         if ($section == 'modules' && $page == 'edit') {
@@ -1988,7 +1988,7 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Module = new \GT\ModuleLink($id);
+            $Module = new \block_gradetracker\ModuleLink($id);
             $Module->loadPostData();
 
             $valid = ($Module->isValid());
@@ -1998,7 +1998,7 @@ class GradeTracker {
                 $MSGS['success'] = get_string('modlinking:saved', 'block_gradetracker');
 
                 // Log variables
-                $detail = ($valid) ? \GT\Log::GT_LOG_DETAILS_UPDATED_MODULE_LINK : \GT\Log::GT_LOG_DETAILS_CREATED_MODULE_LINK;
+                $detail = ($valid) ? \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_MODULE_LINK : \block_gradetracker\Log::GT_LOG_DETAILS_CREATED_MODULE_LINK;
                 $attributes = array('id' => $Module->getID());
 
             } else {
@@ -2020,7 +2020,7 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Module = new \GT\ModuleLink($id);
+            $Module = new \block_gradetracker\ModuleLink($id);
 
             if ($submission['run_away']) {
                 redirect( $CFG->wwwroot . '/blocks/gradetracker/config.php?view=assessments&section=modules' );
@@ -2030,7 +2030,7 @@ class GradeTracker {
                 $MSGS['success'] = get_string('modlinking:deleted', 'block_gradetracker');
 
                 // Log variables
-                $detail = \GT\Log::GT_LOG_DETAILS_DELETED_MODULE_LINK;
+                $detail = \block_gradetracker\Log::GT_LOG_DETAILS_DELETED_MODULE_LINK;
                 $attributes = array('id' => $Module->getID());
 
             }
@@ -2045,7 +2045,7 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Assessment = new \GT\Assessment($id);
+            $Assessment = new \block_gradetracker\Assessment($id);
             $Assessment->loadPostData();
 
             $valid = ($Assessment->isValid());
@@ -2056,8 +2056,8 @@ class GradeTracker {
                 $MSGS['success'] = get_string('assessmentsaved', 'block_gradetracker');
 
                 // Log variables
-                $detail = ($valid) ? \GT\Log::GT_LOG_DETAILS_UPDATED_ASSESSMENT : \GT\Log::GT_LOG_DETAILS_CREATED_ASSESSMENT;
-                $attributes = array(\GT\Log::GT_LOG_ATT_ASSID => $Assessment->getID());
+                $detail = ($valid) ? \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_ASSESSMENT : \block_gradetracker\Log::GT_LOG_DETAILS_CREATED_ASSESSMENT;
+                $attributes = array(\block_gradetracker\Log::GT_LOG_ATT_ASSID => $Assessment->getID());
 
             } else {
                 $MSGS['errors'] = $Assessment->getErrors();
@@ -2078,7 +2078,7 @@ class GradeTracker {
             }
 
             $id = optional_param('id', false, PARAM_INT);
-            $Assessment = new \GT\Assessment($id);
+            $Assessment = new \block_gradetracker\Assessment($id);
 
             if ($submission['run_away']) {
                 redirect( $CFG->wwwroot . '/blocks/gradetracker/config.php?view=assessments&section=manage' );
@@ -2088,8 +2088,8 @@ class GradeTracker {
                 $MSGS['success'] = get_string('assessment:deleted', 'block_gradetracker');
 
                 // Log variables
-                $detail = \GT\Log::GT_LOG_DETAILS_DELETED_ASSESSMENT;
-                $attributes = array(\GT\Log::GT_LOG_ATT_ASSID => $Assessment->getID());
+                $detail = \block_gradetracker\Log::GT_LOG_DETAILS_DELETED_ASSESSMENT;
+                $attributes = array(\block_gradetracker\Log::GT_LOG_ATT_ASSID => $Assessment->getID());
 
             }
 
@@ -2099,8 +2099,8 @@ class GradeTracker {
 
         if (isset($detail)) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
             $Log->afterjson = $_POST; // This usage of $_POST is to store all the submitted data in the log.
             $Log->attributes = $attributes;
@@ -2112,7 +2112,7 @@ class GradeTracker {
 
     /**
      * Submit the QoE import
-     * @global \GT\type $MSGS
+     * @global \block_gradetracker\type $MSGS
      */
     private function saveConfigDataQOE() {
 
@@ -2120,7 +2120,7 @@ class GradeTracker {
 
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportQualsOnEntry();
 
             if ($import->getErrors()) {
@@ -2136,7 +2136,7 @@ class GradeTracker {
 
     /**
      * Submit the AVG GCSE import
-     * @global \GT\type $MSGS
+     * @global \block_gradetracker\type $MSGS
      */
     private function saveConfigDataAvgGCSE() {
 
@@ -2144,7 +2144,7 @@ class GradeTracker {
 
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportAvgGCSE();
 
             if ($import->getErrors()) {
@@ -2160,16 +2160,16 @@ class GradeTracker {
 
     /**
      * Submit the TG import
-     * @global \GT\type $MSGS
+     * @global \block_gradetracker\type $MSGS
      */
     private function saveConfigDataTargetGrades() {
 
         global $MSGS;
 
         // Minimum load - we don't need the criteria
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
         $GTEXE->min();
-        $GTEXE->STUDENT_LOAD_LEVEL = \GT\Execution::STUD_LOAD_LEVEL_UNIT;
+        $GTEXE->STUDENT_LOAD_LEVEL = \block_gradetracker\Execution::STUD_LOAD_LEVEL_UNIT;
 
         $submission = array(
             'submit_calculate' => optional_param('submit_calculate', false, PARAM_TEXT),
@@ -2192,7 +2192,7 @@ class GradeTracker {
 
                 foreach ($tg_added_qualID as $qualid) {
 
-                    $qual = new \GT\Qualification\UserQualification($qualid);
+                    $qual = new \block_gradetracker\Qualification\UserQualification($qualid);
                     $students_on_qual = $qual->getUsers('student');
                     $student_counter[0] += 1;
 
@@ -2289,7 +2289,7 @@ class GradeTracker {
 
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportTargetGrades();
 
             if ($import->getErrors()) {
@@ -2309,7 +2309,7 @@ class GradeTracker {
 
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportAspirationalGrades();
 
             if ($import->getErrors()) {
@@ -2329,7 +2329,7 @@ class GradeTracker {
 
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportCETAGrades();
 
             if ($import->getErrors()) {
@@ -2361,7 +2361,7 @@ class GradeTracker {
                 return false;
             }
 
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportAssessmentGrades($settings['assID']);
 
             if ($import->getErrors()) {
@@ -2382,7 +2382,7 @@ class GradeTracker {
 
         // Check if file was submitted
         if (isset($_FILES['file']) && !$_FILES['file']['error']) {
-            $import = new \GT\DataImport($_FILES['file']);
+            $import = new \block_gradetracker\DataImport($_FILES['file']);
             $import->runImportWCoe();
 
             if ($import->getErrors()) {
@@ -2401,9 +2401,9 @@ class GradeTracker {
     /**
      * Save the configuration from the course settings
      * @global type $DB
-     * @global \GT\type $CFG
-     * @global \GT\type $MSGS
-     * @global \GT\type $VARS
+     * @global \block_gradetracker\type $CFG
+     * @global \block_gradetracker\type $MSGS
+     * @global \block_gradetracker\type $VARS
      * @param type $section
      * @param type $page
      * @return boolean
@@ -2412,7 +2412,7 @@ class GradeTracker {
 
         global $DB, $CFG, $MSGS, $VARS, $USER;
 
-        $User = new \GT\User($USER->id);
+        $User = new \block_gradetracker\User($USER->id);
 
         $submission = array(
             'confirm_delete_activity_link' => optional_param('confirm_delete_activity_link', false, PARAM_TEXT),
@@ -2437,7 +2437,7 @@ class GradeTracker {
             $part = optional_param('part', null, PARAM_INT);
 
             // Get the course this coursemodule is on
-            $Course = \GT\Activity::getCourseFromCourseModule($cmID);
+            $Course = \block_gradetracker\Activity::getCourseFromCourseModule($cmID);
             if (!$Course || !$Course->isValid()) {
                 print_error('invalidcourse', 'block_gradetracker');
             }
@@ -2447,7 +2447,7 @@ class GradeTracker {
                 print_error('invalidaccess', 'block_gradetracker');
             }
 
-            $links = \GT\Activity::findLinks($cmID, $part, $qID, $uID);
+            $links = \block_gradetracker\Activity::findLinks($cmID, $part, $qID, $uID);
             if ($links) {
                 foreach ($links as $link) {
                     $link->remove();
@@ -2457,12 +2457,12 @@ class GradeTracker {
             $MSGS['success'] = get_string('modlinking:deleted', 'block_gradetracker');
 
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_DELETED_COURSE_ACTIVTY_LINK;
-            $Log->addAttribute(\GT\Log::GT_LOG_ATT_COURSEID, $Course->id)
-                ->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $qID)
-                ->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $uID);
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_DELETED_COURSE_ACTIVTY_LINK;
+            $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $Course->id)
+                ->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $qID)
+                ->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_UNITID, $uID);
             $Log->save();
             // ------------ Logging Info
 
@@ -2470,7 +2470,7 @@ class GradeTracker {
 
         if ($section != 'search') {
             $id = optional_param('id', false, PARAM_INT);
-            $course = new \GT\Course($id);
+            $course = new \block_gradetracker\Course($id);
             if (!$course->isValid()) {
                 print_error('invalidcourse', 'block_gradetracker');
             }
@@ -2517,7 +2517,7 @@ class GradeTracker {
 
                         $qualID = $settings['qualid'];
                         $unitID = $settings['unitid'];
-                        $course = new \GT\Course($settings['courseID']);
+                        $course = new \block_gradetracker\Course($settings['courseID']);
                         $linkedCriteria = $settings['gt_criteria'];
                         $criteriaArray = array();
 
@@ -2532,7 +2532,7 @@ class GradeTracker {
 
                                     if ( (is_numeric($value) && $value > 0) || !is_numeric($value) ) {
 
-                                        $activity = new \GT\Activity();
+                                        $activity = new \block_gradetracker\Activity();
                                         $activity->setCourseModuleID($courseModID);
                                         $activity->setQualID($qualID);
                                         $activity->setUnitID($unitID);
@@ -2555,17 +2555,17 @@ class GradeTracker {
                         }
 
                         // Now remove any that are currently linked to this qual unit that were not submitted in the form
-                        \GT\Activity::removeNonSubmittedLinksOnUnit($qualID, $unitID, $course->id, $criteriaArray);
+                        \block_gradetracker\Activity::removeNonSubmittedLinksOnUnit($qualID, $unitID, $course->id, $criteriaArray);
 
                         $MSGS['success'] = get_string('modlinking:saved', 'block_gradetracker');
 
                         // ------------ Logging Info
-                        $Log = new \GT\Log();
-                        $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-                        $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS;
+                        $Log = new \block_gradetracker\Log();
+                        $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+                        $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_ACTIVITY_LINKS;
                         $Log->afterjson = $linkedCriteria;
-                        $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $qualID)
-                            ->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $unitID);
+                        $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $qualID)
+                            ->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_UNITID, $unitID);
                         $Log->save();
                         // ------------ Logging Info
 
@@ -2575,12 +2575,12 @@ class GradeTracker {
 
             }
         } else if ($section == 'search') {
-            $courses = \GT\Course::search( array(
+            $courses = \block_gradetracker\Course::search( array(
                 "name" => $settings['coursename'],
                 "catID" => $settings['coursecats']
             ) );
 
-            $TPL = new \GT\Template();
+            $TPL = new \block_gradetracker\Template();
             $TPL->set("courses", $courses);
             $VARS['TPL'] = $TPL;
         }
@@ -2606,18 +2606,18 @@ class GradeTracker {
 
         // change deleted field in 1
         if ($submission['delete_unit'] && gt_has_capability('block/gradetracker:delete_restore_units')) {
-            $unit = new \GT\Unit($id);
+            $unit = new \block_gradetracker\Unit($id);
             $unit->delete();
-            $detail = \GT\Log::GT_LOG_DETAILS_DELETED_UNIT;
+            $detail = \block_gradetracker\Log::GT_LOG_DETAILS_DELETED_UNIT;
             $MSGS['success'] = get_string('unitdeleted', 'block_gradetracker');
         } else if ($submission['copy_unit']) {
-            $unit = new \GT\Unit($id);
+            $unit = new \block_gradetracker\Unit($id);
             $unit->copyUnit();
-            $detail = \GT\Log::GT_LOG_DETAILS_DUPLICATED_UNIT;
+            $detail = \block_gradetracker\Log::GT_LOG_DETAILS_DUPLICATED_UNIT;
         } else if ($section == 'new' && !$submission['restoreUnit_x']) {
 
-            $TPL = new \GT\Template();
-            $unit = new \GT\Unit\GUI($id);
+            $TPL = new \block_gradetracker\Template();
+            $unit = new \block_gradetracker\Unit\GUI($id);
 
             $valid = ($unit->isValid());
 
@@ -2625,15 +2625,15 @@ class GradeTracker {
             $unit->saveFormNewUnit();
 
             if (isset($MSGS['success'])) {
-                $detail = ($valid) ? \GT\Log::GT_LOG_DETAILS_UPDATED_UNIT : \GT\Log::GT_LOG_DETAILS_CREATED_UNIT;
+                $detail = ($valid) ? \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_UNIT : \block_gradetracker\Log::GT_LOG_DETAILS_CREATED_UNIT;
             }
 
             $VARS['TPL'] = $TPL;
             $VARS['GUI'] = $unit;
 
         } else if ($section == 'search' && $submission['submit_search']) {
-            $TPL = new \GT\Template();
-            $unit = new \GT\Unit\GUI($id);
+            $TPL = new \block_gradetracker\Template();
+            $unit = new \block_gradetracker\Unit\GUI($id);
             $unit->loadTemplate($TPL);
 
             $results = $unit->submitFormUnitSearch();
@@ -2646,13 +2646,13 @@ class GradeTracker {
             $VARS['GUI'] = $unit;
 
         } else if ($submission['restoreUnit_x'] && gt_has_capability('block/gradetracker:delete_restore_units')) {
-            $unit = new \GT\Unit($id);
+            $unit = new \block_gradetracker\Unit($id);
             $unit->restore();
-            $detail = \GT\Log::GT_LOG_DETAILS_RESTORED_UNIT;
+            $detail = \block_gradetracker\Log::GT_LOG_DETAILS_RESTORED_UNIT;
             $MSGS['success'] = get_string('unitrestored', 'block_gradetracker');
         } else if ($submission['submit_import_unit']) {
 
-            $result = \GT\Unit::importXML($_FILES['file']['tmp_name']);
+            $result = \block_gradetracker\Unit::importXML($_FILES['file']['tmp_name']);
             if ($result['result']) {
                 $MSGS['success'] = get_string('unitsimported', 'block_gradetracker');
                 unset($MSGS['errors']);
@@ -2666,11 +2666,11 @@ class GradeTracker {
 
         if (!isset($MSGS['errors']) && isset($detail)) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
             $Log->afterjson = $_POST; // This usage of $_POST is just for storing the submitted data in a log.
-            $Log->addAttribute(\GT\Log::GT_LOG_ATT_UNITID, $unit->getID());
+            $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_UNITID, $unit->getID());
             $Log->save();
             // ------------ Logging info
         }
@@ -2695,18 +2695,18 @@ class GradeTracker {
         );
 
         if ($submission['delete_qual'] && gt_has_capability('block/gradetracker:delete_restore_quals')) {
-            $qual = new \GT\Qualification($id);
+            $qual = new \block_gradetracker\Qualification($id);
             $qual->delete();
             $MSGS['success'] = get_string('qualdeleted', 'block_gradetracker');
-            $detail = \GT\Log::GT_LOG_DETAILS_DELETED_QUALIFICATION;
+            $detail = \block_gradetracker\Log::GT_LOG_DETAILS_DELETED_QUALIFICATION;
         } else if ( $submission['copy_qual'] ) {
-            $qual = new \GT\Qualification($id);
+            $qual = new \block_gradetracker\Qualification($id);
             $qual->copyQual();
-            $detail = \GT\Log::GT_LOG_DETAILS_DUPLICATED_QUALIFICATION;
+            $detail = \block_gradetracker\Log::GT_LOG_DETAILS_DUPLICATED_QUALIFICATION;
         } else if ($section == 'new' && !$submission['restoreQual_x']) {
 
-            $TPL = new \GT\Template();
-            $qual = new \GT\Qualification\GUI($id);
+            $TPL = new \block_gradetracker\Template();
+            $qual = new \block_gradetracker\Qualification\GUI($id);
 
             $valid = ($qual->isValid());
 
@@ -2714,15 +2714,15 @@ class GradeTracker {
             $qual->saveFormNewQualification();
 
             if (isset($MSGS['success'])) {
-                $detail = ($valid) ? \GT\Log::GT_LOG_DETAILS_UPDATED_QUALIFICATION : \GT\Log::GT_LOG_DETAILS_CREATED_QUALIFICATION;
+                $detail = ($valid) ? \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_QUALIFICATION : \block_gradetracker\Log::GT_LOG_DETAILS_CREATED_QUALIFICATION;
             }
 
             $VARS['TPL'] = $TPL;
             $VARS['GUI'] = $qual;
         } else if ($section == 'search' && $submission['submit_search']) {
 
-            $TPL = new \GT\Template();
-            $qual = new \GT\Qualification\GUI($id);
+            $TPL = new \block_gradetracker\Template();
+            $qual = new \block_gradetracker\Qualification\GUI($id);
             $qual->loadTemplate($TPL);
 
             $results = $qual->submitFormSearch();
@@ -2738,19 +2738,19 @@ class GradeTracker {
 
         // Restore deleted qual
         if ($submission['restoreQual_x'] && gt_has_capability('block/gradetracker:delete_restore_quals')) {
-            $qual = new \GT\Qualification($id);
+            $qual = new \block_gradetracker\Qualification($id);
             $qual->restore();
-            $detail = \GT\Log::GT_LOG_DETAILS_RESTORED_QUALIFICATION;
+            $detail = \block_gradetracker\Log::GT_LOG_DETAILS_RESTORED_QUALIFICATION;
             $MSGS['success'] = get_string('qualrestored', 'block_gradetracker');
         }
 
         if (!isset($MSGS['errors']) && isset($detail)) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
             $Log->afterjson = $_POST; // This usage of $_POST is just for storing the submitted data in a log.
-            $Log->addAttribute(\GT\Log::GT_LOG_ATT_QUALID, $qual->getID());
+            $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $qual->getID());
             $Log->save();
             // ------------ Logging info
         }
@@ -2759,8 +2759,8 @@ class GradeTracker {
 
     /**
      * Save the config from grading structures
-     * @global \GT\type $MSGS
-     * @global \GT\type $VARS
+     * @global \block_gradetracker\type $MSGS
+     * @global \block_gradetracker\type $VARS
      * @param type $page
      */
     private function saveConfigGradingStructures($page) {
@@ -2779,8 +2779,8 @@ class GradeTracker {
         }
 
         $buildID = optional_param('build', false, PARAM_INT);
-        $QualStructure = new \GT\QualificationStructure($structureID);
-        $QualBuild = new \GT\QualificationBuild($buildID);
+        $QualStructure = new \block_gradetracker\QualificationStructure($structureID);
+        $QualBuild = new \block_gradetracker\QualificationBuild($buildID);
 
         $submission = array(
             'submit_unit_grading_structure' => optional_param('submit_unit_grading_structure', false, PARAM_TEXT),
@@ -2810,7 +2810,7 @@ class GradeTracker {
                 return false;
             }
 
-            $UnitGradingStructure = new \GT\UnitAwardStructure();
+            $UnitGradingStructure = new \block_gradetracker\UnitAwardStructure();
             $UnitGradingStructure->loadPostData();
 
             if ($UnitGradingStructure->hasNoErrors() && $UnitGradingStructure->save()) {
@@ -2824,7 +2824,7 @@ class GradeTracker {
         } else if ( ($page == 'new_criteria' || $page == 'edit_criteria') && $submission['submit_crit_grading_structure']) {
 
             $type = 'criteria';
-            $CriteriaAwardStructure = new \GT\CriteriaAwardStructure();
+            $CriteriaAwardStructure = new \block_gradetracker\CriteriaAwardStructure();
             $CriteriaAwardStructure->loadPostData();
 
             if ($CriteriaAwardStructure->hasNoErrors() && $CriteriaAwardStructure->save()) {
@@ -2838,7 +2838,7 @@ class GradeTracker {
         } else if ($submission['delete_unit_grading_structure']) {
 
             $type = 'unit';
-            $UnitGradingStructure = new \GT\UnitAwardStructure($settings['grading_structure_id']);
+            $UnitGradingStructure = new \block_gradetracker\UnitAwardStructure($settings['grading_structure_id']);
             if ($UnitGradingStructure->isValid()) {
 
                 $UnitGradingStructure->delete();
@@ -2849,7 +2849,7 @@ class GradeTracker {
         } else if ($submission['delete_crit_grading_structure']) {
 
             $type = 'criteria';
-            $CriteriaGradingStructure = new \GT\CriteriaAwardStructure($settings['grading_structure_id']);
+            $CriteriaGradingStructure = new \block_gradetracker\CriteriaAwardStructure($settings['grading_structure_id']);
             if ($CriteriaGradingStructure->isValid()) {
 
                 $CriteriaGradingStructure->delete();
@@ -2860,7 +2860,7 @@ class GradeTracker {
         } else if ($submission['enable_unit_grading_structure_x']) {
 
             $type = 'unit';
-            $UnitGradingStructure = new \GT\UnitAwardStructure($settings['grading_structure_id']);
+            $UnitGradingStructure = new \block_gradetracker\UnitAwardStructure($settings['grading_structure_id']);
             if ($UnitGradingStructure->isValid()) {
                 $UnitGradingStructure->toggleEnabled();
             }
@@ -2868,7 +2868,7 @@ class GradeTracker {
         } else if ($submission['enable_crit_grading_structure_x']) {
 
             $type = 'criteria';
-            $CriteriaGradingStructure = new \GT\CriteriaAwardStructure($settings['grading_structure_id']);
+            $CriteriaGradingStructure = new \block_gradetracker\CriteriaAwardStructure($settings['grading_structure_id']);
             if ($CriteriaGradingStructure->isValid()) {
 
                 $CriteriaGradingStructure->toggleEnabled();
@@ -2879,7 +2879,7 @@ class GradeTracker {
 
             $type = 'criteria';
             $gradingStructureID = $settings['grading_structure_id'];
-            $gradingStructure = new \GT\CriteriaAwardStructure($gradingStructureID);
+            $gradingStructure = new \block_gradetracker\CriteriaAwardStructure($gradingStructureID);
 
             if (!$gradingStructure->isValid()) {
                 $MSGS['errors'] = get_string('invalidgradingstructure', 'block_gradetracker');
@@ -2945,7 +2945,7 @@ class GradeTracker {
         } else if ($submission['import_qual_structure_unit'] && !empty($_FILES['file'])) {
 
             $type = 'unit';
-            $result = \GT\QualificationStructure::importUnitXML($_FILES['file']['tmp_name'], $structureID);
+            $result = \block_gradetracker\QualificationStructure::importUnitXML($_FILES['file']['tmp_name'], $structureID);
             if ($result['result']) {
                 $MSGS['success'] = get_string('gradingstructuresaved', 'block_gradetracker');
             } else {
@@ -2960,10 +2960,10 @@ class GradeTracker {
 
             // Do it by qual build
             if ($QualBuild && $QualBuild->isValid()) {
-                $result = \GT\QualificationStructure::importCriteriaXML($_FILES['file']['tmp_name'], false, $QualBuild->getID());
+                $result = \block_gradetracker\QualificationStructure::importCriteriaXML($_FILES['file']['tmp_name'], false, $QualBuild->getID());
             } else {
                 // Do it by qual structure
-                $result = \GT\QualificationStructure::importCriteriaXML($_FILES['file']['tmp_name'], $structureID);
+                $result = \block_gradetracker\QualificationStructure::importCriteriaXML($_FILES['file']['tmp_name'], $structureID);
             }
 
             if ($result['result']) {
@@ -2978,9 +2978,9 @@ class GradeTracker {
 
         if (!isset($MSGS['errors'])) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = constant('\GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_'.strtoupper($type).'_GRADING_STRUCTURE');
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = constant('\block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_'.strtoupper($type).'_GRADING_STRUCTURE');
             $Log->afterjson = $_POST; // This usage of $_POST is just for storing all the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
@@ -2990,8 +2990,8 @@ class GradeTracker {
 
     /**
      * Save the config from the QUal Build pages
-     * @global \GT\type $MSGS
-     * @global \GT\type $VARS
+     * @global \block_gradetracker\type $MSGS
+     * @global \block_gradetracker\type $VARS
      * @param type $page
      */
     private function saveConfigQualBuilds($page) {
@@ -3016,12 +3016,12 @@ class GradeTracker {
         // Are we editing a build?
         if ($page == 'new' || $page == 'edit') {
 
-            $QualBuild = new \GT\QualificationBuild();
+            $QualBuild = new \block_gradetracker\QualificationBuild();
             $QualBuild->loadPostData();
 
             if ($QualBuild->hasNoErrors() && $QualBuild->save()) {
                 $MSGS['success'] = get_string('buildsaved', 'block_gradetracker');
-                $QualBuild = new \GT\QualificationBuild();
+                $QualBuild = new \block_gradetracker\QualificationBuild();
             } else {
                 $MSGS['errors'] = $QualBuild->getErrors();
             }
@@ -3031,7 +3031,7 @@ class GradeTracker {
         } else if ($page == 'awards' && $submission['submit_qual_build_awards']) {
 
             $id = $settings['build_id'];
-            $build = new \GT\QualificationBuild($id);
+            $build = new \block_gradetracker\QualificationBuild($id);
             if ($build->isValid()) {
 
                 $build->loadAwardPostData();
@@ -3049,7 +3049,7 @@ class GradeTracker {
         } else if ($page == 'defaults' && $submission['submit_qual_build_defaults']) {
 
             $id = $settings['build_id'];
-            $build = new \GT\QualificationBuild($id);
+            $build = new \block_gradetracker\QualificationBuild($id);
             if ($build->isValid()) {
 
                 $build->saveDefaults( (($settings['custom']) ? $settings['custom'] : false), (($settings['build']) ? $settings['build'] : false) );
@@ -3060,7 +3060,7 @@ class GradeTracker {
         } else if ($submission['delete_build']) {
 
             $id = $settings['build_id'];
-            $build = new \GT\QualificationBuild($id);
+            $build = new \block_gradetracker\QualificationBuild($id);
             if ($build->isValid()) {
 
                 $build->delete();
@@ -3071,7 +3071,7 @@ class GradeTracker {
         } else if ($submission['export_build_x']) {
 
             $id = $settings['build_id'];
-            $build = new \GT\QualificationBuild($id);
+            $build = new \block_gradetracker\QualificationBuild($id);
             if ($build->isValid()) {
 
                 $XML = $build->exportXML();
@@ -3094,9 +3094,9 @@ class GradeTracker {
 
             $path = self::dataroot() . "/tmp";
 
-            $builds = \GT\QualificationBuild::getAllBuilds();
+            $builds = \block_gradetracker\QualificationBuild::getAllBuilds();
             foreach ($builds as $build) {
-                $build = new \GT\QualificationBuild($build->getID());
+                $build = new \block_gradetracker\QualificationBuild($build->getID());
                 $settings['build_id' . $build->getID()] = optional_param('build_id' . $build->getID(), false, PARAM_INT);
                 if ($build->isValid() && $settings['build_id_' . $build->getID()]) {
                     $XML = $build->exportXML();
@@ -3126,7 +3126,7 @@ class GradeTracker {
             exit;
         } else if ($submission['import_qual_build']) {
 
-            $result = \GT\QualificationBuild::importXML($_FILES['file']['tmp_name']);
+            $result = \block_gradetracker\QualificationBuild::importXML($_FILES['file']['tmp_name']);
             if ($result['result']) {
                 $MSGS['success'] = get_string('qualbuildimported', 'block_gradetracker');
                 unset($MSGS['errors']);
@@ -3140,9 +3140,9 @@ class GradeTracker {
 
         if (!isset($MSGS['errors'])) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD;
             $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
@@ -3152,8 +3152,8 @@ class GradeTracker {
 
     /**
      * Save qual levels
-     * @global \GT\type $MSGS
-     * @global \GT\type $VARS
+     * @global \block_gradetracker\type $MSGS
+     * @global \block_gradetracker\type $VARS
      * @param type $page
      */
     private function saveConfigQualLevels($page) {
@@ -3171,12 +3171,12 @@ class GradeTracker {
         // Are we editing a build?
         if ($page == 'new' || $page == 'edit') {
 
-            $Level = new \GT\Level();
+            $Level = new \block_gradetracker\Level();
             $Level->loadPostData();
 
             if ($Level->hasNoErrors() && $Level->save()) {
                 $MSGS['success'] = get_string('levelsaved', 'block_gradetracker');
-                $Level = new \GT\Level();
+                $Level = new \block_gradetracker\Level();
             } else {
                 $MSGS['errors'] = $Level->getErrors();
             }
@@ -3186,7 +3186,7 @@ class GradeTracker {
         } else if ($submission['delete_level']) {
 
             $id = $settings['level_id'];
-            $level = new \GT\Level($id);
+            $level = new \block_gradetracker\Level($id);
             if ($level->isValid()) {
                 $level->delete();
                 $MSGS['success'] = get_string('leveldeleted', 'block_gradetracker');
@@ -3196,9 +3196,9 @@ class GradeTracker {
 
         if (!isset($MSGS['errors'])) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS;
             $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
@@ -3208,8 +3208,8 @@ class GradeTracker {
 
     /**
      * Save sub types
-     * @global \GT\type $MSGS
-     * @global \GT\type $VARS
+     * @global \block_gradetracker\type $MSGS
+     * @global \block_gradetracker\type $VARS
      * @param type $page
      */
     private function saveConfigQualSubTypes($page) {
@@ -3227,12 +3227,12 @@ class GradeTracker {
         // Are we editing a build?
         if ($page == 'new' || $page == 'edit') {
 
-            $SubType = new \GT\SubType();
+            $SubType = new \block_gradetracker\SubType();
             $SubType->loadPostData();
 
             if ($SubType->hasNoErrors() && $SubType->save()) {
                 $MSGS['success'] = get_string('subtypesaved', 'block_gradetracker');
-                $SubType = new \GT\SubType();
+                $SubType = new \block_gradetracker\SubType();
             } else {
                 $MSGS['errors'] = $SubType->getErrors();
             }
@@ -3242,7 +3242,7 @@ class GradeTracker {
         } else if ($submission['delete_subtype']) {
 
             $id = $settings['subtype_id'];
-            $SubType = new \GT\SubType($id);
+            $SubType = new \block_gradetracker\SubType($id);
             if ($SubType->isValid()) {
                 $SubType->delete();
                 $MSGS['success'] = get_string('subtypedeleted', 'block_gradetracker');
@@ -3252,9 +3252,9 @@ class GradeTracker {
 
         if (!isset($MSGS['errors'])) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES;
             $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
@@ -3287,7 +3287,7 @@ class GradeTracker {
         // Are we editing a structure?
         if ($page == 'edit' || $page == 'new') {
 
-            $QualStructure = new \GT\QualificationStructure();
+            $QualStructure = new \block_gradetracker\QualificationStructure();
             $QualStructure->loadPostData();
 
             // If no errors, save it
@@ -3306,7 +3306,7 @@ class GradeTracker {
         } else if ($submission['enable_structure_x']) {
 
             $structureID = $settings['structure_id'];
-            $QualStructure = new \GT\QualificationStructure($structureID);
+            $QualStructure = new \block_gradetracker\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
                 $QualStructure->toggleEnabled();
             }
@@ -3314,7 +3314,7 @@ class GradeTracker {
         } else if ($submission['delete_structure']) {
 
             $structureID = $settings['structure_id'];
-            $QualStructure = new \GT\QualificationStructure($structureID);
+            $QualStructure = new \block_gradetracker\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
 
                 $QualStructure->delete();
@@ -3325,7 +3325,7 @@ class GradeTracker {
         } else if ($submission['copy_structure_x']) {
 
             $structureID = $settings['structure_id'];
-            $QualStructure = new \GT\QualificationStructure($structureID);
+            $QualStructure = new \block_gradetracker\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
                 $QualStructure->duplicate();
             }
@@ -3333,7 +3333,7 @@ class GradeTracker {
         } else if ($submission['export_structure_x']) {
 
             $structureID = $settings['structure_id'];
-            $QualStructure = new \GT\QualificationStructure($structureID);
+            $QualStructure = new \block_gradetracker\QualificationStructure($structureID);
             if ($QualStructure->isValid()) {
 
                 $XML = $QualStructure->exportXML();
@@ -3350,7 +3350,7 @@ class GradeTracker {
             }
 
         } else if ($submission['import_qual_structure'] && !empty($_FILES['file'])) {
-            $result = \GT\QualificationStructure::importXML($_FILES['file']['tmp_name']);
+            $result = \block_gradetracker\QualificationStructure::importXML($_FILES['file']['tmp_name']);
             if ($result['result']) {
                 $MSGS['success'] = get_string('structureimported', 'block_gradetracker');
             } else {
@@ -3363,9 +3363,9 @@ class GradeTracker {
 
         if (!isset($MSGS['errors'])) {
             // ------------ Logging Info
-            $Log = new \GT\Log();
-            $Log->context = \GT\Log::GT_LOG_CONTEXT_CONFIG;
-            $Log->details = \GT\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE;
+            $Log = new \block_gradetracker\Log();
+            $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
+            $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE;
             $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
             $Log->save();
             // ------------ Logging Info
@@ -3398,14 +3398,14 @@ class GradeTracker {
             $settings['multipliers'] = df_optional_param_array_recursive('multipliers', false, PARAM_TEXT);
 
             // Enable/Disable
-            \GT\Setting::updateSetting('weighting_constants_enabled', $settings['weighting_constants_enabled']);
+            \block_gradetracker\Setting::updateSetting('weighting_constants_enabled', $settings['weighting_constants_enabled']);
 
             // The qual build constants
             if (isset($settings['constants'])) {
 
                 foreach ($settings['constants'] as $buildID => $constant) {
 
-                    $build = new \GT\QualificationBuild($buildID);
+                    $build = new \block_gradetracker\QualificationBuild($buildID);
                     if ($build->isValid()) {
 
                         // Get the multiplier as well
@@ -3437,25 +3437,25 @@ class GradeTracker {
             if ($submission['submitconfig']) {
 
                 // Number of percentiles to use
-                \GT\Setting::updateSetting('qual_weighting_percentiles', $settings['qual_weighting_percentiles']);
+                \block_gradetracker\Setting::updateSetting('qual_weighting_percentiles', $settings['qual_weighting_percentiles']);
 
                 // Colours
                 if (isset($settings['percentile_colours']) && $settings['percentile_colours']) {
                     foreach ($settings['percentile_colours'] as $percentile => $colour) {
-                        \GT\Setting::updateSetting('weighting_percentile_color_' . $percentile, $colour);
+                        \block_gradetracker\Setting::updateSetting('weighting_percentile_color_' . $percentile, $colour);
                     }
                 }
 
                 // Percentages
                 if (isset($settings['percentile_percents']) && $settings['percentile_percents']) {
                     foreach ($settings['percentile_percents'] as $percentile => $percent) {
-                        \GT\Setting::updateSetting('weighting_percentile_percentage_'.$percentile, $percent);
+                        \block_gradetracker\Setting::updateSetting('weighting_percentile_percentage_'.$percentile, $percent);
                     }
                 }
 
                 // Default.
                 if (isset($settings['default_percentile'])) {
-                    \GT\Setting::updateSetting('default_weighting_percentile', $settings['default_percentile']);
+                    \block_gradetracker\Setting::updateSetting('default_weighting_percentile', $settings['default_percentile']);
                 }
 
                 $MSGS['success'] = get_string('settingsupdated', 'block_gradetracker');
@@ -3468,7 +3468,7 @@ class GradeTracker {
                     foreach ($settings['build_coefficient'] as $buildID => $coefficients) {
                         if ($coefficients) {
                             foreach ($coefficients as $percentile => $coefficient) {
-                                \GT\Setting::updateSetting('build_coefficient_' . $buildID . '_' . $percentile, $coefficient);
+                                \block_gradetracker\Setting::updateSetting('build_coefficient_' . $buildID . '_' . $percentile, $coefficient);
                             }
                         }
                     }
@@ -3482,7 +3482,7 @@ class GradeTracker {
                 if ($settings['qual_coefficients']) {
                     foreach ($settings['qual_coefficients'] as $qualID => $coefficients) {
 
-                        $qual = new \GT\Qualification($qualID);
+                        $qual = new \block_gradetracker\Qualification($qualID);
 
                         if ($qual && $coefficients) {
                             foreach ($coefficients as $percentile => $coefficient) {
@@ -3549,7 +3549,7 @@ class GradeTracker {
                         $params->type = (isset($settings['custom_form_fields_types'][$key])) ? $settings['custom_form_fields_types'][$key] : false;
                         $params->options = (isset($settings['custom_form_fields_options'][$key]) && !empty($settings['custom_form_fields_options'][$key])) ? $settings['custom_form_fields_options'][$key] : false;
                         $params->validation = array();
-                        $element = \GT\FormElement::create($params);
+                        $element = \block_gradetracker\FormElement::create($params);
                         $element->save();
                         $elementIDs[] = $element->getID();
 
@@ -3706,7 +3706,7 @@ class GradeTracker {
                 $settings['pass_prog_by_grade_structure'] = df_optional_param_array_recursive('pass_prog_by_grade_structure', false, PARAM_TEXT);
 
                 // Criteria Progress report - weighted criteria scores
-                $allStructures = \GT\QualificationStructure::getAllStructures();
+                $allStructures = \block_gradetracker\QualificationStructure::getAllStructures();
                 if ($allStructures) {
                     foreach ($allStructures as $structure) {
 
@@ -3818,12 +3818,12 @@ class GradeTracker {
 
             $avggcsescore = $settings['gt_avggcsescore'];
             $qual_id = $settings['qualid'];
-            $qual = new \GT\Qualification($qual_id);
+            $qual = new \block_gradetracker\Qualification($qual_id);
             $qual_build = $qual->getBuild();
             $award = $qual_build->getAwardByAvgGCSEScore($avggcsescore);
             $awards = $qual_build->getAwards('desc');
 
-            $TPL = new \GT\Template();
+            $TPL = new \block_gradetracker\Template();
             $TPL->set("single_award", $award);
             $TPL->set("awards", $awards);
             $TPL->set("avggcsescore", $avggcsescore);
@@ -3838,7 +3838,7 @@ class GradeTracker {
 
         global $TPL, $VARS;
 
-        $GTEXE = \GT\Execution::getInstance();
+        $GTEXE = \block_gradetracker\Execution::getInstance();
         $GTEXE->min();
         $GTEXE->UNIT_NO_SORT = false;
 
@@ -3869,14 +3869,14 @@ class GradeTracker {
                 }
             }
 
-            $results = \GT\Log::search($params);
+            $results = \block_gradetracker\Log::search($params);
             $TPL->set("results", $results);
             $TPL->set("search", $params);
 
             // If we searched for a qual, get the list of units & assessments on the qual to populate the dropdowns
             if (isset($params['atts']['QUALID'])) {
 
-                $qual = new \GT\Qualification($params['atts']['QUALID']);
+                $qual = new \block_gradetracker\Qualification($params['atts']['QUALID']);
                 $TPL->set("useUnits", $qual->getUnits());
                 $TPL->set("useAss", $qual->getAssessments());
 
@@ -3884,7 +3884,7 @@ class GradeTracker {
 
             if (isset($params['atts']['UNITID'])) {
 
-                $unit = new \GT\Unit($params['atts']['UNITID']);
+                $unit = new \block_gradetracker\Unit($params['atts']['UNITID']);
                 $TPL->set("useCriteria", $unit->sortCriteria(false, true));
 
             }
@@ -3898,7 +3898,7 @@ class GradeTracker {
 
     /**
      * Get the URL of one of the icons from the pix/icons directory
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @param type $icon
      * @return type
      */
@@ -3969,7 +3969,7 @@ class GradeTracker {
 
     /**
      * Return the dataroot directory
-     * @global \GT\type $CFG
+     * @global \block_gradetracker\type $CFG
      * @return type
      */
     public static function dataroot() {

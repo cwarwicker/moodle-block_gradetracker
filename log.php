@@ -32,9 +32,9 @@ if (!gt_has_capability('block/gradetracker:configure') || !gt_has_capability('bl
 
 $id = required_param('id', PARAM_INT);
 
-$GT = new \GT\GradeTracker();
-$Log = new \GT\Log($id);
-$TPL = new \GT\Template();
+$GT = new \block_gradetracker\GradeTracker();
+$Log = new \block_gradetracker\Log($id);
+$TPL = new \block_gradetracker\Template();
 
 if ($Log->id) {
     $TPL->set("log", $Log);
