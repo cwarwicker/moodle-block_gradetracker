@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-class listofquals extends \BCDB\Report\Element {
+class listofquals extends \block_bc_dashboard\Report\Element {
 
     protected $level = 'individual';
     protected $type = 'function';

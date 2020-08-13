@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-class valueadded extends \BCDB\Report\Element {
+class valueadded extends \block_bc_dashboard\Report\Element {
 
     protected $level = 'aggregate';
     protected $type = 'function';
