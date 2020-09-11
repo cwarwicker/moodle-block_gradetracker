@@ -1569,12 +1569,8 @@ function gt_validate_external_session($ssn, $studentID) {
                 define('PARENT_PORTAL', true);
             }
 
-            // Check for parent portal lib (old or new)
-            if (file_exists($CFG->dirroot . '/portal/lib.php')) {
-                require_once($CFG->dirroot . '/portal/lib.php');
-            } else {
-                require_once($CFG->dirroot . '/local/parentportal/lib.php');
-            }
+            // Load parent portal lib.
+            require_once($CFG->dirroot . '/local/parentportal/lib.php');
 
             $session = ( isset($_SESSION['pp_user']) && isset($_SESSION['pp_ssn']) && $_SESSION['pp_ssn'] == $ssn );
             if ($session) {
