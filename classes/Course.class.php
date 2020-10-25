@@ -24,6 +24,8 @@
 
 namespace block_gradetracker;
 
+require_once($CFG->dirroot . '/local/df_hub/lib.php');
+
 defined('MOODLE_INTERNAL') or die();
 
 class Course {
@@ -749,7 +751,7 @@ class Course {
         $Log = new \block_gradetracker\Log();
         $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_UNITS;
-        $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+        $Log->afterjson = \df_clean_entire_post();
         $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
@@ -897,7 +899,7 @@ class Course {
         $Log = new \block_gradetracker\Log();
         $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_USER_QUALS;
-        $Log->afterjson = $_POST; // This usage of $_POST is just to store submitted data in a log.
+        $Log->afterjson = \df_clean_entire_post();
         $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info
@@ -1069,7 +1071,7 @@ class Course {
         $Log = new \block_gradetracker\Log();
         $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_COURSE_QUALS;
-        $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+        $Log->afterjson = \df_clean_entire_post();
         $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_COURSEID, $this->id);
         $Log->save();
         // ------------ Logging Info

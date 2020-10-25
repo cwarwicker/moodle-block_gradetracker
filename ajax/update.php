@@ -50,7 +50,8 @@ $GT = new \block_gradetracker\GradeTracker();
 $TPL = new \block_gradetracker\Template();
 $User = new \block_gradetracker\User($USER->id);
 
-\gt_debug("Called update.php: " . print_r($_POST, true)); // This usage of $_POST is to store submitted data in a debugging log.
+// Store entire submitted form in a debugging log (if enabled).
+\gt_debug("Called update.php: " . print_r(\df_clean_entire_post(), true));
 
 // If action not defined exit.
 if (!$action) {

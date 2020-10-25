@@ -335,7 +335,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_QOE;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->save();
         // ------------ Logging Info
@@ -524,7 +524,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_AVGGCSE;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->save();
         // ------------ Logging Info
@@ -716,7 +716,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_TARGET_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->save();
         // ------------ Logging Info
@@ -849,7 +849,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_ASP_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->save();
         // ------------ Logging Info
@@ -1011,7 +1011,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_CETA_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->save();
         // ------------ Logging Info
@@ -1140,7 +1140,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_COEFFICIENTS;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->save();
         // ------------ Logging Info
@@ -1321,7 +1321,7 @@ class DataImport {
         $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_IMPORTED_ASSESSMENT_GRADES;
         $Log->afterjson = array(
             'data' => file_get_contents($this->file['tmp_name']),
-            'post' => $_POST // This usage of $_POST is just to store the submitted data in a log.
+            'post' => \df_clean_entire_post()
         );
         $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_ASSID, $Assessment->getID());
         $Log->save();

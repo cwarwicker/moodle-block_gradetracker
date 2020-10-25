@@ -73,7 +73,7 @@ $TPL = new \block_gradetracker\Template();
 $MSGS = false;
 $VARS = false;
 
-// This use of $_POST is just to check if a config form was submitted.
+// Has a config form been submitted?
 if (isset($_POST) && !empty($_POST)) {
     $GT->saveConfig($view, $section, $page);
 }

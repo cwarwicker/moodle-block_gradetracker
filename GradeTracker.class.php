@@ -1717,7 +1717,7 @@ class GradeTracker {
                     $Log = new \block_gradetracker\Log();
                     $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
                     $Log->details = constant('\block_gradetracker\Log::' . $detail);
-                    $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+                    $Log->afterjson = \df_clean_entire_post();
                     $Log->save();
                     // ------------ Logging Info
 
@@ -1957,7 +1957,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QOE;
-            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->save();
             // ------------ Logging Info
         }
@@ -2102,7 +2102,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
-            $Log->afterjson = $_POST; // This usage of $_POST is to store all the submitted data in the log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->attributes = $attributes;
             $Log->save();
             // ------------ Logging Info
@@ -2669,7 +2669,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
-            $Log->afterjson = $_POST; // This usage of $_POST is just for storing the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_UNITID, $unit->getID());
             $Log->save();
             // ------------ Logging info
@@ -2749,7 +2749,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = $detail;
-            $Log->afterjson = $_POST; // This usage of $_POST is just for storing the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->addAttribute(\block_gradetracker\Log::GT_LOG_ATT_QUALID, $qual->getID());
             $Log->save();
             // ------------ Logging info
@@ -2981,7 +2981,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = constant('\block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_'.strtoupper($type).'_GRADING_STRUCTURE');
-            $Log->afterjson = $_POST; // This usage of $_POST is just for storing all the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->save();
             // ------------ Logging Info
         }
@@ -3143,7 +3143,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_BUILD;
-            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->save();
             // ------------ Logging Info
         }
@@ -3199,7 +3199,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_LEVELS;
-            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->save();
             // ------------ Logging Info
         }
@@ -3255,7 +3255,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_SUBTYPES;
-            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->save();
             // ------------ Logging Info
         }
@@ -3366,7 +3366,7 @@ class GradeTracker {
             $Log = new \block_gradetracker\Log();
             $Log->context = \block_gradetracker\Log::GT_LOG_CONTEXT_CONFIG;
             $Log->details = \block_gradetracker\Log::GT_LOG_DETAILS_UPDATED_STRUCTURE_QUAL_STRUCTURE;
-            $Log->afterjson = $_POST; // This usage of $_POST is just to store the submitted data in a log.
+            $Log->afterjson = \df_clean_entire_post();
             $Log->save();
             // ------------ Logging Info
         }

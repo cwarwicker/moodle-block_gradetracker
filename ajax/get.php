@@ -56,7 +56,8 @@ if (!$action) {
     exit;
 }
 
-\gt_debug("Called get.php: " . print_r($_POST, true)); // This usage of $_POST is just to store the submitted data in a debug log.
+// Store entire submitted form in a debugging log (if enabled).
+\gt_debug("Called get.php: " . print_r(\df_clean_entire_post(), true));
 
 // Check which action we're doing.
 switch ($action) {
