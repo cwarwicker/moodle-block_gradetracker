@@ -17,7 +17,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         // Bind elements
         GT.bind();
 
-    }
+    };
 
     //-- Element bindings
     // Core element bindings
@@ -525,7 +525,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
             if( $('#gt_table_row_' + qualID).length == 0)
             {
-                $('#report_icon_' + qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/ajax-loader.gif')
+                $('#report_icon_' + qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/ajax-loader.gif');
 
                 GT.ajax(M.cfg.wwwroot + '/blocks/gradetracker/ajax/get.php', {action: 'get_qualification_report', params: params}, function(data){
 
@@ -540,8 +540,8 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             }
             else
             {
-                $('#gt_table_row_' + qualID).remove()
-                $('#report_icon_' + qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/dropdown.png')
+                $('#gt_table_row_' + qualID).remove();
+                $('#report_icon_' + qualID).attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/dropdown.png');
             }
 
             e.preventDefault();
@@ -928,7 +928,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     //-- Show an html section
     GT.show_section = function(section, hideClass, el){
 
-        $(el).parents('ul').find('a').removeClass('selected')
+        $(el).parents('ul').find('a').removeClass('selected');
         $('.' + hideClass).hide();
 
         $('#' + section).slideDown();
@@ -1100,7 +1100,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
                 success: function(data){
 
                     var matches = data.match(/\{.*?\}/g);
-                    if (matches != null && matches.length > 0){
+                    if (matches !== null && matches.length > 0){
                         var m = matches.pop();
                         if (m.length > 0){
                             data = $.parseJSON(m);
@@ -1415,10 +1415,10 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         $(b).attr('disabled', '');
 
         // Update enabled img
-        var id = a.substr(1, a.length)
+        var id = a.substr(1, a.length);
         $('#' + id + '_enabled').attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/on.png');
 
-        var idB = b.substr(1, b.length)
+        var idB = b.substr(1, b.length);
         $('#' + idB + '_enabled').attr('src', M.cfg.wwwroot + '/blocks/gradetracker/pix/off.png');
 
     };
@@ -1446,7 +1446,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function() {
@@ -1456,7 +1456,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         client.log('Loaded gt.js');
 
-    }
+    };
 
     // Return client object
     return client;

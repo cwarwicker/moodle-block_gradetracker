@@ -1,5 +1,6 @@
 define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
+
     var config = {};
     config.supportedCritTypes = [];
     config.cntCrit = 0;
@@ -86,7 +87,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // Update parent drop-downs
         config.applyCritNameBlurFocus();
 
-    }
+    };
 
     config.bindings = function(){
 
@@ -739,7 +740,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // General bindings
         GT.bind();
 
-    }
+    };
 
     // Add a new criterion
     config.addNewCriterion = function(name){
@@ -792,7 +793,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
             output += "<select name='unit_criteria[" + cntCrit + "][grading]' id='gt_crit_grading_input_" + cntCrit + "' class='gt_change_criterion_grading_structure' critNum='" + cntCrit + "'>";
 
         if (config.critGradingStructures.length == 1){
-            soloGradingStructure = config.critGradingStructures[0]
+            soloGradingStructure = config.critGradingStructures[0];
             output += "<option value='" + soloGradingStructure.id + "'>" + soloGradingStructure.name + "</option>";
         }
         else {
@@ -838,7 +839,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // Rebind new elements
         config.bindings();
 
-    }
+    };
 
     // Remove a criterion
     config.removeCriterion = function(critNum){
@@ -846,7 +847,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         $('.gt_criterion_row_' + critNum).remove();
         config.refreshParentCriteriaLists();
 
-    }
+    };
 
     // Load the conversion chart for the observation
     config.loadObservationConversionChart = function(pNum, num){
@@ -854,7 +855,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         $('#gt_criterion_sub_table_' + pNum + ' td.gt_observation_chart_cell_' + num).html('<img src="' + M.util.image_url('i/loading_small') + '" alt="loading" />');
         config.loadConversionChart(pNum, '[charts][' + num + ']', $('#gt_criterion_sub_table_' + pNum + ' td.gt_observation_chart_cell_' + num));
 
-    }
+    };
 
     // Load the conversion chart for just the criteria (no ranges have been defined)
     config.loadCriteriaConversionChart = function(pNum){
@@ -862,7 +863,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         $('#gt_criterion_sub_table_' + pNum + ' td.gt_sub_criteria_chart_cell').html('<img src="' + M.util.image_url('i/loading_small') + '" alt="loading" />');
         config.loadConversionChart(pNum, '[chart]', $('#gt_criterion_sub_table_' + pNum + ' td.gt_sub_criteria_chart_cell'));
 
-    }
+    };
 
     // Load the conversion chart somewhere
     config.loadConversionChart = function(pNum, inputName, obj){
@@ -911,7 +912,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         return output;
 
-    }
+    };
 
     //  Refresh the select menus for criteria
     config.refreshObservationSelectMenus = function(pNum){
@@ -934,7 +935,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         });
 
-    }
+    };
 
     // Refresh the select menus for criteria
     config.refreshCriteriaSelectMenus = function(pNum){
@@ -956,7 +957,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         });
 
-    }
+    };
 
     // Refresh the drop-down menus of parent criteria with the names of the criteria currently set in the rows
     config.refreshParentCriteriaLists = function(){
@@ -994,7 +995,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         } );
 
-    }
+    };
 
     // Update the parent drop-down with the correct criteria names when you update a criterion name
     config.applyCritNameBlurFocus = function(){
@@ -1038,7 +1039,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         }
 
-    }
+    };
 
     window.config_units = config;
 
@@ -1047,7 +1048,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function(data) {
@@ -1057,7 +1058,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         client.log('Loaded config_units.js');
 
-    }
+    };
 
     // Return client object
     return client;

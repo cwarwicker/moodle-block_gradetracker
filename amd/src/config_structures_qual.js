@@ -1,5 +1,6 @@
 define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/scripts'], function($, ui, bcPopUp, gtScripts) {
 
+
     var config_structures_quals = {};
 
     config_structures_quals.ruleOperator = '.';
@@ -59,7 +60,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         // Bind the elements
         config_structures_quals.bindings();
 
-    }
+    };
 
     // Bind all the elements
     config_structures_quals.bindings = function(){
@@ -366,7 +367,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             var ruleNum = $(this).attr('ruleNum');
             var ruleStepNum = $(this).attr('ruleStepNum');
 
-            $('#gt_rule_step_' + ruleSetNum + '_' + ruleNum + '_' + ruleStepNum).remove()
+            $('#gt_rule_step_' + ruleSetNum + '_' + ruleNum + '_' + ruleStepNum).remove();
 
             config_structures_quals.updateStepNumbers(ruleSetNum, ruleNum);
 
@@ -687,7 +688,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
         // Bind general elements from GT object
         GT.bind();
 
-    }
+    };
 
     // Open the rules popup
     config_structures_quals.openRulesPopup = function(num, ruleSetName, content){
@@ -700,7 +701,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
             appendTo: 'form#gt_qual_structure_form'
         } );
 
-    }
+    };
 
     // Update the step numbers of a rule
     config_structures_quals.updateStepNumbers = function(ruleSetNum, ruleNum){
@@ -723,12 +724,12 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         $('#gt_rule_steps_span_' + ruleSetNum + '_' + ruleNum).text(num - 1);
 
-    }
+    };
 
     // Update function screen
     config_structures_quals.updateFX = function(){
         $('#gt_fx_func').val( config_structures_quals.convertElementsToFX() );
-    }
+    };
 
     // Convert function elements to valid values
     config_structures_quals.convertElementsToFX = function(){
@@ -785,14 +786,14 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         return str;
 
-    }
+    };
 
     var client = {};
 
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function() {
@@ -802,7 +803,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
         client.log('Loaded config_structures_qual.js');
 
-    }
+    };
 
     // Return client object
     return client;

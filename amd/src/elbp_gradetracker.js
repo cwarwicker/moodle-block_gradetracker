@@ -10,7 +10,7 @@ define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/scripts'
         // Bind elements
         config.bindings();
 
-    }
+    };
 
     config.bindings = function(){
 
@@ -38,12 +38,12 @@ define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/scripts'
 
         });
 
-    }
+    };
 
     config.loadGradeTracker = function(id, el){
 
         // Load a display type
-        var params = { type: 'tracker', studentID: elbp.studentID, courseID: elbp.courseID, id: id }
+        var params = { type: 'tracker', studentID: elbp.studentID, courseID: elbp.courseID, id: id };
         elbp.ajax("elbp_gradetracker", "load_display_type", params, function(d){
 
             $('#elbp_gradetracker_content').html(d);
@@ -61,14 +61,14 @@ define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/scripts'
             $('#elbp_gradetracker_content').html('<img src="' + M.cfg.wwwroot + '/blocks/elbp/pix/loader.gif" alt="" />');
         });
 
-    }
+    };
 
     var client = {};
 
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function() {
@@ -78,7 +78,7 @@ define(['jquery', 'jqueryui', 'block_elbp/scripts', 'block_gradetracker/scripts'
 
         client.log('Loaded elbp_gradetracker.js');
 
-    }
+    };
 
     // Push scripts onto ELBP
     elbp.push_script('elbp_gradetracker', config);

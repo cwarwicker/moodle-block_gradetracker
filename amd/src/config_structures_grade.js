@@ -1,5 +1,6 @@
 define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
+
     var config_structures_grade = {};
     config_structures_grade.specialVals = [];
     config_structures_grade.cntGrades = 0;
@@ -14,7 +15,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // Bind elements
         config_structures_grade.bindings();
 
-    }
+    };
 
     config_structures_grade.bindings = function(){
 
@@ -89,14 +90,14 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // Bind general elements from GT object
         GT.bind();
 
-    }
+    };
 
     var client = {};
 
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function(data) {
@@ -106,7 +107,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         client.log('Loaded config_structures_grade.js');
 
-    }
+    };
 
     // Return client object
     return client;

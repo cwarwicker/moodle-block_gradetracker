@@ -1,5 +1,6 @@
 define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
+
     var config = {};
 
     config.init = function(){
@@ -7,7 +8,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // Bind elements
         config.bindings();
 
-    }
+    };
 
     config.bindings = function(){
 
@@ -133,14 +134,14 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         });
 
-    }
+    };
 
     var client = {};
 
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function() {
@@ -150,7 +151,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         client.log('Loaded config_reporting.js');
 
-    }
+    };
 
     // Return client object
     return client;

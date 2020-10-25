@@ -4,7 +4,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/freezetable', 'block_gradetrac
 
     config.init = function(){
         config.bindings();
-    }
+    };
 
     config.bindings = function(){
 
@@ -36,7 +36,8 @@ define(['jquery', 'jqueryui', 'block_gradetracker/freezetable', 'block_gradetrac
             var section = $(this).attr('section');
             var id = $(this).val();
 
-            return window.location = M.cfg.wwwroot + '/blocks/gradetracker/config.php?view=course&section=' + section + '&id=' + id;
+            window.location = M.cfg.wwwroot + '/blocks/gradetracker/config.php?view=course&section=' + section + '&id=' + id;
+            return;
 
         });
 
@@ -187,7 +188,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/freezetable', 'block_gradetrac
         // General bindings
         GT.bind();
 
-    }
+    };
 
     config.updateCredits = function(qID, sID){
 
@@ -222,14 +223,14 @@ define(['jquery', 'jqueryui', 'block_gradetracker/freezetable', 'block_gradetrac
 
         });
 
-    }
+    };
 
     var client = {};
 
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function() {
@@ -239,7 +240,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/freezetable', 'block_gradetrac
 
         client.log('Loaded config_course.js');
 
-    }
+    };
 
     // Return client object
     return client;

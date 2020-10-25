@@ -1,10 +1,11 @@
 define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtScripts) {
 
+
     var config = {};
 
     config.init = function(){
         config.bindings();
-    }
+    };
 
     config.bindings = function(){
 
@@ -201,7 +202,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
         // General bindings
         GT.bind();
 
-    }
+    };
 
     // Filter the units based on type, name, level, etc...
     config.filterUnits = function(){
@@ -231,7 +232,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         });
 
-    }
+    };
 
     // Filter the courses based on name, category, etc...
     config.filterCourses = function(){
@@ -267,14 +268,14 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         });
 
-    }
+    };
 
     var client = {};
 
     //-- Log something to console
     client.log = function(log){
         console.log('[GT] ' + new Date().toTimeString().split(' ')[0] + ': ' + log );
-    }
+    };
 
     //-- Initialise the scripts
     client.init = function() {
@@ -284,7 +285,7 @@ define(['jquery', 'jqueryui', 'block_gradetracker/scripts'], function($, ui, gtS
 
         client.log('Loaded config_quals.js');
 
-    }
+    };
 
     // Return client object
     return client;
