@@ -3,10 +3,9 @@
 [![Open Issues](https://img.shields.io/github/issues/cwarwicker/moodle-block_gradetracker)](https://github.com/cwarwicker/moodle-block_gradetracker/issues)
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-![Moodle 3.4 supported](https://img.shields.io/badge/Moodle-3.4-brightgreen)
-![Moodle 3.5 supported](https://img.shields.io/badge/Moodle-3.5-brightgreen)
-![Moodle 3.6 supported](https://img.shields.io/badge/Moodle-3.6-brightgreen)
-![Moodle 3.7 supported](https://img.shields.io/badge/Moodle-3.7-brightgreen)
+![Moodle 3.8 supported](https://img.shields.io/badge/Moodle-3.8-brightgreen)
+![Moodle 3.9 supported](https://img.shields.io/badge/Moodle-3.9-brightgreen)
+![Moodle 3.10 supported](https://img.shields.io/badge/Moodle-3.10-brightgreen)
 
 This plugin provides you with the Grade Tracker block, which can be used to track students' progress across a wide range of qualification types, from qualification level, down to criteria level.
 
@@ -58,8 +57,8 @@ Example of a Customised System with different options and icons:
 
 Requirements
 ------------
-- Moodle 3.4, 3.5, 3.6, 3.7
-- Plugin block_bc_dashboard installed
+- Moodle 3.8 or above
+- Plugin block_df_dashboard installed
 - Plugin local_df_hub installed
 
 Installation
