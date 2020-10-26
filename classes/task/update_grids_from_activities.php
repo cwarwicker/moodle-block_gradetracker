@@ -364,9 +364,9 @@ class update_grids_from_activities extends \core\task\scheduled_task {
         global $DB;
 
         $sql = "SELECT s.*
-                FROM {{$modLink->getSubTable()}} s 
-                WHERE s.{$modLink->getSubModCol()} = ? 
-                AND s.{$modLink->getSubUserCol()} = ? ";
+                FROM {{$modLink->getSubTable()}} s
+                WHERE s.{$modLink->getSubModCol()} = ?
+                AND s.{$modLink->getSubUserCol()} = ?";
 
         $params = array($activityID, $userID);
 
@@ -478,10 +478,10 @@ class update_grids_from_activities extends \core\task\scheduled_task {
 
         $table = ($useParts) ? $modLink->getPartTable() : $modLink->getModTable();
 
-        $sql = "SELECT a.*  
+        $sql = "SELECT a.*
                 FROM {{$table}} a
-                WHERE a.{$modLink->getModDueCol()} <= ? 
-                AND a.{$modLink->getModDueCol()} > ? 
+                WHERE a.{$modLink->getModDueCol()} <= ?
+                AND a.{$modLink->getModDueCol()} > ?
                 ORDER BY a.{$modLink->getModDueCol()}";
 
         $params = array($now, $lastRun);
@@ -508,7 +508,7 @@ class update_grids_from_activities extends \core\task\scheduled_task {
                 INNER JOIN {user} u ON u.id = s.{$modLink->getSubUserCol()}
                 INNER JOIN {course_modules} cm ON cm.instance = s.{$modLink->getSubModCol()}
                 INNER JOIN {bcgt_activity_refs} ref ON ref.cmid = cm.id
-                WHERE s.{$modLink->getSubDateCol()} >= ? 
+                WHERE s.{$modLink->getSubDateCol()} >= ?
                 AND s.{$modLink->getSubDateCol()} <= ?
                 AND cm.module = ? ";
 

@@ -544,10 +544,8 @@ function gt_save_file($file, $path, $name, $new = true) {
  */
 function gt_sanitise_path($path = null, $separator = DIRECTORY_SEPARATOR) {
     $pathArray = explode($separator, $path);
-    foreach ($pathArray as $key => $value)
-    {
-        if ($value === '.' || $value === '..')
-        {
+    foreach ($pathArray as $key => $value) {
+        if ($value === '.' || $value === '..') {
             $pathArray[$key] = null;
         }
     }

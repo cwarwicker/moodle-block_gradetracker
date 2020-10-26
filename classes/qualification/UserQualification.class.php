@@ -1409,7 +1409,7 @@ class UserQualification extends \block_gradetracker\Qualification {
 
         // Can we see this person's grid?
         // 1) Are we the student ourselves, looking at our own grid?
-        // OR
+        // OR...
         // 2) Are we on one of the same courses as the student, with the capability view_student_grids?
         // 3) And are we ticked onto the qualification?
         // 4) And is the student ticked onto the qualification?
@@ -2940,7 +2940,7 @@ class UserQualification extends \block_gradetracker\Qualification {
 
                                             // Comments
                                             $comments = ($criterion->getUserComments()) ? $subCriterion->getUserComments() : '';
-                                            $sheets['comments']-writeString($rowNum, $letter, $comments);
+                                            $sheets['comments']->writeString($rowNum, $letter, $comments);
 
                                         } else {
 

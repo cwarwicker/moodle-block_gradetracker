@@ -122,22 +122,22 @@ class StandardCriterion extends \block_gradetracker\Criterion {
         if ($this->getChildren()) {
             $output .= "<div class='gt_criterion_info_popup_heading'>".get_string('subcriteria', 'block_gradetracker')."</div>";
             $output .= "<div class=''>";
-                $output .= "<table class='gt_unit_popup_criteria_table'>";
-                $output .= "<tr><th>".get_string('name')."</th><th>".get_string('details', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th><th>".get_string('comments', 'block_gradetracker')."</th></tr>";
-                foreach ($this->getChildren() as $child) {
-                    $output .= "<tr>";
-                    $output .= "<td>{$child->getName()}</td>";
-                    $output .= "<td>{$child->getDescription()}</td>";
-                    $output .= "<td>";
-                        $output .= $child->getUserAward()->getShortName();
-                        // If we are using DATE grading type, display that date awarded
-                        if ($child->getAttribute('gradingtype') == 'DATE' && $child->getUserAwardDate() > 0) {
-                            $output .= " <small>({$child->getUserAwardDate('d-m-Y')})</small>";
-                        }
-                    $output .= "</td>";
-                    $output .= "<td>".\gt_html($child->getUserComments())."</td>";
-                    $output .= "</tr>";
+            $output .= "<table class='gt_unit_popup_criteria_table'>";
+            $output .= "<tr><th>".get_string('name')."</th><th>".get_string('details', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th><th>".get_string('comments', 'block_gradetracker')."</th></tr>";
+            foreach ($this->getChildren() as $child) {
+                $output .= "<tr>";
+                $output .= "<td>{$child->getName()}</td>";
+                $output .= "<td>{$child->getDescription()}</td>";
+                $output .= "<td>";
+                $output .= $child->getUserAward()->getShortName();
+                // If we are using DATE grading type, display that date awarded
+                if ($child->getAttribute('gradingtype') == 'DATE' && $child->getUserAwardDate() > 0) {
+                    $output .= " <small>({$child->getUserAwardDate('d-m-Y')})</small>";
                 }
+                $output .= "</td>";
+                $output .= "<td>".\gt_html($child->getUserComments())."</td>";
+                $output .= "</tr>";
+            }
             $output .= "</div>";
         }
 
@@ -190,46 +190,46 @@ class StandardCriterion extends \block_gradetracker\Criterion {
 
             $output .= "<table class='gt_popup_table'>";
 
-                $output .= "<tr class='gt_lightpink'><th>".get_string('name')."</th><th>".get_string('details', 'block_gradetracker')."</th><th>".get_string('comments', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th></tr>";
+            $output .= "<tr class='gt_lightpink'><th>".get_string('name')."</th><th>".get_string('details', 'block_gradetracker')."</th><th>".get_string('comments', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th></tr>";
 
-                if ($this->getChildren()) {
+            if ($this->getChildren()) {
 
-                    foreach ($this->getChildren() as $child) {
+                foreach ($this->getChildren() as $child) {
 
-                        $child->loadStudent( $this->student );
-                        $gradingStructure = $child->getGradingStructure();
+                    $child->loadStudent( $this->student );
+                    $gradingStructure = $child->getGradingStructure();
 
-                        $output .= "<tr class='gt_criterion_wrapper' sID='{$child->getStudent()->id}' qID='{$qualification->getID()}' uID='{$child->getUnitID()}' cID='{$child->getID()}'>";
-                            $output .= "<td>{$child->getName()}</td>";
-                            $output .= "<td>{$child->getDescription()}</td>";
-                            if ($gradingStructure->isValid()) {
-                                $output .= "<td><textarea class='gt_update_comments gt_comments_sub_large'>{$child->getUserComments()}</textarea></td>";
-                            } else {
-                                $output .= "<td>-</td>";
-                            }
-                            $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."' subPopUp='1'>{$child->getCellEdit($adv, true)}</td>";
-                        $output .= "</tr>";
-
+                    $output .= "<tr class='gt_criterion_wrapper' sID='{$child->getStudent()->id}' qID='{$qualification->getID()}' uID='{$child->getUnitID()}' cID='{$child->getID()}'>";
+                    $output .= "<td>{$child->getName()}</td>";
+                    $output .= "<td>{$child->getDescription()}</td>";
+                    if ($gradingStructure->isValid()) {
+                        $output .= "<td><textarea class='gt_update_comments gt_comments_sub_large'>{$child->getUserComments()}</textarea></td>";
+                    } else {
+                        $output .= "<td>-</td>";
                     }
+                    $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."' subPopUp='1'>{$child->getCellEdit($adv, true)}</td>";
+                    $output .= "</tr>";
 
                 }
 
-                // Overall for this Criterion
-                $output .= "<tr class='gt_pink gt_double_top gt_criterion_wrapper' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>";
-                    $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
-                    $output .= "<td colspan='3' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><textarea class='gt_update_comments gt_comments_large'>".\gt_html($this->userComments, true)."</textarea></td>";
-                $output .= "</tr>";
+            }
 
-                $output .= "<tr class='gt_pink'>";
-                    $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
-                    $output .= "<td colspan='3' class='gt_grid_cell gt_popup_overall_value' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
-                $output .= "</tr>";
+            // Overall for this Criterion
+            $output .= "<tr class='gt_pink gt_double_top gt_criterion_wrapper' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>";
+            $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
+            $output .= "<td colspan='3' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><textarea class='gt_update_comments gt_comments_large'>".\gt_html($this->userComments, true)."</textarea></td>";
+            $output .= "</tr>";
 
-                $output .= "<tr class='gt_pink'>";
-                    $date = ($this->userAwardDate > 0) ? $this->getUserAwardDate('d-m-Y') : '';
-                    $output .= "<th>".get_string('date')."</th>";
-                    $output .= "<td colspan='3' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
-                $output .= "</tr>";
+            $output .= "<tr class='gt_pink'>";
+            $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
+            $output .= "<td colspan='3' class='gt_grid_cell gt_popup_overall_value' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
+            $output .= "</tr>";
+
+            $output .= "<tr class='gt_pink'>";
+            $date = ($this->userAwardDate > 0) ? $this->getUserAwardDate('d-m-Y') : '';
+            $output .= "<th>".get_string('date')."</th>";
+            $output .= "<td colspan='3' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
+            $output .= "</tr>";
 
             $output .= "</table>";
 
@@ -278,18 +278,18 @@ class StandardCriterion extends \block_gradetracker\Criterion {
 
                     $output .= "<select id='{$elID}' name='gt_criteria[{$this->qualID}][{$this->unitID}][{$this->id}]' class='gt_criterion_select gt_criterion_select_{$access} gt_criterion_select_{$this->id}'>";
 
-                        $output .= "<option value=''></option>";
+                    $output .= "<option value=''></option>";
 
-                        $lastMet = true;
+                    $lastMet = true;
 
-                        foreach ($values as $award) {
-                            if ($award->isMet() !== $lastMet) {
-                                $output .= "<option value='' disabled>----------</option>";
-                            }
-                            $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
-                            $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
-                            $lastMet = $award->isMet();
+                    foreach ($values as $award) {
+                        if ($award->isMet() !== $lastMet) {
+                            $output .= "<option value='' disabled>----------</option>";
                         }
+                        $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
+                        $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
+                        $lastMet = $award->isMet();
+                    }
 
                     $output .= "</select><br>";
 
@@ -320,12 +320,12 @@ class StandardCriterion extends \block_gradetracker\Criterion {
 
                         $output .= "<select id='{$elID}' class='gt_criterion_select'>";
 
-                            $output .= "<option value=''></option>";
+                        $output .= "<option value=''></option>";
 
-                            foreach ($values as $award) {
-                                $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
-                                $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
-                            }
+                        foreach ($values as $award) {
+                            $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
+                            $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
+                        }
 
                         $output .= "</select>";
 

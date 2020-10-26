@@ -320,144 +320,144 @@ class NumericCriterion extends \block_gradetracker\Criterion {
 
         $output .= "<div class='gt_numeric_criterion_popup'>";
 
-            $output .= "<div class='gt_c'>";
+        $output .= "<div class='gt_c'>";
 
-                if ($this->student) {
-                    $output .= "<br><span class='gt-popup-studname'>{$this->student->getDisplayName()}</span><br>";
-                }
+        if ($this->student) {
+            $output .= "<br><span class='gt-popup-studname'>{$this->student->getDisplayName()}</span><br>";
+        }
 
-                if ($qualification) {
-                    $output .= "<span class='gt-popup-qualname'>{$qualification->getDisplayName()}</span><br>";
-                }
+        if ($qualification) {
+            $output .= "<span class='gt-popup-qualname'>{$qualification->getDisplayName()}</span><br>";
+        }
 
-                if ($unit) {
-                    $output .= "<span class='gt-popup-unitname'>{$unit->getDisplayName()}</span><br>";
-                }
+        if ($unit) {
+            $output .= "<span class='gt-popup-unitname'>{$unit->getDisplayName()}</span><br>";
+        }
 
-                $output .= "<span class='gt-popup-critname'>{$this->getName()}</span><br><br>";
+        $output .= "<span class='gt-popup-critname'>{$this->getName()}</span><br><br>";
 
-                $output .= "<p id='gt_popup_loader' class='gt_c gt_hidden'><img src='".gt_image_url('i/loading_small')."' alt='".get_string('loading', 'block_gradetracker')."' /></p>";
-                $output .= "<div id='gt_popup_error' class='gt_alert_bad gt_left gt_hidden'>".get_string('errors:save', 'block_gradetracker')."</div>";
-                $output .= "<div id='gt_popup_success' class='gt_alert_good gt_left gt_hidden'>".get_string('saved', 'block_gradetracker')."</div>";
+        $output .= "<p id='gt_popup_loader' class='gt_c gt_hidden'><img src='".gt_image_url('i/loading_small')."' alt='".get_string('loading', 'block_gradetracker')."' /></p>";
+        $output .= "<div id='gt_popup_error' class='gt_alert_bad gt_left gt_hidden'>".get_string('errors:save', 'block_gradetracker')."</div>";
+        $output .= "<div id='gt_popup_success' class='gt_alert_good gt_left gt_hidden'>".get_string('saved', 'block_gradetracker')."</div>";
 
-                // Do we have any ranges?
-                $ranges = $this->getChildOfSubCritType("Range");
+        // Do we have any ranges?
+        $ranges = $this->getChildOfSubCritType("Range");
 
-                $totalPoints = 0;
-                $totalMaxPoints = 0;
+        $totalPoints = 0;
+        $totalMaxPoints = 0;
 
-                if ($ranges) {
+        if ($ranges) {
 
-                    $Range = reset($ranges);
-                    $Range->loadStudent($this->student);
-                    $Range->setQualID($this->qualID);
+            $Range = reset($ranges);
+            $Range->loadStudent($this->student);
+            $Range->setQualID($this->qualID);
 
-                    $output .= "<ul class='gt_tabbed_list'>";
+            $output .= "<ul class='gt_tabbed_list'>";
 
-                    foreach ($ranges as $range) {
-                        $class = ($Range->getID() == $range->getID()) ? 'active' : '';
-                        $output .= "<li class='{$class}'><a href='#' class='gt_load_range' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$range->getID()}'>{$range->getName()}</a></li>";
+            foreach ($ranges as $range) {
+                $class = ($Range->getID() == $range->getID()) ? 'active' : '';
+                $output .= "<li class='{$class}'><a href='#' class='gt_load_range' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$range->getID()}'>{$range->getName()}</a></li>";
+            }
+
+            $output .= "</ul>";
+
+            // Get the first range and do that one
+
+            $output .= "<div id='gt_popup_range_info'>";
+            $output .= $Range->getRangePopUpContent();
+            $output .= "</div>";
+
+        } else {
+
+            // No ranges, only criteria
+            $children = $this->getChildOfSubCritType("Criterion");
+            if ($children) {
+
+                $output .= "<table class='gt_popup_table'>";
+                $output .= "<tr class='gt_lightblue'><th>".get_string('name')."</th><th>".get_string('comments', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th></tr>";
+
+                foreach ($children as $child) {
+
+                    $child->loadStudent( $this->student );
+
+                    $maxPoints = $child->getAttribute('maxpoints');
+
+                    $output .= "<tr class='gt_criterion_wrapper' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}'>";
+                    $output .= "<td>{$child->getName()}</td>";
+                    $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}'>";
+
+                    if ($maxPoints > 0) {
+                        $output .= "<textarea type='comments' class='gt_update_comments gt_comments_sub_large'>".\gt_html($child->getUserComments(), true)."</textarea>";
                     }
 
-                    $output .= "</ul>";
+                    $output .= "</td>";
+                    $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."'>";
 
-                    // Get the first range and do that one
+                    if ($maxPoints > 0) {
+                        $points = $child->getUserCustomValue();
+                        $totalPoints += $points;
+                        $totalMaxPoints += $maxPoints;
 
-                    $output .= "<div id='gt_popup_range_info'>";
-                    $output .= $Range->getRangePopUpContent();
-                    $output .= "</div>";
+                        $output .= "<table class='gt_numeric_values_table'>";
+                        $output .= "<tr>";
 
-                } else {
-
-                    // No ranges, only criteria
-                    $children = $this->getChildOfSubCritType("Criterion");
-                    if ($children) {
-
-                        $output .= "<table class='gt_popup_table'>";
-                        $output .= "<tr class='gt_lightblue'><th>".get_string('name')."</th><th>".get_string('comments', 'block_gradetracker')."</th><th>".get_string('value', 'block_gradetracker')."</th></tr>";
-
-                        foreach ($children as $child) {
-
-                            $child->loadStudent( $this->student );
-
-                            $maxPoints = $child->getAttribute('maxpoints');
-
-                            $output .= "<tr class='gt_criterion_wrapper' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}'>";
-                                $output .= "<td>{$child->getName()}</td>";
-                                $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}'>";
-
-                                if ($maxPoints > 0) {
-                                    $output .= "<textarea type='comments' class='gt_update_comments gt_comments_sub_large'>".\gt_html($child->getUserComments(), true)."</textarea>";
-                                }
-
-                                $output .= "</td>";
-                                $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."'>";
-
-                                if ($maxPoints > 0) {
-                                    $points = $child->getUserCustomValue();
-                                    $totalPoints += $points;
-                                    $totalMaxPoints += $maxPoints;
-
-                                    $output .= "<table class='gt_numeric_values_table'>";
-                                    $output .= "<tr>";
-
-                                    for ($p = 0; $p <= $maxPoints; $p++) {
-                                        $output .= "<th>{$p}</th>";
-                                    }
-
-                                    $output .= "</tr>";
-                                    $output .= "<tr>";
-
-                                    for ($p = 0; $p <= $maxPoints; $p++) {
-                                        $chk = ($points == $p) ? 'checked' : '';
-                                        $output .= "<td>";
-                                            $output .= "<input type='radio' name='C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' {$chk} />";
-                                        $output .= "</td>";
-                                    }
-
-                                    $output .= "</tr>";
-                                    $output .= "</table>";
-
-                                }
-
-                                $output .= "</td>";
-                            $output .= "</tr>";
-
+                        for ($p = 0; $p <= $maxPoints; $p++) {
+                            $output .= "<th>{$p}</th>";
                         }
 
+                        $output .= "</tr>";
+                        $output .= "<tr>";
+
+                        for ($p = 0; $p <= $maxPoints; $p++) {
+                            $chk = ($points == $p) ? 'checked' : '';
+                            $output .= "<td>";
+                                $output .= "<input type='radio' name='C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$child->getID()}' {$chk} />";
+                            $output .= "</td>";
+                        }
+
+                        $output .= "</tr>";
                         $output .= "</table>";
 
                     }
 
-                    $output .= "<table class='gt_detail_criterion_overall_table gt_criterion_wrapper' style='background-color:#fff;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>";
-
-                    // Overall for this Criterion
-                    $output .= "<tr class=''>";
-                    $output .= "<th>".get_string('totalpoints', 'block_gradetracker')."</th>";
-                    $output .= "<td colspan='2' class='gt_grid_cell' ><span id='gt_total_points'>{$totalPoints}</span> / {$totalMaxPoints}</td>";
+                    $output .= "</td>";
                     $output .= "</tr>";
-
-                    $output .= "<tr class=''>";
-                    $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
-                    $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($this->userComments, true)."</textarea></td>";
-                    $output .= "</tr>";
-
-                    $output .= "<tr class=''>";
-                    $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
-                    $output .= "<td colspan='2' id='gt_criterion_value_{$this->id}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
-                    $output .= "</tr>";
-
-                    $output .= "<tr class=''>";
-                    $date = ($this->userAwardDate > 0) ? $this->getUserAwardDate('d-m-Y') : '';
-                    $output .= "<th>".get_string('date')."</th>";
-                    $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
-                    $output .= "</tr>";
-
-                    $output .= "</table>";
 
                 }
 
-            $output .= "</div>";
+                $output .= "</table>";
+
+            }
+
+            $output .= "<table class='gt_detail_criterion_overall_table gt_criterion_wrapper' style='background-color:#fff;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>";
+
+            // Overall for this Criterion
+            $output .= "<tr class=''>";
+            $output .= "<th>".get_string('totalpoints', 'block_gradetracker')."</th>";
+            $output .= "<td colspan='2' class='gt_grid_cell' ><span id='gt_total_points'>{$totalPoints}</span> / {$totalMaxPoints}</td>";
+            $output .= "</tr>";
+
+            $output .= "<tr class=''>";
+            $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
+            $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($this->userComments, true)."</textarea></td>";
+            $output .= "</tr>";
+
+            $output .= "<tr class=''>";
+            $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
+            $output .= "<td colspan='2' id='gt_criterion_value_{$this->id}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
+            $output .= "</tr>";
+
+            $output .= "<tr class=''>";
+            $date = ($this->userAwardDate > 0) ? $this->getUserAwardDate('d-m-Y') : '';
+            $output .= "<th>".get_string('date')."</th>";
+            $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$this->unitID}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
+            $output .= "</tr>";
+
+            $output .= "</table>";
+
+        }
+
+        $output .= "</div>";
 
         $output .= "</div>";
 
@@ -493,40 +493,40 @@ class NumericCriterion extends \block_gradetracker\Criterion {
                 $child->loadStudent( $this->student );
 
                 $output .= "<tr class='gt_criterion_wrapper' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}'>";
-                    $output .= "<td>{$child->getName()}</td>";
-                    $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}'><textarea type='comments' class='gt_update_comments gt_comments_sub_large'>".\gt_html($child->getUserComments(), true)."</textarea></td>";
-                    $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."'>";
+                $output .= "<td>{$child->getName()}</td>";
+                $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}'><textarea type='comments' class='gt_update_comments gt_comments_sub_large'>".\gt_html($child->getUserComments(), true)."</textarea></td>";
+                $output .= "<td class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}' cName='".\gt_html($child->getName())."'>";
 
-                        $maxPoints = $parent->getAttribute("maxpoints_{$child->getID()}_{$this->getID()}");
-                        $points = $this->getRangeCriterionValue($this->getID(), $child->getID());
-                        $totalPoints += $points;
+                $maxPoints = $parent->getAttribute("maxpoints_{$child->getID()}_{$this->getID()}");
+                $points = $this->getRangeCriterionValue($this->getID(), $child->getID());
+                $totalPoints += $points;
 
-                        if ($maxPoints > 0) {
-                            $totalMaxPoints += $maxPoints;
+                if ($maxPoints > 0) {
+                    $totalMaxPoints += $maxPoints;
 
-                            $output .= "<table class='gt_numeric_values_table'>";
-                            $output .= "<tr>";
+                    $output .= "<table class='gt_numeric_values_table'>";
+                    $output .= "<tr>";
 
-                            for ($p = 0; $p <= $maxPoints; $p++) {
-                                $output .= "<th>{$p}</th>";
-                            }
+                    for ($p = 0; $p <= $maxPoints; $p++) {
+                        $output .= "<th>{$p}</th>";
+                    }
 
-                            $output .= "</tr>";
-                            $output .= "<tr>";
+                    $output .= "</tr>";
+                    $output .= "<tr>";
 
-                            for ($p = 0; $p <= $maxPoints; $p++) {
-                                $chk = ($points == $p) ? 'checked' : '';
-                                $output .= "<td>";
-                                    $output .= "<input type='radio' name='R{$this->getID()}C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}' rID='{$this->getID()}' {$chk} />";
-                                $output .= "</td>";
-                            }
+                    for ($p = 0; $p <= $maxPoints; $p++) {
+                        $chk = ($points == $p) ? 'checked' : '';
+                        $output .= "<td>";
+                            $output .= "<input type='radio' name='R{$this->getID()}C{$child->getID()}' class='gt_update_numeric_point' value='{$p}' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$child->getID()}' rID='{$this->getID()}' {$chk} />";
+                        $output .= "</td>";
+                    }
 
-                            $output .= "</tr>";
-                            $output .= "</table>";
+                    $output .= "</tr>";
+                    $output .= "</table>";
 
-                        }
+                }
 
-                    $output .= "</td>";
+                $output .= "</td>";
                 $output .= "</tr>";
 
             }
@@ -538,51 +538,51 @@ class NumericCriterion extends \block_gradetracker\Criterion {
         // This is the Range overall
         $output .= "<table class='gt_detail_criterion_overall_table gt_criterion_wrapper' style='background-color:#fff;margin-bottom:1px;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'>";
 
-            $output .= "<tr><th colspan='2'>{$this->getName()}</th></tr>";
+        $output .= "<tr><th colspan='2'>{$this->getName()}</th></tr>";
 
-            $output .= "<tr class=''>";
-                $output .= "<th>".get_string('totalpoints', 'block_gradetracker')."</th>";
-                $output .= "<td colspan='2' class='gt_grid_cell' ><span id='gt_total_points'>{$this->getTotalPoints()}</span> / {$totalMaxPoints}</td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $output .= "<th>".get_string('totalpoints', 'block_gradetracker')."</th>";
+        $output .= "<td colspan='2' class='gt_grid_cell' ><span id='gt_total_points'>{$this->getTotalPoints()}</span> / {$totalMaxPoints}</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr class=''>";
-                $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
-                $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($this->getUserComments(), true)."</textarea></td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
+        $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($this->getUserComments(), true)."</textarea></td>";
+        $output .= "</tr>";
 
-            $output .= "<tr class=''>";
-                $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
-                $output .= "<td colspan='2' id='gt_criterion_value_{$this->getID()}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
+        $output .= "<td colspan='2' id='gt_criterion_value_{$this->getID()}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'>{$this->getCellEdit(true, true)}</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr class=''>";
-                $date = ($this->getUserAwardDate() > 0) ? $this->getUserAwardDate('d-m-Y') : '';
-                $output .= "<th>".get_string('date')."</th>";
-                $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $date = ($this->getUserAwardDate() > 0) ? $this->getUserAwardDate('d-m-Y') : '';
+        $output .= "<th>".get_string('date')."</th>";
+        $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$this->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
+        $output .= "</tr>";
 
         $output .= "</table>";
 
         // This is the overall criterion
         $output .= "<table class='gt_detail_criterion_overall_table gt_detail_criterion_overall_table_2 gt_criterion_wrapper' style='background-color:#fff;' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'>";
 
-            $output .= "<tr><th colspan='2'>{$parent->getName()}</th></tr>";
+        $output .= "<tr><th colspan='2'>{$parent->getName()}</th></tr>";
 
-            $output .= "<tr class=''>";
-                $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
-                $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($parent->getUserComments(), true)."</textarea></td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $output .= "<th>".get_string('comments', 'block_gradetracker')."</th>";
+        $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'><textarea type='comments' class='gt_update_comments'>".\gt_html($parent->getUserComments(), true)."</textarea></td>";
+        $output .= "</tr>";
 
-            $output .= "<tr class=''>";
-                $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
-                $output .= "<td colspan='2' id='gt_criterion_value_{$parent->getID()}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'>{$parent->getCellEdit(true, true)}</td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $output .= "<th>".get_string('value', 'block_gradetracker')."</th>";
+        $output .= "<td colspan='2' id='gt_criterion_value_{$parent->getID()}' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'>{$parent->getCellEdit(true, true)}</td>";
+        $output .= "</tr>";
 
-            $output .= "<tr class=''>";
-                $date = ($parent->getUserAwardDate() > 0) ? $parent->getUserAwardDate('d-m-Y') : '';
-                $output .= "<th>".get_string('date')."</th>";
-                $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
-            $output .= "</tr>";
+        $output .= "<tr class=''>";
+        $date = ($parent->getUserAwardDate() > 0) ? $parent->getUserAwardDate('d-m-Y') : '';
+        $output .= "<th>".get_string('date')."</th>";
+        $output .= "<td colspan='2' class='gt_grid_cell' sID='{$this->student->id}' qID='{$qualification->getID()}' uID='{$unit->getID()}' cID='{$parent->getID()}'><input type='text' class='gt_datepicker gt_criterion_award_date' value='{$date}' /></td>";
+        $output .= "</tr>";
 
         $output .= "</table>";
 
@@ -648,57 +648,57 @@ class NumericCriterion extends \block_gradetracker\Criterion {
 
         $output .= "<table class='gt_criterion_info_popup_sub_table'>";
 
-            $output .= "<tr>";
+        $output .= "<tr>";
 
-                $output .= "<th style='border-top:none;'>".get_string('criterion', 'block_gradetracker')."</th>";
-                $output .= "<th style='border-top:none;'>".get_string('comments', 'block_gradetracker')."</th>";
+        $output .= "<th style='border-top:none;'>".get_string('criterion', 'block_gradetracker')."</th>";
+        $output .= "<th style='border-top:none;'>".get_string('comments', 'block_gradetracker')."</th>";
 
+        if ($ranges) {
+            foreach ($ranges as $range) {
+                $output .= "<th>{$range->getName()}</th>";
+            }
+        } else {
+            $output .= "<th>".get_string('points', 'block_gradetracker')."</th>";
+        }
+
+        $output .= "</tr>";
+
+        // If there are sub criteria
+        if ($criteria) {
+            foreach ($criteria as $crit) {
+                $output .= "<tr>";
+                $output .= "<td>{$crit->getName()}</td>";
+                $output .= "<td><em>{$crit->getUserComments()}</em></td>";
                 if ($ranges) {
                     foreach ($ranges as $range) {
-                        $output .= "<th>{$range->getName()}</th>";
+                        $output .= "<td class='gt_c'>{$crit->getCriterionPoints($range)}</td>";
                     }
                 } else {
-                    $output .= "<th>".get_string('points', 'block_gradetracker')."</th>";
+                    $output .= "<td class='gt_c'>{$crit->getCriterionPoints()}</td>";
                 }
+                $output .= "</tr>";
+            }
+        }
 
+        // Range Comments
+        if ($ranges) {
+            $output .= "<tr>";
+            $output .= "<th colspan='2' class='gt_right'>".get_string('comments', 'block_gradetracker')."</th>";
+            foreach ($ranges as $range) {
+                $output .= "<td><em>{$range->getUserComments()}</em></td>";
+            }
             $output .= "</tr>";
+        }
 
-            // If there are sub criteria
-            if ($criteria) {
-                foreach ($criteria as $crit) {
-                    $output .= "<tr>";
-                        $output .= "<td>{$crit->getName()}</td>";
-                        $output .= "<td><em>{$crit->getUserComments()}</em></td>";
-                        if ($ranges) {
-                            foreach ($ranges as $range) {
-                                $output .= "<td class='gt_c'>{$crit->getCriterionPoints($range)}</td>";
-                            }
-                        } else {
-                            $output .= "<td class='gt_c'>{$crit->getCriterionPoints()}</td>";
-                        }
-                    $output .= "</tr>";
-                }
+        // Range awards
+        if ($ranges) {
+            $output .= "<tr>";
+            $output .= "<th colspan='2' class='gt_right'>".get_string('awards', 'block_gradetracker')."</th>";
+            foreach ($ranges as $range) {
+                $output .= "<td class='gt_c gt_bold'>{$range->getUserAward()->getName()}</td>";
             }
-
-            // Range Comments
-            if ($ranges) {
-                $output .= "<tr>";
-                $output .= "<th colspan='2' class='gt_right'>".get_string('comments', 'block_gradetracker')."</th>";
-                foreach ($ranges as $range) {
-                    $output .= "<td><em>{$range->getUserComments()}</em></td>";
-                }
-                $output .= "</tr>";
-            }
-
-            // Range awards
-            if ($ranges) {
-                $output .= "<tr>";
-                $output .= "<th colspan='2' class='gt_right'>".get_string('awards', 'block_gradetracker')."</th>";
-                foreach ($ranges as $range) {
-                    $output .= "<td class='gt_c gt_bold'>{$range->getUserAward()->getName()}</td>";
-                }
-                $output .= "</tr>";
-            }
+            $output .= "</tr>";
+        }
 
         $output .= "</table>";
 

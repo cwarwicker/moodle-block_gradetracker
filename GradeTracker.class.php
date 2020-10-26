@@ -2354,7 +2354,6 @@ class GradeTracker {
                 'assID' => optional_param('assID', false, PARAM_INT),
             );
 
-
             // Check we chose an assessment
             if (!$settings['assID']) {
                 $MSGS['errors'] = get_string('errors:import:ass:id', 'block_gradetracker');

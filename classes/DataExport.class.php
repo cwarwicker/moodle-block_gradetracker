@@ -23,9 +23,9 @@
  */
 namespace block_gradetracker;
 
-require_once($CFG->dirroot . '/lib/excellib.class.php');
-
 defined('MOODLE_INTERNAL') or die();
+
+require_once($CFG->dirroot . '/lib/excellib.class.php');
 
 class DataExport {
 

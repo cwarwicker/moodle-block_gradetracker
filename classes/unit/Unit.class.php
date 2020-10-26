@@ -1560,41 +1560,41 @@ class Unit {
                     if ($ranged && $subCriteria) {
 
                         $output .= "<tr>";
-                            $output .= "<td colspan='2'>";
+                        $output .= "<td colspan='2'>";
 
-                                $output .= "<table class='gt_unit_info_range_table'>";
+                        $output .= "<table class='gt_unit_info_range_table'>";
 
-                                    $output .= "<tr>";
-                                        $output .= "<th></th>";
-                                        foreach ($ranged as $range) {
-                                            $output .= "<th>{$range->getName()}</th>";
-                                        }
-                                    $output .= "</tr>";
+                        $output .= "<tr>";
+                        $output .= "<th></th>";
+                        foreach ($ranged as $range) {
+                            $output .= "<th>{$range->getName()}</th>";
+                        }
+                        $output .= "</tr>";
 
-                                    // Numeric criterion will have sub criteria of type Criterion on the main parent
-                                    foreach ($subCriteria as $subCriterion) {
+                        // Numeric criterion will have sub criteria of type Criterion on the main parent
+                        foreach ($subCriteria as $subCriterion) {
 
-                                        $output .= "<tr>";
-                                        $output .= "<th>{$subCriterion->getName()}</th>";
-                                        foreach ($ranged as $range) {
-                                            $maxPoints = $criterion->getAttribute("maxpoints_{$subCriterion->getID()}_{$range->getID()}");
-                                            $output .= "<td>";
-                                            if ($maxPoints > 0) {
-                                                for ($i = 1; $i <= $maxPoints; $i++) {
-                                                    $output .= '&nbsp;&nbsp;&nbsp;'.$i.'&nbsp;&nbsp;&nbsp;';
-                                                }
-                                            } else {
-                                                $output .= '&nbsp;&nbsp;&nbsp;' . $maxPoints;
-                                            }
-                                            $output .= "</td>";
-                                        }
-                                        $output .= "</tr>";
-
+                            $output .= "<tr>";
+                            $output .= "<th>{$subCriterion->getName()}</th>";
+                            foreach ($ranged as $range) {
+                                $maxPoints = $criterion->getAttribute("maxpoints_{$subCriterion->getID()}_{$range->getID()}");
+                                $output .= "<td>";
+                                if ($maxPoints > 0) {
+                                    for ($i = 1; $i <= $maxPoints; $i++) {
+                                        $output .= '&nbsp;&nbsp;&nbsp;'.$i.'&nbsp;&nbsp;&nbsp;';
                                     }
+                                } else {
+                                    $output .= '&nbsp;&nbsp;&nbsp;' . $maxPoints;
+                                }
+                                $output .= "</td>";
+                            }
+                            $output .= "</tr>";
 
-                                $output .= "</table>";
+                        }
 
-                            $output .= "</td>";
+                        $output .= "</table>";
+
+                        $output .= "</td>";
                         $output .= "</tr>";
 
                     } else if ($ranged) {

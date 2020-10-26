@@ -1523,7 +1523,7 @@ class RuleStepCondition {
         // If it's an array
         if (is_array($value)) {
 
-            // If empty array return false.
+            // If the array is empty, just return false.
             if (empty($value)) {
                 \gt_debug("Array is empty - Final Result - 0");
                 return false;

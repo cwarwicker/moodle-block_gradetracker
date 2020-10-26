@@ -392,8 +392,7 @@ class PassCriteriaSummaryReport extends \block_gradetracker\Reports\Report {
                                     // As in the previous loop we worked out the best pass score, now we can divide by it
                                     if ($method == 'bygradestructure') {
 
-                                        foreach ($data as $student)
-                                        {
+                                        foreach ($data as $student) {
                                             $studentPassPercentageBest = ($maxPass > 0) ? (float)round( @($studentPassArray[$student->id] / $maxPass) * 100, 1 ) : 100;
                                             $studentPassPercentageArray[$student->id] = $studentPassPercentageBest;
                                         }

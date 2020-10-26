@@ -25,9 +25,9 @@ namespace block_gradetracker;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-require_once($CFG->dirroot . '/lib/excellib.class.php');
-
 defined('MOODLE_INTERNAL') or die();
+
+require_once($CFG->dirroot . '/lib/excellib.class.php');
 
 /**
  * Description of DataImport

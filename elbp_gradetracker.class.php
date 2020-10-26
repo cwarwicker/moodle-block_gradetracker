@@ -83,9 +83,13 @@ class elbp_gradetracker extends Plugin {
 
         $quals = $user->getQualifications("STUDENT");
 
+        // Sort by natural sort first.
         usort($quals, function($A, $B) {
-            return ( \strnatcasecmp($A->getName(), $B->getName()) == 0 ) ? 0 : (  \strnatcasecmp($A->getName(), $B->getName()) > 0 ) ? -1 : 1;
+            return (\strnatcasecmp($A->getName(), $B->getName()));
         });
+
+        // Then reverse them into descending order.
+        $quals = array_reverse($quals);
 
         $TPL->set("obj", $this);
         $TPL->set("quals", $quals);

@@ -861,7 +861,7 @@ switch ($action) {
             try {
                 $output = $TPL->load($CFG->dirroot . '/blocks/gradetracker/tpl/config/units/criteria_types/'.$criterion->hasFormSubRow().'.html');
             } catch (\block_gradetracker\GTException $e) {
-                // Do nothing.
+                exit;
             }
 
         }

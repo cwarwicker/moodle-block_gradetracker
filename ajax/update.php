@@ -751,7 +751,7 @@ switch($action) {
 
                 if ($type == 'custom_value') {
                     $criterion->setUserCustomValue($value);
-                } elseif ($type == 'comments') {
+                } else if ($type == 'comments') {
                     $criterion->setUserComments($value);
                 }
 

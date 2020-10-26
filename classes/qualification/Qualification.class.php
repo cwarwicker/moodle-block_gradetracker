@@ -708,7 +708,7 @@ class Qualification {
                 }
             }
 
-            // Parent
+            // Get parent courses.
             $parents = $course->getParentCourses();
             if ($parents) {
                 foreach ($parents as $parent) {
@@ -730,7 +730,7 @@ class Qualification {
                 }
             }
 
-            // Children
+            // Get child courses.
             $children = $course->getChildCourses();
             if ($children) {
                 foreach ($children as $child) {

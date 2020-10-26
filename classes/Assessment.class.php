@@ -433,12 +433,12 @@ class Assessment {
 
                 $output .= "<select class='gt_assessment_select' gradingMethod='numeric'>";
 
-                    $output .= "<option value=''></option>";
+                $output .= "<option value=''></option>";
 
-                    for ($i = $min; $i <= $max; $i++) {
-                        $sel = ($score == $i) ? 'selected' : '';
-                        $output .= "<option value='{$i}' {$sel}>{$i}</option>";
-                    }
+                for ($i = $min; $i <= $max; $i++) {
+                    $sel = ($score == $i) ? 'selected' : '';
+                    $output .= "<option value='{$i}' {$sel}>{$i}</option>";
+                }
 
                 $output .= "</select>";
 
@@ -451,13 +451,13 @@ class Assessment {
                     $awards = $GradingStructure->getAwards(false, 'desc');
 
                     $output .= "<select class='gt_assessment_select'>";
-                        $output .= "<option value=''></option>";
-                        if ($awards) {
-                            foreach ($awards as $award) {
-                                $sel = ($award->getID() == $grade->getID()) ? 'selected' : '';
-                                $output .= "<option value='{$award->getID()}' {$sel}>{$award->getShortName()}</option>";
-                            }
+                    $output .= "<option value=''></option>";
+                    if ($awards) {
+                        foreach ($awards as $award) {
+                            $sel = ($award->getID() == $grade->getID()) ? 'selected' : '';
+                            $output .= "<option value='{$award->getID()}' {$sel}>{$award->getShortName()}</option>";
                         }
+                    }
                     $output .= "</select>";
 
                 } else {
@@ -544,13 +544,13 @@ class Assessment {
                 $awards = $QualBuild->getAwards('desc');
 
                 $output .= "<select class='gt_assessment_select'>";
-                    $output .= "<option value=''></option>";
-                    if ($awards) {
-                        foreach ($awards as $award) {
-                            $sel = ($award->getID() == $ceta->getID()) ? 'selected' : '';
-                            $output .= "<option value='{$award->getID()}' {$sel}>{$award->getName()}</option>";
-                        }
+                $output .= "<option value=''></option>";
+                if ($awards) {
+                    foreach ($awards as $award) {
+                        $sel = ($award->getID() == $ceta->getID()) ? 'selected' : '';
+                        $output .= "<option value='{$award->getID()}' {$sel}>{$award->getName()}</option>";
                     }
+                }
                 $output .= "</select>";
 
             } else {
@@ -961,103 +961,103 @@ class Assessment {
 
         $output .= "<div class='gt_c'>";
 
-            $output .= "<table>";
+        $output .= "<table>";
+
+        $output .= "<tr>";
+        $output .= "<th>".get_string('grade', 'block_gradetracker')."</th>";
+        if ($qualification->isFeatureEnabledByName('cetagrades') && $this->isCetaEnabled()) {
+            $output .= "<th>".get_string('ceta', 'block_gradetracker')."</th>";
+        }
+        $output .= "</tr>";
+
+        $output .= "<tr>";
+
+        // If numeric show that number instead
+        if ($gradingMethod == 'numeric') {
+            $max = $this->getSetting('numeric_grading_max');
+            // If we have a valid max, which we should do, show it score out of max
+            $score = ($max) ? ($this->getUserScore() . "/" . $max) : $this->getUserScore();
+            $output .= "<td>".$score."</td>";
+        } else {
+
+            // If we're using CETA grades, show the name of the grade
+            if ($qualification->isFeatureEnabledByName('cetagrades')) {
+                $output .= "<td>".$grade->getShortName()."</td>";
+            } else {
+                // If we are not using CETA, then use an image
+                $output .= "<td>";
+                $output .= "<img class='gt_award_icon' src='{$grade->getImageURL()}' alt='{$grade->getShortName()}' title='{$grade->getShortName()}' /><br>";
+                $output .= $grade->getShortName();
+                $output .= "</td>";
+            }
+
+        }
+
+        if ($qualification->isFeatureEnabledByName('cetagrades') && $this->isCetaEnabled()) {
+            $output .= "<td>".$this->getCetaCell('v')."</td>";
+        }
+
+        $output .= "</tr>";
+
+        $output .= "</table>";
+        $output .= "<br>";
+
+        // Custom Fields
+        $numCols = 3;
+        $customFields = $this->getEnabledCustomFormFields();
+        $customFields = \gt_split_array($customFields, $numCols);
+
+        // Work out the colspan to use for each row, to make the table look nice and evenly formatted
+        $numRows = count($customFields);
+        if ($numRows > 1) {
+            $lastRow = $customFields[$numRows - 1];
+            $numElements = count($lastRow);
+            $leastCommonMultiple = \gt_lcm($numCols, $numElements);
+        }
+
+        $rowNum = 0;
+
+        if ($customFields) {
+
+            $output .= "<table class='gt_assessment_popup_custom_fields_table'>";
+
+            foreach ($customFields as $customFieldsArray) {
+
+                // Work out width percentage for columns and whether to use the calculated colspan or not
+                $cnt = count($customFieldsArray);
+                $width = ($cnt > 0) ? 100 / $cnt : 100;
+                $colspan = (isset($leastCommonMultiple)) ? ($leastCommonMultiple / $cnt) : 1;
 
                 $output .= "<tr>";
-                    $output .= "<th>".get_string('grade', 'block_gradetracker')."</th>";
-                    if ($qualification->isFeatureEnabledByName('cetagrades') && $this->isCetaEnabled()) {
-                        $output .= "<th>".get_string('ceta', 'block_gradetracker')."</th>";
-                    }
+                foreach ($customFieldsArray as $field) {
+                    $output .= "<th colspan='{$colspan}' style='width:{$width}%;'>{$field->getName()}</th>";
+                }
                 $output .= "</tr>";
 
                 $output .= "<tr>";
-
-                    // If numeric show that number instead
-                    if ($gradingMethod == 'numeric') {
-                        $max = $this->getSetting('numeric_grading_max');
-                        // If we have a valid max, which we should do, show it score out of max
-                        $score = ($max) ? ($this->getUserScore() . "/" . $max) : $this->getUserScore();
-                        $output .= "<td>".$score."</td>";
-                    } else {
-
-                        // If we're using CETA grades, show the name of the grade
-                        if ($qualification->isFeatureEnabledByName('cetagrades')) {
-                            $output .= "<td>".$grade->getShortName()."</td>";
-                        } else {
-                            // If we are not using CETA, then use an image
-                            $output .= "<td>";
-                            $output .= "<img class='gt_award_icon' src='{$grade->getImageURL()}' alt='{$grade->getShortName()}' title='{$grade->getShortName()}' /><br>";
-                            $output .= $grade->getShortName();
-                            $output .= "</td>";
-                        }
-
-                    }
-
-                    if ($qualification->isFeatureEnabledByName('cetagrades') && $this->isCetaEnabled()) {
-                        $output .= "<td>".$this->getCetaCell('v')."</td>";
-                    }
-
+                foreach ($customFieldsArray as $field) {
+                    $output .= "<td colspan='{$colspan}' style='width:{$width}%;'>".\gt_html($this->getCustomFieldValue($field), true)."</td>";
+                }
                 $output .= "</tr>";
+
+                $rowNum++;
+
+            }
 
             $output .= "</table>";
-            $output .= "<br>";
 
-            // Custom Fields
-            $numCols = 3;
-            $customFields = $this->getEnabledCustomFormFields();
-            $customFields = \gt_split_array($customFields, $numCols);
+        }
 
-            // Work out the colspan to use for each row, to make the table look nice and evenly formatted
-            $numRows = count($customFields);
-            if ($numRows > 1) {
-                $lastRow = $customFields[$numRows - 1];
-                $numElements = count($lastRow);
-                $leastCommonMultiple = \gt_lcm($numCols, $numElements);
-            }
+        $output .= "<br>";
+        $output .= get_string('lastupdatedby', 'block_gradetracker') . ' <b>'. ( ($this->getUserLastUpdateByUserID() > 0) ? $this->getUserLastUpdateBy()->getName() : '-') . '</b>';
+        $output .= "&nbsp;&nbsp;&nbsp;";
+        $output .= get_string('updatetime', 'block_gradetracker') . ' <b>'. ( ($this->getUserLastUpdate() > 0) ? $this->getUserLastUpdate('D jS M Y, H:i') : '-') . '</b>';
 
-            $rowNum = 0;
-
-            if ($customFields) {
-
-                $output .= "<table class='gt_assessment_popup_custom_fields_table'>";
-
-                foreach ($customFields as $customFieldsArray) {
-
-                    // Work out width percentage for columns and whether to use the calculated colspan or not
-                    $cnt = count($customFieldsArray);
-                    $width = ($cnt > 0) ? 100 / $cnt : 100;
-                    $colspan = (isset($leastCommonMultiple)) ? ($leastCommonMultiple / $cnt) : 1;
-
-                    $output .= "<tr>";
-                    foreach ($customFieldsArray as $field) {
-                        $output .= "<th colspan='{$colspan}' style='width:{$width}%;'>{$field->getName()}</th>";
-                    }
-                    $output .= "</tr>";
-
-                    $output .= "<tr>";
-                    foreach ($customFieldsArray as $field) {
-                        $output .= "<td colspan='{$colspan}' style='width:{$width}%;'>".\gt_html($this->getCustomFieldValue($field), true)."</td>";
-                    }
-                    $output .= "</tr>";
-
-                    $rowNum++;
-
-                }
-
-                $output .= "</table>";
-
-            }
-
-            $output .= "<br>";
-            $output .= get_string('lastupdatedby', 'block_gradetracker') . ' <b>'. ( ($this->getUserLastUpdateByUserID() > 0) ? $this->getUserLastUpdateBy()->getName() : '-') . '</b>';
-            $output .= "&nbsp;&nbsp;&nbsp;";
-            $output .= get_string('updatetime', 'block_gradetracker') . ' <b>'. ( ($this->getUserLastUpdate() > 0) ? $this->getUserLastUpdate('D jS M Y, H:i') : '-') . '</b>';
-
-            $output .= "<br>";
-            $output .= "<div class='gt_criterion_info_popup_heading'>".get_string('comments', 'block_gradetracker')."</div>";
-            $output .= "<div class='gt_criterion_info_comments'>";
-                $output .= gt_html($this->userComments, true);
-            $output .= "</div>";
+        $output .= "<br>";
+        $output .= "<div class='gt_criterion_info_popup_heading'>".get_string('comments', 'block_gradetracker')."</div>";
+        $output .= "<div class='gt_criterion_info_comments'>";
+            $output .= gt_html($this->userComments, true);
+        $output .= "</div>";
 
         $output .= "</div>";
 

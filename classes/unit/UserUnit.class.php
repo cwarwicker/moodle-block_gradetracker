@@ -522,14 +522,14 @@ class UserUnit extends \block_gradetracker\Unit {
 
             $output .= "<select id='{$elID}' class='{$elID} gt_grid_unit_award'>";
 
-                $output .= "<option value=''></option>";
+            $output .= "<option value=''></option>";
 
-                if ($possibleAwards) {
-                    foreach ($possibleAwards as $award) {
-                        $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
-                        $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
-                    }
+            if ($possibleAwards) {
+                foreach ($possibleAwards as $award) {
+                    $sel = ($this->getUserAward() && $this->getUserAward()->getID() == $award->getID()) ? 'selected' : '';
+                    $output .= "<option value='{$award->getID()}' {$sel} >{$award->getShortName()} - {$award->getName()}</option>";
                 }
+            }
 
             $output .= "</select>";
 
@@ -577,28 +577,28 @@ class UserUnit extends \block_gradetracker\Unit {
 
         $output .= "<td id='{$elID}' sID='{$this->student->id}' uID='{$this->id}' qID='{$this->qualID}'>";
 
-            // The date is stored as text, not as a unix timestamp, as it's not exact
-            $date = $this->getAttribute('IV_date', $this->student->id);
-            $date = \gt_html($date);
+        // The date is stored as text, not as a unix timestamp, as it's not exact
+        $date = $this->getAttribute('IV_date', $this->student->id);
+        $date = \gt_html($date);
 
-            $who = $this->getAttribute('IV_who', $this->student->id);
-            $who = \gt_html($who);
+        $who = $this->getAttribute('IV_who', $this->student->id);
+        $who = \gt_html($who);
 
-            $output .= "<small><b>".get_string('date', 'block_gradetracker')."</b></small><br>";
+        $output .= "<small><b>".get_string('date', 'block_gradetracker')."</b></small><br>";
 
-            if ($access == 'e' || $access == 'ae') {
-                $output .= "<input type='text' value='{$date}' class='gt_stud_unit_IV_date' sID='{$this->student->id}' uID='{$this->id}' qID='{$this->qualID}' />";
-            } else {
-                $output .= $date;
-            }
+        if ($access == 'e' || $access == 'ae') {
+            $output .= "<input type='text' value='{$date}' class='gt_stud_unit_IV_date' sID='{$this->student->id}' uID='{$this->id}' qID='{$this->qualID}' />";
+        } else {
+            $output .= $date;
+        }
 
-            $output .= "<br><small><b>".get_string('verifier', 'block_gradetracker')."</b></small><br>";
+        $output .= "<br><small><b>".get_string('verifier', 'block_gradetracker')."</b></small><br>";
 
-            if ($access == 'e' || $access == 'ae') {
-                $output .= "<input type='text' value='{$who}' class='gt_stud_unit_IV_who' />";
-            } else {
-                $output .= $who;
-            }
+        if ($access == 'e' || $access == 'ae') {
+            $output .= "<input type='text' value='{$who}' class='gt_stud_unit_IV_who' />";
+        } else {
+            $output .= $who;
+        }
 
         $output .= "</td>";
 

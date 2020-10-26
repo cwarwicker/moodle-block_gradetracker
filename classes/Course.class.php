@@ -24,9 +24,9 @@
 
 namespace block_gradetracker;
 
-require_once($CFG->dirroot . '/local/df_hub/lib.php');
-
 defined('MOODLE_INTERNAL') or die();
+
+require_once($CFG->dirroot . '/local/df_hub/lib.php');
 
 class Course {
 
