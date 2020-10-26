@@ -97,35 +97,35 @@ class DataQualification extends \block_gradetracker\Qualification {
 
         $sql .= "1
                 FROM {user} u
-                INNER JOIN {bcgt_user_quals} uq ON uq.userid = u.id
+                INNER JOIN {bcgt_user_quals} uq ON uq.userid = u.id 
 
                 LEFT JOIN (
                     SELECT a.id, a.name, a.rank, ug.userid
                     FROM {bcgt_qual_build_awards} a
                     INNER JOIN {bcgt_user_grades} ug ON ug.grade = a.id
                     WHERE ug.type = 'target' AND ug.qualid = ?
-                ) tg ON tg.userid = u.id
+                ) tg ON tg.userid = u.id 
 
                 LEFT JOIN (
                     SELECT a.id, a.name, ug.userid
                     FROM {bcgt_qual_build_awards} a
                     INNER JOIN {bcgt_user_grades} ug ON ug.grade = a.id
                     WHERE ug.type = 'weighted_target' AND ug.qualid = ?
-                ) wtg ON tg.userid = u.id
+                ) wtg ON tg.userid = u.id 
 
                 LEFT JOIN (
                     SELECT a.id, a.name, a.rank, ug.userid
                     FROM {bcgt_qual_build_awards} a
                     INNER JOIN {bcgt_user_grades} ug ON ug.grade = a.id
                     WHERE ug.type = 'aspirational' AND ug.qualid = ?
-                ) ag ON ag.userid = u.id
+                ) ag ON ag.userid = u.id 
 
                 LEFT JOIN (
                     SELECT a.id, a.name, ug.userid
                     FROM {bcgt_qual_build_awards} a
                     INNER JOIN {bcgt_user_grades} ug ON ug.grade = a.id
                     WHERE ug.type = 'ceta' AND ug.qualid = ?
-                ) cg ON cg.userid = u.id
+                ) cg ON cg.userid = u.id 
 
                 LEFT JOIN (
                     SELECT t.userid, t.type, a.name, a.rank, a.ucas
@@ -140,7 +140,7 @@ class DataQualification extends \block_gradetracker\Qualification {
                             )
                             OR t.type = 'final'
                         )
-                ) qa ON qa.userid = u.id
+                ) qa ON qa.userid = u.id 
 
                 LEFT JOIN (
                     SELECT uqu.userid, COUNT(uqu.id) as cnt, SUM(u.credits) as ccnt
@@ -149,7 +149,7 @@ class DataQualification extends \block_gradetracker\Qualification {
                     INNER JOIN {bcgt_qual_units} qu ON qu.unitid = uqu.unitid AND qu.qualid = uqu.qualid
                     WHERE uqu.qualid = ? AND uqu.role = 'STUDENT' AND u.deleted = 0
                     GROUP BY userid
-                ) uu ON uu.userid = u.id
+                ) uu ON uu.userid = u.id 
 
                 LEFT JOIN (
                     SELECT uu.userid, COUNT(uu.id) as cnt, SUM(u.credits) as ccnt
@@ -159,7 +159,7 @@ class DataQualification extends \block_gradetracker\Qualification {
                     INNER JOIN {bcgt_units} u ON u.id = uu.unitid
                     WHERE uu.awardid > 0 AND qu.qualid = ? AND u.deleted = 0
                     GROUP BY uu.userid
-                ) uua ON uua.userid = u.id";
+                ) uua ON uua.userid = u.id ";
 
         $params[] = $this->id;
         $params[] = $this->id;

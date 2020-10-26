@@ -1050,6 +1050,7 @@ $string['qualsoncourse'] = 'Qualifications on Course';
 $string['qualsoncourse:short'] = 'Quals on Course';
 $string['qualstructure'] = 'Qualification Structure';
 $string['qualstructures'] = 'Qualification Structures';
+$string['qualstructuresdatabase'] = 'To find Qualification Structures/Builds that other people have created, or to share your own, please check <a href="http://www.cmrwarwicker.com/moodle/mod/data/view.php?id=50">http://www.cmrwarwicker.com/moodle/mod/data/view.php?id=50</a>';
 $string['qualstructurehasnoassessmentgradingstructure'] = 'Qualification Structure (%s) has not got a Criteria Grading Structure set to be used In Assessments';
 $string['qualtype'] = 'Qualification Type';
 $string['query'] = 'Query';
