@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * This file contains the list of all the elements which can be used in bc_dashboard reporting, and their definitions
+ * This file contains the list of all the elements which can be used in df_dashboard reporting, and their definitions
  *
  * @copyright   2011-2017 Bedford College, 2017 onwards Conn Warwicker
  * @package     block_gradetracker
@@ -27,33 +27,33 @@ defined('MOODLE_INTERNAL') || die;
 $elements = array(
 
     'avggcse' => array(
-        'file' => '/blocks/gradetracker/classes/bc_dashboard/avggcse.php',
-        'class' => '\block_gradetracker\bc_dashboard\avggcse',
+        'file' => '/blocks/gradetracker/classes/df_dashboard/avggcse.php',
+        'class' => '\block_gradetracker\df_dashboard\avggcse',
     ),
 
     'grade' => array(
-        'file' => '/blocks/gradetracker/classes/bc_dashboard/grade.php',
-        'class' => '\block_gradetracker\bc_dashboard\grade',
+        'file' => '/blocks/gradetracker/classes/df_dashboard/grade.php',
+        'class' => '\block_gradetracker\df_dashboard\grade',
     ),
 
     'listofquals' => array(
-        'file' => '/blocks/gradetracker/classes/bc_dashboard/listofquals.php',
-        'class' => '\block_gradetracker\bc_dashboard\listofquals',
+        'file' => '/blocks/gradetracker/classes/df_dashboard/listofquals.php',
+        'class' => '\block_gradetracker\df_dashboard\listofquals',
     ),
 
     'numberofqoe' => array(
-        'file' => '/blocks/gradetracker/classes/bc_dashboard/numberofqoe.php',
-        'class' => '\block_gradetracker\bc_dashboard\numberofqoe',
+        'file' => '/blocks/gradetracker/classes/df_dashboard/numberofqoe.php',
+        'class' => '\block_gradetracker\df_dashboard\numberofqoe',
     ),
 
     'award' => array(
-        'file' => '/blocks/gradetracker/classes/bc_dashboard/award.php',
-        'class' => '\block_gradetracker\bc_dashboard\award',
+        'file' => '/blocks/gradetracker/classes/df_dashboard/award.php',
+        'class' => '\block_gradetracker\df_dashboard\award',
     ),
 
     'valueadded' => array(
-        'file' => '/blocks/gradetracker/classes/bc_dashboard/valueadded.php',
-        'class' => '\block_gradetracker\bc_dashboard\valueadded',
+        'file' => '/blocks/gradetracker/classes/df_dashboard/valueadded.php',
+        'class' => '\block_gradetracker\df_dashboard\valueadded',
     ),
 
 
