@@ -326,12 +326,12 @@ $string['back'] = 'Back';
 $string['backtogrid'] = 'Back to Grid';
 
 // Reporting elements
-$string['df_dashboard:avggcse'] = 'Avg GCSE';
-$string['df_dashboard:grade'] = 'Grade';
-$string['df_dashboard:listofquals'] = 'Quals';
-$string['df_dashboard:numberofqoe'] = 'No. QoE';
-$string['df_dashboard:award'] = 'Award';
-$string['df_dashboard:valueadded'] = 'Value Added';
+$string['bc_dashboard:avggcse'] = 'Avg GCSE';
+$string['bc_dashboard:grade'] = 'Grade';
+$string['bc_dashboard:listofquals'] = 'Quals';
+$string['bc_dashboard:numberofqoe'] = 'No. QoE';
+$string['bc_dashboard:award'] = 'Award';
+$string['bc_dashboard:valueadded'] = 'Value Added';
 
 $string['before'] = 'Before';
 

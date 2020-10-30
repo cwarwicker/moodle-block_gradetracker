@@ -14,34 +14,45 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * List of user's qualifications reporting element
+ * Qualification Award reporting element
  *
  * @copyright 2020 Conn Warwicker
  * @package block_gradetracker
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace block_gradetracker\df_dashboard;
+namespace block_gradetracker\bc_dashboard;
 
 defined('MOODLE_INTERNAL') or die();
 
 require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
 
 /**
- * List of user's qualifications reporting element
+ * Qualification Award reporting element
  *
  * @copyright 2020 Conn Warwicker
  * @package block_gradetracker
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-class listofquals extends \block_df_dashboard\Report\Element {
+class award extends \block_bc_dashboard\Report\Element {
 
     protected $level = 'individual';
     protected $type = 'function';
     protected $datatype = 'string';
 
+    public function __construct($params = null) {
+
+        $this->options = array(
+            array('select', get_string('reportoption:type', 'block_gradetracker'), array('average' => get_string('predictedgrade', 'block_gradetracker'), 'min' => get_string('predictedmingrade', 'block_gradetracker'), 'max' => get_string('predictedmaxgrade', 'block_gradetracker'), 'final' => get_string('predictedfinalgrade', 'block_gradetracker')))
+        );
+        parent::__construct($params);
+
+    }
+
     public function call(&$results) {
+
+        $type = $this->getParam(0);
 
         $GTEXE = \block_gradetracker\Execution::getInstance();
         $GTEXE->min();
@@ -55,14 +66,14 @@ class listofquals extends \block_df_dashboard\Report\Element {
 
                 // Get their list of quals
                 $user = new \block_gradetracker\User($row['id']);
-                $quals = $user->getQualifications("STUDENT");
-                if ($quals) {
-                    foreach ($quals as $qual) {
-                        $array[] = $qual->getDisplayName();
+                $grades = $user->getAllUserAwards($type, null);
+                if ($grades) {
+                    foreach ($grades as $grade) {
+                        $array[] = $grade['grade']->getName();
                     }
                 }
 
-                $results['users'][$key][$alias] = implode("; ", $array);
+                $results['users'][$key][$alias] = implode(", ", $array);
 
             }
         }

@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace block_gradetracker\df_dashboard;
+namespace block_gradetracker\bc_dashboard;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-class valueadded extends \block_df_dashboard\Report\Element {
+class valueadded extends \block_bc_dashboard\Report\Element {
 
     protected $level = 'aggregate';
     protected $type = 'function';

@@ -21,7 +21,7 @@
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-namespace block_gradetracker\df_dashboard;
+namespace block_gradetracker\bc_dashboard;
 
 defined('MOODLE_INTERNAL') or die();
 
@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/blocks/gradetracker/lib.php');
  * @version 2.0
  * @author Conn Warwicker <conn@cmrwarwicker.com>
  */
-class numberofqoe extends \block_df_dashboard\Report\Element {
+class numberofqoe extends \block_bc_dashboard\Report\Element {
 
     protected $level = 'aggregate';
     protected $type = 'sql';
@@ -44,7 +44,7 @@ class numberofqoe extends \block_df_dashboard\Report\Element {
 
         // What options can they choose?
         $this->options = array(
-            array('select', get_string('reportoption:count', 'block_df_dashboard'), array('total' => get_string('total', 'block_df_dashboard'), 'average' => get_string('average', 'block_df_dashboard')))
+            array('select', get_string('reportoption:count', 'block_bc_dashboard'), array('total' => get_string('total', 'block_bc_dashboard'), 'average' => get_string('average', 'block_bc_dashboard')))
         );
 
         parent::__construct($params);
