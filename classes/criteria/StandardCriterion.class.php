@@ -114,7 +114,7 @@ class StandardCriterion extends \block_gradetracker\Criterion {
         if ($this->hasUserComments()) {
             $output .= "<div class='gt_criterion_info_popup_heading'>".get_string('comments', 'block_gradetracker')."</div>";
             $output .= "<div class='gt_criterion_info_comments'>";
-                $output .= gt_html($this->userComments, true);
+                $output .= format_text(gt_html($this->userComments, true));
             $output .= "</div>";
         }
 
