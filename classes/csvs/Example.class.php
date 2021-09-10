@@ -36,7 +36,7 @@ class Example {
 
         global $DB;
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/targetgrades.csv';
+        $file = 'csv/examples/targetgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -106,7 +106,7 @@ class Example {
 
         global $DB;
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/aspirationalgrades.csv';
+        $file = 'csv/examples/aspirationalgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -171,7 +171,7 @@ class Example {
 
         global $DB;
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/cetagrades.csv';
+        $file = 'csv/examples/cetagrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -240,7 +240,7 @@ class Example {
      */
     public static function generateExampleQoECSV($reload = false) {
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/qoe.csv';
+        $file = 'csv/examples/qoe.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -281,7 +281,7 @@ class Example {
 
     public static function generateExampleWCoeCSV($reload = false) {
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/wcoe.csv';
+        $file = 'csv/examples/wcoe.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -325,7 +325,7 @@ class Example {
      */
     public static function generateExampleAvgGCSECSV($reload = false) {
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/avggcse.csv';
+        $file = 'csv/examples/avggcse.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return
@@ -372,7 +372,7 @@ class Example {
 
         global $DB;
 
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/csv/examples/assgrades.csv';
+        $file = 'csv/examples/assgrades.csv';
         $code = \gt_create_data_path_code($file);
 
         // If it already exists and we don't want to reload it, just return

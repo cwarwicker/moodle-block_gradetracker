@@ -548,7 +548,7 @@ class GradeTracker {
 
         $setting = \block_gradetracker\Setting::getSetting("institution_logo");
         if ($setting) {
-            $code = gt_get_data_path_code($CFG->dataroot . '/gradetracker/img/' . $setting);
+            $code = gt_get_data_path_code('img/' . $setting);
             if ($code) {
                 return $CFG->wwwroot . '/blocks/gradetracker/download.php?f=' . $code;
             }
@@ -3785,7 +3785,7 @@ class GradeTracker {
                     if (\gt_save_file($_FILES['institution_logo']['tmp_name'], 'img', $_FILES['institution_logo']['name'])) {
 
                         // Create data path code for it
-                        \gt_create_data_path_code($CFG->dataroot . '/gradetracker/img/' . $_FILES['institution_logo']['name']);
+                        \gt_create_data_path_code('img/' . $_FILES['institution_logo']['name']);
 
                         // Save setting
                         $this->updateSetting("institution_logo", $_FILES['institution_logo']['name']);

@@ -437,7 +437,7 @@ class CriteriaProgressReport extends \block_gradetracker\Reports\Report {
 
         // End the Spreadsheet generation and save it.
         \gt_create_data_directory('reports');
-        $file = \block_gradetracker\GradeTracker::dataroot() . '/reports/' . $filename;
+        $file = 'reports/' . $filename;
         $objPHPExcel->save($file);
 
         $download = \gt_create_data_path_code($file);

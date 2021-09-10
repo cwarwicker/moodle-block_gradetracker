@@ -294,7 +294,7 @@ class CriteriaAward {
             $result = $Upload->doUpload();
             if ($result['success'] === true) {
                 $this->iconTmp = $Upload->getFileName();
-                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
+                \gt_create_data_path_code( 'tmp/' . $this->iconTmp );
             } else {
                 $this->errors[] = $result['error'] . ' - ' . $this->name;
             }
@@ -318,7 +318,7 @@ class CriteriaAward {
 
             $result = \gt_save_base64_image($this->imgData, \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp);
             if ($result) {
-                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
+                \gt_create_data_path_code( 'tmp/' . $this->iconTmp );
             } else {
                 $this->errors[] = get_string('errors:save:file', 'block_gradetracker') . ' - ' . $this->name;
             }
@@ -360,7 +360,7 @@ class CriteriaAward {
 
                 $this->img = $this->iconTmp;
                 $obj->img = $this->img;
-                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/img/awards/' . $this->gradingStructureID . '/' . $this->img );
+                \gt_create_data_path_code( 'img/awards/' . $this->gradingStructureID . '/' . $this->img );
                 unset($this->iconTmp);
 
             }

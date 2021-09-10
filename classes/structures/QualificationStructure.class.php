@@ -929,7 +929,7 @@ class QualificationStructure {
 
                 $this->icon = $this->iconTmp;
                 $obj->icon = $this->icon;
-                \gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/img/' . $this->icon );
+                \gt_create_data_path_code( 'img/' . $this->icon );
                 unset($this->iconTmp);
 
             }
@@ -1162,7 +1162,7 @@ class QualificationStructure {
             $result = $Upload->doUpload();
             if ($result['success'] === true) {
                 $this->iconTmp = $Upload->getFileName();
-                gt_create_data_path_code( \block_gradetracker\GradeTracker::dataroot() . '/tmp/' . $this->iconTmp );
+                gt_create_data_path_code( 'tmp/' . $this->iconTmp );
             } else {
                 $this->errors[] = $result['error'];
             }
