@@ -1263,7 +1263,7 @@ class UserQualification extends \block_gradetracker\Qualification {
 
             } else if ($this->isFeatureEnabledByName('predictedgrades')) {
                 \gt_debug("Total units awarded ({$totalUnitsWithAward}) does not meet the minimum no. required ({$min}). So resetting predicted awards.");
-                $blank = new \gt\QualificationAward();
+                $blank = new \block_gradetracker\QualificationAward();
 
                 $this->saveUserAward($blank, "average");
                 if ($totalUnitsWithAward == $totalUnits) {
@@ -1278,7 +1278,7 @@ class UserQualification extends \block_gradetracker\Qualification {
                 $this->saveUserAward($maxAward, "max");
             } else if ($this->isFeatureEnabledByName('predictedminmaxgrades')) {
                 \gt_debug("Deleting min/max awards");
-                $blank = new \gt\QualificationAward();
+                $blank = new \block_gradetracker\QualificationAward();
 
                 $this->saveUserAward($blank, "min");
                 $this->saveUserAward($blank, "max");
