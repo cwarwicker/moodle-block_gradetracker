@@ -17,6 +17,15 @@
 
                 <li class="gt_nav_dropdowns">
 
+                    <?php if(isset($Course)): ?>
+                        <select class="gt_switch_qual_class_grid">
+                            <option value=""><?php echo $string['switchqual'] ?></option>
+                            <?php foreach($Course->getCourseQualifications() as $qual): ?>
+                                <option value="<?php echo $qual->getID() ?>" <?php echo ($Qualification->getID() === $qual->getID()) ? 'selected' : ''; ?> ><?php echo $qual->getDisplayName() ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
+
                     <select class="gt_switch_course">
                         <option value=""><?php echo $string['switchcourse'] ?></option>
                         <?php if ($Qualification->getCourses()): ?>

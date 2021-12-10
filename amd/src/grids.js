@@ -71,6 +71,16 @@ define(['jquery', 'jqueryui', 'block_gradetracker/bcpopup', 'block_gradetracker/
 
             });
 
+            $('.gt_switch_qual_class_grid').off().on('change', function(){
+                var qID = $(this).val();
+                var url = M.cfg.wwwroot + '/blocks/gradetracker/grid.php?type=' + config.grid + '&id='+qID;
+                if (config.course > 0){
+                    url += '&courseID=' + config.course;
+                }
+                window.location = url;
+
+            });
+
             // Switch user
             $('.gt_switch_user').unbind('change');
             $('.gt_switch_user').bind('change', function(e){
